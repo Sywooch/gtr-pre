@@ -102,7 +102,16 @@ foreach ($endList as $key => $value) {
     
 <?= $form->field($model, 'content')->widget(\yii\redactor\widgets\Redactor::className(), [
     'clientOptions' => [
-        'plugins' => ['clips', 'fontcolor','imagemanager','table','video','clips','fontfamily','fontsize']
+        'plugins' => [
+                'clips',
+                'fontcolor',
+                //'imagemanager',
+                'table',
+                'video',
+                'clips',
+                'fontfamily',
+                'fontsize',
+                ]
     ]
 ])?>
 
