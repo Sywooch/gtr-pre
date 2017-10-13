@@ -233,8 +233,6 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
   'style'=>'display:none;'
   ]); ?>
         
-
-
 <?php 
 $customCss = <<< SCRIPT
 
