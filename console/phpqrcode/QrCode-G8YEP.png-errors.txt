@@ -1,0 +1,1 @@
+2017-10-04 00:03:28: imagepng(/opt/lampp/htdocs/gilitransfers-local/console/E-Ticket/XNcJAI8d7fjK4MElQu7j2-xId/QrCode-G8YEP.png): failed to open stream: No such file or directory
