@@ -11,7 +11,7 @@ $modelBookForm->returnDate = $modelBookForm->departureDate;
 $items =['1'=>'One Way','2'=>'Return'];
 $modelBookForm->type = 1;
 ?>
-<div class="col-md-12 col-sm-12 col-xs-12">
+<div class="row col-md-12 col-sm-12 col-xs-12">
     <div class="col-md-2 col-sm-6 col-xs-6">
       <?= $form->field($modelBookForm, 'departurePort')->dropDownList($listDept, [
                         'id' => 'drop-dept',
@@ -42,6 +42,7 @@ $modelBookForm->type = 1;
     <div class="col-md-1 col-sm-4 col-xs-4">
     <?= $form->field($modelBookForm, 'infants')->dropDownList($childList, ['id' => 'drop-infant','class'=>'input-sm form-control']); ?>
     </div>  
+
 </div>
                     <div class="col-md-2 col-md-offset-0 col-sm-6 col-sm-offset-4 col-xs-6 col-xs-offset-4">
                      <?= $form->field($modelBookForm, 'type')->radioList($items, [

@@ -112,17 +112,17 @@ class NavBar extends Widget
             }
             echo Html::beginTag('div', $this->innerContainerOptions);
         }
-        echo Html::beginTag('div', ['class' => 'navbar-header']);
+        echo Html::beginTag('div', ['class' => 'navbar-header material-navbar__header']);
         if (!isset($this->containerOptions['id'])) {
             $this->containerOptions['id'] = "{$this->options['id']}-collapse";
         }
         echo $this->renderToggleButton();
         if ($this->brandLabel !== false) {
-            Html::addCssClass($this->brandOptions, ['widget' => 'navbar-brand']);
+            Html::addCssClass($this->brandOptions, ['widget' => 'navbar-brand material-navbar__brand']);
             echo Html::a($this->brandLabel, $this->brandUrl === false ? Yii::$app->homeUrl : $this->brandUrl, $this->brandOptions);
         }
         echo Html::endTag('div');
-        Html::addCssClass($this->containerOptions, ['collapse' => 'collapse', 'widget' => 'navbar-collapse']);
+        Html::addCssClass($this->containerOptions, ['collapse' => 'collapse', 'widget' => 'collapse navbar-collapse materil-navbar__collapse']);
         $options = $this->containerOptions;
         $tag = ArrayHelper::remove($options, 'tag', 'div');
         echo Html::beginTag($tag, $options);
@@ -149,11 +149,11 @@ class NavBar extends Widget
      */
     protected function renderToggleButton()
     {
-        $bar = Html::tag('span', '', ['class' => 'icon-bar']);
+        $bar = Html::tag('span', '', ['class' => 'icon-bar materail-navbar__icon-bar']);
         $screenReader = "<span class=\"sr-only\">{$this->screenReaderToggleText}</span>";
 
         return Html::button("{$screenReader}\n{$bar}\n{$bar}\n{$bar}", [
-            'class' => 'navbar-toggle',
+            'class' => 'navbar-toggle materail-navbar__toogle collapsed',
             'data-toggle' => 'collapse',
             'data-target' => "#{$this->containerOptions['id']}",
         ]);

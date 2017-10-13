@@ -32,22 +32,47 @@ AppAsset::register($this);
         'brandLabel' => 'GiliTransfers',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
-            'class' => 'navbar navbar-inverse navbar-fixed-top',
+            'class' => 'navbar material-navbar material-navbar_primary navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
         
         [
             'label' => 'Fast Boat',
             'url' => ['/content/fastboats'],
+            'options'=>['class'=>'lis'],
+            'linkOptions'=>['class'=>'material-navbar__link'],
         ],
-        ['label' => 'Destination', 'url' => ['/content/destinations']],
-        ['label' => 'Ports', 'url' => ['/content/ports']],
-        ['label' => 'Article', 'url' => ['/content/articles']],
-        ['label' => 'Cart ( '.Yii::$app->view->params['countCart'].' )', 'url' => ['/book/detail-data']],
-        //['label' => 'About', 'url' => ['/site/about']],
-        ['label' => 'Contact', 'url' => ['/site/contact']],
+        [
+        'label' => 'Destination', 'url' => ['/content/destinations'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'Ports', 'url' => ['/content/ports'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'Article', 'url' => ['/content/articles'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'Cart ( '.Yii::$app->view->params['countCart'].' )', 'url' => ['/book/detail-data'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'About', 'url' => ['/site/about'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'Contact', 'url' => ['/site/contact'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
         
     ];
     if (Yii::$app->user->isGuest) {
@@ -64,7 +89,7 @@ AppAsset::register($this);
             . '</li>';
     }
     echo Nav::widget([
-        'options' => ['class' => 'navbar-nav navbar-right'],
+        'options' => ['class' => 'nav navbar-nav navbar-right material-navbar__nav'],
         'items' => $menuItems,
     ]);
     NavBar::end();

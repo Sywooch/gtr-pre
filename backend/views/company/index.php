@@ -12,8 +12,6 @@ $this->title = 'Company List';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tcompany-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -27,12 +25,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
            // 'id',
             'name',
-            'address',
+           // 'address',
             [
-            'header'=>'Email',
+            'header'=>'Email Bali',
             'format'=>'email',
             'value'=>'email_bali'],
-            'email_gili:email',
+            [
+            'header'=>'Email Bali',
+            'format'=>'email',
+            'value'=>'email_gili'],
+           // 'email_gili:email',
             'phone',
             ['header'=>'POD',
             'format'=>'raw',
@@ -47,7 +49,7 @@ $this->params['breadcrumbs'][] = $this->title;
             ['header'=>'Logo',
             'format'=>'raw',
             'value'=>function($model){
-                return Html::a(Html::img(['/company/logo','logo'=>$model->logo_path], ['class' => 'img-responsive','style'=>'width:150px;height: auto']),['/company/view','id'=>$model->id],[
+                return Html::a(Html::img(['/company/logo','logo'=>$model->logo_path], ['class' => 'img-responsive','style'=>'width:150px;height: 45px']),['/company/view','id'=>$model->id],[
                         'data-toggle'=>"modal",
                         'data-target'=>"#myModal",
                         'data-title'=>"Detail Data",

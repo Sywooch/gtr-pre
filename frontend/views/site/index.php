@@ -227,8 +227,8 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
     <?php endif; ?>
       </div>
 
-<?= Html::a(' Top<span></span>','#', [
-  'class'=>'',
+<?= Html::button(' Top<span></span>', [
+  'class'=>'btn',
   'id'=>'btn-scroll',
   'style'=>'display:none;'
   ]); ?>
@@ -246,7 +246,7 @@ $customCss = <<< SCRIPT
 #btn-scroll {
     position:fixed;
     right:10px;
-    bottom:10px;
+    bottom:100px;
     cursor:pointer;
     width:50px;
     height:50px;

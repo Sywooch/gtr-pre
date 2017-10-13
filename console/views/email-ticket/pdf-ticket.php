@@ -102,16 +102,37 @@ endif;
 ?>
 <!-- Shuttle End -->
 
+<!-- Buyer Detail Start -->
+<table class="table table-striped ">
+  <caption><center>Contact Detail</center></caption>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th width="175">Phone</th>
+    <th width="174">Email</th>
+  </tr>
+
+  </thead>
+  <tbody>
+  <tr>
+    <td><?= $modelPayment->name?></td>
+    <td><?= $modelPayment->phone ?></td>
+    <td><?= $modelPayment->email ?></td>
+
+  </tr>
+</tbody>
+</table>
+<!-- Buyer Detail End -->
+
 <!-- Passenger Table Start -->
 <table class="table table-striped ">
   <caption><center>Passenger Detail</center></caption>
   <thead>
   <tr>
-    <th>No.</th>
+    <th width="20">No.</th>
     <th>Name</th>
-    <th>Nationality</th>
-    <th>Type</th>
-    <th>Date Of Birth</th>
+    <th width="175">Nationality</th>
+    <th width="100">Type</th>
   </tr>
 
   </thead>
@@ -125,7 +146,7 @@ endif;
     <td><?= $valAdult->name?></td>
     <td><?= $valAdult->idNationality->nationality ?></td>
     <td>Adult</td>
-    <td>-</td>
+
   </tr>
 <?php endforeach;?>
   <!-- Adult End -->
@@ -139,7 +160,6 @@ endif;
     <td><?= $valChild->name ?></td>
     <td><?= $valChild->idNationality->nationality ?></td>
     <td>Child</td>
-    <td><?= date('d-m-Y',strtotime( $valChild->birthday)) ?> </td>
   </tr>
   <?php endforeach;?>
 <?php endif; ?>
@@ -153,7 +173,6 @@ endif;
     <td><?= $valInfant->name ?></td>
     <td><?= $valInfant->idNationality->nationality ?></td>
     <td>Infants</td>
-    <td><?= date('d-m-Y',strtotime($valInfant->birthday)) ?></td>
   </tr>
 <?php endforeach;?>
 <?php endif; ?>

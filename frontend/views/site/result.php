@@ -25,8 +25,8 @@ $('.radio-dept, .radio-return').on('change',function(){
   }
 });
 
-$('#btn-close-modal').on('click',function(){
-  location.reload();
+$('#myModal').on('hide.bs.modal',function(){
+  $('input:radio').attr('checked', false);
 })
 
   ", \yii\web\View::POS_READY);

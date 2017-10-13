@@ -136,8 +136,8 @@ class MailerController extends Controller
                                 'SetFooter' =>['This receipt automatically printed by system and doesnt require a signature'],
                         ]
                     ]);
-                //$Receipt->render();
-               /* Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
+                $Receipt->render();
+               Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
                 ->setTo($modelPayment->email)
                 ->setBcc('istanatravel94@gmail.com')
                 ->setSubject('E-Ticket GiliTransfers')
@@ -147,7 +147,7 @@ class MailerController extends Controller
                     ]))
                 ->attach($savePath."E-Ticket.pdf")
                 ->attach($savePath."Receipt.pdf")
-                ->send();*/
+                ->send();
                 foreach ($modelBooking as $key => $value) {
                     $PdfSupplier = new Pdf([
                 'filename'=>$savePath.$value->id.'.pdf',
@@ -179,19 +179,19 @@ class MailerController extends Controller
                                 'SetFooter' =>['Document automatically printed by system'],
                         ]
                     ]);
-                    //$PdfSupplier->render();
+                    $PdfSupplier->render();
                     $attach = $savePath.$value->id.".pdf";
 
                     if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
-                        //$this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $attach,$value, $modelPayment);
+                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $attach,$value, $modelPayment);
                     }else{
-                        //$this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali, $attach, $value, $modelPayment);
+                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali, $attach, $value, $modelPayment);
                     }
                     
                 }
                 $modelQueue->status = '3';
-                //$modelQueue->save();
-                //FileHelper::removeDirectory($savePath);
+                $modelQueue->save();
+                FileHelper::removeDirectory($savePath);
         }else{
             return true;
         }
