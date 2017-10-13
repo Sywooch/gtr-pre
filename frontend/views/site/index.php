@@ -226,20 +226,16 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
     ?>
     <?php endif; ?>
       </div>
-<?= Html::button(' Top', [
-  'onclick' => '
-      $("html, body").animate({
-      scrollTop: 25
-      }, 800);
-      return false;',
-  'class'=>'btn material-btn material-btn_primary main-container__column material-btn_md glyphicon glyphicon-arrow-up'
+
+<?= Html::a(' Top<span></span>','#', [
+  'class'=>'',
+  'id'=>'btn-scroll',
+  'style'=>'display:none;'
   ]); ?>
-            
+        
 
 
 <?php 
-$x = Url::home(true);
-echo "->".$x;
 $customCss = <<< SCRIPT
 
 #list-fastboat{
@@ -249,6 +245,50 @@ $customCss = <<< SCRIPT
 .art-tab{
   min-height: 390px;
 }
+#btn-scroll {
+    position:fixed;
+    right:10px;
+    bottom:10px;
+    cursor:pointer;
+    width:50px;
+    height:50px;
+    background-color:#3498db;
+    text-indent:-9999px;
+    display:none;
+    -webkit-border-radius:60px;
+    -moz-border-radius:60px;
+    border-radius:60px
+}
+#btn-scroll span {
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-left:-8px;
+    margin-top:-12px;
+    height:0;
+    width:0;
+    border:8px solid transparent;
+    border-bottom-color:#ffffff;
+}
+#btn-scroll:hover {
+    background-color:#e74c3c;
+    opacity:1;filter:"alpha(opacity=100)";
+    -ms-filter:"alpha(opacity=100)";
+}
 SCRIPT;
 $this->registerCss($customCss);
+$customScript = <<< SCRIPT
+  $(window).scroll(function(){ 
+        if ($(this).scrollTop() > 100) { 
+            $('#btn-scroll').fadeIn(); 
+        } else { 
+            $('#btn-scroll').fadeOut(); 
+        } 
+    }); 
+    $('#btn-scroll').click(function(){ 
+        $("html, body").animate({ scrollTop: 0 }, 600); 
+        return false; 
+    }); 
+SCRIPT;
+$this->registerJs($customScript, \yii\web\View::POS_READY);
 ?>
