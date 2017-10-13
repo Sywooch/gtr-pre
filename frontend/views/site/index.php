@@ -289,7 +289,6 @@ $customScript = <<< SCRIPT
         $("html, body").animate({ scrollTop: 0 }, 600); 
         return false; 
     }); 
-    
 SCRIPT;
 $this->registerJs($customScript, \yii\web\View::POS_READY);
 ?>
