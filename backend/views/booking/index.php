@@ -40,6 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
+                
                 'attribute'=>'id_payment',
                 'width'=>'auto',
                 'value'=>function ($model, $key, $index, $widget) { 

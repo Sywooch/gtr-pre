@@ -25,9 +25,9 @@ $this->registerMetaTag([
         <p style="text-align: justify;"><?= substr($valContent->description, 0,100) ?></p>
     </div>
 
-     <footer class="material-card__footer">
+     <div class="material-card__footer">
         <?= Html::a('Read more', ['view','slug'=>$valContent->slug,],['class'=>'btn material-btn material-btn_warning main-container__column material-btn_md btn-block']); ?>
-     </footer>
+     </div>
     </div>
 </div>
 <?php endforeach;	?>

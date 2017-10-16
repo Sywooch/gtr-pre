@@ -21,9 +21,6 @@ if($model->isNewRecord){
 }
 
 ?>
-<script type="text/javascript">
-    (".datepicker").pickadate();
-</script>
 <div class="container ttrip-form">
 <div class="col-md-6">
 

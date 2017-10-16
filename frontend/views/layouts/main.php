@@ -107,17 +107,23 @@ AppAsset::register($this);
     </div>
 </div>
 
-<footer class="footer">
-    <div class="container">
-        <p class="pull-left">&copy; Gilitransfers.com <?= date('Y') ?></p>
 
-        <p class="pull-right">
-            <?= Html::a('Home', Yii::$app->homeUrl, ['class' => 'text-muted footer-link']); ?> 
-            <br>
-            <?= Html::a('About', '/site/about', ['class' => 'text-muted footer-link']); ?> 
-        </p>
+<?= $this->render('_footer'); ?>
+
+<!--<footer class="footer">
+    <div class="container">
+        
+
+       <div class="row">
+            <?= Html::a('Home', Yii::$app->homeUrl, ['class' => 'footer-link']); ?> 
+            <?= Html::a('About', '/site/about', ['class' => 'footer-link']); ?>
+             <center>&copy; Gilitransfers.com <?= date('Y') ?></center> 
+      <span class="pull-right "> We Accepted : <?= Html::img('/img/paypal.png', ['class' => 'img-responsive','width'=>'200px','height'=>'auto']); ?></span>
+       
+       </div>
+
     </div>
-</footer>
+</footer>-->
 
 <?php $this->endBody() ?>
 </body>

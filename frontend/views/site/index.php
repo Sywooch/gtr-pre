@@ -40,10 +40,10 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
 
   <div class="panel-group material-tabs-group">
         <ul class="nav nav-tabs material-tabs material-tabs_primary">
-          <li class="active"><a href="#fastboat" class="material-tabs__tab-link" data-toggle="tab">FastBoat</a></li>
-          <li><a href="#destinations" class="material-tabs__tab-link" data-toggle="tab">Destinations</a></li>
-          <li><a href="#article" class="material-tabs__tab-link" data-toggle="tab">Article</a></li>
-          <li><a href="#ports" class="material-tabs__tab-link" data-toggle="tab">Ports</a></li>
+          <li class="active bar"><a href="#fastboat" class="material-tabs__tab-link" data-toggle="tab">FastBoat</a></li>
+          <li class="bar"><a href="#destinations" class="material-tabs__tab-link" data-toggle="tab">Dest</a></li>
+          <li class="bar"><a href="#article" class="material-tabs__tab-link" data-toggle="tab">Article</a></li>
+          <li class="bar"><a href="#ports" class="material-tabs__tab-link" data-toggle="tab">Ports</a></li>
         </ul>   
         <div class="tab-content materail-tabs-content">
           
@@ -235,7 +235,9 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
         
 <?php 
 $customCss = <<< SCRIPT
-
+.bar{
+  width : 150px;
+}
 #list-fastboat{
   min-height: 175px;
   max-height: 175px;

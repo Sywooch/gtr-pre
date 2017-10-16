@@ -78,6 +78,14 @@ $this->registerCss($customCss);
 <span class="pull-right" id="grand-total">TOTAl <?= $cartList[0]['currency']." ".array_sum($grandTotal) ?></span>
   </div>
   </div>
+<?php else: ?>
+  <span class="pull-right" id="grand-total">-</span>
+  </div>
+  </div>
+<?php endif; ?>
+<?php if(!empty($cartList)):  ?> 
+
+
   <!-- Cart End -->
   		<?php $form = ActiveForm::begin(); ?>
       <div class="col-md-12">
@@ -319,67 +327,3 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
   
 		<?php ActiveForm::end(); ?>
 <?php endif; ?>
-              
-<?php 
-//var_dump($trip);
-/*
-var_dump($modelAdults);
-echo "This <br><br>";
-//echo count($modelAdults)."<br><br>";
-$helperAdult = ArrayHelper::map($cartList, 'id_trip', 'adult', 'id_trip');
-var_dump($helperAdult);
-echo "<br><br> Child";
-$helperChild = ArrayHelper::map($cartList, 'id_trip', 'child', 'id_trip');
-var_dump($helperChild);
-echo "<br><br> Infant";
-$helperInfant = ArrayHelper::map($cartList, 'id_trip', 'infant', 'id_trip');
-var_dump($helperInfant);
-echo "<br><br>";
-
-foreach ($cartList as $key => $value) {
-  echo "Trip Id = ".$value->id_trip."<br>";
-  //echo "string";
-  //var_dump($value->id_trip);
- 
-  foreach ($helperAdult[$value->id_trip] as $keyAdult => $valAdult) {
-    echo ". <b>Adult = </b>".$valAdult."<br>";
-    for ($i=0; $i < $valAdult ; $i++) { 
-      echo "Adult KE".$i."<br>";
-    }
-  }
-  foreach ($helperChild[$value->id_trip] as $valChild) {
-    echo "<b>. Child = </b>".$valChild."<br>";
-    for ($i=0; $i < $valChild ; $i++) { 
-      echo "Child KE".$i."<br>";
-    }
-  }
-  foreach ($helperInfant[$value->id_trip] as $valInfant) {
-    echo " <b>. Infant = </b> ".$valInfant."<br>";
-    for ($i=0; $i < $valInfant ; $i++) { 
-      echo "Infant KE".$i."<br>";
-    }
-  }
-
-  echo "<br>";
-
-}
-
-/*foreach ($cartList as $key => $Adult) {
-  echo "Key = ".$key."PErcobaan id = ".$Adult->id."- Adult = ".$Adult->adult."<br>";
-  foreach ($Adult as $x => $val) {
-   // echo "Trip = ".$key." - Adult = ".$val."<br>";
-  }
- 
-}
-
-
-//var_dump($cartList);
-/*echo "<br><br> Mergered";
-$mergered = ArrayHelper::merge($helperChild, $helperAdult);
-var_dump($mergered);
-echo "<br><br> 3 Mergered";
-$mer = array_merge($helperAdult,$helperChild,$helperInfant);
-
-var_dump($mer);*/
-
-?>
