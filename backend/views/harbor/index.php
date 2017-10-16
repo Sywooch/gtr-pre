@@ -7,12 +7,11 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\HarborSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Harbor List');
+$this->title = Yii::t('app', 'Port List');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tharbor-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
@@ -27,7 +26,8 @@ $this->params['breadcrumbs'][] = $this->title;
             'name',
             'idIsland.island',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+            'template'=>'{update} {delete}'],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>

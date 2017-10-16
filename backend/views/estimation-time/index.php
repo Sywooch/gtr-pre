@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 /* @var $searchModel common\models\TEstTimeSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = Yii::t('app', 'Test Times');
+$this->title = Yii::t('app', 'Est Times');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="test-time-index">
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Test Time'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('', ['create'], ['class' => 'btn btn-danger btn-lg glyphicon glyphicon-plus']) ?>
     </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,

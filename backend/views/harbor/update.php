@@ -3,16 +3,16 @@
 use yii\helpers\Html;
 
 /* @var $this yii\web\View */
-/* @var $model common\models\THarbor */
+/* @var $model common\models\Ports */
 
 $this->title = Yii::t('app', 'Update {modelClass}: ', [
-    'modelClass' => 'Tharbor',
+    'modelClass' => 'Ports',
 ]) . $model->name;
-$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Tharbors'), 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Portss'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 ?>
-<div class="tharbor-update">
+<div class="Ports-update">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

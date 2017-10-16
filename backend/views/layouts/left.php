@@ -10,21 +10,22 @@ use mdm\admin\components\Helper;
                 'options' => ['class' => 'sidebar-menu sidebar-collapse'],
                 'items' => [
                    // ['label'    => 'Home', 'url' => ['/site/index']],
+                    ['label'    => 'Content','icon'=>'dashboard', 'url' => ['/content/index']],
                     ['label' => 'Booking','icon' => 'book', 'url' => '/booking/index'],
                      ['label' => 'Validate','icon' => 'check-square', 'url' => ['/booking/validation']],
                     // ['label' => 'Avb Template', 'url' => ['/avaibility-template/index']],
                     ['label'    => 'Trip/Schedule','icon'=>'calendar', 'url' => ['/trip/index']],
-                    ['label'    => 'Content','icon'=>'dashboard', 'url' => ['/content/index']],
+                    
                     // ['label' => 'Price List', 'url' => ['/season-price/index']],
                     ['label'    => 'Season Price','icon'=>'money', 'url' => ['/set-season/index']],
                     ['label'    => 'Company', 'icon'=>'flag', 'url' => ['/company/index']],
-                    ['label'    => 'Harbor','icon'=>'ship', 'url' => ['/harbor/index']],
+                    ['label'    => 'Harbor/Port','icon'=>'ship', 'url' => ['/harbor/index']],
                     ['label'  => 'Boat','icon'=>'ship', 'url' => ['/boat/index']],
                     ['label'    => 'Route','icon'=>'code-fork', 'url' => ['/route/index']],
 
                     ['label'    => 'Est Time','icon'=>'clock-o', 'url' => ['/estimation-time/index']],
-                    ['label'    => 'Area','icon'=>'map', 'url' => ['/shuttle-area/index']],
-                    ['label'    => 'Location','icon'=>'map-marker', 'url' => ['/shuttle-location/index']],
+                    ['label'    => 'Shuttle Area','icon'=>'map', 'url' => ['/shuttle-area/index']],
+                   // ['label'    => 'Location','icon'=>'map-marker', 'url' => ['/shuttle-location/index']],
                    // ['label'    => 'Price','icon'=>'money', 'url' => ['/shuttle-price/index']],
                     
                     ['label' => 'Change Password','icon'=>'lock', 'url' => ['/admin/user/change-password']],
