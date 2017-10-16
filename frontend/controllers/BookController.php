@@ -52,8 +52,6 @@ class BookController extends Controller
 
   public function beforeAction($action){
     $session       = Yii::$app->session;
-        $cart = $this->findCart2()->all();
-        Yii::$app->view->params['countCart'] = count($cart);
     if ($session['timeout'] < date('Y-m-d H:i:s') || $session['timeout'] == null) {
       $cartList = $this->findCart2()->all();
       if (!empty($cartList)) {

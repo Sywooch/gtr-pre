@@ -50,7 +50,7 @@ class ContentSearch extends TContent
             'sort'=>[
                 'defaultOrder'=>[
                 'id_type_content'=>SORT_ASC,
-                //'dept_time'=>SORT_ASC
+                'updated_at'=>SORT_DESC,
                 ]
             ]
         ]);

@@ -22,10 +22,10 @@ use yii\helpers\Html;
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-danger"><?= Yii::$app->view->params['bookvalidation'] ?></span>
+                        <span class="label label-danger"><?= Yii::$app->gilitransfers->Valbook(); ?></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header"><?= Yii::$app->view->params['bookvalidation'] ?> Booking Need Validation</li>
+                        <li class="header"><?= Yii::$app->gilitransfers->Valbook(); ?> Booking Need Validation</li>
                         <li>
                             <!-- inner menu: contains the actual data 
                             <ul class="menu">

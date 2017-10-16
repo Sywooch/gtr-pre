@@ -13,7 +13,7 @@ use mdm\admin\components\Helper;
                     ['label'    => 'Content','icon'=>'dashboard', 'url' => ['/content/index']],
                     ['label'    => 'Booking','icon' => 'book', 'url' => '/booking/index'],
                     ['label'    => 'Validate','icon' => 'check-square', 'url' => ['/booking/validation']],
-                    // ['label' => 'Avb Template', 'url' => ['/avaibility-template/index']],
+                    ['label'    => 'Avb Template', 'url' => ['/avaibility-template/index']],
                     ['label'    => 'Trip/Schedule','icon'=>'calendar', 'url' => ['/trip/index']],
                     
                     // ['label' => 'Price List', 'url' => ['/season-price/index']],

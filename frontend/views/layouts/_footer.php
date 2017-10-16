@@ -29,10 +29,9 @@ use yii\helpers\Html;
       </div>
       <div class="col-md-3 col-sm-6 footer-col">
         <h6 class="heading7">LATEST POST</h6>
-        <div class="post">
-          <p>facebook crack the movie advertisment code:what it means for you <span>August 3,2015</span></p>
-          <p>facebook crack the movie advertisment code:what it means for you <span>August 3,2015</span></p>
-          <p>facebook crack the movie advertisment code:what it means for you <span>August 3,2015</span></p>
+        <div class="post footer-ul">
+          <?= Yii::$app->gilitransfers->LatestPost() ?>
+         
         </div>
       </div>
       <div class="col-md-3 col-sm-6 footer-col">

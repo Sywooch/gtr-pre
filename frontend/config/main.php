@@ -49,6 +49,10 @@ return [
             'class' => 'yii\web\urlManager',
             'baseUrl' => 'https://www.agoda.com/pages/agoda/default/destinationsearchresult.aspx?cid=1605135&pcs=4&hl=en&sort=priceLowToHigh',
         ],
+
+        'gilitransfers'=>[
+            'class'=>'common\components\Gilitransfers',
+        ],
         
     ],
     'params' => $params,

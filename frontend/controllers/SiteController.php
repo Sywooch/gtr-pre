@@ -7,7 +7,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+//use common\models\LoginForm;
 use common\models\THarbor;
 use common\models\TRoute;
 use common\models\TTrip;
@@ -36,9 +36,6 @@ class SiteController extends Controller
      */
     public function behaviors()
     {
-        $session       = Yii::$app->session;
-        $cart = $this->findCart()->where(['session_key'=>$session['session_key']])->all();
-        Yii::$app->view->params['countCart'] = count($cart);
         return [
             'access' => [
                 'class' => AccessControl::className(),
@@ -384,7 +381,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogin()
+   /* public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
@@ -405,7 +402,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionLogout()
+   /* public function actionLogout()
     {
         Yii::$app->user->logout();
 
@@ -450,7 +447,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionSignup()
+   /* public function actionSignup()
     {
         $model = new SignupForm();
         if ($model->load(Yii::$app->request->post())) {
@@ -471,7 +468,7 @@ class SiteController extends Controller
      *
      * @return mixed
      */
-    public function actionRequestPasswordReset()
+    /*public function actionRequestPasswordReset()
     {
         $model = new PasswordResetRequestForm();
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -496,7 +493,7 @@ class SiteController extends Controller
      * @return mixed
      * @throws BadRequestHttpException
      */
-    public function actionResetPassword($token)
+    /*public function actionResetPassword($token)
     {
         try {
             $model = new ResetPasswordForm($token);
@@ -513,5 +510,5 @@ class SiteController extends Controller
         return $this->render('resetPassword', [
             'model' => $model,
         ]);
-    }
+    }*/
 }

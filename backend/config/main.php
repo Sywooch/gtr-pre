@@ -78,6 +78,10 @@ return [
             '/trip/index/<month>'                    => 'trip/index',
             ],
         ],
+
+        'gilitransfers'=>[
+            'class'=>'common\components\Gilitransfers',
+        ],
         
     ],
     'params' => $params,

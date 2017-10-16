@@ -10,7 +10,6 @@ use mdm\admin\components\Helper;
 
 $this->title = 'Content';
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 <div class="tcontent-index">
     <p>
@@ -46,13 +45,24 @@ $this->params['breadcrumbs'][] = $this->title;
             'header'=>'title',
             'value'=> 'title',
             ],
-            'idTypeContent.type',
-           
             'slug',
-            'created_at:datetime',
-            'updated_at:datetime',
+            //'created_at:datetime',
+           // 'updated_at:datetime',
             ['header'=>'Author',
             'value'=>'author0.username'
+            ],
+            [
+            'header'=>'Up',
+            'format'=>'raw',
+            'value'=>function($model){
+                    return "<center>".Html::a('', ['follow-up', 'id' => $model->id], [
+                    'class' => 'glyphicon glyphicon-arrow-up',
+                    'data' => [
+                    'confirm' => Yii::t('app', 'Are you sure you want to follow up this content?'),
+                    'method' => 'post',
+                    ],
+                    ])."</center>";
+                }
             ],
             [
             'header'=>'preview',

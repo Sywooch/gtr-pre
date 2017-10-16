@@ -59,17 +59,17 @@ AppAsset::register($this);
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
-        'label' => 'Cart ( '.Yii::$app->view->params['countCart'].' )', 'url' => ['/book/detail-data'],
-        'options'=>['class'=>'lis'],
-        'linkOptions'=>['class'=>'material-navbar__link'],
-        ],
-        [
         'label' => 'About', 'url' => ['/site/about'],
         'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'Contact', 'url' => ['/site/contact'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'Cart ('.Yii::$app->gilitransfers->Countcart().')', 'url' => ['/book/detail-data'],
         'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],

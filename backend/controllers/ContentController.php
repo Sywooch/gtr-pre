@@ -24,7 +24,6 @@ class ContentController extends Controller
      */
     public function behaviors()
     {
-        Yii::$app->view->params['bookvalidation'] = count(TBooking::find()->joinWith('idPayment')->where(['t_payment.id_payment_method'=>2])->andWhere(['between','t_booking.id_status',2,3])->all());
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -44,6 +43,17 @@ class ContentController extends Controller
                //'fileSize' => '386',
                 'inline' => true
         ]);
+    }
+
+    public function actionFollowUp($id){
+        if (Yii::$app->request->isPost){
+            $modelContent = $this->findModel($id);
+            $modelContent->updated_at = strtotime(date('M d, Y h:i:s A'));
+            $modelContent->save(false);
+            return $this->redirect(['index']);
+        }else{
+            return $this->goHome();
+        }
     }
 
     public function actionSlug(){

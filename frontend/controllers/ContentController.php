@@ -21,9 +21,6 @@ class ContentController extends Controller
 	public $defaultAction = 'index';
 
 	public function behaviors(){
-		$session       = Yii::$app->session;
-        $cart = $this->findCart()->where(['session_key'=>$session['session_key']])->all();
-        Yii::$app->view->params['countCart'] = count($cart);
         return [
             'access' => [
                 'class' => AccessControl::className(),

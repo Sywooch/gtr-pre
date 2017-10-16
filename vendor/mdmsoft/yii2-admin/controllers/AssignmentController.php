@@ -42,7 +42,7 @@ class AssignmentController extends Controller
      */
     public function behaviors()
     {
-        Yii::$app->view->params['bookvalidation'] = count(TBooking::find()->joinWith('idPayment')->where(['t_payment.id_payment_method'=>2])->andWhere(['between','t_booking.id_status',2,3])->all());
+        
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
