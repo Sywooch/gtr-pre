@@ -4,8 +4,8 @@
 
 $this->title = 'Welcome To Gilitransfers';
 ?>
-<h2>Transaction Graph</h2>
-<?=
+<?php
+/*
 \dosamigos\highcharts\HighCharts::widget([
     'clientOptions' => [
         'chart' => [
@@ -31,5 +31,6 @@ $this->title = 'Welcome To Gilitransfers';
             ['name' => 'John', 'data' => [5, 7, 3]]
         ]
     ]
-]);
+]);*/
+
 ?>
