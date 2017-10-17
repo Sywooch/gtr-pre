@@ -276,7 +276,7 @@ class SiteController extends Controller
             $arrayRoute[] = ['id'=>$value->id,'name'=>$value->name,'island'=>$value->idIsland->island];
         }
         $listDept = ArrayHelper::map($arrayRoute, 'id', 'name', 'island');
-        $adultList = ['1'=>'1','2','3','4','5','6','7','8','9','10'];
+        $adultList = ['1'=>'1','2','3','4','5','6','7','8','9'];
         $childList = ['0','1','2','3','4','5'];
         $now = date('d-m-Y');
         $limitdate = date('d-m-Y',strtotime('+1 days',strtotime($now)));

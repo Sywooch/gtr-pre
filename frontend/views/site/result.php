@@ -27,6 +27,11 @@ $('.radio-dept, .radio-return').on('change',function(){
           scrollTop: $('#div-return').offset().top
         }, 1000); 
         return false; 
+  }else if(dept == undefined && ret != undefined){
+    $('html, body').animate({
+          scrollTop: $('#div-dept').offset().top
+        }, 1000); 
+        return false; 
   }
 });
 
@@ -38,32 +43,44 @@ $('#myModal').on('hide.bs.modal',function(){
 
 ?>
 <!--modal Start -->
-<div class="modal fade" id="myModal" >
+
+<div class="modal material-modal material-modal_primary fade" id="myModal">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Book Detail</h4>
+    <div class="modal-content material-modal__content">
+      <div class="modal-header material-modal__header">
+        <button class="close material-modal__close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title material-modal__title">Round Trip Detail</h4>
       </div>
-      <div class="modal-body">
+      <div class="modal-body material-modal__body">
         <div id="detail" class="col-md-12">
-          
-        </div>
       </div>
-      <div class="modal-footer">
-      
-        <?php //Html::button('Next', ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md ']); ?>
+      <div class="modal-footer material-modal__footer">
       </div>
     </div>
   </div>
 </div>
+</div>
 <!--modal End -->
-<div class="col-md-6" >
+
+<div id="div-dept" class="col-md-6" ><br><br>
 <h2 align="center"> DEPARTURE </h2>
 <h4 align="center"><?= date('D, d-M-Y',strtotime($formData['departureDate'])) ?></h4>
+
+<?= $this->render('_filter-result',[
+      'col'=>"col-md-4 col-sm-4 col-xs-12",
+      'parent'=>"result-dept"
+      ]) ?>
+
 <?php if(!empty($departureList)): ?>
+    <div id="result-dept">
 <?php foreach ($departureList as $key => $valDept): ?>
-          <div class="panel panel-primary material-panel material-panel_primary">
+<?php
+$priceDept = round($valDept->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP);
+$timeDept = date('H:i',strtotime($valDept->dept_time));
+$durDept = $valDept->id_est_time;
+ ?>
+<div id="<?= $priceDept ?>" times="<?= $timeDept ?>" duration="<?= $durDept ?>">
+  <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
     <?= Html::img(['/site/logo','id'=>$valDept->idBoat->id_company], ['class'=>'boat-logo']); ?>
@@ -82,7 +99,7 @@ $('#myModal').on('hide.bs.modal',function(){
 <span class="text-muted timer">
     <span class="col-md-12 col-sm-12">
       <span class="glyphicon glyphicon-time"></span> 
-      Dept Time: <?= date('H:i',strtotime($valDept->dept_time)) ?> WITA
+      Dept Time: <?= $timeDept ?> WITA
       <span class="glyphicon glyphicon-menu-right"></span> 
       <?= $valDept->idEstTime->est_time ?> Duration
     </span>
@@ -96,7 +113,7 @@ $('#myModal').on('hide.bs.modal',function(){
     echo "Note: ".$valDept->description;
     } ?>
  </span> 
-<span  class="bg-danger pull-right harga"><?= $currency->currency." ".round($valDept->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP) ?></span>
+<span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceDept ?></span>
               <div class="funkyradio">
               <div class="funkyradio-warning">
               <?= Html::radio('id_dept', $checked = false,['id'=>$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept  ']); ?>
@@ -108,8 +125,9 @@ $('#myModal').on('hide.bs.modal',function(){
           </div>
         </div><!--/panel-->
 
-
+</div>
 <?php endforeach; ?>
+</div>
 <?php else: ?>
 <center>
   <h2>Sorry</h2>
@@ -121,11 +139,23 @@ $('#myModal').on('hide.bs.modal',function(){
 </div>
 
 <!--  RETURN CODE LIST -->
-<div id="div-return" class="col-md-6" >
+<div id="div-return" class="col-md-6" ><br><br>
 <h2 align="center"> RETURN </h2>
 <h4 align="center"><?= date('D, d-M-Y',strtotime($formData['returnDate'])) ?></h4>
+
+<?= $this->render('_filter-result',[
+      'col'=>"col-md-4 col-sm-4 col-xs-12",
+      'parent'=>"result-arv"
+      ]) ?>
 <?php if(!empty($returnList)): ?>
+<div id="result-arv">
 <?php foreach ($returnList as $key => $valRetr): ?>
+  <?php
+$priceRetr = round($valRetr->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP);
+$timeRetr = date('H:i',strtotime($valRetr->dept_time));
+$durRetr = $valRetr->id_est_time;
+ ?>
+<div id="<?= $priceRetr ?>" times="<?= $timeRetr ?>" duration="<?= $durRetr ?>">
     <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
@@ -145,7 +175,7 @@ $('#myModal').on('hide.bs.modal',function(){
 <span class="text-muted timer">
     <span class="col-md-12s col-sm-12">
       <span class="glyphicon glyphicon-time"></span> 
-      Dept Time: <?= date('H:i',strtotime($valRetr->dept_time)) ?> WITA 
+      Dept Time: <?= $timeRetr ?> WITA 
       <span class="glyphicon glyphicon-menu-right"></span>
       <?= $valRetr->idEstTime->est_time ?> Duration 
     </span>
@@ -159,7 +189,7 @@ $('#myModal').on('hide.bs.modal',function(){
     echo "Note: ".$valRetr->description;
     } ?>
  </span> 
-<span  class="bg-danger pull-right harga"><?= $currency->currency." ".round($valRetr->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP) ?></span>
+<span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceRetr ?></span>
               <div class="funkyradio">
               <div class="funkyradio-warning">
               <?= Html::radio('id_return', $checked = false,['id'=>$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return  ']); ?>
@@ -170,7 +200,9 @@ $('#myModal').on('hide.bs.modal',function(){
            
           </div>
         </div><!--/panel-->
+</div>
 <?php endforeach; ?>
+</div>
 <?php else: ?>
 <center>
   <h2>Sorry</h2>

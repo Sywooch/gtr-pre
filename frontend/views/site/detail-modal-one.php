@@ -8,8 +8,6 @@ $totalD = $aD+$cD;
 ?>
 
 <div class="panel panel-info">
-    <div class="panel-heading">
-      <b class="panel-title" itemprop="name" align="center">Details</b></div><!--/panel-heading-->
         <div class="panel-body" itemprop="reviewBody">
 				   <div class="col-md-12">
             <div class="col-md-2">
@@ -42,7 +40,9 @@ $totalD = $aD+$cD;
     </div>
 </div>
 
-<span class="pull-right"><b class="harga-total"><?= $currency->currency." ".round($totalD,0,PHP_ROUND_HALF_UP); ?></b>&nbsp
+<span class="pull-right">
+<button id="btn-close-modal" type="button" class="btn material-btn material-btn_danger main-container__column material-btn_lg" data-dismiss="modal">Cancel</button>
+<b class="harga-total"><?= $currency->currency." ".round($totalD,0,PHP_ROUND_HALF_UP); ?></b>&nbsp
 <?= Html::a('Book', ['/book/add-to-cart', 'tripDeparture' => $tripDeparture->id], [
             'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
             'data' => [

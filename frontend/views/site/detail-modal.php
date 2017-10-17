@@ -12,9 +12,6 @@ $totalR = $aR+$cR;
 //echo $totalD."<br>".$totalR."<br>";
  ?>
 <div class="panel panel-info">
-    <div class="panel-heading">
-      <h5 class="panel-title" itemprop="name" align="center">Round Trip Details</h5>
-      </div><!--/panel-heading-->
         <div class="panel-body" itemprop="reviewBody">
         <div class="col-md-12">
             <div class="col-md-2">
@@ -44,29 +41,29 @@ $totalR = $aR+$cR;
            </div>
         </div>
            <br><br>
-        <div class="col-md-12">
+        <div class="col-md-12 div-ret">
            <!-- RETURN  -->
-           <div class="col-md-2 div-ret">
+           <div class="col-md-2">
             <b>Return</b>
               <br>
               <?= date('D, d-M-Y',strtotime($tripReturn->date)) ?>
             </div>
-            <div class="col-md-2 div-ret">
+            <div class="col-md-2">
             <b>Boat</b><br>
               <?= $tripReturn->idBoat->idCompany->name ?>       
             </div>
-            <div class="col-md-2 div-ret">
+            <div class="col-md-2">
             <b>Dept Time</b><br>
             <?= date('H:i',strtotime($tripReturn->dept_time)) ?>
               
             </div>
-            <div class="col-md-4 div-ret">
+            <div class="col-md-4">
             <b>Route</b><br>
             <?= $tripReturn->idRoute->departureHarbor->name." -> ".$tripReturn->idRoute->arrivalHarbor->name ?><br>
             (<?= $tripReturn->idEstTime->est_time ?>)
               </div>
             
-           <div class="col-md-2 div-ret">
+           <div class="col-md-2">
             
            <b class="text-strong"><?php $currency->currency." ".round($totalR,0,PHP_ROUND_HALF_UP) ?></b>
            <?= Html::img(['/site/logo','id'=>$tripReturn->idBoat->id_company], ['class'=>'boat-logo-modal']) ?>
