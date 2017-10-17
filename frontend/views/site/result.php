@@ -22,6 +22,11 @@ $('.radio-dept, .radio-return').on('change',function(){
           });
         }
     });
+  }else if(dept != undefined && ret == undefined){
+    $('html, body').animate({
+          scrollTop: $('#div-return').offset().top
+        }, 1000); 
+        return false; 
   }
 });
 
@@ -30,16 +35,7 @@ $('#myModal').on('hide.bs.modal',function(){
 })
 
   ", \yii\web\View::POS_READY);
-$customCss = <<< SCRIPT
-  .harga{
-    font-weight: bold;
-  }
-  .harga-total{
-    font-weight: bold;
-    font-size: 25px;
-  }
-SCRIPT;
-$this->registerCss($customCss);
+
 ?>
 <!--modal Start -->
 <div class="modal fade" id="myModal" >
@@ -55,50 +51,64 @@ $this->registerCss($customCss);
         </div>
       </div>
       <div class="modal-footer">
-      <!--  <button id="btn-close-modal" type="button" class="btn material-btn material-btn_danger main-container__column material-btn_md" data-dismiss="modal">Cancel</button> -->
+      
         <?php //Html::button('Next', ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md ']); ?>
       </div>
     </div>
   </div>
 </div>
 <!--modal End -->
-<div class="col-md-6 <?= $formData['type'] == '1' ? 'col-md-offset-3' : '' ?>" >
+<div class="col-md-6" >
 <h2 align="center"> DEPARTURE </h2>
 <h4 align="center"><?= date('D, d-M-Y',strtotime($formData['departureDate'])) ?></h4>
 <?php if(!empty($departureList)): ?>
 <?php foreach ($departureList as $key => $valDept): ?>
-    <div class="col-sm-12">
-          <div class="panel panel-info">
-          <div class="panel-heading">
-            <span itemscope itemtype="http://schema.org/Review">
-            <h3 class="panel-title" itemprop="name"><?= $valDept->idBoat->idCompany->name ?></h3>
-          </div><!--/panel-heading-->
+          <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
-<?= Html::img(['/site/logo','id'=>$valDept->idBoat->id_company], ['class'=>'boat-logo']); ?><span class=" bg-danger pull-right harga"> <?= $currency->currency." ".round($valDept->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP) ?> </span>
-            <ul class="list-group">
-              <li class="list-group-item">Date <?= date('m, d-Y',strtotime($valDept->date)) ?></li>
-              <li class="list-group-item"><?= date('H:i',strtotime($valDept->dept_time)) ?></li>
-              <li class="list-group-item"><?= $valDept->idRoute->departureHarbor->name." -> ".$valDept->idRoute->arrivalHarbor->name ?></li>
-               <li class="list-group-item"> <?= $valDept->idEstTime->est_time ?></li>
-            </ul>
+<span>
+    <?= Html::img(['/site/logo','id'=>$valDept->idBoat->id_company], ['class'=>'boat-logo']); ?>
+    <span class="nama-company"><?= $valDept->idBoat->idCompany->name ?></span>
+    
+</span><br>
+<span class="text-muted row rute">
+    <span class="col-md-12s col-sm-12">
+    <?= $valDept->idRoute->departureHarbor->name ?>
+    &nbsp
+    <span class="glyphicon glyphicon-arrow-right"></span> 
+    &nbsp
+    <?=$valDept->idRoute->arrivalHarbor->name ?></span>
+    
+</span><br>
+<span class="text-muted timer">
+    <span class="col-md-12 col-sm-12">
+      <span class="glyphicon glyphicon-time"></span> 
+      Dept Time: <?= date('H:i',strtotime($valDept->dept_time)) ?> WITA
+      <span class="glyphicon glyphicon-menu-right"></span> 
+      <?= $valDept->idEstTime->est_time ?> Duration
+    </span>
+  
+</span>
+<br><br>
+ <span class="text-warning note">
+   <?php if($valDept->description == null || $valDept->description == " "){
 
-              <div class="funkyradio col-md-1 col-md-offset-9">
+  }else{
+    echo "Note: ".$valDept->description;
+    } ?>
+ </span> 
+<span  class="bg-danger pull-right harga"><?= $currency->currency." ".round($valDept->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP) ?></span>
+              <div class="funkyradio">
               <div class="funkyradio-warning">
-              <?= Html::radio('id_dept', $checked = false,['id'=>$valDept->id,'value'=>$valDept->id,'class'=>'radio-return  ']); ?>
+              <?= Html::radio('id_dept', $checked = false,['id'=>$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept  ']); ?>
              <?= Html::label('Book!', $valDept->id); ?>
               </div>
               </div>
               
            
-          </div><!--/panel-body -
-          <div class="panel-footer clearfix">
-              <div class="col-sm-1"><i class="fa fa-facebook-official fa-2x"></i></div>
-              <div class="col-sm-1"><i class="fa fa-twitter-square fa-2x"></i></div>
-              <div class="col-sm-1"><i class="fa fa-google-plus fa-2x"></i></div>
-          </div><!-/panel-footer-->
+          </div>
         </div><!--/panel-->
 
-    </div><!--/col-sm-6-->
+
 <?php endforeach; ?>
 <?php else: ?>
 <center>
@@ -111,40 +121,56 @@ $this->registerCss($customCss);
 </div>
 
 <!--  RETURN CODE LIST -->
-<div class="col-md-6" >
+<div id="div-return" class="col-md-6" >
 <h2 align="center"> RETURN </h2>
 <h4 align="center"><?= date('D, d-M-Y',strtotime($formData['returnDate'])) ?></h4>
 <?php if(!empty($returnList)): ?>
 <?php foreach ($returnList as $key => $valRetr): ?>
-    <div class="col-sm-12">
-          <div class="panel panel-info">
-          <div class="panel-heading">
-            <h3 class="panel-title" itemprop="name"><?= $valRetr->idBoat->idCompany->name ?></h3>
-          </div><!--/panel-heading-->
+    <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
-        <?= Html::img(['/site/logo','id'=>$valRetr->idBoat->id_company], ['class'=>'boat-logo']); ?>
-        <span class="bg-danger pull-right harga"> <?= $currency->currency." ".round($valRetr->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP) ?> </span>
-            <ul class="list-group">
-              <li class="list-group-item">Date <?= date('m, d-Y',strtotime($valRetr->date)) ?></li>
-              <li class="list-group-item">Time <?= date('H:i',strtotime($valRetr->dept_time)) ?></li>
-              <li class="list-group-item"><b>Port</b> <?= $valRetr->idRoute->departureHarbor->name." -> ".$valRetr->idRoute->arrivalHarbor->name ?></li>
-              <li class="list-group-item"><?= $valRetr->idEstTime->est_time ?></li>
-            </ul>
+<span>
+    <?= Html::img(['/site/logo','id'=>$valRetr->idBoat->id_company], ['class'=>'boat-logo']); ?>
+    <span class="nama-company"><?= $valRetr->idBoat->idCompany->name ?></span>
+    
+</span><br>
+<span class="text-muted row rute">
+    <span class="col-md-12s col-sm-12">
+    <?= $valRetr->idRoute->departureHarbor->name ?>
+    &nbsp
+    <span class="glyphicon glyphicon-arrow-right"></span> 
+    &nbsp
+    <?=$valRetr->idRoute->arrivalHarbor->name ?></span>
+    
+</span><br>
+<span class="text-muted timer">
+    <span class="col-md-12s col-sm-12">
+      <span class="glyphicon glyphicon-time"></span> 
+      Dept Time: <?= date('H:i',strtotime($valRetr->dept_time)) ?> WITA 
+      <span class="glyphicon glyphicon-menu-right"></span>
+      <?= $valRetr->idEstTime->est_time ?> Duration 
+    </span>
+  
+</span>
+<br><br>
+ <span class="text-warning note">
+   <?php if($valRetr->description == null || $valRetr->description == " "){
 
-             <div class="funkyradio col-md-1">
+  }else{
+    echo "Note: ".$valRetr->description;
+    } ?>
+ </span> 
+<span  class="bg-danger pull-right harga"><?= $currency->currency." ".round($valRetr->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP) ?></span>
+              <div class="funkyradio">
               <div class="funkyradio-warning">
-              <?= Html::radio('id_return', $checked = false,['id'=>$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return']); ?>
+              <?= Html::radio('id_return', $checked = false,['id'=>$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return  ']); ?>
              <?= Html::label('Book!', $valRetr->id); ?>
               </div>
               </div>
-          </div><!--/panel-body -->
-        
-        </div><!-- /panel -->
-
-    </div><!--/col-sm-6-->
-<?php 
-
-endforeach; ?>
+              
+           
+          </div>
+        </div><!--/panel-->
+<?php endforeach; ?>
 <?php else: ?>
 <center>
   <h2>Sorry</h2>
@@ -155,6 +181,103 @@ endforeach; ?>
 <?php endif;  ?>
 </div>
 
+<?php 
+$customCss = <<< SCRIPT
+.note{
+  font-size: 10px;
+}
+.nama-company{
+  font-weight: bold;
+    font-size: 15px;
+}
+  .harga{
+    font-weight: bold;
+  }
+  .harga-total{
+    font-weight: bold;
+    font-size: 25px;
+  }
+  
+
+.div-ret{
+  border-top: 1px solid #B0BEC5;
+  padding-top: 2%;
+  margin-top: 5%;
+}
+.boat-logo{
+  width: auto;
+  height:25px;
+  max-height: 25px;
+  max-width: 300px;
+}
+.boat-logo-modal{
+  width: auto;
+  height:30px;
+  max-height: 30px;
+  max-width: 75px;
+}
 
 
+SCRIPT;
+$this->registerCss($customCss);
+?>
 
+<style type="text/css">
+    .funkyradio label {
+    /*min-width: 400px;*/
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #D1D3D4;
+    font-weight: normal;
+}
+.funkyradio input[type="radio"]:empty {
+    display: none;
+}
+.funkyradio input[type="radio"]:empty ~ label {
+    position: relative;
+    line-height: 2.5em;
+    text-indent: 3.25em;
+    margin-top: 2em;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.funkyradio input[type="radio"]:empty ~ label:before {
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    content:'';
+    width: 2.5em;
+    background: #D1D3D4;
+    border-radius: 3px 0 0 3px;
+}
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label:before {
+    content:'\2714';
+    text-indent: .9em;
+    color: #C2C2C2;
+}
+.funkyradio input[type="radio"]:hover:not(:checked) ~ label {
+    color: #888;
+}
+.funkyradio input[type="radio"]:checked ~ label:before {
+    content:'\2714';
+    text-indent: .9em;
+    color: #333;
+    background-color: #ccc;
+}
+.funkyradio input[type="radio"]:checked ~ label {
+    color: #777;
+}
+.funkyradio input[type="radio"]:focus ~ label:before {
+    box-shadow: 0 0 0 3px #999;
+}
+.funkyradio-warning input[type="radio"]:checked ~ label:before {
+    color: #fff;
+    background-color: #f0ad4e;
+}
+
+</style>

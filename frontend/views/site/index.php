@@ -227,11 +227,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
     <?php endif; ?>
       </div>
 
-<?= Html::button(' Top<span></span>', [
-  'class'=>'btn',
-  'id'=>'btn-scroll',
-  'style'=>'display:none;'
-  ]); ?>
+
         
 <?php 
 $customCss = <<< SCRIPT
@@ -277,18 +273,5 @@ $customCss = <<< SCRIPT
 }
 SCRIPT;
 $this->registerCss($customCss);
-$customScript = <<< SCRIPT
-  $(window).scroll(function(){ 
-        if ($(this).scrollTop() > 100) { 
-            $('#btn-scroll').fadeIn(); 
-        } else { 
-            $('#btn-scroll').fadeOut(); 
-        } 
-    }); 
-    $('#btn-scroll').click(function(){ 
-        $("html, body").animate({ scrollTop: 0 }, 600); 
-        return false; 
-    }); 
-SCRIPT;
-$this->registerJs($customScript, \yii\web\View::POS_READY);
+
 ?>

@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     return "<center>".Html::a('', ['follow-up', 'id' => $model->id], [
                     'class' => 'glyphicon glyphicon-arrow-up',
                     'data' => [
-                    'confirm' => Yii::t('app', 'Are you sure you want to follow up this content?'),
+                    'confirm' => 'Are you sure you want to follow up this content?',
                     'method' => 'post',
                     ],
                     ])."</center>";

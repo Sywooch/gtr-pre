@@ -16,7 +16,7 @@ $totalR = $aR+$cR;
       <h5 class="panel-title" itemprop="name" align="center">Round Trip Details</h5>
       </div><!--/panel-heading-->
         <div class="panel-body" itemprop="reviewBody">
-            <div class="col-md-12">
+        <div class="col-md-12">
             <div class="col-md-2">
             <b>Departure</b>
               <br>
@@ -42,9 +42,9 @@ $totalR = $aR+$cR;
            <b class="text-strong"><?php $currency->currency." ".round($totalD,0,PHP_ROUND_HALF_UP) ?></b>
            <?= Html::img(['/site/logo','id'=>$tripDeparture->idBoat->id_company], ['class'=>'boat-logo-modal']) ?>
            </div>
-</div>
+        </div>
            <br><br>
-<div class="col-md-12">
+        <div class="col-md-12">
            <!-- RETURN  -->
            <div class="col-md-2 div-ret">
             <b>Return</b>
@@ -71,15 +71,22 @@ $totalR = $aR+$cR;
            <b class="text-strong"><?php $currency->currency." ".round($totalR,0,PHP_ROUND_HALF_UP) ?></b>
            <?= Html::img(['/site/logo','id'=>$tripReturn->idBoat->id_company], ['class'=>'boat-logo-modal']) ?>
            </div>
-</div>
         </div>
+</div>
 
 </div>
 
-<span class="pull-right"><b class="harga-total"><?= $currency->currency." ".round($totalD+$totalR,0,PHP_ROUND_HALF_UP); ?></b>&nbsp
+
+
+<span class="pull-right">
+<button id="btn-close-modal" type="button" class="btn material-btn material-btn_danger main-container__column material-btn_lg" data-dismiss="modal">Cancel</button>
+<b class="harga-total"><?= $currency->currency." ".round($totalD+$totalR,0,PHP_ROUND_HALF_UP); ?></b>&nbsp
+
 <?= Html::a('Book', ['/book/add-to-cart', 'tripDeparture' => $tripDeparture->id,'tripReturn' => $tripReturn->id], [
             'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
             'data' => [
                 'method' => 'post',
             ],
-          ]) ?></span>
+          ]) ?>
+
+</span>

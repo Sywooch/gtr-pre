@@ -6,7 +6,7 @@ use yii\helpers\Url;
 ?>
 <?php $form = ActiveForm::begin();
 $modelBookForm->arrivalPort = 4;
-$modelBookForm->departureDate = date('d-m-Y H:i:s') < date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
+$modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
 $modelBookForm->returnDate = $modelBookForm->departureDate;
 $items =['1'=>'One Way','2'=>'Return'];
 $modelBookForm->type = 1;
@@ -68,35 +68,14 @@ $modelBookForm->type = 1;
 						'options'=>[
 							'id'=>'dept-date',
 							'class'=>'input-sm form-control',
-              'onchange'=>'
-                $.pjax.reload({
-                  container: "#pjax-return",
-                });
-              ',
               ],
-						'pickadateOptions' => [
-						'format'=> 'dd-mm-yyyy',
-						'formatSubmit'=> 'yyyy-mm-dd',
-						'min'=>date('d-m-Y H:i:s') < date('d-m-Y 16:i:s') ? +2 : +1 ,
-             'clear'=>'',
-             'today'=>'',
-						],
             
 					]); ?>
 					</div>
 					
 					<div style="visibility: hidden;" class="col-md-2 col-sm-4 col-xs-6" id="div-return">
-<?php Pjax::begin(['id'=>'pjax-return']); ?>
 <?php
-$this->registerJs("
-$('#return-date').pickadate({
-  min:+2,
-  format: 'dd-mm-yyyy',
-  formatSubmit: 'yyyy-mm-dd',
-  clear:'',
-  today:'',
-});
-  ", \yii\web\View::POS_READY);
+
 $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] : null;
 
  ?>
@@ -107,7 +86,6 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 						'options'=>['id'=>'return-date','class'=>'input-sm form-control'],
 
 					]); ?>
-<?php Pjax::end(); ?>
 					</div>
           <div id="div-currency" class="col-md-1 col-sm-4 col-xs-6">
                     <?= $form->field($modelBookForm, 'currency')->dropDownList($listCurrency, ['id' => 'drop-currency','class'=>'input-sm form-control']); ?>
@@ -118,4 +96,44 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 					<?= Html::submitButton(Yii::t('app', 'Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block']) ?>
 					</div>
 <?php ActiveForm::end(); ?>
-       
+<?php 
+$this->registerJs("
+$('#dept-date').pickadate({
+  min: +1,
+  format: 'dd-mm-yyyy',
+  formatSubmit: 'yyyy-mm-dd',
+  clear:'',
+  today:'',
+});
+
+$('#return-date').pickadate({
+  format: 'dd-mm-yyyy',
+  formatSubmit: 'yyyy-mm-dd',
+  clear:'',
+  today:'',
+});
+
+var from_input = $('#dept-date').pickadate(),
+    from_picker = from_input.pickadate('picker')
+
+var to_input = $('#return-date').pickadate(),
+    to_picker = to_input.pickadate('picker')
+
+
+// Check if there’s a “from” or “to” date to start with.
+if ( from_picker.get('value') ) {
+  to_picker.set('min', from_picker.get('select'))
+}
+
+
+// When something is selected, update the “from” and “to” limits.
+from_picker.on('set', function(event) {
+  if ( event.select ) {
+    to_picker.set('min', from_picker.get('select'))    
+  }
+  else if ( 'clear' in event ) {
+    to_picker.set('min', false)
+  }
+})
+  ", \yii\web\View::POS_READY);
+?>
