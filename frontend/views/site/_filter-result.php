@@ -1,7 +1,6 @@
 <?php
 use yii\helpers\Html;
 ?>
-
 <div class="row">
   <div class="<?= $col ?>">
     <div class="dropdown material-dropdown material-dropdown_warning main-container__column">
@@ -135,3 +134,4 @@ use yii\helpers\Html;
   </div>
 
 </div>
+<br>

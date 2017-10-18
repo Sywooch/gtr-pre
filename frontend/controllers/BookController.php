@@ -52,18 +52,22 @@ class BookController extends Controller
 
   public function beforeAction($action){
     $session       = Yii::$app->session;
-    if ($session['timeout'] < date('Y-m-d H:i:s') || $session['timeout'] == null) {
-      $cartList = $this->findCart2()->all();
-      if (!empty($cartList)) {
-          foreach ($cartList as $key => $value) {
-          $this->removeCart($value->id);
+    if ($action->id != 'add-to-cart') {
+        if ($session['timeout'] < date('Y-m-d H:i:s') || $session['timeout'] == null) {
+          $cartList = $this->findCartBySessionKey()->all();
+          if (!empty($cartList)) {
+              foreach ($cartList as $key => $value) {
+              $this->removeCart($value->id);
+              }
+              $session['timeout'] = 'timeout';
+            return $this->goHome()->send();
           }
-          $session['timeout'] = 'timeout';
-        return $this->goHome()->send();
-      }
-        return true;
+            return true;
+        }else{
+          return true;
+        }
     }else{
-      return true;
+         return true;
     }
   }
 
@@ -89,7 +93,7 @@ class BookController extends Controller
         
     }
 
-    protected function findCart2(){
+    protected function findCartBySessionKey(){
         $session       = Yii::$app->session;
         return TCart::find()->where(['session_key'=>$session['session_key']]);
     }
@@ -100,7 +104,7 @@ class BookController extends Controller
 
     public function actionDetailData(){
     $session       = Yii::$app->session;
-    $cartList        = $this->findCart2()->orderBy(['id'=>SORT_ASC])->all();
+    $cartList        = $this->findCartBySessionKey()->orderBy(['id'=>SORT_ASC])->all();
     $helperAdult     = ArrayHelper::map($cartList, 'id_trip', 'adult', 'id_trip');
     $helperChild     = ArrayHelper::map($cartList, 'id_trip', 'child', 'id_trip');
     $helperInfant    = ArrayHelper::map($cartList, 'id_trip', 'infant', 'id_trip');
@@ -456,7 +460,7 @@ class BookController extends Controller
     public function actionAddToCart($tripDeparture,$tripReturn = null){
         $session = Yii::$app->session;
         $now = date('Y-m-d H:i:s');
-        $session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 100 MINUTES',strtotime($now)));
+        $session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 10000 MINUTES',strtotime($now)));
         if (!isset($session['session_key'])) {
             $session['session_key']= Yii::$app->getSecurity()->generateRandomString(25);
         }

@@ -65,13 +65,11 @@ $('#myModal').on('hide.bs.modal',function(){
 <div id="div-dept" class="col-md-6" ><br><br>
 <h2 align="center"> DEPARTURE </h2>
 <h4 align="center"><?= date('D, d-M-Y',strtotime($formData['departureDate'])) ?></h4>
-
-<?= $this->render('_filter-result',[
+<?php if(!empty($departureList)): ?>
+  <?= $this->render('_filter-result',[
       'col'=>"col-md-4 col-sm-4 col-xs-12",
       'parent'=>"result-dept"
       ]) ?>
-
-<?php if(!empty($departureList)): ?>
     <div id="result-dept">
 <?php foreach ($departureList as $key => $valDept): ?>
 <?php
@@ -116,8 +114,8 @@ $durDept = $valDept->id_est_time;
 <span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceDept ?></span>
               <div class="funkyradio">
               <div class="funkyradio-warning">
-              <?= Html::radio('id_dept', $checked = false,['id'=>$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept  ']); ?>
-             <?= Html::label('Book!', $valDept->id); ?>
+              <?= Html::radio('id_dept', $checked = false,['id'=>'radio-dept'.$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept']); ?>
+             <?= Html::label('Book!', 'radio-dept'.$valDept->id); ?>
               </div>
               </div>
               
@@ -143,11 +141,12 @@ $durDept = $valDept->id_est_time;
 <h2 align="center"> RETURN </h2>
 <h4 align="center"><?= date('D, d-M-Y',strtotime($formData['returnDate'])) ?></h4>
 
-<?= $this->render('_filter-result',[
+
+<?php if(!empty($returnList)): ?>
+  <?= $this->render('_filter-result',[
       'col'=>"col-md-4 col-sm-4 col-xs-12",
       'parent'=>"result-arv"
       ]) ?>
-<?php if(!empty($returnList)): ?>
 <div id="result-arv">
 <?php foreach ($returnList as $key => $valRetr): ?>
   <?php
@@ -192,8 +191,8 @@ $durRetr = $valRetr->id_est_time;
 <span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceRetr ?></span>
               <div class="funkyradio">
               <div class="funkyradio-warning">
-              <?= Html::radio('id_return', $checked = false,['id'=>$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return  ']); ?>
-             <?= Html::label('Book!', $valRetr->id); ?>
+              <?= Html::radio('id_return', $checked = false,['id'=>'radio-return'.$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return']); ?>
+             <?= Html::label('Book!', 'radio-return'.$valRetr->id); ?>
               </div>
               </div>
               
