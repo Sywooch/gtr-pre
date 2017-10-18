@@ -49,7 +49,7 @@ class TCompany extends \yii\db\ActiveRecord
             [['create_at', 'update_at'], 'safe'],
             [['name', 'email_bali', 'email_gili'], 'string', 'max' => 50],
             [['address'], 'string', 'max' => 75],
-            [['phone'], 'string', 'max' => 25],
+            [['phone'], 'string', 'max' => 50],
             [['id_pod'], 'exist', 'skipOnError' => true, 'targetClass' => TPod::className(), 'targetAttribute' => ['id_pod' => 'id']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id']],
         ];
