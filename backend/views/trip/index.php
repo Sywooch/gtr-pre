@@ -22,7 +22,6 @@ $varmonth = $monthYear;
 $month= date('m',strtotime($monthYear));
 $year=date('Y',strtotime($monthYear));
 $day=date("d");
-
 $endDate=date("t",mktime(0,0,0,$month,$day,$year));
 
 ?>

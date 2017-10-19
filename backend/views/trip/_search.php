@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\MaskedInput;
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
 use kartik\widgets\TouchSpin;
@@ -16,119 +17,70 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
 <div class="panel-group material-tabs-group">
     <ul class="nav nav-tabs material-tabs material-tabs_primary">
         <li class="active"><a href="#filter" class="material-tabs__tab-link" data-toggle="tab">Filter</a></li>
-        <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Topup</a></li>
+        <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Stock</a></li>
         <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Edit</a></li>
         
     </ul>       
     <div class="tab-content materail-tabs-content">
         <div class="tab-pane fade active in" id="filter">
-            <div class="row">
-            
-         <div class="col-md-2">
-        <?= Html::label('Month','', ['class' => 'control-label']); ?>
-        <?= Html::dropDownList('bulan',$selected = date('m'), $listBulan,
-          [
-           'id'=>'form-bulan',
-          'class' => 'form-control',
-          'prompt'=>'Chose Month To Dislay',
-
-          ]); ?>
-        </div>
-        <div class="col-md-2">
-          <?= Html::label('Year','', ['class' => 'control-label']); ?>
-        <?= Html::dropDownList('bulan',null, $listTahun,
-          [
-          'id'=>'form-tahun',
-          'class' => 'form-control',
-          ]); ?>
-        </div>
-        <div class="col-md-8">
-        <br>
-        <?= Html::button('Submit', [
-            'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg',
-            'onclick'=>'
-            var month = $("#form-bulan").val();
-            var tahun = $("#form-tahun").val();
-             $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-            $.pjax.reload({
-            url:"'.Url::to("/trip/index").'/"+tahun+month,
-            timeout:10000,
-            container:"#pjax-trip",
-            })',
-            ]); ?>
-        <?= Html::a('Previous Month',null,[
-            'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
-            'onclick'=>'
-                 $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                $.pjax.reload({
-                url:"'.Url::to(["/trip/index","month"=>$blnUrlMin]).'",
-                timeout:10000,
-                container:"#pjax-trip",
-              })'
-        ]) ?>
-        <?= Html::a('Next Month',null,[
-            'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
-            'onclick'=>'
-                 $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                $.pjax.reload({
-                url:"'.Url::to(["/trip/index","month"=>$blnUrlPlus]).'",
-                timeout:10000,
-                container:"#pjax-trip",
-
-              })'
-        ]) ?>
-        
-        </div>
-            </div>
-        </div>
-        <div class="tab-pane fade" id="edit">
         <div class="row">
-                      <div class="col-md-2">
-          <div class="col-md-12">
-          <label>Change Status</label>
-          <?php if(Helper::checkRoute('/booking/validation')): ?>
-            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off','3'=>'Blocked'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
-          <?php else: ?>
-            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
-          <?php endif; ?>
-          </div>
-          <div class="col-md-12">
-            <?= Html::a('Save ',null,[
-                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_sm glyphicon glyphicon-saved',
-                'onclick'=>'
-                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
-                        return $(this).val();
-                        }).get();
+            
+             <div class="col-md-2">
+            <?= Html::label('Month','', ['class' => 'control-label']); ?>
+            <?= Html::dropDownList('bulan',$selected = date('m'), $listBulan,
+              [
+               'id'=>'form-bulan',
+              'class' => 'form-control',
+              'prompt'=>'Chose Month To Dislay',
 
-                        var stsv = $("#drop-status").val();
-                        var stst = $("#drop-status").text();
-                        if (idtrip == "" || stsv == "") {
-                          alert("Select Trip and Status First");
-                          return false;
-                        }else{
-                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
-                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                            $.ajax({
-                                url: "'.Url::to(["change-status"]).'",
-                                type: "POST",
-                                async: true, 
-                                data: {id: idtrip, sts: stsv},
-                                success: function() {
-                                      $.pjax.reload({
-                                      timeout:10000,
-                                      container:"#pjax-trip",
-                                      })
-                                }, 
-                            });
-                          }else{
-                            return false;
-                          }
-                        }  
-                    '
+              ]); ?>
+            </div>
+            <div class="col-md-2">
+              <?= Html::label('Year','', ['class' => 'control-label']); ?>
+            <?= Html::dropDownList('bulan',null, $listTahun,
+              [
+              'id'=>'form-tahun',
+              'class' => 'form-control',
+              ]); ?>
+            </div>
+            <div class="col-md-8">
+            <br>
+            <?= Html::button('Submit', [
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg',
+                'onclick'=>'
+                var month = $("#form-bulan").val();
+                var tahun = $("#form-tahun").val();
+                 $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                $.pjax.reload({
+                url:"'.Url::to("/trip/index").'/"+tahun+month,
+                timeout:10000,
+                container:"#pjax-trip",
+                })',
+                ]); ?>
+            <?= Html::a('Previous Month',null,[
+                'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
+                'onclick'=>'
+                     $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                    $.pjax.reload({
+                    url:"'.Url::to(["/trip/index","month"=>$blnUrlMin]).'",
+                    timeout:10000,
+                    container:"#pjax-trip",
+                  })'
             ]) ?>
-          </div>
-        </div>
-        </div>
+            <?= Html::a('Next Month',null,[
+                'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
+                'onclick'=>'
+                     $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                    $.pjax.reload({
+                    url:"'.Url::to(["/trip/index","month"=>$blnUrlPlus]).'",
+                    timeout:10000,
+                    container:"#pjax-trip",
+
+                  })'
+            ]) ?>
+            
+            </div>
+            </div>
         </div>
         <div class="tab-pane fade" id="topup">
         <div class="row">
@@ -157,8 +109,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         </div>
          <div class="col-md-2">
 
-        <?= Html::a('Update',null,[
-            'class' => 'btn material-btn material-btn_danger main-container__column material-btn_sm glyphicon glyphicon-saved',
+        <?= Html::a('Submit Status',null,[
+            'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
             'onclick'=>'
                     var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
                     return $(this).val();
@@ -193,6 +145,152 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
           
         </div>
       </div>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="edit">
+        <div class="row">
+          <?php if(Helper::checkRoute('/booking/validation')): ?>
+            <div class="col-md-2">
+            <label>Change Status</label>
+            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off','3'=>'Blocked'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
+            </div>
+            <div class="col-md-2">
+            <label>Adult Prices</label>
+            <?= MaskedInput::widget([
+            'name' => 'adult_price',
+            'id' => 'edit-adult-price',
+            'mask' => '999,999',
+            ]); ?>
+            </div>
+            <div class="col-md-2">
+              <label>Child Price</label>
+               <?= MaskedInput::widget([
+            'name' => 'child_price',
+            'id' => 'edit-child-price',
+            'mask' => '999,999',
+            ]); ?>
+            </div>
+       
+           <div class="row col-md-12">
+          <div class="col-md-2">
+            <?= Html::a(' Submit ',null,[
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
+                'onclick'=>'
+                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).val();
+                        }).get();
+
+                        var stsv = $("#drop-status").val();
+                        var stst = $("#drop-status").text();
+                        if (idtrip == "" || stsv == "") {
+                          alert("Select Trip and Status First");
+                          return false;
+                        }else{
+                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
+                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                            $.ajax({
+                                url: "'.Url::to(["change-status"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {id: idtrip, sts: stsv},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                          }else{
+                            return false;
+                          }
+                        }  
+                    '
+            ]) ?>
+          </div>
+               <div class="col-md-2  col-md-offset-1">
+            <?= Html::a(' Submit Price',null,[
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
+                'onclick'=>'
+                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).val();
+                        }).get();
+
+                        var adultprice = $("#edit-adult-price").val();
+                        var childprice = $("#edit-child-price").val();
+                        if (idtrip == "") {
+                          alert("Select Trip First");
+                          return false;
+                        }else{
+                          if (adultprice == "" && childprice == "") {
+                            alert("Please Insert Adult Or Child Price");
+                            return false;
+                          }else if(confirm("Confirm \\r\\n Price For Selected Trip will be change To custom? ")){
+                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                            $.ajax({
+                                url: "'.Url::to(["change-price"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {id: idtrip, adult: adultprice, child: childprice},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                            return true;
+                          }else{
+                            return false;
+                          }
+                        }  
+                    '
+            ]) ?>
+          </div>
+        </div>
+          <?php else: ?>
+            <div class="col-md-2">
+            <label>Change Status</label>
+            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
+            </div> 
+         <div class="row col-md-12">
+          <div class="col-md-2">
+            <?= Html::a(' Submit ',null,[
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
+                'onclick'=>'
+                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).val();
+                        }).get();
+
+                        var stsv = $("#drop-status").val();
+                        var stst = $("#drop-status").text();
+                        if (idtrip == "" || stsv == "") {
+                          alert("Select Trip and Status First");
+                          return false;
+                        }else{
+                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
+                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                            $.ajax({
+                                url: "'.Url::to(["change-status"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {id: idtrip, sts: stsv},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                          }else{
+                            return false;
+                          }
+                        }  
+                    '
+            ]) ?>
+          </div>
+        </div>
+          <?php endif; ?>
+
         </div>
         </div>
 

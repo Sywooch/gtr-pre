@@ -314,7 +314,7 @@ class SiteController extends Controller
         return TTrip::find()
         ->where(['date'=>$date])
         ->andWhere(['id_route'=>$route->id])
-        ->andWhere('t_trip.id_season IS NOT :season',['season'=>null])
+        ->andWhere('t_trip.id_price_type IS NOT :priceid',['priceid'=>null])
         ->andWhere('t_trip.stock >= :totalPax',[':totalPax'=>$totalPax])
         ->andWhere(['status'=>1])
         ->all();

@@ -131,6 +131,44 @@ class TripController extends Controller
         }
     }
 
+    public function actionChangePrice(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $idTrip = $data['id'];
+            $adult_price =  preg_replace('/\D/','',$data['adult']);
+            $child_price =  preg_replace('/\D/','',$data['child']);
+            if ($child_price == null) {
+                foreach ($idTrip as $key => $value) {
+                    $Trip                = $this->findModel($value);
+                    $Trip->adult_price   = $adult_price;
+                    $Trip->id_price_type = '2';
+                    $Trip->validate();
+                    $Trip->save(false);
+                }
+            }elseif ($adult_price == null) {
+                foreach ($idTrip as $key => $value) {
+                    $Trip                = $this->findModel($value);
+                    $Trip->child_price   = $child_price;
+                    $Trip->id_price_type = '2';
+                    $Trip->validate();
+                    $Trip->save(false);
+                }
+            }else{
+                foreach ($idTrip as $key => $value) {
+                    $Trip                = $this->findModel($value);
+                    $Trip->adult_price   = $adult_price;
+                    $Trip->child_price   = $child_price;
+                    $Trip->id_price_type = '2';
+                    $Trip->validate();
+                    $Trip->save(false);
+                }
+            }
+            return true;
+        }else{
+            return $this->goBack();
+        }
+    }
+
 protected function findTrip(){
    // $today = date
     return TTrip::find()->joinWith('idBoat.idCompany');
