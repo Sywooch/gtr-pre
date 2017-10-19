@@ -162,9 +162,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $modelBookForm = new BookForm();
-        $modelHotel = new Hotel();
-        $listCurrency = ArrayHelper::map($this->findKurs()->orderBy(['currency'=>SORT_DESC])->all(), 'currency', 'currency');
+
         $session =Yii::$app->session;
       if ($session['route'] == 'none') {
            // $session      = session_unset();
@@ -226,7 +224,9 @@ class SiteController extends Controller
         }
       $session =Yii::$app->session;
       $session->open();
-
+        $modelBookForm = new BookForm();
+        $modelHotel = new Hotel();
+        
          if ($modelBookForm->load(Yii::$app->request->post()) && $modelBookForm->validate()){
              $session->open();
              $session['currency'] = $modelBookForm->currency;
@@ -270,12 +270,15 @@ class SiteController extends Controller
             
             return $this->redirect(['result','formData'=>$formData]);
         }else{
-        
+        $listCurrency = ArrayHelper::map($this->findKurs()->orderBy(['currency'=>SORT_DESC])->all(), 'currency', 'currency');
         $route = $this->findHarbor()->all();
         foreach ($route as $key => $value) {
             $arrayRoute[] = ['id'=>$value->id,'name'=>$value->name,'island'=>$value->idIsland->island];
         }
-        $listDept = ArrayHelper::map($arrayRoute, 'id', 'name', 'island');
+       /* $bali[] = ['id'=>'1000','name'=>'Bali (All Port)','island'=>' '];
+        $mergered = ArrayHelper::merge($bali,$arrayRoute);
+        $listDept =ArrayHelper::map($mergered, 'id', 'name', 'island');*/
+         $listDept =ArrayHelper::map($arrayRoute, 'id', 'name', 'island');
         $adultList = ['1'=>'1','2','3','4','5','6','7','8','9'];
         $childList = ['0','1','2','3','4','5'];
         $now = date('d-m-Y');
@@ -320,6 +323,26 @@ class SiteController extends Controller
         ->all();
     }
 
+    protected function findTripAllBali($date,$formData,$route){
+        $totalPax = $formData['adults']+$formData['childs'];
+      foreach ($route as $keyRoute => $valRoute) {
+        $Trips [] = TTrip::find()
+        ->where(['date'=>$date])
+        ->andWhere(['id_route'=>$valRoute->id])
+        ->andWhere('id_price_type IS NOT :priceid',['priceid'=>null])
+        ->andWhere('stock >= :totalPax',[':totalPax'=>$totalPax])
+        ->andWhere(['status'=>1])
+        ->all();
+      }
+      return $Trips;
+         
+    }
+    protected function findRouteToBali($departure){
+      return TRoute::find()->joinWith('arrivalHarbor')->where(['t_harbor.id_island'=>1])->andWhere(['departure'=>$departure])->all();
+    }
+    protected function findRouteFromBali($arrival){
+      return TRoute::find()->joinWith('departureHarbor')->where(['t_harbor.id_island'=>1])->andWhere(['arrival'=>$arrival])->all();
+    }
 
     public function actionResult(){
          $session =Yii::$app->session;
@@ -327,14 +350,41 @@ class SiteController extends Controller
          $formData = Yii::$app->request->get('formData');
          $currency = $this->findKurs()->where(['currency'=>$session['currency']])->one();
          $totalPax = $formData['adults']+$formData['childs'];
-         if (($routeDeparture = $this->findRoute($formData['departurePort'],$formData['arrivalPort'])) !== null) {
+         if($formData['departurePort'] == '1000') {
+                 $routeDeparture = $this->findRouteFromBali($formData['arrivalPort']);
+                 $departureList  = $this->findTripAllBali($formData['departureDate'],$formData,$routeDeparture);
+                 if ($formData['type'] == '2') {
+                      $routeReturn    = $this->findRoute($formData['arrivalPort'],$formData['departurePort']);
+                      $returnList     = $this->findTrip($formData['returnDate'],$formData,$routeReturn);
+                  return $this->render('result',[
+                  'formData'      => $formData,
+                  'departureList' => $departureList,
+                  'returnList'    => $returnList,
+                  'currency'      => $currency,
+                  'totalPax'      => $totalPax,
+                  'session'       => $session,
+              
+                  ]);
+              }elseif ($formData['type'] == '1') {
+                      
+                  return $this->render('result-one',[
+                  'formData'      => $formData,
+                  'departureList' => $departureList,
+                  'currency'      => $currency,
+                  'totalPax'      => $totalPax,
+                  'session'       => $session,
+              
+                  ]);
+              }else{
+                  return $this->goHome();
+              }
+
+         }elseif (($routeDeparture = $this->findRoute($formData['departurePort'],$formData['arrivalPort'])) !== null) {
             $departureList  = $this->findTrip($formData['departureDate'],$formData,$routeDeparture);
          }else{
             $session['route'] = 'none';
             return $this->goHome();
          }
-         
-         
         // 1 One Way 2 Return
         if ($formData['type'] == '2') {
                 $routeReturn    = $this->findRoute($formData['arrivalPort'],$formData['departurePort']);

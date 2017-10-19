@@ -3,7 +3,6 @@
 namespace mdm\admin\controllers;
 
 use Yii;
-use common\models\TBooking;
 use mdm\admin\models\Assignment;
 use mdm\admin\models\searchs\Assignment as AssignmentSearch;
 use yii\web\Controller;
@@ -42,7 +41,6 @@ class AssignmentController extends Controller
      */
     public function behaviors()
     {
-        
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),

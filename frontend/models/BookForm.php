@@ -32,10 +32,19 @@ class BookForm extends Model
             [['departurePort', 'arrivalPort', 'adults','departureDate'], 'required'],
             [['childs','infants','type'],'integer'],
             [['currency'],'string','max'=>3],
-            [['returnDate'],'safe'],
+            ['returnDate','returnvalidate'],
             ];
     }
 
+public function returnvalidate($attribute, $params, $validator){
+    if ($this->type == "2" && $this->$attribute < $this->departureDate) {
+        $this->addError($attribute,'Please Select Valid Return');
+       return false;
+    }else{
+        return true;
+    }
+       
+}
     /**
      * @inheritdoc
      */

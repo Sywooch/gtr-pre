@@ -4,13 +4,22 @@ use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 ?>
-<?php $form = ActiveForm::begin();
+
+<?php
 $modelBookForm->arrivalPort = 4;
 $modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
-$modelBookForm->returnDate = $modelBookForm->departureDate;
+//$modelBookForm->returnDate = $modelBookForm->departureDate;
 $items =['1'=>'One Way','2'=>'Return'];
 $modelBookForm->type = 1;
+
+$customScript = <<< SCRIPT
+  $(document).ready(function(){
+    $("#div-return").css("visibility", "hidden");
+  })
+SCRIPT;
+$this->registerJs($customScript, \yii\web\View::POS_READY);
 ?>
+<?php $form = ActiveForm::begin(); ?>
 <div class="row col-md-12 col-sm-12 col-xs-12">
     <div class="col-md-2 col-sm-6 col-xs-6">
       <?= $form->field($modelBookForm, 'departurePort')->dropDownList($listDept, [
@@ -72,12 +81,10 @@ $modelBookForm->type = 1;
             
 					]); ?>
 					</div>
-					
-					<div style="visibility: hidden;" class="col-md-2 col-sm-4 col-xs-6" id="div-return">
+<?php Pjax::begin(['id'=>'pjax-return-date']); ?>					
+					<div class="col-md-2 col-sm-4 col-xs-6" id="div-return">
 <?php
-
 $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] : null;
-
  ?>
 
 					<?= $form->field($modelBookForm, 'returnDate')->widget(kato\pickadate\Pickadate::classname(), [
@@ -87,17 +94,20 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 
 					]); ?>
 					</div>
-          <div id="div-currency" class="col-md-1 col-sm-4 col-xs-6">
-                    <?= $form->field($modelBookForm, 'currency')->dropDownList($listCurrency, ['id' => 'drop-currency','class'=>'input-sm form-control']); ?>
-          
-        </div>
-					<div class="form-group col-md-12 col-sm-12 col-xs-12">
-         
-					<?= Html::submitButton(Yii::t('app', 'Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block']) ?>
-					</div>
-<?php ActiveForm::end(); ?>
 <?php 
 $this->registerJs("
+  $('#dept-date').on('change',function(){
+    $('#return-date').val(null);
+    /*$.pjax.reload({
+                container:'#pjax-return-date',
+                complete:typetrip(),
+                
+              });*/
+});
+function typetrip(){
+                $(\"#div-return\").css(\"visibility\", \"visible\");
+};
+
 $('#dept-date').pickadate({
   min: +1,
   format: 'dd-mm-yyyy',
@@ -137,3 +147,13 @@ from_picker.on('set', function(event) {
 })
   ", \yii\web\View::POS_READY);
 ?>
+<?php Pjax::end(); ?> 
+<div id="div-currency" class="col-md-1 col-sm-4 col-xs-6">
+                    <?= $form->field($modelBookForm, 'currency')->dropDownList($listCurrency, ['id' => 'drop-currency','class'=>'input-sm form-control']); ?>
+          
+        </div>
+          <div class="form-group col-md-12 col-sm-12 col-xs-12">
+         
+          <?= Html::submitButton(Yii::t('app', 'Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block']) ?>
+          </div>     
+<?php ActiveForm::end(); ?>
