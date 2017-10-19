@@ -25,7 +25,7 @@ use mdm\admin\components\Helper;
                     
                     ['label'    => 'Est Time','icon'=>'clock-o', 'url' => ['/estimation-time/index']],
                     ['label'    => 'Shuttle Area','icon'=>'map', 'url' => ['/shuttle-area/index']],
-                    ['label' => 'Kurs','icon'=>'money', 'url' => ['/kurs/index']],
+                    ['label' => 'Kurs','icon'=>'money', 'url' => ['/kurs/index'], 'visible' => Helper::checkRoute('/kurs/*')],
                     // ['label' => 'Price','icon'=>'money', 'url' => ['/shuttle-price/index']],
                     
                     ['label'    => 'Change Password','icon'=>'lock', 'url' => ['/admin/user/change-password']],
