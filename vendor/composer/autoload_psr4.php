@@ -49,6 +49,7 @@ return array(
     'dosamigos\\highcharts\\' => array($vendorDir . '/2amigos/yii2-highcharts-widget'),
     'dmstr\\' => array($vendorDir . '/dmstr/yii2-adminlte-asset'),
     'cebe\\markdown\\' => array($vendorDir . '/cebe/markdown'),
+    'bedezign\\yii2\\audit\\' => array($vendorDir . '/bedezign/yii2-audit'),
     'Webmozart\\Assert\\' => array($vendorDir . '/webmozart/assert/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),

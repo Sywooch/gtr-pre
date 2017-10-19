@@ -29,7 +29,8 @@
         "kartik-v/yii2-mpdf": "*",
         "dmstr/yii2-adminlte-asset": "2.*",
         "2amigos/yii2-highcharts-widget": "*",
-        "yiidoc/yii2-redactor": "*"
+        "yiidoc/yii2-redactor": "*",
+        "bedezign/yii2-audit": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

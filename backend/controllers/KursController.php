@@ -41,6 +41,8 @@ class KursController extends Controller
         if ($action->id == 'kurs') {
             $this->enableCsrfValidation = false;
             return parent::beforeAction($action);
+        }else{
+            return true;
         }    
     }
 

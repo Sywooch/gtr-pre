@@ -345,4 +345,13 @@ return array (
       '@yii/redactor' => '/',
     ),
   ),
+  'bedezign/yii2-audit' => 
+  array (
+    'name' => 'bedezign/yii2-audit',
+    'version' => '0.1.6.0',
+    'alias' => 
+    array (
+      '@bedezign/yii2/audit' => $vendorDir . '/bedezign/yii2-audit',
+    ),
+  ),
 );

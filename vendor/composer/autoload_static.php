@@ -82,6 +82,10 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         array (
             'cebe\\markdown\\' => 14,
         ),
+        'b' => 
+        array (
+            'bedezign\\yii2\\audit\\' => 20,
+        ),
         'W' => 
         array (
             'Webmozart\\Assert\\' => 17,
@@ -298,6 +302,10 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         'cebe\\markdown\\' => 
         array (
             0 => __DIR__ . '/..' . '/cebe/markdown',
+        ),
+        'bedezign\\yii2\\audit\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bedezign/yii2-audit',
         ),
         'Webmozart\\Assert\\' => 
         array (

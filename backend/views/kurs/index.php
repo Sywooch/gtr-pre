@@ -12,12 +12,6 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tkurs-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Tkurs'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -25,10 +19,18 @@ $this->params['breadcrumbs'][] = $this->title;
             ['class' => 'yii\grid\SerialColumn'],
 
             'currency',
-            'kurs',
-            'update_at',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+            'header'=>'Kurs IDR',
+            'value'=>function($model){
+                return "Rp ".number_format($model->kurs,0);
+            }
+            ],
+            [
+            'header'=>'Last Update',
+            'value'=>function($model){
+                return date('d-m-Y H:i:s',strtotime($model->update_at));
+            }
+            ],
         ],
     ]); ?>
 </div>

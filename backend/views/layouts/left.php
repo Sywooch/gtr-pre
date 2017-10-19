@@ -4,7 +4,7 @@ use mdm\admin\components\Helper;
 <aside class="main-sidebar">
 
     <section class="sidebar">
-    <?php if(Helper::checkRoute('/booking/validation')): ?>
+    <?php if(Helper::checkRoute('/booking/*')): ?>
         <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu sidebar-collapse'],
@@ -25,7 +25,7 @@ use mdm\admin\components\Helper;
                     
                     ['label'    => 'Est Time','icon'=>'clock-o', 'url' => ['/estimation-time/index']],
                     ['label'    => 'Shuttle Area','icon'=>'map', 'url' => ['/shuttle-area/index']],
-                    // ['label' => 'Location','icon'=>'map-marker', 'url' => ['/shuttle-location/index']],
+                    ['label' => 'Kurs','icon'=>'money', 'url' => ['/kurs/index']],
                     // ['label' => 'Price','icon'=>'money', 'url' => ['/shuttle-price/index']],
                     
                     ['label'    => 'Change Password','icon'=>'lock', 'url' => ['/admin/user/change-password']],
