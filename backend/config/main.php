@@ -28,7 +28,7 @@ return [
                 'controllerMap' => [
                     'assignment' => [
                         'class' => 'mdm\admin\controllers\AssignmentController',
-                        'userClassName' => 'app\models\User',
+                        'userClassName' => 'backend\models\User',
                         'idField' => 'id'
                     ],
                     'other' => [
