@@ -93,7 +93,7 @@ for ($d=1;$d<=$endDate;$d++) {
     if (date("d",mktime (0,0,0,$month,$d,$year)) == "Sun") {  }
       $today = date("Y-m-d",mktime (0,0,0,$month,$d,$year));
 
-      if(Helper::checkRoute('/*')){
+      if(Helper::checkRoute('/booking/*')){
            $trips = $model2->where('id_boat IS NOT :nuel',['nuel'=>null])->andWhere(['date'=>$today])->orderBy(['dept_time'=>SORT_ASC])->all();
         }else{
             $trips = $model2->where('t_company.id_user = :userid',[':userid'=>Yii::$app->user->identity->id])->andWhere(['date'=>$today])->orderBy(['dept_time'=>SORT_ASC])->all();

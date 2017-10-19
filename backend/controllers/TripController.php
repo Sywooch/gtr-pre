@@ -436,7 +436,7 @@ protected function findTrip(){
      */
     protected function findModel($id)
     {
-        if(Helper::checkRoute('/booking/validation')){
+        if(Helper::checkRoute('/booking/*')){
 
             if (($model = TTrip::findOne($id)) !== null) {
                 return $model;
