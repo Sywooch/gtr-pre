@@ -376,7 +376,8 @@ HTML;
                         var dtime = $("#form-dept-time").val();
 
                         if (start == "" || end == "" || company == "" || route == "" || dtime == "") {
-                          alert("please FIll Data");
+                          alert("Please Fill All Form Data");
+                          return false;
                         }else{
                            if(confirm("Confirm \\r\\n Data Will Be deleted And This Cannot Be Undone? ")){
                              $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");

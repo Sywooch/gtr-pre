@@ -80,16 +80,20 @@ class TripController extends Controller
     public function actionMultipleDelete(){
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post();
-            $transaction = Yii::$app->db->beginTransaction();
-            try {
-                $trips = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->orderBy(['dept_time'=>SORT_ASC])->all();
-                foreach ($trips as $key => $value) {
-                    $value->delete();
+            if ($data['company'] == null || $data['route'] == null || $data['dtime'] == null || $data['start'] == null || $data['end'] == null) {
+                return false;
+            }else{
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    $trips = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->all();
+                    foreach ($trips as $key => $value) {
+                        $value->delete();
+                    }
+                    $transaction->commit();
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
                 }
-                $transaction->commit();
-            } catch(\Exception $e) {
-                $transaction->rollBack();
-                throw $e;
             }
         }else{
             return $this->goBack();
