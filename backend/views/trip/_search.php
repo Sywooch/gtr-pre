@@ -22,7 +22,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         <li class="active"><a href="#filter" class="material-tabs__tab-link" data-toggle="tab">Filter</a></li>
         <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Stock</a></li>
         <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Update</a></li>
-        <li><a href="#delete" class="material-tabs__tab-link" data-toggle="tab">Deleted</a></li>
+        <li><a href="#delete" class="material-tabs__tab-link" data-toggle="tab">Delete</a></li>
         
     </ul>       
     <div class="tab-content materail-tabs-content">
@@ -300,6 +300,9 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         </div>
         <div class="tab-pane fade" id="delete">
         <div class="row">
+        <div class="col-md-12">
+          <h4><b>Delete using Form</b></h4>
+        </div>
           <div class="col-md-4">
 <?php 
     $layout3 = <<< HTML
@@ -401,6 +404,40 @@ HTML;
                       '
                     ]); ?>
           </div>
+          <div class="col-md-12">
+          <h4><b>Delete using CheckBox</b></h4>
+            <?= Html::a(' Delete ',null,[
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-trash',
+                'onclick'=>'
+                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).val();
+                        }).get();
+                        if (idtrip == "") {
+                          alert("Select Trip First");
+                          return false;
+                        }else{
+                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
+                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                            $.ajax({
+                                url: "'.Url::to(["delete-checkbox"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {id: idtrip},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                          }else{
+                            return false;
+                          }
+                        }  
+                    '
+            ]) ?>
+
+        </div>
         </div>
         </div>
 

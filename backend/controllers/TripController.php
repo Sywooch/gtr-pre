@@ -99,7 +99,28 @@ class TripController extends Controller
             return $this->goBack();
         }
     }
-
+    public function actionDeleteCheckbox(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $idTrip = $data['id'];
+            if($idTrip == null){
+                return false;
+            }else{
+                foreach ($idTrip as $key => $value) {
+                    $transaction = Yii::$app->db->beginTransaction();
+                    try {
+                        $Trip         = $this->findModel($value);
+                        $Trip->delete();
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
+                
+                }
+            }
+        }
+    }
     public function actionChangeStatus(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
