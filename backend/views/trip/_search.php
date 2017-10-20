@@ -4,7 +4,6 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\MaskedInput;
 use yii\helpers\Url;
-use mdm\admin\components\Helper;
 use kartik\widgets\TouchSpin;
 use kartik\widgets\DatePicker;
 use kartik\widgets\Select2;
@@ -21,8 +20,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
     <ul class="nav nav-tabs material-tabs material-tabs_primary">
         <li class="active"><a href="#filter" class="material-tabs__tab-link" data-toggle="tab">Filter</a></li>
         <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Stock</a></li>
-        <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Update</a></li>
-        <li><a href="#delete" class="material-tabs__tab-link" data-toggle="tab">Delete</a></li>
+        <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Edit</a></li>
+        <li><a href="#update" class="material-tabs__tab-link" data-toggle="tab">Update</a></li>
         
     </ul>       
     <div class="tab-content materail-tabs-content">
@@ -154,7 +153,6 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         </div>
         <div class="tab-pane fade" id="edit">
         <div class="row">
-          <?php if(Helper::checkRoute('/booking/validation')): ?>
             <div class="col-md-2">
             <label>Change Status</label>
             <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off','3'=>'Blocked'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
@@ -252,56 +250,21 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
             ]) ?>
           </div>
         </div>
-          <?php else: ?>
-            <div class="col-md-2">
-            <label>Change Status</label>
-            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
-            </div> 
-         <div class="row col-md-12">
-          <div class="col-md-2">
-            <?= Html::a(' Submit ',null,[
-                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
-                'onclick'=>'
-                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
-                        return $(this).val();
-                        }).get();
-
-                        var stsv = $("#drop-status").val();
-                        var stst = $("#drop-status").text();
-                        if (idtrip == "" || stsv == "") {
-                          alert("Select Trip and Status First");
-                          return false;
-                        }else{
-                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
-                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                            $.ajax({
-                                url: "'.Url::to(["change-status"]).'",
-                                type: "POST",
-                                async: true, 
-                                data: {id: idtrip, sts: stsv},
-                                success: function() {
-                                      $.pjax.reload({
-                                      timeout:10000,
-                                      container:"#pjax-trip",
-                                      })
-                                }, 
-                            });
-                          }else{
-                            return false;
-                          }
-                        }  
-                    '
-            ]) ?>
-          </div>
-        </div>
-          <?php endif; ?>
-
         </div>
         </div>
-        <div class="tab-pane fade" id="delete">
+      <div class="tab-pane fade" id="update">
         <div class="row">
+          <div class="panel-group material-accordion material-accordion_success" id="accordion2">
+      <div class="panel panel-default material-accordion__panel material-accordion__panel">
+        <div class="panel-heading material-accordion__heading" id="acc2_headingOne">
+          <h4 class="panel-title">
+            <a data-toggle="collapse" data-parent="#accordion2" href="#acc2_collapseOne" class="material-accordion__title">Search Form Based</a>
+          </h4>
+        </div>
+        <div id="acc2_collapseOne" class="panel-collapse collapse in material-accordion__collapse">
+          <div class="panel-body">
+            <div class="row">
         <div class="col-md-12">
-          <h4><b>Delete using Form</b></h4>
         </div>
           <div class="col-md-4">
 <?php 
@@ -369,7 +332,7 @@ HTML;
             ]); ?>
           </div>
           <div class="col-md-12">
-           <?= Html::button(' Delete Trip', [
+           <?= Html::button(' Delete', [
                     'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-trash',
                     'onclick'=>'
                         var start = $("#form-start-date").val();
@@ -404,8 +367,21 @@ HTML;
                       '
                     ]); ?>
           </div>
-          <div class="col-md-12">
-          <h4><b>Delete using CheckBox</b></h4>
+        </div>
+          </div>
+        </div>
+      </div>
+      <div class="panel panel-default material-accordion__panel">
+        <div class="panel-heading material-accordion__heading">
+          <h4 class="panel-title">
+            <a class="collapsed material-accordion__title" data-toggle="collapse" data-parent="#accordion2" href="#acc2_collapseTwo">Checkbox Based</a>
+          </h4>
+        </div>
+        <div id="acc2_collapseTwo" class="panel-collapse collapse material-accordion__collapse">
+          <div class="panel-body">
+            <div class="row">
+           <div class="col-md-12">
+          <span><b>Delete using CheckBox</b></span><br>
             <?= Html::a(' Delete ',null,[
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-trash',
                 'onclick'=>'
@@ -416,7 +392,7 @@ HTML;
                           alert("Select Trip First");
                           return false;
                         }else{
-                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
+                          if(confirm("Confirm \\r\\n Selected Trip Will Be deleted And This Cannot Be Undone? ")){
                             $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                             $.ajax({
                                 url: "'.Url::to(["delete-checkbox"]).'",
@@ -438,8 +414,13 @@ HTML;
             ]) ?>
 
         </div>
+            </div>
+          </div>
         </div>
-        </div>
-
+      </div>
+    </div>
+      </div>
+      </div>
     </div>
 </div>
+ 
