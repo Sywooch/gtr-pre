@@ -6,6 +6,9 @@ use yii\widgets\MaskedInput;
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
 use kartik\widgets\TouchSpin;
+use kartik\widgets\DatePicker;
+use kartik\widgets\Select2;
+use kato\pickadate\Pickadate;
 /* @var $this yii\web\View */
 /* @var $model common\models\TTripSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -18,7 +21,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
     <ul class="nav nav-tabs material-tabs material-tabs_primary">
         <li class="active"><a href="#filter" class="material-tabs__tab-link" data-toggle="tab">Filter</a></li>
         <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Stock</a></li>
-        <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Edit</a></li>
+        <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Update</a></li>
+        <li><a href="#delete" class="material-tabs__tab-link" data-toggle="tab">Deleted</a></li>
         
     </ul>       
     <div class="tab-content materail-tabs-content">
@@ -43,6 +47,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
               'class' => 'form-control',
               ]); ?>
             </div>
+            
             <div class="col-md-8">
             <br>
             <?= Html::button('Submit', [
@@ -84,7 +89,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         </div>
         <div class="tab-pane fade" id="topup">
         <div class="row">
-                   <div class="col-md-3">
+        <div class="col-md-3">
       <div class="col-md-12">
       <label>Update Stock</label>
         <?= TouchSpin::widget([
@@ -291,6 +296,110 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         </div>
           <?php endif; ?>
 
+        </div>
+        </div>
+        <div class="tab-pane fade" id="delete">
+        <div class="row">
+          <div class="col-md-4">
+<?php 
+    $layout3 = <<< HTML
+    {input1}
+    {separator}
+    {input2}
+    <span class="input-group-addon kv-date-remove">
+        <i id="remove-date-range" class="glyphicon glyphicon-remove"></i>
+    </span>
+HTML;
+
+        echo '<center><label class="control-label">Select date range</label></center>';
+        echo DatePicker::widget([
+            'type'          => DatePicker::TYPE_RANGE,
+            'name'          => 'start_date',
+            'name2'         => 'end_date',
+            'separator'     => '<i class="glyphicon glyphicon-resize-horizontal"></i>',
+            'options'       => ['placeholder' => 'Start date','id'=>'form-start-date'],
+            'options2'      => ['placeholder' => 'End date','id'=>'form-end-date'],
+            'layout'        => $layout3,
+            'pluginOptions' => [
+                'format' => 'yyyy-mm-dd',
+                'autoclose' => true,
+            ]
+        ]);
+        ?>
+          </div>
+          <div class="col-md-2">
+            <?php
+            echo '<label class="control-label">Company</label>';
+            echo Select2::widget([
+            'name' => 'company',
+            'data' => $listCompany,
+            'id'  =>'form-company',
+            'options' => [
+            'placeholder' => 'Select Company ...',
+            'multiple' => false
+            ],
+            ]);
+            ?>
+          </div>
+           <div class="col-md-2">
+            <?php
+            echo '<label class="control-label">Route</label>';
+            echo Html::dropDownList('route',$selected = null, $listRoute,
+              [
+               'id'=>'form-route',
+              'class' => 'form-control',
+              'prompt'=>'Chose Route ...',
+
+              ]); 
+            ?>
+          </div>
+          <div class="col-md-2">
+          <label class="control-label">Dept Time</label>
+            <?= Pickadate::widget([
+              'isTime' => true,
+              'name'=>'dept-time',
+              'id'=>'form-dept-time',
+              'pickadateOptions' => [
+                'format'=> 'H:i',
+                'interval'=>15,
+              ],
+            ]); ?>
+          </div>
+          <div class="col-md-12">
+           <?= Html::button(' Delete Trip', [
+                    'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-trash',
+                    'onclick'=>'
+                        var start = $("#form-start-date").val();
+                        var end = $("#form-end-date").val();
+                        var company = $("#form-company").val();
+                        var route = $("#form-route").val();
+                        var dtime = $("#form-dept-time").val();
+
+                        if (start == "" || end == "" || company == "" || route == "" || dtime == "") {
+                          alert("please FIll Data");
+                        }else{
+                           if(confirm("Confirm \\r\\n Data Will Be deleted And This Cannot Be Undone? ")){
+                             $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                               $.ajax({
+                                url: "'.Url::to(["multiple-delete"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {start: start, end: end, company: company, route: route, dtime: dtime},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                            }else{
+                              return false;
+                            }
+                        }
+
+                      '
+                    ]); ?>
+          </div>
         </div>
         </div>
 

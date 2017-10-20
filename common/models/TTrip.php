@@ -60,6 +60,7 @@ class TTrip extends \yii\db\ActiveRecord
         TimestampBehavior::className(),
     ];
     }
+
     /**
      * @inheritdoc
      */

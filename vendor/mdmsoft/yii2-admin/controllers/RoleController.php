@@ -4,8 +4,6 @@ namespace mdm\admin\controllers;
 
 use mdm\admin\components\ItemController;
 use yii\rbac\Item;
-use common\models\TBooking;
-use Yii;
 
 /**
  * RoleController implements the CRUD actions for AuthItem model.

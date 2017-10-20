@@ -7,7 +7,6 @@ use mdm\admin\models\Route;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 
-use common\models\TBooking;
 /**
  * Description of RuleController
  *

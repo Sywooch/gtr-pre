@@ -29,6 +29,8 @@ $endDate=date("t",mktime(0,0,0,$month,$day,$year));
     'listBulan'=>$listBulan,
     'listTahun'=>$listTahun,
     'varmonth'=>$varmonth,
+    'listCompany'=>$listCompany,
+    'listRoute'=>$listRoute,
 ]) ?>
 <?php
 $this->registerJs("

@@ -43,10 +43,10 @@ class BookingController extends Controller
         if (Yii::$app->request->isAjax) {
             $Route = $this->findAllRoute();
             $Booking = TBooking::find()->joinWith('idTrip.idBoat.idCompany');
-            if (Helper::checkRoute('/*')) {
+            if (Helper::checkRoute('/booking/*')) {
                 $Booking->where('id_status > :zero',[':zero'=>0]);
             }else{
-                $Booking->where('t_company.id_user = :iduser',[':iduser'=>Yii::$app->user->identity->id]);
+                $Booking->where('t_company.id_user = :iduser',[':iduser'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',4,5]);
             }
             foreach ($Route as $key => $value) {
                 $result = $Booking->andWhere('t_trip.id_route = :idroute',[':idroute'=>$value->id])->all();

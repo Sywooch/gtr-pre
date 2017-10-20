@@ -77,6 +77,25 @@ class TripController extends Controller
         }
     }
 
+    public function actionMultipleDelete(){
+        if (Yii::$app->request->isPost) {
+            $data = Yii::$app->request->post();
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $trips = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->orderBy(['dept_time'=>SORT_ASC])->all();
+                foreach ($trips as $key => $value) {
+                    $value->delete();
+                }
+                $transaction->commit();
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+        }else{
+            return $this->goBack();
+        }
+    }
+
     public function actionChangeStatus(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -178,11 +197,12 @@ protected function findTrip(){
      * Lists all TTrip models.
      * @return mixed
      */
-    public function actionIndex($month = null)
+    public function actionIndex($month = null,$company = null)
     {
       
         $listBulan = ['01'=>'January','02'=>'February','03'=>'March','04'=>'April','05'=>'Mei','06'=>'June','07'=>'July','08'=>'August','09'=>'September','10'=>'October','11'=>'November','12'=>'December'];
         $listTahun = ['2017-'=>'2017','2018-'=>'2018','2019-'=>'2019','2020','2021-'=>'2021'];
+        $listCompany = ArrayHelper::map($this->findCompany()->all(), 'id', 'name');
        if ($month == null) {
            $monthYear = date('Y-m-d');
        }else{
@@ -191,12 +211,19 @@ protected function findTrip(){
        }
        $model2 = $this->findTrip();
         if(Helper::checkRoute('/booking/validation')){
+            $Route = $this->findRoute();
+        foreach ($Route as $key => $value) {
+            $list[$value->id] = $value->departureHarbor->name."->".$value->arrivalHarbor->name;
+        }
+        $listRoute = $list;
             return $this->render('index', [
              //   'model'=>$model,
                 'model2'=>$model2,
                 'monthYear'=>$monthYear,
                 'listBulan'=>$listBulan,
                 'listTahun'=>$listTahun,
+                'listCompany'=>$listCompany,
+                'listRoute'=>$listRoute,
             ]);
         }else{
             return $this->render('index-supplier', [
@@ -205,6 +232,7 @@ protected function findTrip(){
                 'monthYear'=>$monthYear,
                 'listBulan'=>$listBulan,
                 'listTahun'=>$listTahun,
+                'listCompany'=>$listCompany,
             ]);
         }
     }

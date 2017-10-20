@@ -12,8 +12,8 @@ return [
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
     'modules' => [
-            'redactor' => 'yii\redactor\RedactorModule',
             
+            'redactor' => 'yii\redactor\RedactorModule',
             'gridview' =>  [
             'class' => '\kartik\grid\Module',
             // enter optional module parameters below - only if you need to  

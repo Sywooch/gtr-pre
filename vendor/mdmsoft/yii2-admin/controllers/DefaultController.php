@@ -3,8 +3,6 @@
 namespace mdm\admin\controllers;
 
 use Yii;
-use common\models\TBooking;
-
 
 /**
  * DefaultController
@@ -20,7 +18,6 @@ class DefaultController extends \yii\web\Controller
      */
     public function actionIndex($page = 'README.md')
     {
-        
         if (strpos($page, '.png') !== false) {
             $file = Yii::getAlias("@mdm/admin/{$page}");
             return Yii::$app->getResponse()->sendFile($file);

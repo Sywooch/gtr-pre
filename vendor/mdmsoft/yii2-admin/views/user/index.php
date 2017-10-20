@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-<?= Html::a('  ', '/admin/user/signup', ['class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg glyphicon glyphicon-plus']); ?>
+
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,
