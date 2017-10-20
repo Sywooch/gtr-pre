@@ -48,6 +48,15 @@ $(function(){
         }
     });
   });
+$('.trip-text').mouseenter(function(){
+  var bg = $(this).css(\"background-color\");
+  $(this).css(\"background-color\", \"yellow\");
+  $('.trip-text').mouseleave(function(){
+  $(this).css(\"background-color\", bg);
+  
+});
+});
+
     ");
  ?>   
 <?php 
@@ -123,14 +132,14 @@ for ($d=1;$d<=$endDate;$d++) {
     if (!empty($trips)) {
         foreach ($trips as $key => $value) {
           if ($value->id_season == null) {
-            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", '#detail', ['class' =>'pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", '#detail', ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
           }else{
             if ($value->status == 1) {
-              $warna_text = "pull-left text-success append text-info tip";
+              $warna_text = "trip-text pull-left text-success append text-info tip";
             }elseif ($value->status == 2) {
-              $warna_text = "pull-left text-danger append text-info tip";
+              $warna_text = "trip-text pull-left text-danger append text-info tip";
             }else{
-              $warna_text = "pull-left bg-danger text-danger append text-info tip";
+              $warna_text = "trip-text pull-left bg-danger text-danger append tip";
             }
             echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")",
            '#detail', ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
