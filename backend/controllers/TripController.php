@@ -77,6 +77,9 @@ class TripController extends Controller
         }
     }
 
+    public function actionModalUpdate(){
+            return $this->renderAjax('_update');
+    }
     public function actionMultipleDelete(){
         if (Yii::$app->request->isPost) {
             $data = Yii::$app->request->post();

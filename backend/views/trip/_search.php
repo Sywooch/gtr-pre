@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\bootstrap\Modal;
 use yii\widgets\MaskedInput;
 use yii\helpers\Url;
 use kartik\widgets\TouchSpin;
@@ -364,8 +365,14 @@ HTML;
                             }
                         }
 
-                      '
+                      ' 
                     ]); ?>
+              <?= Html::a("Update", ['modal-update'], [
+                      'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload',
+                      'data-toggle'=>"modal",
+                      'data-target'=>"#ModalUpdate",
+                      'data-title'=>"Update Data",
+                      ]); ?>
           </div>
         </div>
           </div>
@@ -423,4 +430,28 @@ HTML;
       </div>
     </div>
 </div>
+<?php
+Modal::begin([
+    'id' => 'ModalUpdate',
+    'header' => '<h4 class="modal-title">...</h4>',
+]);
  
+echo '...';
+ 
+Modal::end();
+?><?php
+$this->registerJs("
+    $('#ModalUpdate').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title') 
+        var href = button.attr('href') 
+        modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+            .done(function( data ) {
+                modal.find('.modal-body').html(data)
+            });
+        })
+");
+?>

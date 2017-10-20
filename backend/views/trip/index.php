@@ -158,7 +158,7 @@ for ($d=1;$d<=$endDate;$d++) {
           "</div></center></div>
           <div class='popover-body list-group col-lg-12' >
           <div class='col-sm-3' style='font-weight:bold;'>Date</div><div class='col-sm-9'>".date('d-m-Y',strtotime($value->date))."</div>
-          <div class='col-sm-3' style='font-weight:bold;'>Time</div><div class='col-sm-9'>".date('H:i',strtotime($value->dept_time))." (".$value->idEstTime->est_time.")</div>
+          <div class='col-sm-3' style='font-weight:bold;'>Time</div><div class='col-sm-9'>".date('H:i',strtotime($value->dept_time))."</div>
           <div class='col-sm-3' style='font-weight:bold;'>Duration</div><div class='col-sm-9'>".$value->idEstTime->est_time."</div>
           <div class='col-sm-3' style='font-weight:bold;'>Boat</div><div class='col-sm-9'>".$value->idBoat->name."</div>
           <div class='col-sm-3' style='font-weight:bold;'>Route</div><div class='col-sm-9'>".$value->idRoute->departureHarbor->name." -> ".$value->idRoute->arrivalHarbor->name."</div>
