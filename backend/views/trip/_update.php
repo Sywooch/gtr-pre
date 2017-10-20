@@ -5,16 +5,9 @@ use kato\pickadate\Pickadate;
 ?>
 <div class="row">
 
-
+<?php $form = ActiveForm::begin(['action' =>'update-multiple']); ?>
     <div id="div-dept-time" class="col-md-12">
-        <?= Pickadate::widget([
-              'isTime' => true,
-              'name'=>'update-dept-time',
-              'id'=>'form-update-dept-time',
-              'pickadateOptions' => [
-                'format'=> 'H:i',
-                'interval'=>15,
-              ],
-            ]); ?>
+        
     </div>
+<?php ActiveForm::end();?>
 </div>

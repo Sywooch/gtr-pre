@@ -367,12 +367,7 @@ HTML;
 
                       ' 
                     ]); ?>
-              <?= Html::a("Update", ['modal-update'], [
-                      'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload',
-                      'data-toggle'=>"modal",
-                      'data-target'=>"#ModalUpdate",
-                      'data-title'=>"Update Data",
-                      ]); ?>
+              <?= Html::button('Update', ['id'=>'btn-modal','class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload']); ?>
           </div>
         </div>
           </div>
@@ -431,27 +426,152 @@ HTML;
     </div>
 </div>
 <?php
-Modal::begin([
-    'id' => 'ModalUpdate',
-    'header' => '<h4 class="modal-title">...</h4>',
-]);
- 
-echo '...';
- 
-Modal::end();
-?><?php
 $this->registerJs("
-    $('#ModalUpdate').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
-        var modal = $(this)
-        var title = button.data('title') 
-        var href = button.attr('href') 
-        modal.find('.modal-title').html(title)
-        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
-        $.post(href)
-            .done(function( data ) {
-                modal.find('.modal-body').html(data)
+    $('#btn-modal').click(function(){
+        var start = $('#form-start-date').val();
+        var end = $('#form-end-date').val();
+        var company = $('#form-company').val();
+        var route = $('#form-route').val();
+        var dtime = $('#form-dept-time').val();
+      if (start == '' || end == '' || company == '' || route == '' || dtime == '') {
+          alert('Please Fill All Form Data');
+          return false;
+        }else{
+          $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false
             });
-        })
+          
+        }
+    });
+        
 ");
+?>
+<div class="modal material-modal material-modal_primary fade" id="myModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content material-modal__content">
+      <div class="modal-header material-modal__header">
+        <button class="close material-modal__close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title material-modal__title">Round Trip Detail</h4>
+      </div>
+      <div class="modal-body material-modal__body">
+        <div class="row">
+        <div class="col-md-2">
+      <label>Update Stock</label>
+        <?= TouchSpin::widget([
+              'name' => 'update-stok',
+              'id' =>'form-update-stock',
+              'pluginOptions' => [
+                'verticalbuttons' => true,
+                'initval'         => 1,
+                'min'             => 0,
+                'max'             => 100,
+                'step'            => 1,
+
+                ],
+          ]);
+
+        ?>
+        </div>
+        <div class="col-md-2">
+        <label>Dept Time</label>
+          <?= Pickadate::widget([
+              'isTime' => true,
+              'name'=>'update-dept-time',
+              'id'=>'form-update-dept-time',
+              'pickadateOptions' => [
+                'format'=> 'H:i',
+                'interval'=>15,
+              ],
+            ]); ?>
+        </div>
+
+         <div class="col-md-2">
+        <label>Est Time</label>
+          <?= Html::dropDownList('update-est-time',null, ['Wait'=>'Please Wait...'],
+              [
+              'id'=>'form-update-est-time',
+              'class' => 'form-control',
+              ]); ?>
+        </div>
+        <div class="col-md-2">
+            <label>Change Status</label>
+            <?= Html::dropDownList('update-status', $selection = null, ['1'=>'ON','2'=>'Off','3'=>'Blocked'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-update-status']); ?>
+        </div>
+       <!-- <div class="col-md-2">
+          <label>Adult Prices</label>
+          <?= MaskedInput::widget([
+            'name' => 'update-adult_price',
+            'id' => 'update-adult-price',
+            'mask' => '999,999',
+            ]); ?>
+            </div>
+        <div class="col-md-2">
+          <label>Child Price</label>
+               <?= MaskedInput::widget([
+            'name' => 'update-child_price',
+            'id' => 'update-child-price',
+            'mask' => '999,999',
+            ]); ?>
+        </div>-->
+        <div class="col-md-12">
+         <div class="col-md-9">
+        <?= Html::radioList('update-type-topup', $selection = null, $items = ['1'=>'Up','2'=>'Down'], ['id' => 'radio-update-type']); ?>
+        </div>
+        </div>
+        <div class="col-md-12">
+          <?= Html::button('Submit Changes', [
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg4 glyphicon glyphicon-trash btn-block',
+                'onclick'=>'
+                        var start = $("#form-start-date").val();
+                        var end = $("#form-end-date").val();
+                        var company = $("#form-company").val();
+                        var route = $("#form-route").val();
+                        var dtime = $("#form-dept-time").val();
+
+                        var dept = $("#form-update-dept-time").val();
+                        var est = $("#form-update-est-time").val();
+                        var stock = $("#form-update-stock").val();
+                        var sts = $("#drop-update-status").val();
+                      //  var uadult = $("#update-adult-price").val();
+                      // var uchild = $("#update-child_price").val();
+                        var type = $("#radio-update-type").val();
+
+                           if(confirm("Confirm \\r\\n Data On Filtered Will be Updated? ")){
+                             $(this).html("<center><img src=\'/spinner.svg\'></center>");
+                               $.ajax({
+                                url: "'.Url::to(["update-multiple"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type},
+                                success: function() {
+                                     location.reload();
+                                }, 
+                            });
+                            }else{
+                              return false;
+                            }
+                        
+                '
+                ]); ?>
+        </div>
+      </div>
+      <div class="modal-footer material-modal__footer">
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+<?php
+
+$this->registerJs('
+  $("#body-summary").html("<center><div class=\'col-md-12\'><img src=\'/spinner.svg\'></div></center>");
+     $.ajax({
+                url:"'.Url::to(["list-time"]).'",
+                type: "POST",
+                success:function(data){
+                    $("#form-update-est-time").html(data);
+                }
+              })', \yii\web\View::POS_READY);
 ?>

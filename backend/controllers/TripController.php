@@ -39,9 +39,52 @@ class TripController extends Controller
         ];
     }
 
-     public function actionLoadData(){
-        
+    public function actionUpdateMultiple(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $TripList = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->all();
+            if ($TripList != null) {
+                $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    foreach ($TripList as $x => $value) {
+                        if ($data['dept'] != null) {
+                            $value->dept_time = $data['dept'];
+                        }
+                        if ($data['est'] != null) {
+                            $value->id_est_time = $data['est'];
+                        }
+                        if ($data['stock'] != null && $data['type'] != null) {
+                            if ($data['type'] == '1') {
+                                $value->stock = $value->stock+$data['stock'];
+                            }elseif($data['type'] == '2'){
+                                $value->stock = $value->stock-$data['stock'];
+                            }   
+                        }
+                        if ($data['sts'] != null) {
+                            $value->status = $data['sts'];
+                        }
+                        /*if ($data['uadult'] != null) {
+                            $adult_price =  preg_replace('/\D/','',$data['uadult']);
+                            $value->adult_price = $adult_price;
+                        }
+                        if ($data['uchild'] != null) {
+                            $child_price =  preg_replace('/\D/','',$data['uchild']);
+                            $value->child_price = $child_price;
+                        }*/
+                        $value->save(false);
+                    }
+                    $transaction->commit();
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                }
+                
+            }
+        }else{
+            return $this->goBack();
+        }
     }
+
 
     protected function findBoat($type = null){
         return TBoat::find();
@@ -77,8 +120,13 @@ class TripController extends Controller
         }
     }
 
-    public function actionModalUpdate(){
-            return $this->renderAjax('_update');
+
+    public function actionListTime(){
+        $estTime = TEstTime::find()->all();
+        echo "<option value=''>Est Time ...</option>";
+        foreach ($estTime as $key => $value) {
+            echo "<option value='".$value->id."'>".$value->est_time."</option>";
+        }
     }
     public function actionMultipleDelete(){
         if (Yii::$app->request->isPost) {

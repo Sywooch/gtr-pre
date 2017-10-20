@@ -25,7 +25,7 @@ use Yii;
  * @property TRoute $idRoute
  * @property TStatusTrip $status0
  */
-class TTrip extends \yii\db\ActiveRecord
+class TTrip extends yii\base\Model
 {
     public static function tableName()
     {
@@ -58,7 +58,6 @@ class TTrip extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
             'id_boat' => Yii::t('app', 'Boat'),
             'id_company'=>Yii::t('app', 'Company'),
             'id_route' => Yii::t('app', 'Route'),
