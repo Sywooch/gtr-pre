@@ -73,8 +73,7 @@ echo '<span class="pull-left"><div class="main-container__column material-checkb
                             }
                               ',
                             ]).'<label class="material-checkbox-group__label" for="checkbox-table">Select All</label>
-                          </div></span>';
-echo 'Color Desc:</div>';
+                          </div></span></div>';
 
 echo '<table id="table-trip" align="center" class="table table-striped table-responsive">
 <thead>

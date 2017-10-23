@@ -21,7 +21,7 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
 ?>
 <?php $form = ActiveForm::begin(); ?>
 <div class="row col-md-12 col-sm-12 col-xs-12">
-    <div class="col-md-2 col-sm-6 col-xs-6">
+    <div class="col-md-2 col-sm-6 col-xs-12">
       <?= $form->field($modelBookForm, 'departurePort')->dropDownList($listDept, [
                         'id' => 'drop-dept',
                         'class'=>'input-sm form-control',
@@ -39,7 +39,7 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
                            ',*/
       ]); ?>
     </div>
-    <div class="col-md-2 col-sm-6 col-xs-6">
+    <div class="col-md-2 col-sm-6 col-xs-12">
     <?= $form->field($modelBookForm, 'arrivalPort')->dropDownList($listDept, ['id' => 'drop-arv','class'=>'input-sm form-control']); ?>
     </div>
     <div class="col-md-1 col-sm-4 col-xs-4">

@@ -427,6 +427,7 @@ HTML;
 <?php
 $this->registerJs("
     $('#btn-modal').click(function(){
+       $('.checkbox-trip').prop('checked', false);
         var start = $('#form-start-date').val();
         var end = $('#form-end-date').val();
         var company = $('#form-company').val();
@@ -446,6 +447,7 @@ $this->registerJs("
         }
     });
     $('#btn-update-checkbox').click(function(){
+
         var idtrip = $('#table-trip .checkbox-trip:checkbox:checked').map(function(){
           return $(this).val();
           }).get();
@@ -469,7 +471,7 @@ $this->registerJs("
   <div class="modal-dialog modal-lg">
     <div class="modal-content material-modal__content">
       <div class="modal-header material-modal__header">
-        <button class="close material-modal__close" data-dismiss="modal">&times;</button>
+        <button id="btn-close-modal" class="close material-modal__close" data-dismiss="modal">&times;</button>
         <h4 class="modal-title material-modal__title">Update Trip Data</h4>
       </div>
       <div class="modal-body material-modal__body">
@@ -561,6 +563,7 @@ $this->registerJs("
           <?= Html::button('Submit Changes', [
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg4 glyphicon glyphicon-trash btn-block',
                 'onclick'=>'
+
                         var start = $("#form-start-date").val();
                         var end = $("#form-end-date").val();
                         var company = $("#form-company").val();
@@ -576,6 +579,7 @@ $this->registerJs("
                         var type = $(".check:checkbox:checked").val();
                        
                            if(confirm("Confirm \\r\\n Data On Filtered Will be Updated? ")){
+                            $("#btn-close-modal").hide();
                              $(this).html("<center><img src=\'/spinner.svg\'></center>");
                                $.ajax({
                                 url: "'.Url::to(["update-multiple"]).'",
@@ -612,6 +616,7 @@ $this->registerJs("
                     return false;
                   }else{
                     if(confirm("Confirm \\r\\n Checked Data Will be Updated? ")){
+                      $("#btn-close-modal").hide();
                       $(this).html("<center><p>Plese Wait...</p><br><img src=\'/spinner.svg\'></center>");
                       $.ajax({
                       url: "'.Url::to(["update-multiple"]).'",

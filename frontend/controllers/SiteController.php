@@ -489,7 +489,25 @@ class SiteController extends Controller
      */
     public function actionAbout()
     {
-        return $this->render('about');
+       $content = $this->findOneContent(6);
+        return $this->render('about',['content'=>$content]);
+    }
+
+    public function actionHowToBook()
+    {
+       $content = $this->findOneContent(7);
+        return $this->render('about',[
+                'content'=>$content,
+                ]);
+    }
+    public function actionFaq()
+    {
+       $content = TContent::find()->where(['id_type_content'=>8])->orderBy(['updated_at'=>SORT_DESC])->all();
+        return $this->render('/faq/index',['content'=>$content]);
+    }
+
+    protected function findOneContent($id_type){
+      return TContent::findOne(['id_type_content'=>$id_type]);
     }
 
     /**

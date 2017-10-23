@@ -59,12 +59,22 @@ AppAsset::register($this);
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
+        'label' => 'Contact', 'url' => ['/site/contact'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'How To Book', 'url' => ['/site/how-to-book'],
+        'options'=>['class'=>'lis'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
         'label' => 'About', 'url' => ['/site/about'],
         'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
-        'label' => 'Contact', 'url' => ['/site/contact'],
+        'label' => 'FAQ', 'url' => ['/site/faq'],
         'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
