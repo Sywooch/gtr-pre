@@ -38,53 +38,41 @@ AppAsset::register($this);
     $menuItems = [
         
         [
-            'label' => 'Fast Boat',
-            'url' => ['/content/fastboats'],
-            'options'=>['class'=>'lis'],
-            'linkOptions'=>['class'=>'material-navbar__link'],
+        'label' => 'Fast Boat',
+        'url' => ['/content/fastboats'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'Destination', 'url' => ['/content/destinations'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'Ports', 'url' => ['/content/ports'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'Article', 'url' => ['/content/articles'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'Contact', 'url' => ['/site/contact'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'How To Book', 'url' => ['/site/how-to-book'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'About', 'url' => ['/site/about'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
         'label' => 'FAQ', 'url' => ['/site/faq'],
-        'options'=>['class'=>'lis'],
-        'linkOptions'=>['class'=>'material-navbar__link'],
-        ],
-        [
-        'label' => 'Cart ('.Yii::$app->gilitransfers->Countcart().')', 'url' => ['/book/detail-data'],
-        'options'=>['class'=>'lis'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         
     ];
+    $menuItems[] ='<li><a class="material-navbar__link" href="/book/detail-data" id="cart"><i class="fa fa-shopping-cart"></i> Cart <span class="badge">'.Yii::$app->gilitransfers->Countcart().'</span></a></li>';
     if (Yii::$app->user->isGuest) {
       //  $menuItems[] = ['label' => 'Signup', 'url' => ['/site/signup']];
       //  $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];

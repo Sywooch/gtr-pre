@@ -35,11 +35,11 @@ use yii\helpers\Html;
         </div>
       </div>
       <div class="col-md-3 col-sm-6 footer-col">
-        <h6 class="heading7">Follow Us On</h6>
+        <h6 class="heading7">Follow Us</h6>
         <ul class="footer-social">
           <!--<li><i class="fa fa-linkedin social-icon linked-in" aria-hidden="true"></i></li>-->
           <li><a target="_blank" href="https://www.facebook.com/Gilitransferscom/"><i class="fa fa-facebook social-icon facebook" aria-hidden="true"></i></a></li>
-          <!--<li><i class="fa fa-twitter social-icon twitter" aria-hidden="true"></i></li>-->
+          <li><a target="_blank" href="https://www.youtube.com/channel/UC_NtnHWVkbECkOqAB-2tWcA"><i class="fa fa-youtube social-icon youtube" aria-hidden="true"></i></a></li>
           <li><a target="_blank" href="https://plus.google.com/114019474249953149637"><i class="fa fa-google-plus social-icon google" aria-hidden="true"></i></a></li>
         </ul>
       </div>
