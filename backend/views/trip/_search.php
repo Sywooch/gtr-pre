@@ -367,7 +367,7 @@ HTML;
 
                       ' 
                     ]); ?>
-              <?= Html::button('Update', ['id'=>'btn-modal','class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload']); ?>
+              <?= Html::button(' Update', ['id'=>'btn-modal','class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload']); ?>
           </div>
         </div>
           </div>
@@ -383,7 +383,6 @@ HTML;
           <div class="panel-body">
             <div class="row">
            <div class="col-md-12">
-          <span><b>Delete using CheckBox</b></span><br>
             <?= Html::a(' Delete ',null,[
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-trash',
                 'onclick'=>'
@@ -414,7 +413,7 @@ HTML;
                         }  
                     '
             ]) ?>
-
+            <?= Html::button(' Update', ['id'=>'btn-update-checkbox','class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload']); ?>
         </div>
             </div>
           </div>
@@ -437,6 +436,25 @@ $this->registerJs("
           alert('Please Fill All Form Data');
           return false;
         }else{
+          $('#btn-modal-check').hide();
+          $('#btn-modal-form').show();
+          $('#myModal').modal({
+            backdrop: 'static',
+            keyboard: false
+            });
+          
+        }
+    });
+    $('#btn-update-checkbox').click(function(){
+        var idtrip = $('#table-trip .checkbox-trip:checkbox:checked').map(function(){
+          return $(this).val();
+          }).get();
+          if (idtrip == '') {
+            alert('Select Trip First');
+            return false;
+          }else{
+            $('#btn-modal-check').show();
+            $('#btn-modal-form').hide();
           $('#myModal').modal({
             backdrop: 'static',
             keyboard: false
@@ -452,7 +470,7 @@ $this->registerJs("
     <div class="modal-content material-modal__content">
       <div class="modal-header material-modal__header">
         <button class="close material-modal__close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title material-modal__title">Round Trip Detail</h4>
+        <h4 class="modal-title material-modal__title">Update Trip Data</h4>
       </div>
       <div class="modal-body material-modal__body">
         <div class="row">
@@ -498,7 +516,7 @@ $this->registerJs("
             <label>Change Status</label>
             <?= Html::dropDownList('update-status', $selection = null, ['1'=>'ON','2'=>'Off','3'=>'Blocked'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-update-status']); ?>
         </div>
-       <!-- <div class="col-md-2">
+        <div class="col-md-2">
           <label>Adult Prices</label>
           <?= MaskedInput::widget([
             'name' => 'update-adult_price',
@@ -513,13 +531,33 @@ $this->registerJs("
             'id' => 'update-child-price',
             'mask' => '999,999',
             ]); ?>
-        </div>-->
+        </div>
         <div class="col-md-12">
          <div class="col-md-9">
-        <?= Html::radioList('update-type-topup', $selection = null, $items = ['1'=>'Up','2'=>'Down'], ['id' => 'radio-update-type']); ?>
+         <label>Up</label>
+        <?= Html::checkbox('modal-checkbox-up', $checked = false, [
+            'value'=>'1',
+            'class' => 'check',
+            'id'=>'check-up',
+            'onchange'=>'
+              if ($(this).is(":checked")) {
+                $("#check-down").prop("checked", false);
+              }
+              ',
+            ]); ?>
+        <label>Down</label>
+        <?= Html::checkbox('modal-checkbox-down', $checked = false, [
+            'value'=>'2',
+            'class' => 'check',
+            'id'=>'check-down',
+            'onchange'=>'
+              if ($(this).is(":checked")) {
+                $("#check-up").prop("checked", false);
+              }'
+            ]); ?>
         </div>
         </div>
-        <div class="col-md-12">
+        <div style="display: none;" id="btn-modal-form" class="col-md-12">
           <?= Html::button('Submit Changes', [
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg4 glyphicon glyphicon-trash btn-block',
                 'onclick'=>'
@@ -533,24 +571,61 @@ $this->registerJs("
                         var est = $("#form-update-est-time").val();
                         var stock = $("#form-update-stock").val();
                         var sts = $("#drop-update-status").val();
-                      //  var uadult = $("#update-adult-price").val();
-                      // var uchild = $("#update-child_price").val();
-                        var type = $("#radio-update-type").val();
-
+                        var uadult = $("#update-adult-price").val();
+                        var uchild = $("#update-child-price").val();
+                        var type = $(".check:checkbox:checked").val();
+                       
                            if(confirm("Confirm \\r\\n Data On Filtered Will be Updated? ")){
                              $(this).html("<center><img src=\'/spinner.svg\'></center>");
                                $.ajax({
                                 url: "'.Url::to(["update-multiple"]).'",
                                 type: "POST",
                                 async: true, 
-                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type},
+                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type, adult: uadult, child: uchild},
                                 success: function() {
                                      location.reload();
                                 }, 
-                            });
+                              });
                             }else{
                               return false;
                             }
+                        
+                '
+                ]); ?>
+        </div>
+        <div style="display: none;" id="btn-modal-check" class="col-md-12">
+          <?= Html::button('Submit Changes', [
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg4 glyphicon glyphicon-trash btn-block',
+                'onclick'=>'
+                     var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                  return $(this).val();
+                  }).get();
+                    var dept = $("#form-update-dept-time").val();
+                    var est = $("#form-update-est-time").val();
+                    var stock = $("#form-update-stock").val();
+                    var typ = $(".check:checkbox:checked").val();
+                    var sts = $("#drop-update-status").val();
+                    var uadult = $("#update-adult-price").val();
+                    var uchild = $("#update-child-price").val();
+                  if (idtrip == "") {
+                    alert("Select Trip First");
+                    return false;
+                  }else{
+                    if(confirm("Confirm \\r\\n Checked Data Will be Updated? ")){
+                      $(this).html("<center><p>Plese Wait...</p><br><img src=\'/spinner.svg\'></center>");
+                      $.ajax({
+                      url: "'.Url::to(["update-multiple"]).'",
+                      type: "POST",
+                      async: true, 
+                      data: {idtrip: idtrip, dept: dept, est: est, stock: stock, sts: sts, type: typ, adult: uadult, child: uchild},
+                      success: function() {
+                        location.reload();
+                      }, 
+                      });
+                    }else{
+                     return false;
+                   }
+                  }
                         
                 '
                 ]); ?>
@@ -568,10 +643,10 @@ $this->registerJs("
 $this->registerJs('
   $("#body-summary").html("<center><div class=\'col-md-12\'><img src=\'/spinner.svg\'></div></center>");
      $.ajax({
-                url:"'.Url::to(["list-time"]).'",
-                type: "POST",
-                success:function(data){
-                    $("#form-update-est-time").html(data);
-                }
-              })', \yii\web\View::POS_READY);
+      url:"'.Url::to(["list-time"]).'",
+      type: "POST",
+      success:function(data){
+        $("#form-update-est-time").html(data);
+      }
+    })', \yii\web\View::POS_READY);
 ?>

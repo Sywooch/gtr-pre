@@ -42,47 +42,90 @@ class TripController extends Controller
     public function actionUpdateMultiple(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
-            $TripList = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->all();
-            if ($TripList != null) {
-                $transaction = Yii::$app->db->beginTransaction();
-                try {
-                    foreach ($TripList as $x => $value) {
-                        if ($data['dept'] != null) {
-                            $value->dept_time = $data['dept'];
+         if (!isset($data['idtrip'])) {
+                $TripList = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->all();
+
+            
+                if ($TripList != null) {
+                    $transaction = Yii::$app->db->beginTransaction();
+                    try {
+                        foreach ($TripList as $x => $value) {
+                            if ($data['dept'] != null) {
+                                $value->dept_time = $data['dept'];
+                            }
+                            if ($data['est'] != null) {
+                                $value->id_est_time = $data['est'];
+                            }
+                            if ($data['stock'] != null && isset($data['type'])) {
+                                if ($data['type'] == '1') {
+                                    $value->stock = $value->stock+$data['stock'];
+                                }elseif($data['type'] == '2'){
+                                    $value->stock = $value->stock-$data['stock'];
+                                }   
+                            }
+                            if ($data['sts'] != null) {
+                                $value->status = $data['sts'];
+                            }
+                            if ($data['adult'] != null) {
+                                $adult_price =  preg_replace('/\D/','',$data['adult']);
+                                $value->adult_price = $adult_price;
+                            }
+                            if ($data['child'] != null) {
+                                $child_price =  preg_replace('/\D/','',$data['child']);
+                                $value->child_price = $child_price;
+                            }
+                            $value->save(false);
                         }
-                        if ($data['est'] != null) {
-                            $value->id_est_time = $data['est'];
-                        }
-                        if ($data['stock'] != null && $data['type'] != null) {
-                            if ($data['type'] == '1') {
-                                $value->stock = $value->stock+$data['stock'];
-                            }elseif($data['type'] == '2'){
-                                $value->stock = $value->stock-$data['stock'];
-                            }   
-                        }
-                        if ($data['sts'] != null) {
-                            $value->status = $data['sts'];
-                        }
-                        /*if ($data['uadult'] != null) {
-                            $adult_price =  preg_replace('/\D/','',$data['uadult']);
-                            $value->adult_price = $adult_price;
-                        }
-                        if ($data['uchild'] != null) {
-                            $child_price =  preg_replace('/\D/','',$data['uchild']);
-                            $value->child_price = $child_price;
-                        }*/
-                        $value->save(false);
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
                     }
-                    $transaction->commit();
-                } catch(\Exception $e) {
-                    $transaction->rollBack();
-                    throw $e;
+                    
+                }else{
+                    return true;
                 }
-                
+            }else{
+                 $transaction = Yii::$app->db->beginTransaction();
+                    try {
+                        $TripList = $data['idtrip'];
+                        foreach ($TripList as $x => $val) {
+                            $value = $this->findModel($val);
+                            if ($data['dept'] != null) {
+                                $value->dept_time = $data['dept'];
+                            }
+                            if ($data['est'] != null) {
+                                $value->id_est_time = $data['est'];
+                            }
+                            if ($data['stock'] != null && isset($data['type'])) {
+                                if ($data['type'] == '1') {
+                                    $value->stock = $value->stock+$data['stock'];
+                                }elseif($data['type'] == '2'){
+                                    $value->stock = $value->stock-$data['stock'];
+                                }   
+                            }
+                            if ($data['sts'] != null) {
+                                $value->status = $data['sts'];
+                            }
+                            if ($data['adult'] != null) {
+                                $adult_price =  preg_replace('/\D/','',$data['adult']);
+                                $value->adult_price = $adult_price;
+                            }
+                            if ($data['child'] != null) {
+                                $child_price =  preg_replace('/\D/','',$data['child']);
+                                $value->child_price = $child_price;
+                            }
+                            $value->save(false);
+                        }
+                        $transaction->commit();
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
+                    }
             }
-        }else{
+         }else{
             return $this->goBack();
-        }
+         }
     }
 
 
