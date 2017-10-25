@@ -25,6 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 <div class="col-md-12">
+<?php 
+$userHost = Yii::$app->request->userHost;
+var_dump($userHost);
+?>
 <?php Pjax::begin(); ?>
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
