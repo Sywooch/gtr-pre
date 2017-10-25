@@ -20,6 +20,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
 <div class="panel-group material-tabs-group">
     <ul class="nav nav-tabs material-tabs material-tabs_primary">
         <li class="active"><a href="#filter" class="material-tabs__tab-link" data-toggle="tab">Filter</a></li>
+        <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Stock</a></li>
+        <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Edit</a></li>
         <li><a href="#update" class="material-tabs__tab-link" data-toggle="tab">Update</a></li>
         
     </ul>       
@@ -100,9 +102,175 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
             </div>
             </div>
         </div>
+        <div class="tab-pane fade" id="topup">
+        <div class="row">
+        <div class="col-md-3">
+      <div class="col-md-12">
+      <label>Update Stock</label>
+        <?= TouchSpin::widget([
+              'name' => 'topup-stok',
+              'id' =>'form-topup',
+              'pluginOptions' => [
+                'verticalbuttons' => true,
+                'initval'         => 1,
+                'min'             => 1,
+                'max'             => 100,
+                'step'            => 1,
+
+                ],
+          ]);
+
+        ?>
+        </div>
+        <div class="col-md-12">
+         <div class="col-md-9">
+        <?= Html::radioList('type-topup', $selection = '1', $items = ['1'=>'Up','2'=>'Down'], ['id' => 'radio-topup-type']); ?>
+
+        </div>
+         <div class="col-md-2">
+
+        <?= Html::a('Submit Status',null,[
+            'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
+            'onclick'=>'
+                    var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                    return $(this).val();
+                    }).get();
+                    var topval = $("#form-topup").val();
+                    var toptype = $("#radio-topup-type :radio:checked").val();
+                    if (idtrip == "" || topval == "") {
+                      alert("Select Trip and fill topup value First");
+                      return false;
+                    }else{
+                      if(confirm("Confirm \\r\\n Selected Trip will be Topup Stock? ")){
+                        $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                        $.ajax({
+                            url: "'.Url::to(["topup"]).'",
+                            type: "POST",
+                            async: true, 
+                            data: {id: idtrip, topup: topval, type: toptype},
+                            success: function() {
+                                  $.pjax.reload({
+                                  timeout:10000,
+                                  container:"#pjax-trip",
+                                  })
+                            }, 
+                        });
+                      }else{
+                        return false;
+                      }
+                    }  
+                '
+        ]) ?>
+       </div>
+          
+        </div>
+      </div>
+        </div>
+        </div>
+        <div class="tab-pane fade" id="edit">
+        <div class="row">
+            <div class="col-md-2">
+            <label>Change Status</label>
+            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off','3'=>'Blocked'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
+            </div>
+            <div class="col-md-2">
+            <label>Adult Prices</label>
+            <?= MaskedInput::widget([
+            'name' => 'adult_price',
+            'id' => 'edit-adult-price',
+            'mask' => '999,999',
+            ]); ?>
+            </div>
+            <div class="col-md-2">
+              <label>Child Price</label>
+               <?= MaskedInput::widget([
+            'name' => 'child_price',
+            'id' => 'edit-child-price',
+            'mask' => '999,999',
+            ]); ?>
+            </div>
+       
+           <div class="row col-md-12">
+          <div class="col-md-2">
+            <?= Html::a(' Submit ',null,[
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
+                'onclick'=>'
+                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).val();
+                        }).get();
+
+                        var stsv = $("#drop-status").val();
+                        var stst = $("#drop-status").text();
+                        if (idtrip == "" || stsv == "") {
+                          alert("Select Trip and Status First");
+                          return false;
+                        }else{
+                          if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
+                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                            $.ajax({
+                                url: "'.Url::to(["change-status"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {id: idtrip, sts: stsv},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                          }else{
+                            return false;
+                          }
+                        }  
+                    '
+            ]) ?>
+          </div>
+               <div class="col-md-2  col-md-offset-1">
+            <?= Html::a(' Submit Price',null,[
+                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
+                'onclick'=>'
+                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).val();
+                        }).get();
+
+                        var adultprice = $("#edit-adult-price").val();
+                        var childprice = $("#edit-child-price").val();
+                        if (idtrip == "") {
+                          alert("Select Trip First");
+                          return false;
+                        }else{
+                          if (adultprice == "" && childprice == "") {
+                            alert("Please Insert Adult Or Child Price");
+                            return false;
+                          }else if(confirm("Confirm \\r\\n Price For Selected Trip will be change To custom? ")){
+                            $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                            $.ajax({
+                                url: "'.Url::to(["change-price"]).'",
+                                type: "POST",
+                                async: true, 
+                                data: {id: idtrip, adult: adultprice, child: childprice},
+                                success: function() {
+                                      $.pjax.reload({
+                                      timeout:10000,
+                                      container:"#pjax-trip",
+                                      })
+                                }, 
+                            });
+                            return true;
+                          }else{
+                            return false;
+                          }
+                        }  
+                    '
+            ]) ?>
+          </div>
+        </div>
+        </div>
+        </div>
       <div class="tab-pane fade" id="update">
         <div class="row">
-          <div class="panel-group material-accordion material-accordion_warning" id="accordion2">
+          <div class="panel-group material-accordion material-accordion_success" id="accordion2">
       <div class="panel panel-default material-accordion__panel material-accordion__panel">
         <div class="panel-heading material-accordion__heading" id="acc2_headingOne">
           <h4 class="panel-title">

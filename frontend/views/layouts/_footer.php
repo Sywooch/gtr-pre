@@ -8,7 +8,7 @@ use yii\helpers\Html;
   <div class="container">
     <div class="row">
       <div class="col-md-3 col-sm-6 footer-col">
-        <div class="logofooter">Gilitransfers.com</div>
+        <div class="logofooter"><img style="height: 40px; width: auto;"  src="/img/logo.png"></div>
         <p>Transfer from Bali to Gili Trawangan, Gili Air, Gili Meno, and Lombok by Fast Boat or Flight. Easy online booking. Pay in your currency and save money.</p>
         <p><i class="fa fa-map-pin"></i> +62, Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</p>
         <p><i class="fa fa-phone"></i> Phone (Indonesia) : +62-813-5330-4990</p>
