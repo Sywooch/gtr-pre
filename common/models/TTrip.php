@@ -46,6 +46,9 @@ class TTrip extends \yii\db\ActiveRecord
     public $startDate;
     public $endDate;
     public $template;
+    public $minDate;
+    public $maxDate;
+    public $company_name;
     /**
      * @inheritdoc
      */

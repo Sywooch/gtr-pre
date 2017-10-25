@@ -5,7 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\TBooking;
 use common\models\TTrip;
-use common\models\TTripSearch;
+use app\models\TTripSearch;
 use common\models\TBoat;
 use common\models\TRoute;
 use common\models\TCompany;
@@ -37,6 +37,17 @@ class TripController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionSummaryTrip(){
+        if (Yii::$app->request->isAjax) {
+
+            $ListTrip = TTrip::find()->select('*,MIN(date) AS minDate,MAX(date) maxDate')->groupBy('id_boat,id_route,dept_time')->asArray()->orderBy(['id_route'=>SORT_ASC,'dept_time'=>SORT_ASC])->all();
+
+                echo $this->renderAjax('summary-trip',['ListTrip'=>$ListTrip]);
+        }else{
+            return $this->goHome();
+        }
     }
 
     public function actionUpdateMultiple(){
@@ -318,41 +329,52 @@ protected function findTrip(){
      */
     public function actionIndex($month = null,$company = null)
     {
-      
-        $listBulan = ['01'=>'January','02'=>'February','03'=>'March','04'=>'April','05'=>'Mei','06'=>'June','07'=>'July','08'=>'August','09'=>'September','10'=>'October','11'=>'November','12'=>'December'];
-        $listTahun = ['2017-'=>'2017','2018-'=>'2018','2019-'=>'2019','2020','2021-'=>'2021'];
-        $listCompany = ArrayHelper::map($this->findCompany()->all(), 'id', 'name');
-       if ($month == null) {
-           $monthYear = date('Y-m-d');
-       }else{
-        $monthYear = $month.'-01';
-      //  $month = '2017-10-01';
-       }
-       $model2 = $this->findTrip();
-        if(Helper::checkRoute('/booking/validation')){
-            $Route = $this->findRoute();
-        foreach ($Route as $key => $value) {
-            $list[$value->id] = $value->departureHarbor->name."->".$value->arrivalHarbor->name;
+
+       if (Yii::$app->request->isAjax || Yii::$app->request->isPjax) {
+        $request = Yii::$app->request;
+        $session = Yii::$app->session;
+        if ($request->post('company') != null) {
+            $session['filter']=[
+            'company'=>$request->post('company'),
+            'route'=>$request->post('route'),
+            'time'=>$request->post('time'),
+            ];
         }
-        $listRoute = $list;
-            return $this->render('index', [
-             //   'model'=>$model,
-                'model2'=>$model2,
-                'monthYear'=>$monthYear,
-                'listBulan'=>$listBulan,
-                'listTahun'=>$listTahun,
-                'listCompany'=>$listCompany,
-                'listRoute'=>$listRoute,
-            ]);
-        }else{
-            return $this->render('index-supplier', [
-             //   'model'=>$model,
-                'model2'=>$model2,
-                'monthYear'=>$monthYear,
-                'listBulan'=>$listBulan,
-                'listTahun'=>$listTahun,
-                'listCompany'=>$listCompany,
-            ]);
+        
+            $listBulan = ['01'=>'January','02'=>'February','03'=>'March','04'=>'April','05'=>'Mei','06'=>'June','07'=>'July','08'=>'August','09'=>'September','10'=>'October','11'=>'November','12'=>'December'];
+            $listTahun = ['2017-'=>'2017','2018-'=>'2018','2019-'=>'2019','2020','2021-'=>'2021'];
+            $listCompany = ArrayHelper::map($this->findCompany()->all(), 'id', 'name');
+           if ($month == null) {
+               $monthYear = date('Y-m-d');
+           }else{
+            $monthYear = $month.'-01';
+          //  $month = '2017-10-01';
+           }
+          
+            $model2 = $this->findTrip();
+            $Route = $this->findRoute();
+            foreach ($Route as $key => $value) {
+                $list[$value->id] = $value->departureHarbor->name."->".$value->arrivalHarbor->name;
+            }
+            $listRoute = $list;
+           
+            return $this->renderAjax('trip-schedule',[
+                    'session'=>$session,
+                    'model2'=>$model2,
+                    'monthYear'=>$monthYear,
+                    'listBulan'=>$listBulan,
+                    'listTahun'=>$listTahun,
+                    'listCompany'=>$listCompany,
+                    'listRoute'=>$listRoute,
+                    ]);
+       }else{
+            $searchModel = new TTripSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+             return $this->render('index',[
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                    ]);
+           
         }
     }
 

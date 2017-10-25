@@ -79,7 +79,7 @@ class ContentController extends Controller
         }
     }
 
-    public function actionDestinations(){
+    public function actionDestination(){
     	$listContent = $this->findByType('3');
     	if (empty($listContent)) {
     		return $this->goHome();

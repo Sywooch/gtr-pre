@@ -15,7 +15,7 @@ use kato\pickadate\Pickadate;
 $blnUrlPlus = date('Y-m',strtotime('+1 MONTH',strtotime($varmonth)));
 $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
 ?>
-        <?= Html::a('', ['create'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
+        
 
 <div class="panel-group material-tabs-group">
     <ul class="nav nav-tabs material-tabs material-tabs_primary">
@@ -55,7 +55,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 'onclick'=>'
                 var month = $("#form-bulan").val();
                 var tahun = $("#form-tahun").val();
-                 $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                 $.pjax.reload({
                 url:"'.Url::to("/trip/index").'/"+tahun+month,
                 timeout:10000,
@@ -66,20 +66,30 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
                 'onclick'=>'
                      $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                    $.pjax.reload({
+                    $.ajax({
                     url:"'.Url::to(["/trip/index","month"=>$blnUrlMin]).'",
-                    timeout:10000,
-                    container:"#pjax-trip",
+                    type: "POST",
+                    success:function(data){
+                      $("#div-schedule").html(data);
+                    },
+                    error:function(data){
+                      $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
+                    },
                   })'
             ]) ?>
             <?= Html::a('Next Month',null,[
                 'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
                 'onclick'=>'
-                     $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                    $.pjax.reload({
+                    $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
+                    $.ajax({
                     url:"'.Url::to(["/trip/index","month"=>$blnUrlPlus]).'",
-                    timeout:10000,
-                    container:"#pjax-trip",
+                    type: "POST",
+                    success:function(data){
+                      $("#div-schedule").html(data);
+                    },
+                    error:function(data){
+                      $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
+                    },
 
                   })'
             ]) ?>
