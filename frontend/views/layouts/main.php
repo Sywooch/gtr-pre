@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
   NavBar::begin([
-        'brandLabel' => 'GiliTransfers',
+        'brandLabel' => '<img style="height: 25px; width: auto;" alt="logo-navbar"  src="/img/logo.png"><br><br>',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar material-navbar material-navbar_primary navbar-fixed-top',

@@ -38,6 +38,7 @@ class BookForm extends Model
 
 public function returnvalidate($attribute, $params, $validator){
     if ($this->type == "2" && $this->$attribute < $this->departureDate) {
+        
         $this->addError($attribute,'Please Select Valid Return');
        return false;
     }else{
