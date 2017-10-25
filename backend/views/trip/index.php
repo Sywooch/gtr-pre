@@ -111,9 +111,14 @@ $this->params['breadcrumbs'][] = $this->title;
 $this->registerJs('
 $(".btn-view-schedule").on("click",function(){
 
-  var idc = $(this).attr("cid");
-  var idr = $(this).attr("route");
+  var idc  = $(this).attr("cid");
+  var idr  = $(this).attr("route");
   var time = $(this).attr("time");
+  var cb   = "btn btn-xs btn-warning glyphicon glyphicon-calendar";
+  var cl   = "fa fa-spinner fa-spin";
+  $(this).removeClass(cb);
+  $(this).addClass(cl);
+
   $("#div-schedule").html("<center>Please Wait...<br><img src=\'/spinner.svg\'></center>");
     $.ajax({
       url:"'.Url::to(["index"]).'",
@@ -126,9 +131,13 @@ $(".btn-view-schedule").on("click",function(){
       success:function(data){
         $("#div-schedule").html(data);
         $("#hidden-panel").trigger("click");
+        $(".btn-view-schedule").removeClass(cl);
+        $(".btn-view-schedule").addClass(cb);
       },
       error:function(data){
-        $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
+        $("#div-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
+        $(".btn-view-schedule").removeClass(cl);
+        $(".btn-view-schedule").addClass(cb);
       },
     });
 

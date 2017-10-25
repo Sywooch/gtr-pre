@@ -10,6 +10,7 @@ use common\models\TPassenger;
 use common\models\TRoute;
 use common\models\THarbor;
 use common\models\TMailQueue;
+use common\models\TTrip;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -41,20 +42,34 @@ class BookingController extends Controller
 
     public function actionSummary(){
         if (Yii::$app->request->isAjax) {
-            $Route = $this->findAllRoute();
+           
             $Booking = TBooking::find()->joinWith('idTrip.idBoat.idCompany');
             if (Helper::checkRoute('/booking/*')) {
+                 $Route = $this->findAllRoute();
                 $Booking->where('id_status > :zero',[':zero'=>0]);
-            }else{
-                $Booking->where('t_company.id_user = :iduser',[':iduser'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',4,5]);
-            }
-            foreach ($Route as $key => $value) {
+                foreach ($Route as $key => $value) {
                 $result = $Booking->andWhere('t_trip.id_route = :idroute',[':idroute'=>$value->id])->all();
                 echo '<li class=" col-xs-6 list-group-item material-list-group__item material-list-group__item">
                 '.$value->departureHarbor->name.' -> '.$value->arrivalHarbor->name.'
                 <span class="pull-right label label-primary material-label material-label_sm material-label_primary main-container__column">'.count($result).'</span>
                 </li>';
             }
+            }else{
+                $user = Yii::$app->user->identity->id;
+                $Trip = TTrip::find()->joinWith('idBoat.idCompany')->where('t_company.id_user = :iduser',[':iduser'=>$user])->groupBy('id_route')->all();
+                $Booking->where('t_company.id_user = :iduser',[':iduser'=>$user])->andWhere(['between','id_status',4,5]);
+
+                foreach ($Trip as $x => $val) {
+                $Route = TRoute::findOne($val->id_route);
+                $result = $Booking->andWhere('t_trip.id_route = :idroute',[':idroute'=>$Route->id])->all();
+                echo '<li class=" col-xs-6 list-group-item material-list-group__item material-list-group__item">
+                '.$Route->departureHarbor->name.' -> '.$Route->arrivalHarbor->name.'
+                <span class="pull-right label label-primary material-label material-label_sm material-label_primary main-container__column">'.count($result).'</span>
+                </li>';
+                 }
+            }
+           
+            
           
         }
     }

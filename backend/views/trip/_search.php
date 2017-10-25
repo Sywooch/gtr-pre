@@ -56,10 +56,15 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 var month = $("#form-bulan").val();
                 var tahun = $("#form-tahun").val();
                 $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                $.pjax.reload({
+                $.ajax({
                 url:"'.Url::to("/trip/index").'/"+tahun+month,
-                timeout:10000,
-                container:"#pjax-trip",
+                type: "POST",
+                    success:function(data){
+                      $("#div-schedule").html(data);
+                    },
+                    error:function(data){
+                      $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
+                    },
                 })',
                 ]); ?>
             <?= Html::a('Previous Month',null,[
@@ -634,7 +639,7 @@ $this->registerJs("
                       async: true, 
                       data: {idtrip: idtrip, dept: dept, est: est, stock: stock, sts: sts, type: typ, adult: uadult, child: uchild},
                       success: function() {
-                        location.reload();
+                                location.reload();
                       }, 
                       });
                     }else{
