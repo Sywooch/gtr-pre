@@ -51,7 +51,7 @@ class TBookingSearch extends TBooking
      */
     public function search($params)
     {
-        if(Helper::checkRoute('/*')){
+        if(Helper::checkRoute('/booking/*')){
              $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->joinWith('idTrip.idRoute');
         }else{
             $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where('t_company.id_user = :userid',[':userid'=>Yii::$app->user->identity->id])->andWhere('id_status > :idstatus',[':idstatus'=>3]);

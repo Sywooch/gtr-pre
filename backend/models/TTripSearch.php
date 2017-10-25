@@ -6,7 +6,7 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\TTrip;
-
+use mdm\admin\components\Helper;
 /**
  * TTripSearch represents the model behind the search form about `common\models\TTrip`.
  */
@@ -44,8 +44,11 @@ class TTripSearch extends TTrip
      */
     public function search($params)
     {
+        if(Helper::checkRoute('/booking/*')){
         $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
-
+        }else{
+            $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
+        }
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

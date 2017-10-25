@@ -23,7 +23,7 @@ $day=date("d");
 $endDate=date("t",mktime(0,0,0,$month,$day,$year));
 
 ?>
-<?= $this->render('_search-supplier',[
+<?= $this->render('_search',[
     'listBulan'=>$listBulan,
     'listTahun'=>$listTahun,
     'varmonth'=>$varmonth,
@@ -97,7 +97,7 @@ for ($d=1;$d<=$endDate;$d++) {
     if (date("d",mktime (0,0,0,$month,$d,$year)) == "Sun") {  }
       $today = date("Y-m-d",mktime (0,0,0,$month,$d,$year));
 
-            $trips = $model2->where('t_company.id_user = :userid',[':userid'=>Yii::$app->user->identity->id])->andWhere(['date'=>$today])->orderBy(['dept_time'=>SORT_ASC])->all();
+            $trips = $model2->where('t_company.id_user = :userid',[':userid'=>Yii::$app->user->identity->id])->andWhere(['id_company'=>$session['filter']['company'] ])->andWhere(['id_route'=>$session['filter']['route']])->andWhere(['dept_time'=>$session['filter']['time']])->andWhere(['date'=>$today])->andWhere(['date'=>$today])->orderBy(['dept_time'=>SORT_ASC])->all();
 
       
     //tanggal

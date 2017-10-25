@@ -357,8 +357,8 @@ protected function findTrip(){
                 $list[$value->id] = $value->departureHarbor->name."->".$value->arrivalHarbor->name;
             }
             $listRoute = $list;
-           
-            return $this->renderAjax('trip-schedule',[
+           if (Helper::checkRoute('/booking/validation')) {
+                return $this->renderAjax('trip-schedule',[
                     'session'=>$session,
                     'model2'=>$model2,
                     'monthYear'=>$monthYear,
@@ -367,15 +367,32 @@ protected function findTrip(){
                     'listCompany'=>$listCompany,
                     'listRoute'=>$listRoute,
                     ]);
+            }else{
+                return $this->renderAjax('supplier/trip-schedule',[
+                    'session'=>$session,
+                    'model2'=>$model2,
+                    'monthYear'=>$monthYear,
+                    'listBulan'=>$listBulan,
+                    'listTahun'=>$listTahun,
+                    'listCompany'=>$listCompany,
+                    'listRoute'=>$listRoute,
+                    ]);
+            }
        }else{
             $searchModel = new TTripSearch();
             $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-             return $this->render('index',[
+          if (Helper::checkRoute('/booking/validation')) {
+                return $this->render('index',[
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
                     ]);
-           
+            }else{
+              return $this->render('supplier/index',[
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                    ]);
         }
+            }
     }
 
     /**

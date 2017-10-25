@@ -29,7 +29,7 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
   NavBar::begin([
-        'brandLabel' => '<img style="height: 25px; width: auto;" alt="logo-navbar"  src="/img/logo.png"><br><br>',
+        'brandLabel' => '<img style="height: 25px; width: auto; margin-top:25px;" alt="logo-navbar"  src="/img/logo.png">',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar material-navbar material-navbar_primary navbar-fixed-top',
@@ -95,7 +95,7 @@ AppAsset::register($this);
 
     
  
-
+<div class="container-fluid">&nbsp</div>
     <div class="container">
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
@@ -155,6 +155,30 @@ $customCss = <<< SCRIPT
     background-color:#e74c3c;
     opacity:1;filter:"alpha(opacity=100)";
     -ms-filter:"alpha(opacity=100)";
+}
+ .navbar {
+  min-height: 80px;
+}
+
+.navbar-brand {
+  padding: 0 15px;
+  height: 80px;
+  line-height: 80px;
+}
+
+.navbar-toggle {
+  /* (80px - button height 34px) / 2 = 23px */
+  margin-top: 23px;
+  padding: 9px 10px !important;
+}
+
+@media (min-width: 768px) {
+  .navbar-nav > li > a {
+    /* (80px - line-height of 27px) / 2 = 26.5px */
+    padding-top: 26.5px;
+    padding-bottom: 26.5px;
+    line-height: 27px;
+  }
 }
 SCRIPT;
 $this->registerCss($customCss);

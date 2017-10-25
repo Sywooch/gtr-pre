@@ -78,7 +78,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                     error:function(data){
                       $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
                     },
-                  })'
+                  })',
             ]) ?>
             <?= Html::a('Next Month',null,[
                 'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
