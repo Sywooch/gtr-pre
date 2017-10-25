@@ -26,17 +26,15 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <div id="summary-grid" class="panel-collapse collapse in material-accordion__collapse">
           <div class="panel-body">
- <?php Pjax::begin(); ?>    <?= GridView::widget([
+ <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'panel'=>['type'=>'info', 'heading'=>''],
         'striped'      =>true,
         'bordered'  => true,
         'hover'        =>true,
-        'pjax'         =>true,
-        'pjaxSettings' =>[
-            'neverTimeout' =>true,
-        ],
+        'pjax'         =>false,
+       
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
              [
@@ -96,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
         ],
     ]); ?>
-<?php Pjax::end(); ?>
+
 </div>
 </div>
 </div>

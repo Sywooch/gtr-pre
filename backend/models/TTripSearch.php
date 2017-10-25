@@ -50,6 +50,7 @@ class TTripSearch extends TTrip
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination'=> ['defaultPageSize' => 10],
             'sort'=>[
                 'defaultOrder'=>[
                // 'id_boat'=>SORT_ASC,
