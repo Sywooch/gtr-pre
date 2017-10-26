@@ -19,6 +19,7 @@ class TBookingSearch extends TBooking
     public $bookdate;
     public $departure;
     public $id_route;
+    public $id_company;
     /**
      * @inheritdoc
      */
@@ -49,6 +50,68 @@ class TBookingSearch extends TBooking
      *
      * @return ActiveDataProvider
      */
+
+    public function summarySearch($params){
+        
+        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->joinWith('idTrip.idRoute')->groupBy('t_company.id,t_trip.id_route,t_trip.dept_time')->orderBy(['t_boat.id_company'=>SORT_ASC]);
+       
+
+        // add conditions that should always apply here
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'sort'=>[
+                'defaultOrder'=>[
+                'id_payment'=>SORT_ASC,
+                //'dept_time'=>SORT_ASC
+                ]
+            ]
+
+        ]);
+
+        $this->load($params);
+
+        if (!$this->validate()) {
+            // uncomment the following line if you do not want to return any records when validation fails
+            // $query->where('0=1');
+            return $dataProvider;
+        }
+
+        // grid filtering conditions
+        $query->andFilterWhere([
+            'id_trip' => $this->id_trip,
+            'id_payment' => $this->id_payment,
+            'trip_price' => $this->trip_price,
+            'total_price' => $this->total_price,
+            'total_idr' => $this->total_idr,
+            'exchange' => $this->exchange,
+            'id_status' => $this->id_status,
+            'id_payment_method' => $this->id_payment_method,
+            'send_amount' => $this->send_amount,
+            'process_by' => $this->process_by,
+            'expired_time' => $this->expired_time,
+            't_route.departure' => $this->departure,
+            't_trip.id_route' => $this->id_route,
+            't_boat.id_company'=>$this->id_company,
+        ]);
+        if ($this->date == date('Y-m-d')) {
+             $query->andFilterWhere(['>','t_trip.date',$this->date]);
+        }else{
+            $query->andFilterWhere(['t_trip.date' => $this->date]);
+        }
+
+        $query->andFilterWhere(['between', 't_trip.date', $this->startDate, $this->endDate]);
+       
+
+        $query->andFilterWhere(['like', 't_booking.id', $this->id])
+            ->andFilterWhere(['like', 'email', $this->email])
+            ->andFilterWhere(['like', 'phone', $this->phone])
+            ->andFilterWhere(['like', 'currency', $this->currency])
+            ->andFilterWhere(['like', 'token', $this->token])
+            ->andFilterWhere(['like', 't_booking.datetime', $this->bookdate]);
+
+        return $dataProvider;
+    }
     public function search($params)
     {
         if(Helper::checkRoute('/booking/*')){

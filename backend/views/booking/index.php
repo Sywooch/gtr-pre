@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
-use common\models\TPassenger;
+
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
 /* @var $this yii\web\View */
@@ -26,8 +26,6 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <div class="col-md-12">
 <?php 
-$userHost = Yii::$app->request->userHost;
-var_dump($userHost);
 ?>
 <?php Pjax::begin(); ?>
 <?= GridView::widget([
@@ -44,90 +42,139 @@ var_dump($userHost);
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
             [
-                
-                'attribute'=>'id_payment',
-                'width'=>'auto',
-                'value'=>function ($model, $key, $index, $widget) { 
-                     if(Helper::checkRoute('/*')){
-                        return "Customer <b>".$model->idPayment->name." - ".$model->idPayment->email." - ".$model->idPayment->phone."<b> <span class='label material-label material-label_xs material-label_success main-container__column'>".$model->idStatus->status."</span>";
-                     }else{
-                        return "Customer <b>".$model->idPayment->name." - ".$model->idPayment->email." - ".$model->idPayment->phone."";
-                     }
-                
-                },
-                'format'=>'raw',
-                'group'             =>true,  // enable grouping,
-                'groupedRow'        =>true,                    // move grouped column to a single grouped row
-                'groupOddCssClass'  =>'kv-grouped-row',  // configure odd group cell css class
-                'groupEvenCssClass' =>'kv-grouped-row', // configure even group cell css class
-                'groupFooter'       =>function ($model, $key, $index, $widget) { // Closure method
-                    return [
-                        'mergeColumns'=>[[0,2]], // columns to merge in summary
-                        'content'=>[             // content to show in each summary cell
-                           // 0=> $model->idPayment->name." - ".$model->idPayment->phone,
-                           // 4=>GridView::F_AVG,
-                           // 5=>GridView::F_SUM,
-                           // 6=>GridView::F_SUM,
-                        ],
-                        'contentFormats'=>[      // content reformatting for each summary cell
-                          //  4=>['format'=>'number', 'decimals'=>2],
-                           // 5=>['format'=>'number', 'decimals'=>0],
-                           // 6=>['format'=>'number', 'decimals'=>2],
-                        ],
-                        'contentOptions'=>[      // content html attributes for each summary cell
-                           // 0=>['style'=>'font-variant:small-caps'],
-                           // 4=>['style'=>'text-align:right'],
-                            //5=>['style'=>'text-align:right'],
-                            //6=>['style'=>'text-align:right'],
-                        ],
-                        // html attributes for group summary row
-                        'options'=>['class'=>'success','style'=>'font-weight:bold;']
-                    ];
-            }
-            ],
-            [
-            'header'=>'Code',
-            'value'=>'id',
+            'attribute'=>'idTrip.idBoat.id_company', 
             'width'=>'50px',
+            'value'=>function ($model, $key, $index, $widget) { 
+                return "Company ".$model->idTrip->idBoat->idCompany->name;
+            },
+            //'filterType'=>GridView::FILTER_SELECT2,
+            //'filter'=>ArrayHelper::map(Suppliers::find()->orderBy('company_name')->asArray()->all(), 'id', 'company_name'), 
+            /*'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],*/
+            //'filterInputOptions'=>['placeholder'=>'Any supplier'],
+            'group'=>true,  // enable grouping,
+            'groupedRow'=>true,                    // move grouped column to a single grouped row
+            'groupOddCssClass'=>'kv-grouped-row',  // configure odd group cell css class
+            'groupEvenCssClass'=>'kv-grouped-row', // configure even group cell css class
+            'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
+                return [
+                    'mergeColumns'=>[[0,3]], // columns to merge in summary
+                    'content'=>[             // content to show in each summary cell
+                        0=>'Summary By Company (' . $model->idTrip->idBoat->idCompany->name . ')',
+                       // 4=>GridView::F_AVG,
+                        5=>GridView::F_SUM,
+                        6=>GridView::F_SUM,
+                    ],
+                    'contentFormats'=>[      // content reformatting for each summary cell
+                        //4=>['format'=>'number', 'decimals'=>2],
+                        5=>['format'=>'number', 'decimals'=>0],
+                        6=>['format'=>'number', 'decimals'=>2],
+                    ],
+                    'contentOptions'=>[      // content html attributes for each summary cell
+                        0=>['style'=>'font-variant:small-caps'],
+                       // 4=>['style'=>'text-align:right'],
+                        5=>['style'=>'text-align:center'],
+                        6=>['style'=>'text-align:right'],
+                    ],
+                    // html attributes for group summary row
+                    'options'=>['class'=>'info','style'=>'font-weight:bold;']
+                ];
+            }
+        ],
+        [
+            'attribute'=>'idTrip.id_route', 
+            'width'=>'100px',
+            'vAlign'=>'top',
+            'value'=>function ($model, $key, $index, $widget) { 
+                return $model->idTrip->idRoute->departureHarbor->name." -> ".$model->idTrip->idRoute->arrivalHarbor->name;
+            },
+            /*'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(Categories::find()->orderBy('category_name')->asArray()->all(), 'id', 'category_name'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
             ],
-            [
-                'header'=>'Trip Description',
-                'format'=>'raw',
-                'value'=>function($model){
-                    if (!empty($model->shuttleTmp->id_booking)) {
-                        return "<b>".$model->idTrip->idBoat->idCompany->name."</b> ( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br> Required ".$model->shuttleTmp->type." in ".$model->shuttleTmp->idArea->area."-".$model->shuttleTmp->location_name."-".$model->shuttleTmp->address."-".$model->shuttleTmp->phone;
-                    }else{
-                    return "<b>".$model->idTrip->idBoat->idCompany->name."</b> ( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br>";
-                }
-                }
-            ],
-            [
-                'header'=>'Passenger',
-                'value'=>function($model){
-                  
-                    $Child = TPassenger::find()->where(['id_booking'=>$model->id])->andWhere(['id_type'=>'2'])->all();
-                    $Infant = TPassenger::find()->where(['id_booking'=>$model->id])->andWhere(['id_type'=>'3'])->all();
-                    $Adult = TPassenger::find()->where(['id_booking'=>$model->id])->andWhere(['id_type'=>'1'])->all();
-                    if ($Child == null && $Infant == null) {
-                       return count($Adult)." Adult";
-                    }elseif ($Child == null && $Infant != null) {
-                       return count($Adult)." Adult, ".count($Infant)." Infant";
-                    }elseif($Child != null && $Infant == null){
-                        return count($Adult)." Adult, ". count($Child)." Child";
-                    }else{
-                        return count($Adult)." Adult, ". count($Child)." Child, ".count($Infant)." Infant";
-                    }
-                    
-                }
-            ],
-            // 'token:ntext',
-            // 'process_by',
-            // 'expired_time',
-            // 'datetime',
+            'filterInputOptions'=>['placeholder'=>'Any category'],*/
+            'group'=>true,  // enable grouping
+            'subGroupOf'=>1, // supplier column index is the parent group,
+            'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
+                return [
+                    'mergeColumns'=>[[2, 3]], // columns to merge in summary
+                    'content'=>[              // content to show in each summary cell
+                        2=>'Summary By Route(' . $model->idTrip->idRoute->departureHarbor->name." -> ".$model->idTrip->idRoute->arrivalHarbor->name . ')',
+                       // 4=>GridView::F_AVG,
+                        5=>GridView::F_SUM,
+                        6=>GridView::F_SUM,
+                    ],
+                    'contentFormats'=>[      // content reformatting for each summary cell
+                       // 4=>['format'=>'number', 'decimals'=>2],
+                        5=>['format'=>'number', 'decimals'=>0],
+                        6=>['format'=>'number', 'decimals'=>2],
+                    ],
+                    'contentOptions'=>[      // content html attributes for each summary cell
+                       // 4=>['style'=>'text-align:right'],
+                        5=>['style'=>'text-align:center'],
+                        6=>['style'=>'text-align:right'],
+                    ],
+                    // html attributes for group summary row
+                    'options'=>['class'=>'success','style'=>'font-weight:bold;']
+                ];
+            },
+        ],
+        [
+            'attribute'=>'idTrip.dept_time',
+            'pageSummary'=>'Page Summary Bottom Of Time',
+            'pageSummaryOptions'=>['class'=>'text-right text-warning'],
+        ],
+        [
+        'class'=>'kartik\grid\ExpandRowColumn',
+        'width'=>'50px',
+        'value'=>function ($model, $key, $index, $column) {
+            return GridView::ROW_COLLAPSED;
+            },
+        'detailUrl'=>'detail',
+        'headerOptions'=>['class'=>'kartik-sheet-style'],
+        'expandOneOnly'=>true
+        ],
+        [
+            'header'=>'Jumlah Booking',
+            'width'=>'100px',
+            'hAlign'=>'center',
+            'value'=>function($model){
+                $varParam = ['id_company'=>$model->idTrip->idBoat->id_company,'id_route'=>$model->idTrip->id_route,'dept_time'=>$model->idTrip->dept_time,'date'=>$model->idTrip->date];
+                $hasil = Yii::$app->runAction('/booking/count-passenger',['var'=>$varParam]);
+                return $hasil;
+            }
+        ],
+        [
+            'attribute'=>'Adult',
+            'width'=>'50px',
+            'hAlign'=>'center',
+            'value'=>function($model){
+
+            },
+        ],
+        [
+            'attribute'=>'Child',
+            'width'=>'50px',
+            'hAlign'=>'center',
+            'value'=>function($model){
+
+            },
+        ],
+        [
+            'attribute'=>'Infant',
+            'width'=>'50px',
+            'hAlign'=>'center',
+            'value'=>function($model){
+
+            },
+        ],
+
         ],
     ]); ?>
     </div>
-<div class="col-md-12">
+<!--<div class="col-md-12">
 <div class=" col-md-8 panel panel-default material-panel material-panel_warning">
             <h5 class="panel-heading material-panel__heading">Summary Passengers</h5>
             <div id="body-summary" class="panel-body material-panel__body">
@@ -136,10 +183,14 @@ var_dump($userHost);
 
 </div>
 </div>
-</div>
+</div>-->
 <?php Pjax::end(); ?>
 </div>
 <?php 
+/*foreach ($dataProvider as $key => $value) {
+    var_dump($value);
+}
+//echo var_dump($dataProvider);
 $this->registerJs('
     $("#body-summary").html("<center><div class=\'col-md-12\'><img src=\'/spinner.svg\'></div></center>");
      $.ajax({
@@ -149,5 +200,5 @@ $this->registerJs('
                     $("#body-summary").html(data);
                 }
               })
-    ');
+    ');*/
 ?>

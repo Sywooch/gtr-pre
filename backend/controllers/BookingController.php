@@ -36,6 +36,26 @@ class BookingController extends Controller
         ];
     }
 
+    public function actionCountPassenger(array $var){
+        $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->count();
+        return $modelBooking;
+
+    }
+    public function actionDetail(){
+        if (isset($_POST['expandRowKey'])) {
+            $model = $this->findModel($_POST['expandRowKey']);
+            $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$model->idTrip->idBoat->id_company])->andWhere(['t_trip.id_route'=>$model->idTrip->id_route])->andWhere(['t_trip.date'=>$model->idTrip->date])->andWhere(['t_trip.dept_time'=>$model->idTrip->dept_time])->all();
+           //$modelPassenger = TPassenger::find();
+            return $this->renderAjax('_detail-booking', [
+                'modelBooking'=>$modelBooking,
+                //'modelPassenger'=> $modelPassenger,
+                //'mode'
+                ]);
+        } else {
+            return '<div class="alert alert-danger">No data found</div>';
+        }
+    }
+
     protected function findAllRoute(){
         return TRoute::find()->all();
     }
@@ -54,7 +74,8 @@ class BookingController extends Controller
                 <span class="pull-right label label-primary material-label material-label_sm material-label_primary main-container__column">'.count($result).'</span>
                 </li>';
             }
-            }else{
+            }
+            /*else{
                 $user = Yii::$app->user->identity->id;
                 $Trip = TTrip::find()->joinWith('idBoat.idCompany')->where('t_company.id_user = :iduser',[':iduser'=>$user])->groupBy('id_route')->all();
                 $Booking->where('t_company.id_user = :iduser',[':iduser'=>$user])->andWhere(['between','id_status',4,5]);
@@ -67,7 +88,7 @@ class BookingController extends Controller
                 <span class="pull-right label label-primary material-label material-label_sm material-label_primary main-container__column">'.count($result).'</span>
                 </li>';
                  }
-            }
+            }*/
            
             
           
@@ -84,16 +105,10 @@ protected function findAllBooking(){
     public function actionIndex()
     {
         $searchModel = new TBookingSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->summarySearch(Yii::$app->request->queryParams);
         $findPassengers = TPassenger::find();
-        $portModel = THarbor::find()->all();
+        $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
 
-        foreach ($portModel as $key => $value) {
-            $arrayHarbor[] = ['id'=>$value->id,'name'=>$value->name,'island'=>$value->idIsland->island];
-        }
-        $listDept = ArrayHelper::map($arrayHarbor, 'id', 'name', 'island');
-
-       // $bookingList = ;
         foreach ($this->findAllBooking() as $key => $value) {
             $res[] = $value->id;
         }

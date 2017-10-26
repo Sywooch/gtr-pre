@@ -151,7 +151,7 @@ public function generateBookingNumber($attribute, $length = 4){
      */
     public function getTShuttles()
     {
-        return $this->hasOne(TShuttle::className(), ['id_booking' => 'id']);
+        return $this->hasOne(TShuttleLocationTmp::className(), ['id_booking' => 'id']);
     }
     public function getShuttleTmp()
     {
