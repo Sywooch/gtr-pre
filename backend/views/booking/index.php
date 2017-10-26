@@ -10,6 +10,7 @@ use mdm\admin\components\Helper;
 /* @var $searchModel app\models\TBookingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
+
 $this->title = 'Booking Data';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
