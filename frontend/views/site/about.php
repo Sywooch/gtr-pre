@@ -12,7 +12,7 @@ $userIP = Yii::$app->request->userIP;
 
 echo "User Host = ".$userHost."<br>";
 echo "IP = ".$userIP;
-$info = file_get_contents('http://freegeoip.net/json/125.167.68.186');
+$info = file_get_contents('http://freegeoip.net/json/'.$userIP);
 echo "This Visitor Info<br><br>";
 $dec = Json::decode($info);
 var_dump($dec['country_name']);
