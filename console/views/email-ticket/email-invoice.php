@@ -141,7 +141,7 @@
                         <tbody><tr valign="bottom">    
                             <td style="border-bottom:2px solid black;" width="20" valign="top" align="center"> </td>
                             <td style="border-bottom:2px solid black;" height="64" align="left">
-                                <img alt="Logo" style="width:85%; height:85%;" src="http://traviora.com/traviora.png"  border="0"><br><br>
+                                <img alt="Logo" style="width:85%; height:85%;" src="http://book.istanatravel.com/img/logo.png"  border="0"><br><br>
                             </td>   
                             <td style="border-bottom:2px solid black;" width="40" valign="top" align="center"> </td>
                             <td style="border-bottom:2px solid black;" align="right">
@@ -290,7 +290,26 @@ IDR <?= $modelPayment->total_payment_idr ?>
 </table>
 
 <!--  COntent End-->
-
+<br><br>
+<b style="padding-top: 10px; padding-bottom: 5px; font-size: 15px;"><center>you can make payment on the following account</center></b>
+<table width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
+<thead>
+  <tr>
+    <th style="border-top:2px solid #37474F; border-bottom:2px solid #37474F; border-right:none;border-left:none;padding:10px 5px 10px 5px;">No</th>
+    <th style="border-top:2px solid #37474F; border-bottom:2px solid #37474F; border-right:none;border-left:none;padding:10px 5px 10px 5px;">Owner Name</th>
+    <th style="border-top:2px solid #37474F; border-bottom:2px solid #37474F; border-right:none;border-left:none;padding:10px 5px 10px 5px;">Account Number</th>
+    <th style="border-top:2px solid #37474F; border-bottom:2px solid #37474F; border-right:none;border-left:none;padding:10px 5px 10px 5px;">Bank Name</th>
+  </tr>
+</thead>
+<tbody>
+  <tr>
+    <td style="text-align: center; padding:5px 2px 2px 5px;">1</td>
+    <td style="text-align: center; padding:5px 2px 2px 5px;">CV Istana Media</td>
+    <td style="text-align: center; padding:5px 2px 2px 5px;">1750000113976</td>
+    <td style="text-align: center; padding:5px 2px 2px 5px;">Bank Mandiri</td>
+  </tr>
+</tbody>
+</table>
 <table style="border-top: 1px solid #ccc;border-bottom: 1px solid #ccc;color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px;margin-bottom:10px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0" align="center">
 <tbody><tr>
 <td>

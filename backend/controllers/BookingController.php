@@ -36,6 +36,15 @@ class BookingController extends Controller
         ];
     }
 
+    public function actionDetailModal($id_booking){
+        $modelBooking = $this->findModel($id_booking);
+        if(Helper::checkRoute('/booking/*')){
+            return $this->renderAjax('_modal-detail-booking',['modelBooking'=>$modelBooking]);
+        }else{
+            return $this->renderAjax('supplier/_modal-detail-booking',['modelBooking'=>$modelBooking]);
+        }
+    }
+
     public function actionCountPassenger(array $var){
         $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->count();
         return $modelBooking;
@@ -265,10 +274,11 @@ protected function findAllBooking(){
      */
     protected function findModel($id)
     {
-        if (($model = TBooking::findOne($id)) !== null) {
-            return $model;
-        } else {
-            throw new NotFoundHttpException('The requested page does not exist.');
+        if(Helper::checkRoute('/booking/*')){
+            return TBooking::findOne($id);           
+        }else{
+
+            return TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['t_booking.id'=>$id])->one();
         }
     }
 }

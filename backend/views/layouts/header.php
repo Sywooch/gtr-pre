@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-
+use mdm\admin\components\Helper;
 /* @var $this \yii\web\View */
 /* @var $content string */
 ?>
@@ -18,7 +18,7 @@ use yii\helpers\Html;
         <div class="navbar-custom-menu">
 
             <ul class="nav navbar-nav">
-
+            <?php if(Helper::checkRoute('/booking/*')): ?>
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
@@ -61,7 +61,7 @@ use yii\helpers\Html;
                         <li class="footer"><a href="/booking/validation">View all</a></li>
                     </ul>
                 </li>
-               
+               <?php endif; ?>
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="<?= $directoryAsset ?>/img/user2-160x160.jpg" class="user-image" alt="User Image"/>

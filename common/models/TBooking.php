@@ -32,6 +32,9 @@ use Yii;
  */
 class TBooking extends \yii\db\ActiveRecord
 {
+    const PASSENGER_ADULT  = '1';
+    const PASSENGER_CHILD  = '2';
+    const PASSENGER_INFANT = '3';
     /**
      * @inheritdoc
      */
@@ -145,7 +148,26 @@ public function generateBookingNumber($attribute, $length = 4){
         return $this->hasOne(TTrip::className(), ['id' => 'id_trip']);
     }
 
-
+    public function getTPassengers()
+    {
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->orderBy(['id_type' => SORT_ASC]);
+    }
+    public function getAffectedPassengers()
+    {
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['!=','id_type',self::PASSENGER_INFANT]);
+    }
+    public function getAdultPassengers()
+    {
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::PASSENGER_ADULT]);
+    }
+    public function getChildPassengers()
+    {
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::PASSENGER_CHILD]);
+    }
+    public function getInfantPassengers()
+    {
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::PASSENGER_INFANT]);
+    }
     /**
      * @return \yii\db\ActiveQuery
      */
