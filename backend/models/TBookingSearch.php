@@ -55,10 +55,11 @@ class TBookingSearch extends TBooking
 
     public function summarySearch($params){
         if(Helper::checkRoute('/booking/*')){
-        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->joinWith('idTrip.idRoute')->where(['between','id_status',self::STATUS_VALIDATION,self::STATUS_RESCHEDULE])->groupBy('t_company.id,t_trip.id_route,t_trip.dept_time')->orderBy(['t_boat.id_company'=>SORT_ASC]);
+        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->joinWith('idTrip.idRoute')->where(['between','id_status',self::STATUS_VALIDATION,self::STATUS_RESCHEDULE]);
        }else{
-        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->joinWith('idTrip.idRoute')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',self::STATUS_VALIDATION,self::STATUS_RESCHEDULE])->groupBy('t_company.id,t_trip.id_route,t_trip.dept_time')->orderBy(['t_boat.id_company'=>SORT_ASC]);
+        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->joinWith('idTrip.idRoute')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',self::STATUS_VALIDATION,self::STATUS_RESCHEDULE]);
        }
+       $query->groupBy('t_company.id,t_trip.id_route,t_trip.dept_time')->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
 
         // add conditions that should always apply here
 

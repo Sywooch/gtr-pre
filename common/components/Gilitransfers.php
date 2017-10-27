@@ -33,6 +33,9 @@ class Gilitransfers extends Component{
           
 		}
 	}
+	public function trackFrontendVisitor(){
+		
+	}
 	
 }
 ?>
