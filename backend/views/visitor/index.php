@@ -14,10 +14,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-    <p>
-        <?= Html::a(Yii::t('app', 'Create Tvisitor'), ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -30,12 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'city',
             'idTimezone.timezone',
             'url:ntext',
-            'user_agent:ntext',
             'created_at:datetime',
             'updated_at:datetime',
             'latitude',
             'longitude',
-          
+            'user_agent:ntext',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
