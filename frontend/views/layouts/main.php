@@ -201,15 +201,14 @@ var_dump($infoArray);
 echo "<br><br>URL = ".$url;
 $modelVisitor = new TVisitor();
 $modelVisitor->ip = $infoArray['ip'];
-$modelVisitor->id_country = $infoArray['country_code'];
+$modelVisitor->id_country = "US";
 $modelVisitor->region = $infoArray['region_name'];
 $modelVisitor->id_timezone = $modelVisitor->findTimeZone($infoArray['time_zone']);
 $modelVisitor->latitude = $infoArray['latitude'];
 $modelVisitor->longitude = $infoArray['longitude'];
 $modelVisitor->url = $url;
 $modelVisitor->user_agent = $userAgent;
-$modelVisitor->save();
-// /$modelVisitor->
+$modelVisitor->save(false);
 ?>
 </div>
 <?= $this->render('_footer'); ?>

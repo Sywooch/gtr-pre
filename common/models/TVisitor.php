@@ -96,10 +96,10 @@ class TVisitor extends \yii\db\ActiveRecord
     }
 
     public function findTimeZone($time_zone){
-        if (($modelTimezone = TTimezone::find()->where(['timezone'=>$time_zone])->one()) !== null) {
-            return $modelTimezone;
+        if (($modelTimezone = TTimezone::find()->where(['timezone'=>$time_zone])->one()) != null) {
+            return $modelTimezone->id;
         }else{
-            return null;
+            return '0';
         }
     }
 }
