@@ -45,6 +45,7 @@ class ContentController extends Controller
 
      public function actionThumbnail($slug)
     {
+         $this->layout = 'empty-layout';
         $model = $this->findModel($slug);
         $response = Yii::$app->getResponse();
         return $response->sendFile($model->thumbnail,'thumbnail.jpg', [

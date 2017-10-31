@@ -46,8 +46,8 @@ class TVisitor extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['ip', 'id_country', 'region', 'city', 'id_timezone', 'latitude', 'longitude', 'url', 'user_agent', 'created_at', 'updated_at'], 'required'],
-            [['id_timezone', 'created_at', 'updated_at'], 'integer'],
+            [['ip', 'id_country', 'region', 'city', 'id_timezone', 'latitude', 'longitude', 'url', 'user_agent'], 'required'],
+            [['id_timezone'], 'integer'],
             [['url', 'user_agent'], 'string'],
             [['ip'], 'string', 'max' => 20],
             [['id_country'], 'string', 'max' => 2],
