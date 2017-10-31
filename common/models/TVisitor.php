@@ -10,11 +10,19 @@ use yii\behaviors\TimestampBehavior;
  *
  * @property integer $id
  * @property string $ip
- * @property string $dns
+ * @property string $id_country
+ * @property string $region
+ * @property string $city
+ * @property integer $id_timezone
+ * @property string $latitude
+ * @property string $longitude
+ * @property string $url
  * @property string $user_agent
  * @property integer $created_at
  * @property integer $updated_at
- * @property string $last_page
+ *
+ * @property TCountry $idCountry
+ * @property TTimezone $idTimezone
  */
 class TVisitor extends \yii\db\ActiveRecord
 {
@@ -25,23 +33,28 @@ class TVisitor extends \yii\db\ActiveRecord
     {
         return 't_visitor';
     }
-
-    public function behaviors()
-    {
-    return [
-        TimestampBehavior::className(),
-    ];
+    public function behaviors() 
+    { 
+        return [ 
+            TimestampBehavior::className(), 
+        ]; 
     }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['ip', 'dns', 'user_agent', 'last_page','country'], 'required'],
-            [['user_agent'], 'string'],
-            [['ip', 'dns'], 'string', 'max' => 20],
-            [['last_page','country'], 'string', 'max' => 100],
+            [['ip', 'id_country', 'region', 'city', 'id_timezone', 'latitude', 'longitude', 'url', 'user_agent', 'created_at', 'updated_at'], 'required'],
+            [['id_timezone', 'created_at', 'updated_at'], 'integer'],
+            [['url', 'user_agent'], 'string'],
+            [['ip'], 'string', 'max' => 20],
+            [['id_country'], 'string', 'max' => 2],
+            [['region', 'city'], 'string', 'max' => 50],
+            [['latitude', 'longitude'], 'string', 'max' => 25],
+            [['id_country'], 'exist', 'skipOnError' => true, 'targetClass' => TCountry::className(), 'targetAttribute' => ['id_country' => 'id']],
+            [['id_timezone'], 'exist', 'skipOnError' => true, 'targetClass' => TTimezone::className(), 'targetAttribute' => ['id_timezone' => 'id']],
         ];
     }
 
@@ -52,13 +65,41 @@ class TVisitor extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'country' => Yii::t('app', 'Country'),
             'ip' => Yii::t('app', 'Ip'),
-            'dns' => Yii::t('app', 'Dns'),
+            'id_country' => Yii::t('app', 'Id Country'),
+            'region' => Yii::t('app', 'Region'),
+            'city' => Yii::t('app', 'City'),
+            'id_timezone' => Yii::t('app', 'Id Timezone'),
+            'latitude' => Yii::t('app', 'Latitude'),
+            'longitude' => Yii::t('app', 'Longitude'),
+            'url' => Yii::t('app', 'Url'),
             'user_agent' => Yii::t('app', 'User Agent'),
-            'created_at' => Yii::t('app', 'In Time'),
-            'updated_at' => Yii::t('app', 'Out Time'),
-            'last_page' => Yii::t('app', 'Last Page'),
+            'created_at' => Yii::t('app', 'Created At'),
+            'updated_at' => Yii::t('app', 'Updated At'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdCountry()
+    {
+        return $this->hasOne(TCountry::className(), ['id' => 'id_country']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdTimezone()
+    {
+        return $this->hasOne(TTimezone::className(), ['id' => 'id_timezone']);
+    }
+
+    public function findTimeZone($time_zone){
+        if (($modelTimezone = TTimezone::find()->where(['timezone'=>$time_zone])->one()) !== null) {
+            return $modelTimezone;
+        }else{
+            return null;
+        }
     }
 }

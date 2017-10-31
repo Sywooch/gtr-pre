@@ -7,7 +7,8 @@ use yii\helpers\Url;
 $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nusa Lembongan';
 
 ?>
-  
+ <div class="row"> 
+<div class="col-md-12">
       <div class="panel-group material-tabs-group">
       <h4 class="panel-heading"><center>Booking Form</center></h4>
         <ul class="nav nav-tabs material-tabs material-tabs_primary">
@@ -17,6 +18,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
         <div class="tab-content materail-tabs-content">
           <div class="tab-pane fade active in" id="fastboats">
             <div class="row"> 
+
             <?= $this->render('_form-fastboat.php',[
             'modelBookForm'=>$modelBookForm,
             'listDept'=>$listDept,
@@ -37,7 +39,8 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
           </div>
         </div>
       </div>
-
+</div>
+</div>
   <div class="panel-group material-tabs-group">
         <ul class="nav nav-tabs material-tabs material-tabs_primary">
           <li class="active bar"><a href="#fastboat" class="material-tabs__tab-link" data-toggle="tab">FastBoat</a></li>

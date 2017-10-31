@@ -1,6 +1,6 @@
 <?php
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use kartik\form\ActiveForm;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
 ?>
@@ -18,11 +18,12 @@ $customScript = <<< SCRIPT
   })
 SCRIPT;
 $this->registerJs($customScript, \yii\web\View::POS_READY);
+$layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphicon-map-marker"></i>']]];
 ?>
 <?php $form = ActiveForm::begin(); ?>
 <div class="row col-md-12 col-sm-12 col-xs-12">
-    <div class="col-md-2 col-sm-6 col-xs-12">
-      <?= $form->field($modelBookForm, 'departurePort')->dropDownList($listDept, [
+    <div class="col-md-3 col-sm-6 col-xs-12">
+      <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->dropDownList($listDept, [
                         'id' => 'drop-dept',
                         'class'=>'input-sm form-control',
                        /* 'onchange'=>'
@@ -39,8 +40,8 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
                            ',*/
       ]); ?>
     </div>
-    <div class="col-md-2 col-sm-6 col-xs-12">
-    <?= $form->field($modelBookForm, 'arrivalPort')->dropDownList($listDept, ['id' => 'drop-arv','class'=>'input-sm form-control']); ?>
+    <div class="col-md-3 col-sm-6 col-xs-12">
+    <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->dropDownList($listDept, ['id' => 'drop-arv','class'=>'input-sm form-control']); ?>
     </div>
     <div class="col-md-1 col-sm-4 col-xs-4">
     <?= $form->field($modelBookForm, 'adults')->dropDownList($adultList, ['id' => 'drop-adult','class'=>'input-sm form-control']); ?>
@@ -68,7 +69,7 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
                           $("#div-currency").addClass("col-xs-6");
                      		}
                      		',
-                     		])->label(''); ?>
+                     		])->label(false); ?>
                     </div>
 					<div class="col-md-2 col-sm-4 col-xs-6">
 					<?= $form->field($modelBookForm, 'departureDate')->widget(kato\pickadate\Pickadate::classname(), [

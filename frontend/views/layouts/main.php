@@ -43,7 +43,7 @@ AppAsset::register($this);
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
-        'label' => 'Destination', 'url' => ['/content/destinations'],
+        'label' => 'Destination', 'url' => ['/content/destination'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
@@ -184,7 +184,34 @@ SCRIPT;
 $this->registerCss($customCss);
 
 ?>
+<div class="container">
+<?php
+use yii\helpers\Json;
+use common\models\TVisitor;
 
+$userAgent = Yii::$app->request->userAgent;
+$userIP = Yii::$app->request->userIP;
+$url = Yii::$app->request->url;
+echo "User Host = ".$userAgent."<br>";
+echo "IP = ".$userIP;
+$info = file_get_contents('http://freegeoip.net/json/'.$userIP);
+echo "This Visitor Info<br><br>";
+$infoArray = Json::decode($info);
+var_dump($infoArray);
+echo "<br><br>URL = ".$url;
+$modelVisitor = new TVisitor();
+$modelVisitor->ip = $infoArray['ip'];
+$modelVisitor->id_country = $infoArray['country_code'];
+$modelVisitor->region = $infoArray['region_name'];
+$modelVisitor->id_timezone = $modelVisitor->findTimeZone($infoArray['time_zone']);
+$modelVisitor->latitude = $infoArray['latitude'];
+$modelVisitor->longitude = $infoArray['longitude'];
+$modelVisitor->url = $url;
+$modelVisitor->user_agent = $userAgent;
+$modelVisitor->save();
+// /$modelVisitor->
+?>
+</div>
 <?= $this->render('_footer'); ?>
 
 <!--<footer class="footer">
