@@ -7,7 +7,8 @@ use common\models\TCart;
 use common\models\TContent;
 use yii\helpers\Html;
 use Yii;
-
+use yii\helpers\Json;
+use common\models\TVisitor;
 
 class Gilitransfers extends Component{
 	public $content;
@@ -33,9 +34,33 @@ class Gilitransfers extends Component{
           
 		}
 	}
-	public function trackFrontendVisitor(){
+	public function trackFrontendVisitor($url){
+		$userAgent = Yii::$app->request->userAgent;
+		$userIP = Yii::$app->request->userIP;
+
+		$info = file_get_contents('http://freegeoip.net/json/'.$userIP);
+		$infoArray = Json::decode($info);
+		$transaction = Yii::$app->db->beginTransaction();
+		try {
+			$modelVisitor = new TVisitor();
+			$modelVisitor->ip = $infoArray['ip'];
+			$modelVisitor->id_country = "US";
+			$modelVisitor->region = $infoArray['region_name'];
+			$modelVisitor->city = $infoArray['city'];
+			$modelVisitor->id_timezone = $modelVisitor->findTimeZone($infoArray['time_zone']);
+			$modelVisitor->latitude = $infoArray['latitude'];
+			$modelVisitor->longitude = $infoArray['longitude'];
+			$modelVisitor->url = $url;
+			$modelVisitor->user_agent = $userAgent;
+			$modelVisitor->save(false);
+		    $transaction->commit();
+		} catch(\Exception $e) {
+		    $transaction->rollBack();
+		    throw $e;
+		}
 		
 	}
+
 	
 }
 ?>

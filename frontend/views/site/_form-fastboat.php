@@ -149,8 +149,8 @@ from_picker.on('set', function(event) {
   ", \yii\web\View::POS_READY);
 ?>
 <?php Pjax::end(); ?> 
-<div id="div-currency" class="col-md-1 col-sm-4 col-xs-6">
-                    <?= $form->field($modelBookForm, 'currency')->dropDownList($listCurrency, ['id' => 'drop-currency','class'=>'input-sm form-control']); ?>
+<div id="div-currency" class="col-md-2 col-sm-4 col-xs-6">
+                    <?= $form->field($modelBookForm, 'currency',['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphicon-usd"></i>']]])->dropDownList($listCurrency, ['id' => 'drop-currency','class'=>'input-sm form-control']); ?>
           
         </div>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">

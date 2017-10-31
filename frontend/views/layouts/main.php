@@ -9,6 +9,7 @@ use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
+use yii\helpers\Url;
 
 AppAsset::register($this);
 ?>
@@ -121,7 +122,8 @@ AppAsset::register($this);
     $('#btn-scroll').click(function(){ 
         $("html, body").animate({ scrollTop: 0 }, 600); 
         return false; 
-    }); 
+    });
+
 SCRIPT;
 $this->registerJs($customScript, \yii\web\View::POS_READY); 
 
@@ -182,36 +184,8 @@ $customCss = <<< SCRIPT
 }
 SCRIPT;
 $this->registerCss($customCss);
-
+//$test = Yii::$app->gilitransfers->trackFrontendVisitor();
 ?>
-<div class="container">
-<?php
-use yii\helpers\Json;
-use common\models\TVisitor;
-
-$userAgent = Yii::$app->request->userAgent;
-$userIP = Yii::$app->request->userIP;
-$url = Yii::$app->request->url;
-echo "User Host = ".$userAgent."<br>";
-echo "IP = ".$userIP;
-$info = file_get_contents('http://freegeoip.net/json/'.$userIP);
-echo "This Visitor Info<br><br>";
-$infoArray = Json::decode($info);
-var_dump($infoArray);
-echo "<br><br>URL = ".$url;
-$modelVisitor = new TVisitor();
-$modelVisitor->ip = $infoArray['ip'];
-$modelVisitor->id_country = "US";
-$modelVisitor->region = $infoArray['region_name'];
-$modelVisitor->city = $infoArray['city'];
-$modelVisitor->id_timezone = $modelVisitor->findTimeZone($infoArray['time_zone']);
-$modelVisitor->latitude = $infoArray['latitude'];
-$modelVisitor->longitude = $infoArray['longitude'];
-$modelVisitor->url = $url;
-$modelVisitor->user_agent = $userAgent;
-$modelVisitor->save(false);
-?>
-</div>
 <?= $this->render('_footer'); ?>
 
 <!--<footer class="footer">
@@ -230,6 +204,17 @@ $modelVisitor->save(false);
 </footer>-->
 
 <?php $this->endBody() ?>
+<?php
+$this->registerJs('
+     var vurl = "'.Yii::$app->request->url.'";
+     $.ajax({
+                url:"'.Url::to(["/site/tracking"]).'",
+                type: "POST",
+                async: true,
+                data:{url: vurl},
+              });
+    ');
+ ?>
 </body>
 </html>
 <?php $this->endPage() ?>

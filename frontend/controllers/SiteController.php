@@ -62,6 +62,13 @@ class SiteController extends Controller
         ];
     }
 
+    public function actionTracking(){
+      if (Yii::$app->request->isAjax) {
+        $url = Yii::$app->request->post('url');
+        Yii::$app->gilitransfers->trackFrontendVisitor($url); 
+      }
+    }
+
     protected function findCart(){
         return TCart::find();
     }
