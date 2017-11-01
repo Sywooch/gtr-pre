@@ -78,6 +78,15 @@ return [
             '/trip/index/<month>'                    => 'trip/index',
             ],
         ],
+        'urlFrontend' => [
+            'class' => 'yii\web\urlManager',
+            'baseUrl' => 'http://gilitransfers-local.com',
+        ],
+        'urlMaps' => [
+            'class' => 'yii\web\urlManager',
+            'baseUrl' => 'https://www.google.com/maps/place/',
+        ],
+
 
         'gilitransfers'=>[
             'class'=>'common\components\Gilitransfers',

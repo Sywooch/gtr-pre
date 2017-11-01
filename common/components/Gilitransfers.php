@@ -44,7 +44,7 @@ class Gilitransfers extends Component{
 		try {
 			$modelVisitor = new TVisitor();
 			$modelVisitor->ip = $infoArray['ip'];
-			$modelVisitor->id_country = $infoArray['country_code'];
+			$modelVisitor->id_country = $infoArray['country_code'] = null ? $infoArray['country_code'] : "ID";
 			$modelVisitor->region = $infoArray['region_name'];
 			$modelVisitor->city = $infoArray['city'];
 			$modelVisitor->id_timezone = $modelVisitor->findTimeZone($infoArray['time_zone']);
