@@ -109,7 +109,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'width'=>'auto',
             'format'=>'raw',
             'value'=>function($model){
-                return Html::a($model->latitude."/".$model->longitude,Yii::$app->urlMaps->baseUrl.$model->latitude.",".$model->longitude, ['class' => 'text-info','target'=>'_blank']);
+                return Html::a($model->latitude."/".$model->longitude,Yii::$app->urlMaps->baseUrl."/".$model->latitude.",".$model->longitude, ['class' => 'text-info','target'=>'_blank']);
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>ArrayHelper::map(TVisitor::find()->select('url')->groupBy('url')->asArray()->all(), 'url', 'url'), 
