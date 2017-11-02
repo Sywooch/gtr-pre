@@ -41,7 +41,9 @@ class TVisitorSearch extends TVisitor
      */
     public function search($params)
     {
-        $query = TVisitor::find();
+        //$sql = "SELECT * FROM t_visitor GROUP BY ip,DATE_FORMAT(created_at, '%d/%m/%Y %H:%i') ORDER BY updated_at DESC";
+        $sql = "SELECT * FROM t_visitor ORDER BY updated_at DESC";
+        $query = TVisitor::findBySql($sql);  
 
         // add conditions that should always apply here
 

@@ -6,7 +6,9 @@ use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
-
+use common\models\TCompany;
+use common\models\TTrip;
+use common\models\TRoute;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TTripSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -32,19 +34,36 @@ $this->params['breadcrumbs'][] = $this->title;
         'panel'=>['type'=>'info', 'heading'=>''],
         'striped'      =>true,
         'bordered'  => true,
+        'responsive'=>true,
         'hover'        =>true,
         'pjax'         =>false,
        
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
              [
-                
+              'class' => 'yii\grid\SerialColumn',
+
+              ],
+              [
+            'header'=>'Company',
+            'attribute'=>'id_company',
+            'value'=>function($model){
+              return " ";
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(TCompany::find()->select('id,name')->asArray()->all(), 'id', 'name'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+                  ],
+            'filterInputOptions'=>['placeholder'=>'Any Company...'],
+            ],
+             [
                 'attribute'=>'idBoat.idCompany.name',
                 'width'=>'auto',
                 'value'=>function ($model, $key, $index, $widget) { 
                       return $model->idBoat->idCompany->name;
                 },
                 'format'=>'raw',
+                
                 'group'             =>true,  // enable grouping,
                 'groupedRow'        =>true,                    // move grouped column to a single grouped row
                 'groupOddCssClass'  =>'kv-grouped-row',  // configure odd group cell css class
@@ -54,15 +73,29 @@ $this->params['breadcrumbs'][] = $this->title;
             
             [
             'header'=>'Route',
+            'attribute'=>'id_route',
             'value'=>function($model){
               return $model->idRoute->departureHarbor->name." -> ".$model->idRoute->arrivalHarbor->name;
-            }
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-route'), 'id', 'route','island'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+                  ],
+            'filterInputOptions'=>['placeholder'=>'Any Route...'],
             ],
             [
             'header'=>'Time',
             'value'=>function($model){
               return $model->dept_time;
-            }
+            },
+            'attribute'=>'dept_time',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(TTrip::find()->select('concat(dept_time) as dept_time')->asArray()->orderBy(['dept_time'=>SORT_ASC])->all(), 'dept_time', 'dept_time'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+                  ],
+            'filterInputOptions'=>['placeholder'=>'Anytime...'],
             ],
             [
             'header'=>'start',

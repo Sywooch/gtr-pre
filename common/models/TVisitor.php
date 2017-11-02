@@ -3,7 +3,6 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "t_visitor".
@@ -33,12 +32,7 @@ class TVisitor extends \yii\db\ActiveRecord
     {
         return 't_visitor';
     }
-    public function behaviors() 
-    { 
-        return [ 
-            TimestampBehavior::className(), 
-        ]; 
-    }
+
 
     /**
      * @inheritdoc
@@ -48,6 +42,7 @@ class TVisitor extends \yii\db\ActiveRecord
         return [
             [['ip', 'id_country', 'region', 'city', 'id_timezone', 'latitude', 'longitude', 'url', 'user_agent'], 'required'],
             [['id_timezone'], 'integer'],
+            [['created_at','updated_at'],'safe'],
             [['url', 'user_agent'], 'string'],
             [['ip'], 'string', 'max' => 20],
             [['id_country'], 'string', 'max' => 2],

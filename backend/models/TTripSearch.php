@@ -12,7 +12,7 @@ use mdm\admin\components\Helper;
  */
 class TTripSearch extends TTrip
 {
-    public $company;
+    public $id_company;
 
   //  public $
     /**
@@ -22,7 +22,8 @@ class TTripSearch extends TTrip
     {
         return [
             [['id', 'id_boat', 'id_route', 'status', 'id_est_time'], 'integer'],
-            [['date', 'dept_time', 'description', 'datetime','company'], 'safe'],
+
+            [['date', 'dept_time', 'description', 'datetime','id_company'], 'safe'],
         ];
     }
 
@@ -45,10 +46,11 @@ class TTripSearch extends TTrip
     public function search($params)
     {
         if(Helper::checkRoute('/booking/*')){
-        $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
+        $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate');
         }else{
-            $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
+            $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->where(['t_company.id_user'=>Yii::$app->user->identity->id]);
         }
+        $query->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
@@ -73,14 +75,15 @@ class TTripSearch extends TTrip
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id'          => $this->id,
-            'id_boat'     => $this->id_boat,
-            'id_route'    => $this->id_route,
-            'date'        => $this->date,
-            'dept_time'   => $this->dept_time,
-            'status'      => $this->status,
-            'datetime'    => $this->datetime,
-            'id_est_time' => $this->id_est_time,
+            'id'                => $this->id,
+            'id_boat'           => $this->id_boat,
+            'id_route'          => $this->id_route,
+            'date'              => $this->date,
+            'dept_time'         => $this->dept_time,
+            'status'            => $this->status,
+            'datetime'          => $this->datetime,
+            'id_est_time'       => $this->id_est_time,
+            't_boat.id_company' => $this->id_company,
         ]);
 
         $query->andFilterWhere(['like', 'description', $this->description]);

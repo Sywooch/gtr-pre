@@ -95,7 +95,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'format'=>'raw',
             'attribute'=>'url',
             'value'=>function($model){
-                return Html::a($model->url,Yii::$app->urlFrontend->baseUrl.$model->url, ['class' => 'text-info','target'=>'_blank']);
+                return Html::a(substr($model->url,0,10)." ...",Yii::$app->urlFrontend->baseUrl.$model->url, ['class' => 'text-info','target'=>'_blank']);
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>ArrayHelper::map(TVisitor::find()->select('url')->groupBy('url')->asArray()->all(), 'url', 'url'), 
@@ -118,10 +118,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'Any Page...'],
             ],
-            'created_at:datetime',
-            'updated_at:datetime',
-            'latitude',
-            'longitude',
+            'created_at',
+            'updated_at',
             'user_agent:ntext',
         ],
     ]); ?>

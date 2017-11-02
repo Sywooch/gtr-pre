@@ -39,6 +39,14 @@ class TripController extends Controller
         ];
     }
 
+    public function actionGetRoute(){
+        $Route = $this->findRoute();
+        foreach ($Route as $key => $value) {
+           $list[$key] = ['id'=>$value->id,'route'=>$value->departureHarbor->name."->".$value->arrivalHarbor->name,'island'=>$value->departureHarbor->idIsland->island." -> ".$value->arrivalHarbor->idIsland->island];
+        }
+        return $list; 
+    }
+
     public function actionSummaryTrip(){
         if (Yii::$app->request->isAjax) {
 

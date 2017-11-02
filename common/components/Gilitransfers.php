@@ -42,6 +42,7 @@ class Gilitransfers extends Component{
 		$infoArray = Json::decode($info);
 		$transaction = Yii::$app->db->beginTransaction();
 		try {
+			$now = date('Y-m-d H:i:s');
 			$modelVisitor = new TVisitor();
 			$modelVisitor->ip = $infoArray['ip'];
 			$modelVisitor->id_country = $infoArray['country_code'] = null ? $infoArray['country_code'] : "ID";
@@ -52,6 +53,8 @@ class Gilitransfers extends Component{
 			$modelVisitor->longitude = $infoArray['longitude'];
 			$modelVisitor->url = $url;
 			$modelVisitor->user_agent = $userAgent;
+			$modelVisitor->created_at = $now;
+			$modelVisitor->created_at = $now;
 			$modelVisitor->save(false);
 		    $transaction->commit();
 		} catch(\Exception $e) {
