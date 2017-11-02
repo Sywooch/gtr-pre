@@ -45,8 +45,15 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             'attribute'=>'idTrip.idBoat.id_company', 
             'width'=>'50px',
-            'value'=>function ($model, $key, $index, $widget) { 
-                return "Company ".$model->idTrip->idBoat->idCompany->name;
+            'format'=>'raw',
+            'value'=>function ($model, $key, $index, $widget) {
+            $mail_gili = $model->idTrip->idBoat->idCompany->email_gili;
+            if ($mail_gili == " " || $mail_gili == "" || $mail_gili == null) {
+                 $email = "Bali: ".$model->idTrip->idBoat->idCompany->email_bali;
+             }else{
+                $email = "Bali: ".$model->idTrip->idBoat->idCompany->email_bali." - Email Gili: ".$model->idTrip->idBoat->idCompany->email_gili;
+             }
+                return "<span class=\"fa fa-ship\"></span> ".$model->idTrip->idBoat->idCompany->name." <span class=\"fa fa-phone\"></span> ".$model->idTrip->idBoat->idCompany->phone." <span class=\"fa fa-envelope\"></span> ".$email;
             },
             //'filterType'=>GridView::FILTER_SELECT2,
             //'filter'=>ArrayHelper::map(Suppliers::find()->orderBy('company_name')->asArray()->all(), 'id', 'company_name'), 

@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'width'=>'auto',
                 'format'=>'raw',
                 'value'=>function ($model, $key, $index, $widget) { 
-                return "Customer <b>".$model->idPayment->name." - ".$model->idPayment->email." - ".$model->idPayment->phone."</b><span class='pull-right'>".
+                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method."<span class='pull-right'>".
                     Html::a('', '#', [
                                     'class' => 'btn material-btn material-btn_success main-container__column material-btn_xs glyphicon glyphicon-check',
                                     'onclick'=>'

@@ -13,7 +13,7 @@ use yii\helpers\Html;
 	<div class="panel panel-default material-accordion__panel material-accordion__panel">
 		<div class="panel-heading material-accordion__heading" id="acc1_headingOne">
 			<h4 class="panel-title">
-				<a data-toggle="collapse" data-parent="#booking-Detail<?= $modelBooking->id ?>" href="#payment<?= $modelBooking->id ?>" class="material-accordion__title"><span class="fa fa-money"></span> Payment Detail*</a>
+				<a data-toggle="collapse" data-parent="#booking-Detail<?= $modelBooking->id ?>" href="#payment<?= $modelBooking->id ?>" class="material-accordion__title"><span class="fa fa-money"></span> Price Detail*</a>
 			</h4>
 		</div>
 		<div id="payment<?= $modelBooking->id ?>" class="panel-collapse collapse in material-accordion__collapse">
@@ -32,12 +32,12 @@ use yii\helpers\Html;
 						<?php
 							$AdultPrice = $modelBooking->idTrip->adult_price;
 							$JmlAdult   = count($modelBooking->adultPassengers);
-							$Total      = $AdultPrice*$JmlAdult;
+							$Total      = number_format($AdultPrice*$JmlAdult,0);
 						?>
 							<tr>
 								<td width="125px">Adult Tickets @ Rp <?= number_format($AdultPrice,0) ?></td>
 								<td width="125px"><?= " X ".$JmlAdult ?></td>
-								<td width="125px">Rp <?= number_format($Total,0) ?></td>
+								<td width="125px">Rp <?= $Total ?></td>
 							</tr>
 						<?php if(!empty($modelBooking->childPassengers)): ?>
 							<?php
@@ -119,11 +119,10 @@ use yii\helpers\Html;
 			</div>
 		</div>
 	</div>
-	<?php if(count($modelBooking->idPayment->tBookings) > 1): ?>
 		<div class="panel panel-default material-accordion__panel">
 		<div class="panel-heading material-accordion__heading">
 			<h4 class="panel-title">
-						<a class="collapsed material-accordion__title" data-toggle="collapse" data-parent="#booking-Detail<?= $modelBooking->id ?>" href="#related-booking-<?= $modelBooking->id ?>"><span class="glyphicon glyphicon-random"> </span> Related Trip On This Payment</a>
+						<a class="collapsed material-accordion__title" data-toggle="collapse" data-parent="#booking-Detail<?= $modelBooking->id ?>" href="#related-booking-<?= $modelBooking->id ?>"><span class="glyphicon glyphicon-random"> </span> Related Trip & Payment Detail</a>
 					</h4>
 		</div>
 		<div id="related-booking-<?= $modelBooking->id ?>" class="panel-collapse collapse material-accordion__collapse">
@@ -180,7 +179,6 @@ use yii\helpers\Html;
 			</div>
 		</div>
 	</div>
-	<?php endif; ?>
 </div>
 </div>
 </div> 

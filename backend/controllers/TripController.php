@@ -39,6 +39,17 @@ class TripController extends Controller
         ];
     }
 
+    public function actionHeaderTripSchedule(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $company = $this->findCompany()->where(['id'=>$data['company']])->asArray()->one();
+            $route = TRoute::find()->where(['id'=>$data['route']])->one();
+            echo $this->renderAjax('_header-trip-schedule',['company'=>$company,'route'=>$route,'time'=>$data['time']]);
+        }else{
+            return $this->goHome();
+        }
+    }
+
     public function actionGetRoute(){
         $Route = $this->findRoute();
         foreach ($Route as $key => $value) {
@@ -88,10 +99,12 @@ class TripController extends Controller
                             if ($data['adult'] != null) {
                                 $adult_price =  preg_replace('/\D/','',$data['adult']);
                                 $value->adult_price = $adult_price;
+                                $value->id_price_type = '2';
                             }
                             if ($data['child'] != null) {
                                 $child_price =  preg_replace('/\D/','',$data['child']);
                                 $value->child_price = $child_price;
+                                $value->id_price_type = '2';
                             }
                             $value->save(false);
                         }
@@ -129,10 +142,12 @@ class TripController extends Controller
                             if ($data['adult'] != null) {
                                 $adult_price =  preg_replace('/\D/','',$data['adult']);
                                 $value->adult_price = $adult_price;
+                                $value->id_price_type = '2';
                             }
                             if ($data['child'] != null) {
                                 $child_price =  preg_replace('/\D/','',$data['child']);
                                 $value->child_price = $child_price;
+                                $value->id_price_type = '2';
                             }
                             $value->save(false);
                         }

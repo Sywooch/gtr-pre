@@ -58,8 +58,38 @@ $('.trip-text').mouseenter(function(){
 });
 });
 
+
     ");
- ?>   
+ ?>
+ <?php 
+
+$this->registerJs('
+  var vcom   = '.$session['filter']['company'].';
+  var vroute = '.$session['filter']['route'].';
+  var vtime  = "'.$session['filter']['time'].'";
+  $("#header-trip-schedule").html("<center>Please Wait...<br><img height=\'50px\' src=\'/spinner.svg\'></center>");
+$.ajax({
+      url:"'.Url::to(["header-trip-schedule"]).'",
+      type: "POST",
+      data:{
+          company: vcom,
+          route: vroute,
+          time: vtime,
+        },
+      success:function(data){
+        $("#header-trip-schedule").html(data);
+      },
+      error:function(data){
+        $("#header-trip-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
+      },
+    });
+  ', \yii\web\View::POS_READY);
+ ?>
+ <div class="row">
+   <div id="header-trip-schedule" class="col-md-12">
+     
+   </div>
+ </div>
 <?php 
 echo "<div class='col-md-12' id='judul-table'><h2 align='center'>".Html::encode(date('F',strtotime($monthYear)))." ".Html::encode(date('Y',strtotime($monthYear)))."</h2>";
 echo '<span class="pull-left"><div class="main-container__column material-checkbox-group material-checkbox-group_primary">
