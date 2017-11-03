@@ -23,7 +23,7 @@ $this->registerJs("
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
             client: {
-                sandbox:    'AauwsNJmTf1GfGWwVhwfZVxNaiEbLr0lbslalL80wsUUEgiRJaucebjdExOaCUuG-FAKIEsILDOPo2bC',
+                sandbox:    'ASmiPp9P_Oc31W24wvJB8KPSjS_FJkwB1sOt0-hjH3cttD94VmMP-TCfwYQ8a1hhQwjoKX26m3bCdXQL',
                 //production: 'AauwsNJmTf1GfGWwVhwfZVxNaiEbLr0lbslalL80wsUUEgiRJaucebjdExOaCUuG-FAKIEsILDOPo2bC'
             },
 

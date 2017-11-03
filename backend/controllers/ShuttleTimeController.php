@@ -8,6 +8,7 @@ use app\models\TShuttleTimeSearch;
 use common\models\TCompany;
 use common\models\TTrip;
 use common\models\TRoute;
+use common\models\TShuttleArea;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -43,6 +44,17 @@ class ShuttleTimeController extends Controller
                    echo "<option value='".$modelRoute->id."'>".$modelRoute->departureHarbor->name."->".$modelRoute->arrivalHarbor->name."</option>";
                 }
                 
+            }
+        }
+    }
+
+    public function actionListDeptTime(){
+        if (Yii::$app->request->isAjax) {
+           $data = Yii::$app->request->post();
+           $modelTrip = TTrip::find()->joinWith('idBoat')->select('id_route, dept_time, id_boat, t_boat.id_company')->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->groupBy('id_route,dept_time')->asArray()->all();
+                echo "<option value=''>Select Dept Time ...</option>";
+            foreach ($modelTrip as $key => $value) {
+                echo "<option value='".$value['dept_time']."'>".date('H:i',strtotime($value['dept_time']))."</option>";
             }
         }
     }
@@ -85,13 +97,16 @@ class ShuttleTimeController extends Controller
     {
         $model = new TShuttleTime();
         $listCompany = ArrayHelper::map($this->findCompany(), 'id', 'name');
+        $listArea = ArrayHelper::map(TShuttleArea::find()->asArray()->all(), 'id', 'area', 'idIsland.island');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
                 'model' => $model,
+                'listArea' => $listArea,
                 'listCompany' => $listCompany,
+                
             ]);
         }
     }
@@ -105,12 +120,13 @@ class ShuttleTimeController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
-
+        $listCompany = ArrayHelper::map($this->findCompany(), 'id', 'name');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
                 'model' => $model,
+                'listCompany' => $listCompany,
             ]);
         }
     }

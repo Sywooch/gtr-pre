@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 use kartik\widgets\Select2;
 use kartik\widgets\DepDrop;
+use kato\pickadate\Pickadate;
 /* @var $this yii\web\View */
 /* @var $model common\models\TShuttleTime */
 /* @var $form yii\widgets\ActiveForm */
@@ -39,30 +40,50 @@ use kartik\widgets\DepDrop;
     if ($model->isNewRecord) {
         echo $form->field($model, 'id_route')->dropdownList([],[
             'id'=>'drop-route',
-            'prompt'=>'-> Select Company First <-',
+            'prompt'=>'Select Company First..',
             'onchange'=>'
-                var vcompany = $(this).val();
+                var vcompany = $("#drop-company").val();
+                var vroute   = $(this).val();
                 $.ajax({
                     url: "'.Url::to(["list-dept-time"]).'",
                     type:"POST",
-                    data:{company :vcompany},
+                    data:{company :vcompany, route: vroute},
                     success: function (data) {
-                        $("#drop-route").html(data);
+                        $("#drop-dept-time").html(data);
                     }
                 });
             '
-            ]); 
+            ]);
+        echo $form->field($model, 'dept_time')->dropdownList([],['id'=>'drop-dept-time','prompt'=>'Select Company And Route First..',]);  
     }else{
-        echo $form->field($model, 'id_route')->dropdownList($listRoute,['id'=>'drop-route']); 
+        echo $form->field($model, 'id_route')->dropdownList($listRoute,['id'=>'drop-route']);
+        echo $form->field($model, 'dept_time')->dropdownList($listDeptTime,['id'=>'drop-dept-time']); 
     }
 
     ?>
 
-    <?= $form->field($model, 'dept_time')->textInput() ?>
-
-    <?= $form->field($model, 'id_area')->textInput() ?>
-
-    <?= $form->field($model, 'shuttle_time')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'id_area')->dropdownList($listArea,['id'=>'drop-area']);
+     ?>
+    <?= $form->field($model, 'shuttle_time_start')->widget(Pickadate::classname(), [
+        'isTime' => true,
+        'id'=>'shuttle-time',
+        'options'=>['id'=>'shuttle-time'],
+        'pickadateOptions' => [
+            'format'=> 'H:i',
+            'formatSubmit'=> 'H:i:00',
+            'interval'=>15,
+        ],
+    ]) ?>
+    <?= $form->field($model, 'shuttle_time_end')->widget(Pickadate::classname(), [
+        'isTime' => true,
+        'id'=>'shuttle-time',
+        'options'=>['id'=>'shuttle-time'],
+        'pickadateOptions' => [
+            'format'=> 'H:i',
+            'formatSubmit'=> 'H:i:00',
+            'interval'=>15,
+        ],
+    ]) ?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

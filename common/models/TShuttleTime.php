@@ -12,7 +12,8 @@ use Yii;
  * @property integer $id_route
  * @property string $dept_time
  * @property integer $id_area
- * @property string $shuttle_time
+ * @property string $shuttle_time_start
+ * @property string $shuttle_time_end
  * @property integer $created_at
  *
  * @property TShuttleArea $idArea
@@ -35,10 +36,9 @@ class TShuttleTime extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_company', 'id_route', 'dept_time', 'id_area', 'shuttle_time', 'created_at'], 'required'],
+            [['id_company', 'id_route', 'dept_time', 'id_area', 'shuttle_time_start', 'shuttle_time_end', 'created_at'], 'required'],
             [['id_company', 'id_route', 'id_area', 'created_at'], 'integer'],
-            [['dept_time'], 'safe'],
-            [['shuttle_time'], 'string', 'max' => 50],
+            [['dept_time', 'shuttle_time_start', 'shuttle_time_end'], 'safe'],
             [['id_area'], 'exist', 'skipOnError' => true, 'targetClass' => TShuttleArea::className(), 'targetAttribute' => ['id_area' => 'id']],
             [['id_company'], 'exist', 'skipOnError' => true, 'targetClass' => TCompany::className(), 'targetAttribute' => ['id_company' => 'id']],
             [['id_route'], 'exist', 'skipOnError' => true, 'targetClass' => TRoute::className(), 'targetAttribute' => ['id_route' => 'id']],
@@ -52,11 +52,12 @@ class TShuttleTime extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_company' => Yii::t('app', 'Company'),
-            'id_route' => Yii::t('app', 'Route'),
+            'id_company' => Yii::t('app', 'Id Company'),
+            'id_route' => Yii::t('app', 'Id Route'),
             'dept_time' => Yii::t('app', 'Dept Time'),
-            'id_area' => Yii::t('app', 'Shuttle Area'),
-            'shuttle_time' => Yii::t('app', 'Shuttle Time'),
+            'id_area' => Yii::t('app', 'Id Area'),
+            'shuttle_time_start' => Yii::t('app', 'Shuttle Time Start'),
+            'shuttle_time_end' => Yii::t('app', 'Shuttle Time End'),
             'created_at' => Yii::t('app', 'Created At'),
         ];
     }
