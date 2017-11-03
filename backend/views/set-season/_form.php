@@ -5,6 +5,7 @@ use kartik\widgets\ActiveForm;
 use yii\widgets\MaskedInput;
 use kartik\widgets\Select2;
 use kartik\widgets\DatePicker;
+use yii\helpers\Url;
 /* @var $this yii\web\View */
 /* @var $model common\models\TSeasonPriceSet */
 /* @var $form yii\widgets\ActiveForm */
@@ -17,7 +18,20 @@ $model->isNewRecord ? $model->id_season_type = 1 : $model->id_season_type = $mod
 
     <?= $form->field($model, 'id_company')->widget(Select2::classname(), [
     'data' => $listCompany,
-    'options' => ['placeholder' => 'Select Company ...'],
+    'options'=>[
+     'placeholder' => 'Select Company ...',
+        'id'=>'drop-company',
+        'onchange'=>'
+                var vcompany = $("#drop-company").val();
+                $.ajax({
+                    url: "'.Url::to(["/shuttle-time/list-route"]).'",
+                    type:"POST",
+                    data:{company :vcompany},
+                    success: function (data) {
+                        $("#drop-route").html(data);
+                    }
+                });',
+        ],
     'pluginOptions' => [
         'allowClear' => true
     ],
@@ -31,13 +45,17 @@ $model->isNewRecord ? $model->id_season_type = 1 : $model->id_season_type = $mod
     ],['id' => 'radio-type-season']); ?>
 </div>
 <div class="col-md-12">
-    <?= $form->field($model, 'id_route')->widget(Select2::classname(), [
-    'data' => $listRoute,
-    'options' => ['placeholder' => 'Select Route ...'],
-    'pluginOptions' => [
-        'allowClear' => true
-    ],
-    ]) ?>
+    <?php 
+    if ($model->isNewRecord) {
+        echo $form->field($model, 'id_route')->dropdownList([],[
+            'id'=>'drop-route',
+            'prompt'=>'-> Select Company First <-',
+            ]); 
+    }else{
+        echo $form->field($model, 'id_route')->dropdownList($listRoute,['id'=>'drop-route']); 
+    }
+
+    ?>
 </div>
 <div class="col-md-12">
     <?= $form->field($model, 'adult_price')->widget(MaskedInput::className(), [
