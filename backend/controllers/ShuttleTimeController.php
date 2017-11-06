@@ -76,6 +76,16 @@ class ShuttleTimeController extends Controller
                 }else{
                     echo "<option value=''>All Route Already Inserted</option>";
                 }
+            }else{
+                $modelShuttleArea = TShuttleArea::find()->asArray()->orderBy(['area'=>SORT_ASC])->all();
+                if (!empty($modelShuttleArea)) {
+                    echo "<option value=''>Select Area ...</option>";
+                    foreach ($modelShuttleArea as $key => $value) {
+                        echo "<option value='".$value['id']."'>".$value['area']."</option>";
+                    }
+                }else{
+                    echo "<option value=''>All Route Already Inserted</option>";
+                }
             }
             
         }
@@ -121,14 +131,11 @@ class ShuttleTimeController extends Controller
     {
         $model = new TShuttleTime();
         $listCompany = ArrayHelper::map($this->findCompany(), 'id', 'name');
-        $listArea = ArrayHelper::map(TShuttleArea::find()->asArray()->all(), 'id', 'area', 'idIsland.island');
-
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
-                'listArea' => $listArea,
                 'listCompany' => $listCompany,
                 
             ]);
@@ -145,12 +152,32 @@ class ShuttleTimeController extends Controller
     {
         $model = $this->findModel($id);
         $listCompany = ArrayHelper::map($this->findCompany(), 'id', 'name');
+        $listArea = ArrayHelper::map(TShuttleArea::find()->asArray()->all(), 'id', 'area', 'idIsland.island');
+
+        //List ROute;
+        $modelTrip = TTrip::find()->joinWith('idBoat')->select('id_route, id_boat, t_boat.id_company')->where(['t_boat.id_company'=>$model->id])->groupBy('id_route')->asArray()->all();
+            foreach ($modelTrip as $key => $value) {
+                if (($modelRoute = TRoute::findOne($value['id_route'])) !== null) {
+                    $ARoute[] = ['id'=>$modelRoute->id,'route'=>$modelRoute->departureHarbor->name."->".$modelRoute->arrivalHarbor->name,'island'=>$modelRoute->departureHarbor->idIsland->island];
+                } 
+            }
+        $listRoute = ArrayHelper::map($ARoute, 'id', 'route', 'island');
+        //List Dept Time
+        $modelTrip = TTrip::find()->joinWith('idBoat')->select('id_route, dept_time, id_boat, t_boat.id_company')->groupBy('id_route,dept_time')->asArray()->all();
+            foreach ($modelTrip as $key => $value) {
+               $ADeptTime[$value['dept_time']] = $value['dept_time'];
+            }
+        $listDeptTime = $ADeptTime;
+
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
                 'listCompany' => $listCompany,
+                'listArea' => $listArea,
+                'listRoute' => $listRoute,
+                'listDeptTime' => $listDeptTime,
             ]);
         }
     }

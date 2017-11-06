@@ -23,15 +23,7 @@ $layout6 = ['template'=>"<div class=\"row col-md-3\">{label}\n{input}\n{error}\n
         'placeholder' => 'Select Company ...',
         'id'=>'drop-company',
         'onchange'=>'
-                var vcompany = $("#drop-company").val();
-                $.ajax({
-                    url: "'.Url::to(["list-route"]).'",
-                    type:"POST",
-                    data:{company :vcompany},
-                    success: function (data) {
-                        $("#drop-route").html(data);
-                    }
-                });',
+                ',
         ],
     'pluginOptions' => [
         'allowClear' => true
@@ -43,48 +35,65 @@ $layout6 = ['template'=>"<div class=\"row col-md-3\">{label}\n{input}\n{error}\n
             'id'=>'drop-route',
             'prompt'=>'Select Company First..',
             'onchange'=>'
-                var vcompany = $("#drop-company").val();
-                var vroute   = $(this).val();
-                $.ajax({
-                    url: "'.Url::to(["list-dept-time"]).'",
-                    type:"POST",
-                    data:{company :vcompany, route: vroute},
-                    success: function (data) {
-                        $("#drop-dept-time").html(data);
-                    }
-                });
+                
             '
             ]);
         echo $form->field($model, 'dept_time')->dropdownList([],[
             'id'=>'drop-dept-time',
             'prompt'=>'Select Company And Route First..',
             'onchange'=>'
-                var vtime = $(this).val();
-                var vcompany = $("#drop-company").val();
-                var vroute   = $("#drop-route").val();
-                if (vtime != "" && vcompany != "" && vroute != "") {
-                    $.ajax({
+                
+                '
+            ]);
+        echo $form->field($model, 'id_area')->dropdownList([],['id'=>'drop-area','prompt'=>'Select Company, Route And Dept Time First..',]);  
+    }else{
+        echo $form->field($model, 'id_route')->dropdownList([],['id'=>'drop-route']);
+        echo $form->field($model, 'dept_time')->dropdownList($listDeptTime,['id'=>'drop-dept-time']);
+        echo $form->field($model, 'id_area')->dropdownList([],['id'=>'drop-area']);
+        $this->registerJs('
+            
+            var vcompany = $("#drop-company").val();
+            $.ajax({
+                    url: "'.Url::to(["list-route"]).'",
+                    type:"POST",
+                    data:{company :vcompany},
+                    success: function (data) {
+                        $("#drop-route").html(data);
+                        $("#drop-route").val("'.$model->id_route.'");
+                        
+                    }
+                });
+            var vroute   = $("#drop-route").val();
+            $.ajax({
+                    url: "'.Url::to(["list-dept-time"]).'",
+                    type:"POST",
+                    data:{company :vcompany, route: vroute},
+                    success: function (data) {
+                       // $("#drop-dept-time").html(data);
+                       
+                    }
+                });
+            var vtime    = $("#drop-dept-time").val();
+            $.ajax({
                     url: "'.Url::to(["list-shuttle-area"]).'",
                     type:"POST",
                     data:{company :vcompany, route: vroute, time: vtime},
                     success: function (data) {
                         $("#drop-area").html(data);
+                        $("#drop-area").val("'.$model->id_area.'");
+                        
+                        $("#drop-dept-time").val("'.$model->dept_time.'");
                     }
                 });
-                }else{
-                    alert("Woke");
-                }
-                '
-            ]);  
-    }else{
-        echo $form->field($model, 'id_route')->dropdownList($listRoute,['id'=>'drop-route']);
-        echo $form->field($model, 'dept_time')->dropdownList($listDeptTime,['id'=>'drop-dept-time']); 
+
+
+            ', \yii\web\View::POS_READY);
+
     }
 
     ?>
 
-    <?= $form->field($model, 'id_area')->dropdownList($listArea,['id'=>'drop-area']);
-     ?>
+   
 
     <?= $form->field($model, 'shuttle_time_start',$layout6)->widget(Pickadate::classname(), [
         'isTime' => true,
@@ -114,3 +123,50 @@ $layout6 = ['template'=>"<div class=\"row col-md-3\">{label}\n{input}\n{error}\n
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+
+$this->registerJs('
+$("#drop-company").on("change",function(){
+    var vcompany = $("#drop-company").val();
+        $.ajax({
+            url: "'.Url::to(["list-route"]).'",
+            type:"POST",
+            data:{company :vcompany},
+            success: function (data) {
+                $("#drop-route").html(data);
+            }
+        });
+});
+$("#drop-route").on("change",function(){
+    var vcompany = $("#drop-company").val();
+    var vroute   = $(this).val();
+    $.ajax({
+        url: "'.Url::to(["list-dept-time"]).'",
+        type:"POST",
+        data:{company :vcompany, route: vroute},
+        success: function (data) {
+            $("#drop-dept-time").html(data);
+        }
+    });
+});
+
+$("#drop-dept-time").on("change",function(){
+    var vtime = $(this).val();
+    var vcompany = $("#drop-company").val();
+    var vroute   = $("#drop-route").val();
+    if (vtime != "" && vcompany != "" && vroute != "") {
+        $.ajax({
+            url: "'.Url::to(["list-shuttle-area"]).'",
+            type:"POST",
+            data:{company :vcompany, route: vroute, time: vtime},
+            success: function (data) {
+                $("#drop-area").html(data);
+                        }
+        });
+    }else{
+        return false;
+   }
+});
+    
+    ', \yii\web\View::POS_READY);
+?>
