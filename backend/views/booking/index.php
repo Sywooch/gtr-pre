@@ -25,9 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
     
 
 </div>
+<span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
 <div class="col-md-12">
-<?php 
-?>
+
 <?php Pjax::begin(); ?>
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -77,13 +77,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'contentFormats'=>[      // content reformatting for each summary cell
                         //4=>['format'=>'number', 'decimals'=>2],
                         5=>['format'=>'number', 'decimals'=>0],
-                        6=>['format'=>'number', 'decimals'=>2],
+                        6=>['format'=>'number', 'decimals'=>0],
                     ],
                     'contentOptions'=>[      // content html attributes for each summary cell
-                        0=>['style'=>'font-variant:small-caps'],
+                        0=>['style'=>'font-size:15px; font-variant:small-caps'],
                        // 4=>['style'=>'text-align:right'],
                         5=>['style'=>'text-align:center'],
-                        6=>['style'=>'text-align:right'],
+                        6=>['style'=>'text-align:center'],
                     ],
                     // html attributes for group summary row
                     'options'=>['class'=>'info','style'=>'font-weight:bold;']
@@ -117,12 +117,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     'contentFormats'=>[      // content reformatting for each summary cell
                        // 4=>['format'=>'number', 'decimals'=>2],
                         5=>['format'=>'number', 'decimals'=>0],
-                        6=>['format'=>'number', 'decimals'=>2],
+                        6=>['format'=>'number', 'decimals'=>0],
                     ],
                     'contentOptions'=>[      // content html attributes for each summary cell
                        // 4=>['style'=>'text-align:right'],
                         5=>['style'=>'text-align:center'],
-                        6=>['style'=>'text-align:right'],
+                        6=>['style'=>'text-align:center'],
                     ],
                     // html attributes for group summary row
                     'options'=>['class'=>'success','style'=>'font-weight:bold;']
@@ -150,19 +150,21 @@ $this->params['breadcrumbs'][] = $this->title;
             'hAlign'=>'center',
             'value'=>function($model){
                 $varParam = ['id_company'=>$model->idTrip->idBoat->id_company,'id_route'=>$model->idTrip->id_route,'dept_time'=>$model->idTrip->dept_time,'date'=>$model->idTrip->date];
-                $hasil = Yii::$app->runAction('/booking/count-passenger',['var'=>$varParam]);
+                $hasil = Yii::$app->runAction('/booking/count-booking',['var'=>$varParam]);
                 return $hasil;
             }
         ],
         [
-            'attribute'=>'Adult',
+            'attribute'=>'PAX*',
             'width'=>'50px',
             'hAlign'=>'center',
             'value'=>function($model){
-
+                $varParam = ['id_company'=>$model->idTrip->idBoat->id_company,'id_route'=>$model->idTrip->id_route,'dept_time'=>$model->idTrip->dept_time,'date'=>$model->idTrip->date];
+                $Npax = Yii::$app->runAction('/booking/count-passenger',['var'=>$varParam]);
+                return $Npax;
             },
         ],
-        [
+        /*[
             'attribute'=>'Child',
             'width'=>'50px',
             'hAlign'=>'center',
@@ -177,7 +179,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'value'=>function($model){
 
             },
-        ],
+        ],*/
 
         ],
     ]); ?>

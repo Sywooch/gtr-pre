@@ -11,6 +11,7 @@ use common\models\TRoute;
 use common\models\THarbor;
 use common\models\TMailQueue;
 use common\models\TTrip;
+use common\models\TShuttleTime;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -36,6 +37,18 @@ class BookingController extends Controller
         ];
     }
 
+    public function actionShuttleTime(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            if (($modelShuttleTime = TShuttleTime::find()->where(['id_company'=>$data['keylist'][0],'id_route'=>$data['keylist'][1],'dept_time'=>$data['keylist'][2],'id_area'=>$data['keylist'][3]])->one()) !== null) {
+                echo " ".$modelShuttleTime->shuttle_time_start." <span style='font-size: 10px;' class='fa fa-arrow-right'></span> ".$modelShuttleTime->shuttle_time_end;
+            }else{
+                echo " Unknown";
+            }
+            
+        }
+    }
+
     public function actionDetailModal($id_booking){
         $modelBooking = $this->findModel($id_booking);
         if(Helper::checkRoute('/booking/*')){
@@ -46,6 +59,15 @@ class BookingController extends Controller
     }
 
     public function actionCountPassenger(array $var){
+        $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->select('t_booking.id')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->all();
+        foreach ($modelBooking as $key => $value) {
+            $jumlahPax[] = count($value->affectedPassengers);
+        }
+        return array_sum($jumlahPax);
+
+    }
+
+    public function actionCountBooking(array $var){
         $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->count();
         return $modelBooking;
 

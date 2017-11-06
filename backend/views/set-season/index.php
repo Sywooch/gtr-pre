@@ -13,8 +13,6 @@ $this->title = Yii::t('app', 'Season Price Reference');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tseason-price-set-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>

@@ -29,7 +29,7 @@ class TBookingSearch extends TBooking
     {
         return [
             [['id', 'email', 'phone', 'currency', 'token', 'expired_time', 'datetime','startDate','endDate','bookdate'], 'safe'],
-           // ['date','default','value'=>date('Y-m-d')],
+            //['date','default','value'=>date('Y-m-d')],
             [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'id_payment_method', 'process_by','departure','id_route'], 'integer'],
             [['trip_price', 'total_price', 'send_amount'], 'number'],
         ];
@@ -99,20 +99,18 @@ class TBookingSearch extends TBooking
             't_trip.id_route' => $this->id_route,
             't_boat.id_company'=>$this->id_company,
         ]);
-        if ($this->date == date('Y-m-d')) {
-             $query->andFilterWhere(['>','t_trip.date',$this->date]);
+
+        if ($this->startDate != null && $this->endDate != null) {
+            $query->andFilterWhere(['between', 't_trip.date', $this->startDate, $this->endDate]);
+        }else{
+            if ($this->date == null) {
+             $query->andFilterWhere(['>','t_trip.date',date('Y-m-d')]);
         }else{
             $query->andFilterWhere(['t_trip.date' => $this->date]);
         }
-
-        $query->andFilterWhere(['between', 't_trip.date', $this->startDate, $this->endDate]);
-       
-
+        }
+    
         $query->andFilterWhere(['like', 't_booking.id', $this->id])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'currency', $this->currency])
-            ->andFilterWhere(['like', 'token', $this->token])
             ->andFilterWhere(['like', 't_booking.datetime', $this->bookdate]);
 
         return $dataProvider;
