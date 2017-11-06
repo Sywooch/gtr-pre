@@ -11,12 +11,10 @@ $this->title = Yii::t('app', 'Tshuttle Times');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tshuttle-time-index">
-
-    <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Tshuttle Time'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('', ['create'], ['class' => 'btn btn-danger btn-lg glyphicon glyphicon-plus']) ?>
     </p>
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -37,9 +35,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 return $model->idArea->area;
             }
             ],
-            'dept_time',
-            'shuttle_time',
-            // 'created_at',
+            [
+            'header'=>'Dept Time',
+            'format'=>'raw',
+            'value'=>function($model){
+                return $model->dept_time;
+            }
+            ],
+            [
+            'header'=>'Shuttle Time',
+            'format'=>'raw',
+            'value'=>function($model){
+                return $model->shuttle_time_start." <span class='fa fa-arrow-right'> </span> ".$model->shuttle_time_end;
+            }
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

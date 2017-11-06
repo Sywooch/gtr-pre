@@ -19,7 +19,7 @@ class TShuttleTimeSearch extends TShuttleTime
     {
         return [
             [['id', 'id_company', 'id_route', 'id_area', 'created_at'], 'integer'],
-            [['dept_time', 'shuttle_time'], 'safe'],
+            [['dept_time', 'shuttle_time_start','shuttle_time_end'], 'safe'],
         ];
     }
 
@@ -67,7 +67,8 @@ class TShuttleTimeSearch extends TShuttleTime
             'created_at' => $this->created_at,
         ]);
 
-        $query->andFilterWhere(['like', 'shuttle_time', $this->shuttle_time]);
+        $query->andFilterWhere(['like', 'shuttle_time_start', $this->shuttle_time_start]);
+        $query->andFilterWhere(['like', 'shuttle_time_end', $this->shuttle_time_end]);
 
         return $dataProvider;
     }

@@ -36,7 +36,7 @@ class TShuttleTime extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_company', 'id_route', 'dept_time', 'id_area', 'shuttle_time_start', 'shuttle_time_end', 'created_at'], 'required'],
+            [['id_company', 'id_route', 'dept_time', 'id_area', 'shuttle_time_start', 'shuttle_time_end'], 'required'],
             [['id_company', 'id_route', 'id_area', 'created_at'], 'integer'],
             [['dept_time', 'shuttle_time_start', 'shuttle_time_end'], 'safe'],
             [['id_area'], 'exist', 'skipOnError' => true, 'targetClass' => TShuttleArea::className(), 'targetAttribute' => ['id_area' => 'id']],
@@ -52,10 +52,10 @@ class TShuttleTime extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_company' => Yii::t('app', 'Id Company'),
-            'id_route' => Yii::t('app', 'Id Route'),
+            'id_company' => Yii::t('app', 'Company'),
+            'id_route' => Yii::t('app', 'Route'),
             'dept_time' => Yii::t('app', 'Dept Time'),
-            'id_area' => Yii::t('app', 'Id Area'),
+            'id_area' => Yii::t('app', 'Area'),
             'shuttle_time_start' => Yii::t('app', 'Shuttle Time Start'),
             'shuttle_time_end' => Yii::t('app', 'Shuttle Time End'),
             'created_at' => Yii::t('app', 'Created At'),

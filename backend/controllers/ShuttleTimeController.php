@@ -59,6 +59,30 @@ class ShuttleTimeController extends Controller
         }
     }
 
+    public function actionListShuttleArea(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelShuttleTime = TShuttleTime::find()->select('id_area')->where(['id_company'=>$data['company']])->where(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['time']])->asArray()->all();
+            if (count($modelShuttleTime) != null) {
+                foreach ($modelShuttleTime as $key => $value) {
+                   $my[] =  ArrayHelper::getValue($modelShuttleTime, ''.$key.'.id_area', $default = null);
+                }
+                $modelShuttleArea = TShuttleArea::find()->where(['NOT IN','id',array_values($my)])->asArray()->orderBy(['id'=>SORT_ASC])->all();
+                if (!empty($modelShuttleArea)) {
+                    echo "<option value=''>Select Area ...</option>";
+                    foreach ($modelShuttleArea as $key => $value) {
+                        echo "<option value='".$value['id']."'>".$value['area']."</option>";
+                    }
+                }else{
+                    echo "<option value=''>All Route Already Inserted</option>";
+                }
+            }
+            
+        }
+    }
+
+   // protected function findAvai
+
     /**
      * Lists all TShuttleTime models.
      * @return mixed
@@ -100,7 +124,7 @@ class ShuttleTimeController extends Controller
         $listArea = ArrayHelper::map(TShuttleArea::find()->asArray()->all(), 'id', 'area', 'idIsland.island');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('create', [
                 'model' => $model,
