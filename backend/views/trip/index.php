@@ -39,11 +39,11 @@ $this->params['breadcrumbs'][] = $this->title;
         'pjax'         =>false,
        
         'columns' => [
-             [
+            [
               'class' => 'yii\grid\SerialColumn',
 
-              ],
-              [
+            ],
+            [
             'header'=>'Company',
             'attribute'=>'id_company',
             'value'=>function($model){
