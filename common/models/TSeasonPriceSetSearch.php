@@ -12,13 +12,14 @@ use common\models\TSeasonPriceSet;
  */
 class TSeasonPriceSetSearch extends TSeasonPriceSet
 {
+    public $departure;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'id_company', 'id_season_type', 'id_route', 'adult_price', 'child_price', 'infant_price', 'created_at', 'updated_at'], 'integer'],
+            [['id', 'id_company', 'id_season_type', 'id_route', 'adult_price', 'child_price', 'infant_price', 'created_at', 'updated_at','departure'], 'integer'],
             [['start_date', 'end_date'], 'safe'],
         ];
     }
@@ -41,19 +42,19 @@ class TSeasonPriceSetSearch extends TSeasonPriceSet
      */
     public function search($params)
     {
-        $query = TSeasonPriceSet::find();
+        $query = TSeasonPriceSet::find()->joinWith('idRoute')->orderBy(['id_company'=>SORT_ASC,'t_route.departure'=>SORT_ASC]);
 
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'sort'=>[
+            /*'sort'=>[
                 'defaultOrder'=>[
                 'id_company'=>SORT_ASC,
-               // 'id_route'=>SORT_ASC,
+                
                // 'id_route'=>SORT_ASC
                 ]
-            ]
+            ]*/
         ]);
 
         $this->load($params);

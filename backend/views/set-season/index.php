@@ -29,7 +29,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'id_company',
                 'format'=>'raw',
                 'value'=>function ($model, $key, $index, $widget) { 
-                return "<b>".$model->idCompany->name."<b>";
+                return "<span class='fa fa-ship company'>".$model->idCompany->name."</span>";
                 },
                 'format'=>'raw',
                 'group'             =>true,  // enable grouping,
@@ -61,25 +61,73 @@ $this->params['breadcrumbs'][] = $this->title;
                     ];
             }
             ],
-            'idCompany.name',
+            [
+            'attribute'=>'departure',
+            'format'=>'raw' ,
+            'width'=>'100px',
+            'vAlign'=>'top',
+            'value'=>function ($model, $key, $index, $widget) { 
+                return "<span class='route'>".$model->idRoute->departureHarbor->name."</span> ";
+            },
+            /*'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(Categories::find()->orderBy('category_name')->asArray()->all(), 'id', 'category_name'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+            ],
+            'filterInputOptions'=>['placeholder'=>'Any category'],*/
+            'group'=>true,  // enable grouping
+            'groupedRow'        =>true,
+            'subGroupOf'=>1, // supplier column index is the parent group,
+            'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
+                return [
+                    'mergeColumns'=>[[2, 3]], // columns to merge in summary
+                    'content'=>[              // content to show in each summary cell
+                     //   2=>'Summary By Route(' . $model->idRoute->departureHarbor->name." -> ".$model->idRoute->arrivalHarbor->name . ')',
+                       // 4=>GridView::F_AVG,
+                        //5=>GridView::F_SUM,
+                        //6=>GridView::F_SUM,
+                    ],
+                    'contentFormats'=>[      // content reformatting for each summary cell
+                       // 4=>['format'=>'number', 'decimals'=>2],
+                       // 5=>['format'=>'number', 'decimals'=>0],
+                        //6=>['format'=>'number', 'decimals'=>2],
+                    ],
+                    'contentOptions'=>[      // content html attributes for each summary cell
+                       // 4=>['style'=>'text-align:right'],
+                        //5=>['style'=>'text-align:center'],
+                       // 6=>['style'=>'text-align:right'],
+                    ],
+                    // html attributes for group summary row
+                    'options'=>['class'=>'success','style'=>'font-weight:bold;']
+                ];
+            },
+            ],
+            
             'idSeasonType.season',
             [
-            'header'=>'Route',
+            'header'=>'<span class="fa fa-code-fork"> Route</span>',
+
             'format'=>'raw',
             'value'=>function($model){
                 return $model->idRoute->departureHarbor->name."<span class='fa fa-arrow-right'></span>".$model->idRoute->arrivalHarbor->name;
             }
             ],
             [
-            'header'=>'Price',
+            'header'=>'Price<br><span class="fa fa-user">Adult</span>/<span class="fa fa-child">Child</span>',
+            'hAlign'=>'center',
             'format'=>'raw',
             'value'=>function($model){
-                return "<span class='fa fa-user'> Rp </span> ".number_format($model->adult_price,0)." / <span class='fa fa-child'> Rp </span> ".number_format($model->child_price,0);
+                return "<br><span class='fa fa-user'> Rp </span> ".number_format($model->adult_price,0)." /<span class='fa fa-child'>  Rp </span> ".number_format($model->child_price,0);
             }
             ],
-            'infant_price',
-            'start_date',
-            'end_date',
+            //'infant_price',
+            [
+            'header'=>'<span class="fa fa-calendar"> Affected Date</span>',
+            'format'=>'raw',
+            'value'=>function($model){
+                return "<span> ".date('d-m-Y',strtotime($model->start_date))." - ".date('d-m-Y',strtotime($model->end_date))."</span>";
+            }
+            ],
             //'created_at:datetime',
             //'updated_at:datetime',
 
@@ -88,3 +136,17 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>
+<?php 
+$customCss = <<< SCRIPT
+    .route{
+        font-size: 15px;
+        font-weight: bold;
+        padding-left:25px;
+    }
+    .company{
+        font-size: 17px;
+        font-weight: bold;
+    }
+SCRIPT;
+$this->registerCss($customCss);
+?>
