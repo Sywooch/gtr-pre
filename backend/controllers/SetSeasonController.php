@@ -34,6 +34,25 @@ class SetSeasonController extends Controller
         ];
     }
 
+    public function actionListRoute(){
+        if (Yii::$app->request->isAjax) {
+           $data = Yii::$app->request->post();
+           $modelTrip = TTrip::find()->joinWith('idBoat')->select('id_route, id_boat, t_boat.id_company')->where(['t_boat.id_company'=>$data['company']])->groupBy('id_route')->asArray()->all();
+
+           echo "<option value=''>Select Route ...</option>";
+            foreach ($modelTrip as $key => $value) {
+                if (($modelRoute = TRoute::findOne($value['id_route'])) !== null) {
+                    if (($modelCurrentPrice = TSeasonPriceSet::find()->where(['id_company'=>$data['company']])->andWhere(['id_route'=>$modelRoute->id])->one()) !== null) {
+                        echo "<option style='background-color:#B3E5FC;' value='".$modelRoute->id."'>".$modelRoute->departureHarbor->name."->".$modelRoute->arrivalHarbor->name." ( <span style=\"font-weight:bold;\" class='pull-right'> Avaible On ".date('d-m-Y',strtotime($modelCurrentPrice->start_date))."-".date('d-m-Y',strtotime($modelCurrentPrice->end_date))."</span> )</option>";
+                    }else{
+                   echo "<option value='".$modelRoute->id."'><b>".$modelRoute->departureHarbor->name."->".$modelRoute->arrivalHarbor->name."</b></option>";
+                    }
+                }
+                
+            }
+        }
+    }
+
     /**
      * Lists all TSeasonPriceSet models.
      * @return mixed

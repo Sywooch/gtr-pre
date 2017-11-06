@@ -24,7 +24,7 @@ $model->isNewRecord ? $model->id_season_type = 1 : $model->id_season_type = $mod
         'onchange'=>'
                 var vcompany = $("#drop-company").val();
                 $.ajax({
-                    url: "'.Url::to(["/shuttle-time/list-route"]).'",
+                    url: "'.Url::to(["list-route"]).'",
                     type:"POST",
                     data:{company :vcompany},
                     success: function (data) {

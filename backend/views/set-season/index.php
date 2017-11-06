@@ -63,10 +63,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'idCompany.name',
             'idSeasonType.season',
-            'idRoute.departureHarbor.name',
-            'idRoute.arrivalHarbor.name',
-            'adult_price',
-            'child_price',
+            [
+            'header'=>'Route',
+            'format'=>'raw',
+            'value'=>function($model){
+                return $model->idRoute->departureHarbor->name."<span class='fa fa-arrow-right'></span>".$model->idRoute->arrivalHarbor->name;
+            }
+            ],
+            [
+            'header'=>'Price',
+            'format'=>'raw',
+            'value'=>function($model){
+                return "<span class='fa fa-user'> Rp </span> ".number_format($model->adult_price,0)." / <span class='fa fa-child'> Rp </span> ".number_format($model->child_price,0);
+            }
+            ],
             'infant_price',
             'start_date',
             'end_date',
