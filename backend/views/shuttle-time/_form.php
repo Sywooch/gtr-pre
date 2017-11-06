@@ -128,6 +128,7 @@ $layout6 = ['template'=>"<div class=\"row col-md-3\">{label}\n{input}\n{error}\n
 $this->registerJs('
 $("#drop-company").on("change",function(){
     var vcompany = $("#drop-company").val();
+    $("#drop-route").html("<option value=\'\'>Please Wait ...</option>");
         $.ajax({
             url: "'.Url::to(["list-route"]).'",
             type:"POST",
@@ -140,6 +141,7 @@ $("#drop-company").on("change",function(){
 $("#drop-route").on("change",function(){
     var vcompany = $("#drop-company").val();
     var vroute   = $(this).val();
+    $("#drop-dept-time").html("<option value=\'\'>Please Wait ...</option>");
     $.ajax({
         url: "'.Url::to(["list-dept-time"]).'",
         type:"POST",
@@ -155,6 +157,7 @@ $("#drop-dept-time").on("change",function(){
     var vcompany = $("#drop-company").val();
     var vroute   = $("#drop-route").val();
     if (vtime != "" && vcompany != "" && vroute != "") {
+        $("#drop-area").html("<option value=\'\'>Please Wait ...</option>");
         $.ajax({
             url: "'.Url::to(["list-shuttle-area"]).'",
             type:"POST",
