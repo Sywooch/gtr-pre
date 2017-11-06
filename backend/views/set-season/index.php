@@ -29,7 +29,12 @@ $this->params['breadcrumbs'][] = $this->title;
         'bordered'  => true,
         'responsive'=>true,
         'hover'        =>true,
-        'pjax'         =>false,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+           // 'beforeGrid'=>'My fancy content before.',
+            //'afterGrid'=>'My fancy content after.',
+        ],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 
