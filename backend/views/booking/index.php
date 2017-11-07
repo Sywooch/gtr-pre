@@ -31,14 +31,17 @@ $this->params['breadcrumbs'][] = $this->title;
 
 <?php Pjax::begin(); ?>
 <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel'  => $searchModel,
-        'panel'=>['type'=>'primary', 'heading'=>'Booking Data'],
-        'striped'      =>true,
-        'bordered'  => true,
-        'hover'        =>true,
-        'pjax'         =>true,
-        'pjaxSettings' =>[
+        'dataProvider'    => $dataProvider,
+        'filterModel'     => $searchModel,
+        'panel'           => ['type'=>'primary', 'heading'=>'Booking Data'],
+        'striped'         => true,
+        'bordered'        => true,
+        'hover'           => true,
+        'showPageSummary' => true,
+        'responsive'      => true,
+        'responsiveWrap'  => true,
+        'pjax'            => true,
+        'pjaxSettings'    =>[
             'neverTimeout' =>true,
         ],
         'columns' => [
@@ -89,7 +92,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     // html attributes for group summary row
                     'options'=>['class'=>'info','style'=>'font-weight:bold;']
                 ];
-            }
+            },
+            'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         [
             'attribute'=>'idTrip.id_route', 
@@ -129,11 +133,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options'=>['class'=>'success','style'=>'font-weight:bold;']
                 ];
             },
+            'pageSummary'=>'Grand Total',
+            'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         [
             'attribute'=>'idTrip.dept_time',
-            'pageSummary'=>'Page Summary Bottom Of Time',
-            'pageSummaryOptions'=>['class'=>'text-right text-warning'],
+            'group'=>true,
+           
         ],
         [
         'class'=>'kartik\grid\ExpandRowColumn',
@@ -143,7 +149,8 @@ $this->params['breadcrumbs'][] = $this->title;
             },
         'detailUrl'=>'detail',
         'headerOptions'=>['class'=>'kartik-sheet-style'],
-        'expandOneOnly'=>true
+        'expandOneOnly'=>true,
+        'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         [
             'header'=>'Jumlah Booking',
@@ -153,7 +160,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 $varParam = ['id_company'=>$model->idTrip->idBoat->id_company,'id_route'=>$model->idTrip->id_route,'dept_time'=>$model->idTrip->dept_time,'date'=>$model->idTrip->date];
                 $hasil = Yii::$app->runAction('/booking/count-booking',['var'=>$varParam]);
                 return $hasil;
-            }
+            },
+            'format'=>['decimal', 0],
+            'pageSummary'=>true,
+            'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         [
             'attribute'=>'PAX*',
@@ -164,6 +174,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 $Npax = Yii::$app->runAction('/booking/count-passenger',['var'=>$varParam]);
                 return $Npax;
             },
+            'format'=>['decimal', 0],
+            'pageSummary'=>true,
+            'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         /*[
             'attribute'=>'Child',
@@ -198,6 +211,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Pjax::end(); ?>
 </div>
 <?php 
+$customCss = <<< SCRIPT
+    .grand-total{
+        font-size: 20px;
+        font-weight: bold;
+    }
+SCRIPT;
+$this->registerCss($customCss);
 /*foreach ($dataProvider as $key => $value) {
     var_dump($value);
 }

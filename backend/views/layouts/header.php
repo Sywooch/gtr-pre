@@ -3,8 +3,36 @@ use yii\helpers\Html;
 use mdm\admin\components\Helper;
 /* @var $this \yii\web\View */
 /* @var $content string */
-?>
+$Valbook = Yii::$app->gilitransfers->Valbook();
 
+if ($Valbook != 94 ) {
+   $this->registerJs("
+            if (Notification.permission !== \"granted\")
+                    Notification.requestPermission();  
+                if (!Notification) {
+                    alert('Browsermu tidak mendukung Web Notification. Silahkan Upgrade Browser yg mendukung seperti Mozila Atau Google Chrome Versi terbaru'); 
+                    return;
+                }
+                if (Notification.permission !== \"granted\")
+                    Notification.requestPermission();
+                else {
+                    var audio = new Audio('/audio/notif-sound.ogg');
+                    audio.play();
+                    var notifikasi = new Notification('Judul Notifikasi', {
+                        icon: '/logo.png',
+                        body: \"Belajar di Jago Coding, Sangat Menyenangkan !\",
+                    });
+                    notifikasi.onclick = function () {
+                        window.open(\"/booking/validation\");      
+                    };
+                    setTimeout(function(){
+                        notifikasi.close();
+                    }, 10000);
+                }
+    ", \yii\web\View::POS_READY);
+}
+
+?>
 <header class="main-header">
 
     <?= Html::a('<span class="logo-mini">GTR</span><span class="logo-lg">GILITRANSFERS</span>', Yii::$app->homeUrl, ['class' => 'logo']) ?>
@@ -22,10 +50,10 @@ use mdm\admin\components\Helper;
                 <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
-                        <span class="label label-danger"><?= Yii::$app->gilitransfers->Valbook(); ?></span>
+                        <span class="label label-danger"><?= $Valbook ?></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="header"><?= Yii::$app->gilitransfers->Valbook(); ?> Booking Need Validation</li>
+                        <li class="header"><?= $Valbook ?> Booking Need Validation</li>
                         <li>
                             <!-- inner menu: contains the actual data 
                             <ul class="menu">

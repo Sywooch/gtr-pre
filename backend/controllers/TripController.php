@@ -23,6 +23,7 @@ use mdm\admin\components\Helper;
  */
 class TripController extends Controller
 {
+   // public $_userid = Yii::$app->user->identity->id;
     
     /**
      * @inheritdoc
@@ -39,6 +40,20 @@ class TripController extends Controller
         ];
     }
 
+    public function actionGetAvaibleRoute(){
+       // if (Yii::$app->request->isPost) {
+            $Trip = TTrip::find()->joinWith(['idBoat.idCompany','idRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->all();
+            foreach ($Trip as $key => $value) {
+                $list[$key] = ['id'=>$value->idRoute->id,'route'=>$value->idRoute->departureHarbor->name."->".$value->idRoute->arrivalHarbor->name,'island'=>$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island];
+            }
+        return $list; 
+        //}
+    }
+
+    public function actionGetAvaibleTime(){
+        $ListTime = TTrip::find()->joinWith(['idBoat.idCompany'])->select('concat(dept_time) as dept_time,id_boat')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->asArray()->orderBy(['dept_time'=>SORT_ASC])->all();
+        return $ListTime;
+    }
     public function actionHeaderTripSchedule(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();

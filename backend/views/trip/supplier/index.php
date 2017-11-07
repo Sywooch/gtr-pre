@@ -12,10 +12,9 @@ use mdm\admin\components\Helper;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 $this->title = Yii::t('app', 'Trip List');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 <?= Html::a('', ['create'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
-
+<?= Html::a('', ['index'], ['class' => 'btn material-btn material-btn_success main-container__column material-btn_lg glyphicon glyphicon-refresh']) ?>
  <b style="font-size: 25px;"><center>Trip Summary</center></b>
  <div class="panel-group material-accordion material-accordion_primary" id="grid-summary">
   <div class="panel panel-default material-accordion__panel material-accordion__panel">
@@ -54,15 +53,30 @@ $this->params['breadcrumbs'][] = $this->title;
             
             [
             'header'=>'Route',
+            'attribute'=>'id_route',
             'value'=>function($model){
               return $model->idRoute->departureHarbor->name." -> ".$model->idRoute->arrivalHarbor->name;
-            }
+            },
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route','island'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+                  ],
+            'filterInputOptions'=>['placeholder'=>'Any Route...'],
             ],
             [
             'header'=>'Time',
             'value'=>function($model){
               return $model->dept_time;
-            }
+            },
+            'attribute'=>'dept_time',
+            'filterType'=>GridView::FILTER_SELECT2,
+            'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-time'), 'dept_time', 'dept_time'), 
+            'filterWidgetOptions'=>[
+                'pluginOptions'=>['allowClear'=>true],
+                  ],
+            'filterInputOptions'=>['placeholder'=>'Anytime...'],
+
             ],
             [
             'header'=>'start',

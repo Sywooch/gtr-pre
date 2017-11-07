@@ -76,7 +76,7 @@ class BookingController extends Controller
     public function actionDetail(){
         if (isset($_POST['expandRowKey'])) {
             $model = $this->findModel($_POST['expandRowKey']);
-            $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$model->idTrip->idBoat->id_company])->andWhere(['t_trip.id_route'=>$model->idTrip->id_route])->andWhere(['t_trip.date'=>$model->idTrip->date])->andWhere(['t_trip.dept_time'=>$model->idTrip->dept_time])->all();
+            $modelBooking = TBooking::find()->joinWith(['idTrip.idBoat'])->where(['t_boat.id_company'=>$model->idTrip->idBoat->id_company])->andWhere(['t_trip.id_route'=>$model->idTrip->id_route])->andWhere(['t_trip.date'=>$model->idTrip->date])->andWhere(['t_trip.dept_time'=>$model->idTrip->dept_time])->all();
            //$modelPassenger = TPassenger::find();
             return $this->renderAjax('_detail-booking', [
                 'modelBooking'=>$modelBooking,
@@ -145,14 +145,25 @@ protected function findAllBooking(){
         foreach ($this->findAllBooking() as $key => $value) {
             $res[] = $value->id;
         }
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-            'findPassengers' => $findPassengers,
-            'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
-            'listDept' => $listDept,
-            'listCompany' => $listCompany,
-        ]);
+        if(Helper::checkRoute('/booking/*')){
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'findPassengers' => $findPassengers,
+                'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
+                'listDept' => $listDept,
+                'listCompany' => $listCompany,
+            ]);
+        }else{
+            return $this->render('supplier/index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                'findPassengers' => $findPassengers,
+                'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
+                'listDept' => $listDept,
+                'listCompany' => $listCompany,
+            ]);
+        }
     }
 
         public function actionValidation()

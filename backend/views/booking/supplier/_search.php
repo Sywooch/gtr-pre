@@ -1,11 +1,12 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
+use yii\helpers\ArrayHelper;
 use kartik\widgets\ActiveForm;
 use kato\pickadate\Pickadate;
 use kartik\widgets\DatePicker;
 use kartik\widgets\Typeahead;
-use mdm\admin\components\Helper;
 use kartik\widgets\Select2;
 
 /* @var $this yii\web\View */
@@ -49,6 +50,20 @@ $template2 = ['template'=>"
 ]); ?>
 
     <?= $form->field($model, 'departure',$template2)->dropDownList($listDept, ['id' => 'dept-port','prompt'=>'Select Departure Port']); ?>
+    <?= $form->field($model, 'id_route',$template2)->dropDownList(ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route', 'island'), ['id' => 'drop-route','prompt'=>'Select Route...'])->label('Route'); ?>
+    <?php
+$this->registerJs('
+var vcompany = $("#drop-company").val();
+$.ajax({
+    url: "'.Url::to(["list-route"]).'",
+    type:"POST",
+    data:{company :vcompany},
+    success: function (data) {
+        $("#drop-route").html(data);
+    }
+});
+    ', \yii\web\View::POS_READY);
+     ?>
     <?= $form->field($model, 'date',$template2)->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Select Date'],
     'pickerButton' => false,
@@ -106,33 +121,12 @@ $rangeType = isset($request->queryParams['TBookingSearch']["rangeType"]) ? $requ
 $model->rangeType = $rangeType;
 
     ?>
-    </div>
-    <div class="col-md-4 col-md-offset-9">
+<br>
         <?= Html::activeRadioList($model, 'rangeType', ['1'=>'Trip Date','2'=>'Book Date'], ['id' => 'radio-range-type']); ?>
     </div>
 
-    <div class="col-md-2">
-<?= $form->field($model, 'id_company')->widget(Select2::classname(), [
-                                'data' => $listCompany,
-                                'options' => ['placeholder' => 'Select Company...'],
-                                'pluginOptions' => [
-                                'allowClear' => true
-                                ],
-                                ])->label('Company');
-     ?>
-</div>
-
 
     <div class="form-group col-md-12">
-    <?php  if(Helper::checkRoute('/booking/createss')): ?>
-
-        <?= Html::a('', ['create'], [
-                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg glyphicon glyphicon-plus',
-                'data-toggle'=>'tooltip',
-                'title'=>'Add Booking',
-                ]) ?>
-
-    <?php endif; ?>
         <?= Html::submitButton(' ', [
                 'class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
                 'data-toggle'=>'tooltip',
