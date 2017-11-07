@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TShuttleTimeSearch */
@@ -19,6 +19,18 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'panel'=>['type'=>'info', 'heading'=>''],
+        'export'=>false,
+        'striped'      =>true,
+        'bordered'  => true,
+        'responsive'=>true,
+        'hover'        =>true,
+        'pjax'=>true,
+        'pjaxSettings'=>[
+            'neverTimeout'=>true,
+           // 'beforeGrid'=>'My fancy content before.',
+            //'afterGrid'=>'My fancy content after.',
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
             'idCompany.name',
