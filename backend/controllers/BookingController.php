@@ -11,6 +11,7 @@ use common\models\TRoute;
 use common\models\THarbor;
 use common\models\TMailQueue;
 use common\models\TTrip;
+use common\models\TCompany;
 use common\models\TShuttleTime;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -139,6 +140,7 @@ protected function findAllBooking(){
         $dataProvider = $searchModel->summarySearch(Yii::$app->request->queryParams);
         $findPassengers = TPassenger::find();
         $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
+        $listCompany = ArrayHelper::map(TCompany::find()->asArray()->all(), 'id', 'name');
 
         foreach ($this->findAllBooking() as $key => $value) {
             $res[] = $value->id;
@@ -149,6 +151,7 @@ protected function findAllBooking(){
             'findPassengers' => $findPassengers,
             'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
             'listDept' => $listDept,
+            'listCompany' => $listCompany,
         ]);
     }
 

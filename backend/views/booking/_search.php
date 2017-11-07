@@ -6,6 +6,8 @@ use kato\pickadate\Pickadate;
 use kartik\widgets\DatePicker;
 use kartik\widgets\Typeahead;
 use mdm\admin\components\Helper;
+use kartik\widgets\Select2;
+
 /* @var $this yii\web\View */
 /* @var $model app\models\TBookingSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -83,7 +85,7 @@ $customScript = <<< SCRIPT
     })
 SCRIPT;
 $this->registerJs($customScript, \yii\web\View::POS_READY);
-        echo '<center><label class="control-label">Select date range</label></center>';
+        echo '<center><label class="control-label">Date Range</label></center>';
         echo DatePicker::widget([
             'model' => $model,
             'attribute' => 'startDate',
@@ -99,32 +101,27 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
                 'autoclose' => true,
             ]
         ]);
+$request = Yii::$app->request;
+$rangeType = isset($request->queryParams['TBookingSearch']["rangeType"]) ? $request->queryParams['TBookingSearch']["rangeType"] : '1';
+$model->rangeType = $rangeType;
+
     ?>
     </div>
+    <div class="col-md-4 col-md-offset-9">
+        <?= Html::activeRadioList($model, 'rangeType', ['1'=>'Trip Date','2'=>'Book Date'], ['id' => 'radio-range-type']); ?>
+    </div>
 
-    <?php // echo $form->field($model, 'trip_price',$template2) ?>
+    <div class="col-md-2">
+<?= $form->field($model, 'id_company')->widget(Select2::classname(), [
+                                'data' => $listCompany,
+                                'options' => ['placeholder' => 'Select Company...'],
+                                'pluginOptions' => [
+                                'allowClear' => true
+                                ],
+                                ])->label('Company');
+     ?>
+</div>
 
-    <?php // echo $form->field($model, 'total_price',$template2) ?>
-
-    <?php // echo $form->field($model, 'currency',$template2) ?>
-
-    <?php // echo $form->field($model, 'total_idr',$template2) ?>
-
-    <?php // echo $form->field($model, 'exchange',$template2) ?>
-
-    <?php // echo $form->field($model, 'id_status',$template2) ?>
-
-    <?php // echo $form->field($model, 'id_payment_method',$template2) ?>
-
-    <?php // echo $form->field($model, 'send_amount',$template2) ?>
-
-    <?php // echo $form->field($model, 'token',$template2) ?>
-
-    <?php // echo $form->field($model, 'process_by') ?>
-
-    <?php // echo $form->field($model, 'expired_time') ?>
-
-    <?php // echo $form->field($model, 'datetime') ?>
 
     <div class="form-group col-md-12">
     <?php  if(Helper::checkRoute('/booking/createss')): ?>
