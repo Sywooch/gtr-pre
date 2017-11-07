@@ -41,7 +41,7 @@ class TShuttleTimeSearch extends TShuttleTime
      */
     public function search($params)
     {
-        $query = TShuttleTime::find()->joinWith(['idCompany','idRoute','idArea'])->orderBy(['t_company.name'=>SORT_ASC,'t_route.departure'=>SORT_ASC,'t_shuttle_area.area'=>SORT_ASC]);
+        $query = TShuttleTime::find()->joinWith(['idCompany','idRoute','idArea'])->orderBy(['t_company.name'=>SORT_ASC,'t_route.departure'=>SORT_ASC,'t_shuttle_area.area'=>SORT_ASC,'shuttle_time_start'=>SORT_ASC]);
 
         // add conditions that should always apply here
 
