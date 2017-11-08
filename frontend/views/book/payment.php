@@ -82,7 +82,6 @@ $(document).ready(function(){
 </body>
 
 <div id="form-payment" style="display: none;" class="tpembayaran-form">
-
     <?php $form = ActiveForm::begin(); ?>
 <?php echo AlertBlock::widget([
             'useSessionFlash' => true,
@@ -90,15 +89,13 @@ $(document).ready(function(){
             ]);
 
       ?>
-   
-
 <div class="col-md-12">
-  <div class="col-md-6 col-md-offset-3">
-  <div class="panel panel-primary">
-      <div class="panel-heading">Choose Your Payment</div>
-  <div id="body-form">   
-    <div  class="panel-body">
-           <?=  
+  <div class="col-md-8 col-md-offset-2">
+    <div style="min-height: 250px; height: 250px;" class="panel panel-default material-panel material-panel_primary">
+      <h5 class="panel-heading material-panel__heading">Choose Your Payment</h5>
+      <div id="body-form">  
+        <div class="panel-body material-panel__body">
+         <?=  
            $form->field($modelPayment, 'payment')->radioList(['1'=>'Paypal','2'=>'local Bank Transfers',],[
             'id'=>'rad-method',
             'onchange'=>'
@@ -133,9 +130,6 @@ $(document).ready(function(){
                    });
           }'
             ])->label(false) ?>
-         
-          
-    </ul>
     <center>
     <b style="display: none;" class="payment-harga" id="harga-ext" ><?= $paymentData->currency." ".$paymentData->total_payment ?></b>
     <b class="payment-harga" id="harga-idr"><?= "IDR ".number_format($paymentData->total_payment_idr) ?></b>
@@ -146,10 +140,9 @@ $(document).ready(function(){
         </div>
 </div>
     <center id="hasil-ajax"></center>
- </div>    
-</div>
-</div>
-</div> 
+ </div>
+      </div>
+    </div>
 
     
 

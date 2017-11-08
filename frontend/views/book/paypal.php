@@ -18,13 +18,13 @@ $this->registerJs("
 
     paypal.Button.render({
 
-            env: 'sandbox', // sandbox | production
+            env: 'production', // sandbox | production
 
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
             client: {
-                sandbox:    'ASmiPp9P_Oc31W24wvJB8KPSjS_FJkwB1sOt0-hjH3cttD94VmMP-TCfwYQ8a1hhQwjoKX26m3bCdXQL',
-                //production: 'AauwsNJmTf1GfGWwVhwfZVxNaiEbLr0lbslalL80wsUUEgiRJaucebjdExOaCUuG-FAKIEsILDOPo2bC'
+               // sandbox:    'ASmiPp9P_Oc31W24wvJB8KPSjS_FJkwB1sOt0-hjH3cttD94VmMP-TCfwYQ8a1hhQwjoKX26m3bCdXQL',
+                production: 'AfJ2JcfQX0dwGOgVCYSqAm4V-6RHmN726doLwsA3vUMtgeCOJct59jMH9Z0PHyobxAUGIw_tDQJ0g1Qf'
             },
 
             // Show the buyer a 'Pay Now' button in the checkout flow
@@ -46,7 +46,7 @@ $this->registerJs("
                                 item_list: {
                                         items: [
                                         {
-                                        name: 'Payment Gilitranfers From : ".$modelpembayaranPaypal->name."-".$modelpembayaranPaypal->email."',
+                                        name: 'Payment Gilitranfers From : ".$modelpembayaranPaypal->name."/".$modelpembayaranPaypal->email."',
                                         description: '".count($modelpembayaranPaypal->tBookings)." Trip',
                                         quantity: '1',
                                         price: '".$total."',

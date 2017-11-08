@@ -8,39 +8,15 @@ use yii\helpers\Html;
 
       <!-- Icons source http://dribbble.com/shots/913555-Flat-Web-Elements -->
       <div class="notify successbox">
-        <h1>Your order is successful!</h1>
+        <h1>Thank You</h1>
         <span class="alerticon"><img src="/thanks.png" alt="checkmark" /></span>
-        <p>Please check your email for further instructions, email may be in the spam folder, if you do not receive emails more than 5 minutes please contact us via the following link,. Thank you for choosing gilitransfers, if any criticism and suggestions can you convey through the following link</p>
+        <p><b>Your Booking Successful...!</b><br>Please check your email for further instructions, email may be in the spam folder, if you do not receive emails more than 5 minutes please contact us via the following link,. Thank you for choosing gilitransfers, if any criticism and suggestions can you convey through the following link</p>
         <?= Html::a('Contact Us', ['/site/contact'], ['class' => 'btn material-btn material-btn_success main-container__column material-btn_lg']); ?>
         <?= Html::a('Go Home', ['/'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg']); ?>
       </div>
 <?php
 
 $customCss = <<< SCRIPT
-	/** resets **/
-html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
-  outline: none;
-  -webkit-font-smoothing: antialiased;
-  -webkit-text-size-adjust: 100%;
-  -ms-text-size-adjust: 100%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-}
-html { height: 101%; }
-body { 
-  background: #f0f0f0 url('http://s22.postimg.org/3l1gnfmwd/image.gif'); 
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  color: #313131;
-  font-size: 62.5%; 
-  line-height: 1; 
-}
 
 ::selection { background: #a4dcec; }
 ::-moz-selection { background: #a4dcec; }
@@ -147,6 +123,7 @@ p {
   font-size: 1.35em;
   line-height: 1.5em;
   margin-bottom: 22px;
+  text-align: justify;
 }
 
 

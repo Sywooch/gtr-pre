@@ -19,7 +19,7 @@ Class KursController extends Controller
 
        // if ( $expKurs < $now) {
            
-                foreach ($modelKurs as $value) {
+    foreach ($modelKurs as $value) {
                  $get              = file_get_contents("https://finance.google.com/finance/converter?a=1&from=".$value->currency."&to=IDR");
                  $get              = explode("<span class=bld>",$get);
                  $get              = explode("</span>",$get[1]);  
@@ -29,7 +29,7 @@ Class KursController extends Controller
                  $value->kurs      = $kurs_plus;
                  $value->update_at = $now;
                  $value->save();
-            }
+    }
             
             
         //}

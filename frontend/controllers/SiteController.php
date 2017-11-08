@@ -277,7 +277,7 @@ class SiteController extends Controller
             
             return $this->redirect(['result','formData'=>$formData]);
         }else{
-        $listCurrency = ArrayHelper::map($this->findKurs()->orderBy(['currency'=>SORT_DESC])->all(), 'currency', 'currency');
+        $listCurrency = ArrayHelper::map($this->findKurs()->asArray()->orderBy(['currency'=>SORT_ASC])->all(), 'currency', 'currency');
         $route = $this->findHarbor()->all();
         foreach ($route as $key => $value) {
             $arrayRoute[] = ['id'=>$value->id,'name'=>$value->name,'island'=>$value->idIsland->island];
