@@ -155,7 +155,7 @@ class ShuttleTimeController extends Controller
         $listArea = ArrayHelper::map(TShuttleArea::find()->asArray()->all(), 'id', 'area', 'idIsland.island');
 
         //List ROute;
-        $modelTrip = TTrip::find()->joinWith('idBoat')->select('id_route, id_boat, t_boat.id_company')->where(['t_boat.id_company'=>$model->id])->groupBy('id_route')->asArray()->all();
+        $modelTrip = TTrip::find()->joinWith('idBoat')->select('id_route, id_boat, t_boat.id_company')->where(['t_boat.id_company'=>$model->id_company])->groupBy('id_route')->asArray()->all();
             foreach ($modelTrip as $key => $value) {
                 if (($modelRoute = TRoute::findOne($value['id_route'])) !== null) {
                     $ARoute[] = ['id'=>$modelRoute->id,'route'=>$modelRoute->departureHarbor->name."->".$modelRoute->arrivalHarbor->name,'island'=>$modelRoute->departureHarbor->idIsland->island];
