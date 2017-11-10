@@ -228,10 +228,9 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
       }
     }
   }else{
-
     $("[id^=c-brith-obj-'.$cartValue->id_trip.'-] > div > input").val(null);
     $(".form-child-obj").val(null);
-    $(".label-pax").show();
+    $(".label-childs").show();
 
   }
 });
@@ -252,7 +251,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                             'class'=>$key == 0 ? 'form-control child-name-source-'.$copyVarC : 'form-control form-child-obj child-name-obj-'.$cartValue->id_trip.'-'.$copyVarC,
                             'id'=>$key == 0 ? 'child-name-source-'.$key.'-'.$copyVarC : 'child-obj-'.$key.'-'.$copyVarC,
                             ],
-                          'labelOptions'=>['class'=>$key == 0 ? '' : 'label-pax label-child-'.$cartValue->id_trip.'-'.$copyVarC],
+                          'labelOptions'=>['class'=>$key == 0 ? '' : 'label-childs label-child-'.$cartValue->id_trip.'-'.$copyVarC],
                           ]
                           )."</div>";
                           echo "<div class='col-md-3'>".$form->field($modelChild, "[$cartValue->id_trip][child][$i]id_nationality",$config)->dropDownList($listNationality, [
@@ -294,27 +293,20 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
 $this->registerJs('
 $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
   if ($(this).is(":checked")) {
-    var jmli = $("[id^=infant-source-]").size();
+    var jmli = $("[id^=infant-name-source-]").size();
     for (i=0; i < jmli; i++) {
-      var src = $(".form-infant-source-"+i).val();
+      var src = $(".infant-name-source-"+i).val();
+      var bsri = $(".infants-birthday-source-"+i).val();
       if ( $(".form-infant-obj-'.$cartValue->id_trip.'-"+i).length ) {
         $(".form-infant-obj-'.$cartValue->id_trip.'-"+i).val(src);
         $(".label-infant-'.$cartValue->id_trip.'-"+i).hide();
-      }else{
-       return true;
+        $("#i-brith-obj-'.$cartValue->id_trip.'-"+i+" > div > input").val(bsri);
       }
     }
   }else{
-    var jmli = $("[id^=infant-source-]").size();
-    for (i=0; i < jmli; i++) {
-      var src = $(".form-infant-source-"+i).val();
-      if ( $(".form-infant-obj-'.$cartValue->id_trip.'-"+i).length ) {
-        $(".form-infant-obj-'.$cartValue->id_trip.'-"+i).val(null);
-        $(".label-infant-'.$cartValue->id_trip.'-"+i).show();
-      }else{
-        return true;
-      }
-    }
+    $("[id^=i-brith-obj-'.$cartValue->id_trip.'-] > div > input").val(null);
+    $(".form-infant-obj").val(null);
+    $(".label-infants").show();
   }
 });
 
@@ -331,10 +323,10 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                           'encodeLabel'=> false,
                           'label'=>'<i class="glyphicon glyphicon-user"></i>Infant Name',
                           'options'=>[
-                            'class'=>$key == 0 ? 'form-control form-infant-source-'.$copyVarI : 'form-control form-infant-obj-'.$cartValue->id_trip.'-'.$copyVarI,
-                            'id'=>$key == 0 ? 'infant-source-'.$key.'-'.$copyVarI : 'infant-obj-'.$key.'-'.$copyVarI,
+                            'class'=>$key == 0 ? 'form-control infant-name-source-'.$copyVarI : 'form-control form-infant-obj-'.$cartValue->id_trip.'-'.$copyVarI,
+                            'id'=>$key == 0 ? 'infant-name-source-'.$key.'-'.$copyVarI : 'infant-obj-'.$key.'-'.$copyVarI,
                             ],
-                          'labelOptions'=>['class'=>'label-infant-'.$cartValue->id_trip.'-'.$copyVarI],
+                          'labelOptions'=>['class'=>$key == 0 ? '' : 'label-infants label-infant-'.$cartValue->id_trip.'-'.$copyVarC],
                           ]
                           )."</div>";
 
@@ -343,11 +335,16 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                           'prompt' => 'Select Nationality',
                           ])."</div>";
 
-                          echo "<div class='col-md-2'>". $form->field($modelInfant, "[$cartValue->id_trip][infant][$i]birthday",$config)->widget(\kato\pickadate\Pickadate::classname(), [
+                          echo "<div class='col-md-2'>". $form->field($modelInfant, "[$cartValue->id_trip][infant][$i]birthday",['template'=>"{input}\n{error}\n{hint}",'options' => [ 'id' => $key == 0 ? 'i-brith-src' : 'i-brith-obj-'.$cartValue->id_trip.'-'.$copyVarI]])->widget(Pickadate::classname(), [
                               'isTime' => false,
-                              'id'=>'infant-birthday',
-                              'options'=>['id'=>'infant-birthday-'.$cartValue->id_trip.'-'.$i,'class'=>'picker-infants','placeholder'=>'Date of birth'],
-                             
+                             // 'id'=>'infants-birthday',
+                              'options'=>[
+                                  'class' => $key == 0 ? 'picker-infants infants-birthday-source-'.$copyVarI : 'picker-infants infants-birthday-obj-'.$cartValue->id_trip.'-'.$copyVarI,
+                                  'id'    => $key == 0 ? 'infants-birthday-source-'.$key.'-'.$copyVarI : 'infants-birthday-obj-'.$key.'-'.$copyVarI,
+                                  'placeholder'=>'Date of birth',
+
+                                  ],
+                              
                               ])."</div></div>";
 
                       }

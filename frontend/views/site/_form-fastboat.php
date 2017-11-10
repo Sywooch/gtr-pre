@@ -34,6 +34,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
           'allowClear' => false,
       ],
     ]); ?>
+
     </div>
     <div class="col-md-3 col-sm-6 col-xs-12">
     <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->widget(Select2::classname(), [
@@ -46,10 +47,10 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
     ]); ?>
     </div>
 
-    <div class="col-md-3 col-sm-4 col-xs-4">
+    <div class="col-md-3 col-sm-12 col-xs-12">
     <label class="control-label">No Of Passengers</label>
       <div id="pax-list" class="dropdown material-dropdown main-container__column">
-          <li style="padding: 5px 15px 5px 15px; " class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
+          <li style="padding: 5px 15px 5px 15px; text-align: center; " class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
            <span class="fa fa-group"></span> Adult <span id="span-adult">1 </span>, Childs <span id="span-child"> 0</span>, Infants <span id="span-infants"> 0</span>
           </li>
         <div class="dropdown-menu">
@@ -160,7 +161,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
     </div>
 </div>
 
-<div class="col-md-2 col-md-offset-0 col-sm-6 col-sm-offset-5 col-xs-6 col-xs-offset-6">
+<div class="col-md-1 col-md-offset-0 col-sm-6 col-sm-offset-5 col-xs-6 col-xs-offset-5">
 <label></label>
 <div class="main-container__column material-checkbox-group material-checkbox-group_primary">
     <?= Html::activeCheckbox($modelBookForm,'type', [ 
@@ -170,17 +171,13 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
           'onchange'=>'
           if ($(this).is(":checked")) {
             $("#div-return").css("visibility", "visible");
-            $("#div-currency").removeClass("col-xs-6");
-            $("#div-currency").addClass("col-xs-12");
           }else{
-            $("#div-return").css("visibility", "hidden")
-            $("#div-currency").removeClass("col-xs-12");
-            $("#div-currency").addClass("col-xs-6");
+            $("#div-return").css("visibility", "hidden");
 
           }
           '
           ]); ?>
-    <label class="material-checkbox-group__label" for="checkbox-type"> Return Trip</label>
+    <label class="material-checkbox-group__label" for="checkbox-type"> Return</label>
 </div>
 
 </div>
@@ -197,8 +194,6 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 					</div>
 <?php Pjax::begin(['id'=>'pjax-return-date']); ?>					
 					<div class="col-md-2 col-sm-4 col-xs-6" id="div-return">
-
-
 					<?= $form->field($modelBookForm, 'returnDate')->widget(kato\pickadate\Pickadate::classname(), [
 						'isTime' => false,
 						'id'=>'return-date',
@@ -269,7 +264,7 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
  ?>
 <?php Pjax::end(); ?> 
 
-<div id="div-currency" class="col-md-2 col-sm-4 col-xs-6">
+<div id="div-currency" class="col-md-3 col-sm-4 col-xs-12">
 <?= $form->field($modelBookForm, 'currency',['addon' => ['prepend' => ['content'=>'<i class="fa fa-money"></i>']]])->widget(Select2::classname(), [
     'data' => $listCurrency,
     'size' => Select2::SMALL,

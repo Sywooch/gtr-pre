@@ -107,7 +107,9 @@ AppAsset::register($this);
 <?= Html::button(' Top <span></span>', [
   'class'=>'btn',
   'id'=>'btn-scroll',
-  'style'=>'display:none;'
+  'style'=>'display:none;',
+  'data-toggle'=>'tooltip',
+  'title'=>'Back To Top',
   ]); ?>
     </div>
 </div>
@@ -135,7 +137,7 @@ $customCss = <<< SCRIPT
     cursor:pointer;
     width:50px;
     height:50px;
-    background-color:#3498db;
+    background-color:#f2a12e;
     text-indent:-9999px;
     display:none;
     -webkit-border-radius:60px;

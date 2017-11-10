@@ -29,8 +29,9 @@ class TKurs extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['currency', 'kurs'], 'required'],
+            [['currency', 'kurs','name'], 'required'],
             [['kurs'], 'integer'],
+            [['name'],'string','max'=>50],
             [['update_at'], 'safe'],
             [['currency'], 'string', 'max' => 5],
         ];
@@ -43,6 +44,7 @@ class TKurs extends \yii\db\ActiveRecord
     {
         return [
             'currency' => Yii::t('app', 'Currency'),
+            'name' => Yii::t('app', 'Currency Name'),
             'kurs' => Yii::t('app', 'Kurs'),
             'update_at' => Yii::t('app', 'Update At'),
         ];
