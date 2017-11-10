@@ -240,6 +240,20 @@ class SiteController extends Controller
 
              $kurs = $this->findKurs()->where(['currency'=>$session['currency']])->one();
             if ($modelBookForm->type == '1') {
+                 $formData = [
+                    'departurePort' =>$modelBookForm->departurePort,
+                    'arrivalPort'   =>$modelBookForm->arrivalPort,
+                    'departureDate' =>$modelBookForm->departureDate,
+                    'returnDate'    =>$modelBookForm->returnDate,
+                    'adults'        =>$modelBookForm->adults,
+                    'childs'        =>$modelBookForm->childs,
+                    'infants'       =>$modelBookForm->infants,
+                    'type'          =>'2',
+                   // 'currency'      =>$kurs->currency,
+                    'exchange'      =>$kurs->kurs,
+                ];
+                
+            }else{
                 $formData = [
                     'departurePort' =>$modelBookForm->departurePort,
                     'arrivalPort'   =>$modelBookForm->arrivalPort,
@@ -253,23 +267,11 @@ class SiteController extends Controller
                     'exchange'      =>$kurs->kurs,
                     
                 ];
-            }elseif ($modelBookForm->type == '2') {
-                $formData = [
-                    'departurePort' =>$modelBookForm->departurePort,
-                    'arrivalPort'   =>$modelBookForm->arrivalPort,
-                    'departureDate' =>$modelBookForm->departureDate,
-                    'returnDate'    =>$modelBookForm->returnDate,
-                    'adults'        =>$modelBookForm->adults,
-                    'childs'        =>$modelBookForm->childs,
-                    'infants'       =>$modelBookForm->infants,
-                    'type'          =>'2',
-                   // 'currency'      =>$kurs->currency,
-                    'exchange'      =>$kurs->kurs,
-                ];
-            }else{
+               
+            }/*else{
                 $session            = session_unset();
                 return $this->goHome();
-            }
+            }*/
 
             $session['formData'] = $formData;
             $session['timeout'] = date('d-m-Y H:i:s');

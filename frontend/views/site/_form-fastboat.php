@@ -2,8 +2,10 @@
 use yii\helpers\Html;
 use kartik\form\ActiveForm;
 use yii\widgets\Pjax;
+use kartik\widgets\Select2;
 use yii\helpers\Url;
 use rmrevin\yii\fontawesome\AssetBundle;
+use kartik\widgets\TouchSpin;
 ?>
 
 <?php
@@ -11,7 +13,7 @@ $modelBookForm->arrivalPort = 4;
 $modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
 //$modelBookForm->returnDate = $modelBookForm->departureDate;
 $items =['1'=>'One Way','2'=>'Return'];
-$modelBookForm->type = 1;
+//$modelBookForm->type = 1;
 
 $customScript = <<< SCRIPT
   $(document).ready(function(){
@@ -24,51 +26,163 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 <?php $form = ActiveForm::begin(); ?>
 <div class="row col-md-12 col-sm-12 col-xs-12">
     <div class="col-md-3 col-sm-6 col-xs-12">
-      <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->dropDownList($listDept, [
-                        'id' => 'drop-dept',
-                        'class'=>'input-sm form-control',
-                       /* 'onchange'=>'
-                            var from = $("#drop-dept").val();
-                            $.ajax({
-                              url: "'. Url::to("to-port").'",
-                              type: "POST",
-                              data: {fromv :from},
-                              success: function(data){
-                                $("#drop-arv").html(data);
-                              }
-                            });
-                            ///alert(from);
-                           ',*/
-      ]); ?>
+    <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->widget(Select2::classname(), [
+      'data' => $listDept,
+      'size' => Select2::SMALL,
+      'options' => ['id' => 'drop-dept'],
+      'pluginOptions' => [
+          'allowClear' => false,
+      ],
+    ]); ?>
     </div>
     <div class="col-md-3 col-sm-6 col-xs-12">
-    <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->dropDownList($listDept, ['id' => 'drop-arv','class'=>'input-sm form-control']); ?>
+    <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->widget(Select2::classname(), [
+      'data' => $listDept,
+      'size' => Select2::SMALL,
+      'options' => ['id' => 'drop-arv',],
+      'pluginOptions' => [
+          'allowClear' => false,
+      ],
+    ]); ?>
     </div>
-    <div class="col-md-1 col-sm-4 col-xs-4">
-    <?= $form->field($modelBookForm, 'adults')->dropDownList($adultList, ['id' => 'drop-adult','class'=>'input-sm form-control']); ?>
-    </div>
-    <div class="col-md-1 col-sm-4 col-xs-4">
-    <?= $form->field($modelBookForm, 'childs')->dropDownList($childList, ['id' => 'drop-child','class'=>'input-sm form-control']); ?>
-    </div>
-    <div class="col-md-1 col-sm-4 col-xs-4">
-    <?= $form->field($modelBookForm, 'infants')->dropDownList($childList, ['id' => 'drop-infant','class'=>'input-sm form-control']); ?>
-    </div>  
 
+    <div class="col-md-3 col-sm-4 col-xs-4">
+    <label class="control-label">No Of Passengers</label>
+      <div id="pax-list" class="dropdown material-dropdown main-container__column">
+          <li style="padding: 5px 15px 5px 15px; " class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
+           <span class="fa fa-group"></span> Adult <span id="span-adult">1 </span>, Childs <span id="span-child"> 0</span>, Infants <span id="span-infants"> 0</span>
+          </li>
+        <div class="dropdown-menu">
+        <div class="panel panel-default material-panel material-panel_primary">
+          <div class="panel-body material-panel__body">
+            <div class="row">
+            <div class="col-md-12">
+              <?php 
+
+              echo '<label class="control-label">Adults</label>';
+              echo TouchSpin::widget([
+                'model'         => $modelBookForm,
+                'attribute'     => 'adults',
+                'id'            => 'form-adults',
+                'readonly'      => true,
+                'pluginOptions' => [
+                  'buttonup_class'   => 'btn btn-primary', 
+                  'buttondown_class' => 'btn btn-primary', 
+                  'buttonup_txt'     => '<i class="glyphicon glyphicon-plus-sign"></i>', 
+                  'buttondown_txt'   => '<i class="glyphicon glyphicon-minus-sign"></i>',
+                  'initval'          => 1,
+                  'min'              => 1,
+                  'max'              => 9,
+                  'step'             => 1,
+                  'decimals'         => 0,
+                  'boostat'          => 2,
+                  'maxboostedstep'   => 5,
+
+                ],
+                'pluginEvents'=>[
+                  "change"=>'function(){
+                    $("#span-adult").text($(this).val());
+                  }'
+                ]
+              ]);?>
+            </div>
+            <div class="col-md-12">
+                <?php
+                echo '<label class="control-label">Childs</label>';
+                echo TouchSpin::widget([
+                  'model'         => $modelBookForm,
+                  'attribute'     => 'childs',
+                  'id'            => 'form-childs',
+                  'readonly'      => true,
+                  'pluginOptions' => [
+                    'buttonup_class'   => 'btn btn-primary', 
+                    'buttondown_class' => 'btn btn-primary', 
+                    'buttonup_txt'     => '<i class="glyphicon glyphicon-plus-sign"></i>', 
+                    'buttondown_txt'   => '<i class="glyphicon glyphicon-minus-sign"></i>',
+                    'initval'          => 0,
+                    'min'              => 0,
+                    'max'              => 5,
+                    'step'             => 1,
+                    'decimals'         => 0,
+                    'boostat'          => 2,
+                    'maxboostedstep'   => 3,
+
+                  ],
+                  'pluginEvents'=>[
+                  "change"=>'function(){
+                    $("#span-child").text($(this).val());
+                  }'
+                ]
+                ]);?>
+              </div>
+              <div class="col-md-12">
+                <?php
+                echo '<label class="control-label">Infants</label>';
+                echo TouchSpin::widget([
+                  'model'         => $modelBookForm,
+                  'attribute'     => 'infants',
+                  'id'            => 'form-infats',
+                  'readonly'      => true,
+                  'pluginOptions' => [
+                    'buttonup_class'   => 'btn btn-primary', 
+                    'buttondown_class' => 'btn btn-primary', 
+                    'buttonup_txt'     => '<i class="glyphicon glyphicon-plus-sign"></i>', 
+                    'buttondown_txt'   => '<i class="glyphicon glyphicon-minus-sign"></i>',
+                    'initval'          => 0,
+                    'min'              => 0,
+                    'max'              => 5,
+                    'step'             => 1,
+                    'decimals'         => 0,
+                    'boostat'          => 2,
+                    'maxboostedstep'   => 3,
+                  ],
+                  'pluginEvents'=>[
+                  "change"=>'function(){
+                    $("#span-infants").text($(this).val());
+                  }'
+                ]
+                ]); 
+                ?>
+              </div>
+            </div>
+          </div>
+          <div class="panel-footer">
+            <?= Html::button('Done', [
+                'class' => 'btn material-btn material-btn_warning main-container__column material-btn_sm btn-block',
+                'onclick'=>'
+                   $(".dropdown").removeClass("open");
+                '
+                ]); ?>
+          </div>
+        </div>
+        </div>
+      </div> 
+    </div>
 </div>
-<div class="col-md-2 col-md-offset-0 col-sm-6 col-sm-offset-4 col-xs-6 col-xs-offset-4">
-<?= $form->field($modelBookForm, 'type')->radioList($items, [ 
-    'id' => 'form-type',
-    'onchange'=>'
-    var type = $("#form-type :radio:checked").val();
-    if (type == "2") {
-      $("#div-return").css("visibility", "visible");
-      $("#div-currency").removeClass("col-xs-6");
-      $("#div-currency").addClass("col-xs-12");
-    }else{
-      $("#div-return").css("visibility", "hidden")
-      $("#div-currency").removeClass("col-xs-12");
-      $("#div-currency").addClass("col-xs-6");
-    }',])->label(false); ?>
+
+<div class="col-md-2 col-md-offset-0 col-sm-6 col-sm-offset-5 col-xs-6 col-xs-offset-6">
+<label></label>
+<div class="main-container__column material-checkbox-group material-checkbox-group_primary">
+    <?= Html::activeCheckbox($modelBookForm,'type', [ 
+          'label'=>false,
+          'class' => 'material-checkbox',
+          'id'=>'checkbox-type',
+          'onchange'=>'
+          if ($(this).is(":checked")) {
+            $("#div-return").css("visibility", "visible");
+            $("#div-currency").removeClass("col-xs-6");
+            $("#div-currency").addClass("col-xs-12");
+          }else{
+            $("#div-return").css("visibility", "hidden")
+            $("#div-currency").removeClass("col-xs-12");
+            $("#div-currency").addClass("col-xs-6");
+
+          }
+          '
+          ]); ?>
+    <label class="material-checkbox-group__label" for="checkbox-type"> Return Trip</label>
+</div>
+
 </div>
 					<div class="col-md-2 col-sm-4 col-xs-6">
 					<?= $form->field($modelBookForm, 'departureDate')->widget(kato\pickadate\Pickadate::classname(), [
@@ -143,19 +257,10 @@ from_picker.on('set', function(event) {
     to_picker.set('min', false)
   }
 });
-
-$('.list-currency').on('click',function(){
-    var vcurrency = $(this).attr('value').toUpperCase();
-    $('#form-currency').val(vcurrency);
-    $('#dropdown-text').text(vcurrency);
-});
-$('#layout-drop-currency').on('show.bs.dropdown',function(){
-        $('#search-currency').click();
-        $('#search-currency').focus();
-});
-$('#layout-drop-currency').on('hidden.bs.dropdown',function(){
-        $('#search-currency').val(null);
-        $('.currency-li').show();
+$('#pax-list .dropdown-menu').on({
+    \"click\":function(e){
+      e.stopPropagation();
+    }
 });
   ", \yii\web\View::POS_READY); 
 ?>
@@ -165,52 +270,14 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 <?php Pjax::end(); ?> 
 
 <div id="div-currency" class="col-md-2 col-sm-4 col-xs-6">
-<?= Html::label('<span class="fa fa-money"></span> Currency', 'currency', ['class' => 'control-label']); ?>
-<div id="layout-drop-currency" class="dropdown material-dropdown material-dropdown_primary main-container__column">
-
-    <?= Html::button('<span id="dropdown-text">'.$modelBookForm->currency.'</span><span class="caret material-dropdown__caret "></span>', [
-    'class' => 'dropdown-toggle material-dropdown__btn',
-    'data-toggle'=>'dropdown',
-    'onclick'=>'
-
-      '
-    ]); ?>
-    <ul id="currency-ul" style="height: 200px; overflow: auto;" class="dropdown-menu material-dropdown-menu material-dropdown-menu_primary">
-    <div id="search-form-currency" class="main-container__column">    
-        <div class="form-group materail-input-block materail-input-block_warning materail-input_slide-line">
-        
-    <?= Html::textInput('search-currency', $value = null, [
-        'id'=>'search-currency',
-        'style'=>'position: sticky;',
-        'class' => 'form-control materail-input',
-        'placeholder'=>'Search Currency...',
-        'onkeyup'=>'
-          var input, filter, ul, li, a, i;
-    input = document.getElementById("search-currency");
-    filter = input.value.toUpperCase();
-    ul = document.getElementById("currency-ul");
-    li = ul.getElementsByTagName("li");
-    for (i = 0; i < li.length; i++) {
-        a = li[i].getElementsByTagName("a")[0];
-        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-            li[i].style.display = "";
-        } else {
-            li[i].style.display = "none";
-
-        }
-    }
-        '
-        ]); ?>
-          <span class="materail-input-block__line"></span>
-        </div>  
-    </div>
-      <?php foreach($listCurrency as $valCurency): ?>
-        <li class="currency-li"><?= Html::a($valCurency, $url = null, ['value' => $valCurency,'class'=>'material-dropdown-menu__link list-currency']); ?></li>
-      <?php endforeach; ?>
-      
-    </ul>
-</div>
-<?= Html::activeHiddenInput($modelBookForm, 'currency', ['id' => 'form-currency']); ?>
+<?= $form->field($modelBookForm, 'currency',['addon' => ['prepend' => ['content'=>'<i class="fa fa-money"></i>']]])->widget(Select2::classname(), [
+    'data' => $listCurrency,
+    'size' => Select2::SMALL,
+    'options' => ['placeholder' => 'Select Currency'],
+    'pluginOptions' => [
+        'allowClear' => false,
+    ],
+]); ?>
 </div>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">
          

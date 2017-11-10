@@ -6,13 +6,6 @@ use mdm\admin\components\Helper;
 $Valbook = Yii::$app->gilitransfers->Valbook();
 /*
 $this->registerJs("
-var autoLockTimer;
-window.onload = resetTimer;
-
-function resetTimer() {
-    clearTimeout(autoLockTimer);
-    autoLockTimer = setTimeout(lockScreen, 10000);  // time is in milliseconds
-}
 
 if (Notification.permission !== \"granted\")
     Notification.requestPermission();
@@ -27,7 +20,7 @@ function notifikasi() {
         Notification.requestPermission();
     else {
         var audio = new Audio('/audio/notif-sound.ogg');
-       // audio.play();
+        audio.play();
         var notifikasi = new Notification('Pesanan Baru', {
             icon: '/logo.png',
             body: \"Silahkan Periksa Dengan Klik Notifikasi Ini\",
@@ -43,7 +36,7 @@ function notifikasi() {
 };
 
 function cek(){
-    //notifikasi();
+    notifikasi();
 };
     ", \yii\web\View::POS_READY);*/
 ?>
@@ -148,10 +141,10 @@ function cek(){
                     </ul>
                 </li>
 
-                <!-- User Account: style can be found in dropdown.less -->
+                <!-- User Account: style can be found in dropdown.less 
                 <li>
                     <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                </li>
+                </li>-->
             </ul>
         </div>
     </nav>

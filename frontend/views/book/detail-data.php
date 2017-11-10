@@ -42,7 +42,7 @@ $this->registerCss($customCss);
             <?php foreach ($cartList as $index => $value): ?>
                     
 					<ul class="list-group">
-					<li class="list-group-item"><b><?= $value->idTrip->idBoat->idCompany->name ?></b> - <?=  $value->idTrip->idBoat->name ?>
+					<li class="list-group-item"><span class="fa fa-ship"></span> <b><?= $value->idTrip->idBoat->idCompany->name ?></b> - <?=  $value->idTrip->idBoat->name ?>
           <?php if(count($cartList) > 1 ): ?>
           <?= $value->type == '1' ? '<span class="material-label material-label_xs material-label_primary">One Way' : '<span class="material-label material-label_xs material-label_success">Return' ?>
         <?php else: ?>
@@ -59,18 +59,18 @@ $this->registerCss($customCss);
 					]); ?>
           </span>
 					</li>
-					<li class="list-group-item"><?= $value->idTrip->idRoute->departureHarbor->name." -> ".$value->idTrip->idRoute->arrivalHarbor->name ?></li>
-					<li class="list-group-item">
-						<?=  $value->adult != '0' ? $value->adult." Adult = <b>".$value->currency." ".round($value->idTrip->adult_price/$value->exchange*$value->adult,2,PHP_ROUND_HALF_UP)."</b>" : " " ?>
+					<li class="list-group-item"><span class="fa fa-code-fork"></span> <?= $value->idTrip->idRoute->departureHarbor->name." <span class='fa fa-arrow-right'></span> ".$value->idTrip->idRoute->arrivalHarbor->name ?></li>
+					<li class="list-group-item"><span class="fa fa-money"></span>
+						<?=  $value->adult != '0' ? $value->adult." Adult = <b>".$value->currency." ".round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)."</b>" : " " ?>
 
-						<?=  $value->child != '0' ? " + ".$value->child ." Child = <b>".$value->currency." ".round($value->idTrip->child_price/$value->exchange*$value->child,2,PHP_ROUND_HALF_UP)."</b>" : "" ?>
+						<?=  $value->child != '0' ? " + ".$value->child ." Child = <b>".$value->currency." ".round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP)."</b>" : "" ?>
 
 						<?=   $value->infant != '0' ? " + ".$value->infant." Infant = <b>".$value->currency." 0 </b>" : " " ?>
 
-          <span class="pull-right"><b><?= $value->currency ?> <?= round($value->idTrip->adult_price/$value->exchange*$value->adult,2,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,2,PHP_ROUND_HALF_UP) ?></b></span>      
+          <span class="pull-right"><b><?= $value->currency ?> <?= round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP) ?></b></span>      
             </li>
 					</ul>
-          <?php $grandTotal[] = round($value->idTrip->adult_price/$value->exchange*$value->adult,2,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,2,PHP_ROUND_HALF_UP);  ?> 
+          <?php $grandTotal[] = round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP);  ?> 
             <?php endforeach; ?>
             
 <?= Html::a('Add Another Trip', Yii::$app->homeUrl, ['class' => 'pull-left btn material-btn material-btn_warning main-container__column material-btn_lg pull-right']); ?>
@@ -123,14 +123,12 @@ $this->registerCss($customCss);
                 );
         ?>
 </div>
-
-    
-       			<?php $now = date('Y,m,d');
+<?php $now = date('Y,m,d');
                   /*echo $now."<br>";
                   echo date('Y,m,d',strtotime($now));*/
              
-               foreach ($cartList as $key => $cartValue) {
-                  echo "<h3 class='col-md-12'>Passenger Detail With <b>".$cartValue->idTrip->idBoat->idCompany->name."</b>. On  <b>".$cartValue->idTrip->date."</b></h3>";
+foreach ($cartList as $key => $cartValue) {
+                  echo "<h4 class='col-md-12'>Passenger Detail With <b>".$cartValue->idTrip->idBoat->idCompany->name."</b>. On  <b>".$cartValue->idTrip->date."</b></h4>";
                   
                   foreach ($modelAdults as $index => $modelAdult) {
                     echo "<h4 class='col-md-12'>Adult</h4>";
@@ -207,7 +205,7 @@ $('.picker-childs').pickadate({
   max:-730,
   selectYears: true,
   selectMonths: true,
-  format: 'dd-mm-yyyy',
+  format: 'yyyy-mm-dd',
   formatSubmit: 'yyyy-mm-dd',
   today: '',
   clear: 'Clear',
@@ -219,27 +217,22 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
 $this->registerJs('
 $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
   if ($(this).is(":checked")) {
-    var jmlc = $("[id^=child-source-]").size();
+    var jmlc = $("[id^=child-name-source-]").size();
     for (c=0; c < jmlc; c++) {
-      var src = $(".form-child-source-"+c).val();
-      if ( $(".form-child-obj-'.$cartValue->id_trip.'-"+c).length ) {
-        $(".form-child-obj-'.$cartValue->id_trip.'-"+c).val(src);
+      var nsrc = $(".child-name-source-"+c).val();
+      var bsrc = $(".child-birthday-source-"+c).val();
+      if ( $(".child-name-obj-'.$cartValue->id_trip.'-"+c).length ) {
+        $(".child-name-obj-'.$cartValue->id_trip.'-"+c).val(nsrc);
         $(".label-child-'.$cartValue->id_trip.'-"+c).hide();
-      }else{
-       return true;
+        $("#c-brith-obj-'.$cartValue->id_trip.'-"+c+" > div > input").val(bsrc);
       }
     }
   }else{
-    var jmlc = $("[id^=child-source-]").size();
-    for (c=0; c < jmlc; c++) {
-      var src = $(".form-child-source-"+c).val();
-      if ( $(".form-child-obj-'.$cartValue->id_trip.'-"+c).length ) {
-        $(".form-child-obj-'.$cartValue->id_trip.'-"+c).val(null);
-        $(".label-child-'.$cartValue->id_trip.'-"+c).show();
-      }else{
-        return true;
-      }
-    }
+
+    $("[id^=c-brith-obj-'.$cartValue->id_trip.'-] > div > input").val(null);
+    $(".form-child-obj").val(null);
+    $(".label-pax").show();
+
   }
 });
 
@@ -256,20 +249,26 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                           'encodeLabel'=> false,
                           'label'=>'<i class="glyphicon glyphicon-user"></i>Child Name',
                           'options'=>[
-                            'class'=>$key == 0 ? 'form-control form-child-source-'.$copyVarC : 'form-control form-child-obj-'.$cartValue->id_trip.'-'.$copyVarC,
-                            'id'=>$key == 0 ? 'child-source-'.$key.'-'.$copyVarC : 'child-obj-'.$key.'-'.$copyVarC,
+                            'class'=>$key == 0 ? 'form-control child-name-source-'.$copyVarC : 'form-control form-child-obj child-name-obj-'.$cartValue->id_trip.'-'.$copyVarC,
+                            'id'=>$key == 0 ? 'child-name-source-'.$key.'-'.$copyVarC : 'child-obj-'.$key.'-'.$copyVarC,
                             ],
-                          'labelOptions'=>['class'=>'label-child-'.$cartValue->id_trip.'-'.$copyVarC],
+                          'labelOptions'=>['class'=>$key == 0 ? '' : 'label-pax label-child-'.$cartValue->id_trip.'-'.$copyVarC],
                           ]
                           )."</div>";
                           echo "<div class='col-md-3'>".$form->field($modelChild, "[$cartValue->id_trip][child][$i]id_nationality",$config)->dropDownList($listNationality, [
                           'class' => 'form-nationality',
                           'prompt' => 'Select Nationality',
                           ])."</div>";
-                          echo "<div class='col-md-2'>". $form->field($modelChild, "[$cartValue->id_trip][child][$i]birthday",$config)->widget(Pickadate::classname(), [
+
+                          echo "<div class='col-md-2'>". $form->field($modelChild, "[$cartValue->id_trip][child][$i]birthday",['template'=>"{input}\n{error}\n{hint}",'options' => [ 'id' => $key == 0 ? 'c-brith-src' : 'c-brith-obj-'.$cartValue->id_trip.'-'.$copyVarC]])->widget(Pickadate::classname(), [
                               'isTime' => false,
-                              'id'=>'child-birthday',
-                              'options'=>['id'=>'child-birthday-'.$cartValue->id_trip.'-'.$i,'class'=>'picker-childs','placeholder'=>'Date of birth'],
+                             // 'id'=>'child-birthday',
+                              'options'=>[
+                                  'class' => $key == 0 ? 'picker-childs child-birthday-source-'.$copyVarC : 'picker-childs child-birthday-obj-'.$cartValue->id_trip.'-'.$copyVarC,
+                                  'id'    => $key == 0 ? 'child-birthday-source-'.$key.'-'.$copyVarC : 'child-birthday-obj-'.$key.'-'.$copyVarC,
+                                  'placeholder'=>'Date of birth',
+
+                                  ],
                               
                               ])."</div></div>";
                       }
@@ -283,7 +282,7 @@ $customScript = <<< SCRIPT
   max:true,
   selectYears: true,
   selectMonths: true,
-  format: 'dd-mm-yyyy',
+  format: 'yyyy-mm-dd',
   formatSubmit: 'yyyy-mm-dd',
   today: '',
   clear: 'Clear',
