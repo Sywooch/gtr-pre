@@ -280,7 +280,7 @@ class SiteController extends Controller
       $session =Yii::$app->session;
       $session->open();
         $listCurrency = ArrayHelper::map($this->findKurs()->select(['currency','name','CONCAT(currency, " - ",name) AS Alias'])->asArray()->orderBy(['currency'=>SORT_ASC])->all(), 'currency', 'Alias','name');
-        $route = $this->findHarbor()->joinWith('idIsland')->asArray()->all();
+        $route = $this->findHarbor()->joinWith('idIsland')->asArray()->orderBy(['id_island'=>SORT_ASC,'name'=>SORT_ASC])->all();
         foreach ($route as $key => $value) {
             $arrayRoute[] = ['id'=>$value['id'],'name'=>$value['name'],'island'=>$value['idIsland']['island']];
         }
