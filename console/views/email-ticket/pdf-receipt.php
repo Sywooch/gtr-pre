@@ -1,20 +1,23 @@
 <?php
 use yii\helpers\Html;
 
-require_once Yii::$app->basePath."/phpqrcode/qrlib.php"; //<-- LOKASI FILE UTAMA PLUGINNYA
-$tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
-//if (!file_exists($tempdir))#kalau folder belum ada, maka buat.
-    //mkdir($tempdir);
-#parameter inputan
-
-
 
 ?>
-<div class="col-md-12">
-<div class="col-md-3">
-  <img src="<?= Yii::$app->basePath."/E-Ticket/logo.png" ?>" width="200">
-</div>
-</div>
+<table cellspacing="0" width="100%" align="center">
+
+<tr>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
+    <span style="font-size: 20px; font-weight: bold;" class="pull-left">Receipt</span>
+  </td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;"></td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;text-align: right;">
+    <img src="<?= Yii::$app->basePath."/E-Ticket/logo.png" ?>" style="height:30px;"><br>
+    <span style="text-align: center; " class="ports text-muted">reservation@gilitransfers.com / +62-813-5330-4990</span>
+    </td>
+</tr>
+
+</table>
+
 <?php 
 $tokenPayment = "http://gilitraansfers.com/".$modelPayment->token;
 $tokenQrfileName = "QrCode-".$modelPayment->token.".png";
@@ -27,135 +30,80 @@ QRCode::png($tokenPayment,$tempdir.$tokenQrfileName,$quality,$ukuran,$padding);
   <b align="center" class="judul">
     <img class="pull-right" alt="Logo" style="width:10%; height:10%;" src="<?php echo $tempdir.$tokenQrfileName ?>" border="0">
   </b>
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
-<tr>
-<td style="background-color: #00BCD4; border-top:2px solid #00BCD4; border-bottom:2px solid #00BCD4;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Customer Data
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #00BCD4;border-right:none;border-left:none;color: #333333 !important;">
-</td>
-</tr>
-<tr>
-<td width="30%">
-Name
-</td>
-  <td>: <?= $modelPayment->name?>
-</td>
-</tr>
 
-<tr>
-<td width="30%">
-Email
-</td>
-  <td>: <?= $modelPayment->email ?>
-</td>
-</tr>
+<!-- Buyer Detail Start -->
+<br>
+<table class="table table-striped ">
+  <caption><center>Customer Detail</center></caption>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th width="175">Phone</th>
+    <th width="174">Email</th>
+  </tr>
 
-<tr>
-<td width="30%">
-Phone
-</td>
-  <td>: <?= $modelPayment->phone ?>
-</td>
-</tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><?= $modelPayment->name?></td>
+    <td><?= $modelPayment->phone ?></td>
+    <td><?= $modelPayment->email ?></td>
 
-<tr>
-<td width="30%">
-Payment Method
-</td>
-  <td>: <?= $modelPayment->idPaymentMethod->method ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%" style="border-bottom:2px solid #00BCD4;">
-Total Payment
-</td>
-  <td style="border-bottom:2px solid #00BCD4;">: <?= $modelPayment->id_payment_method = '1' ? $modelPayment->currency.' '.$modelPayment->total_payment : 'IDR '.$modelPayment->total_payment_idr ?>
-</td>
-</tr>
-
+  </tr>
 </tbody>
 </table>
+<!-- Buyer Detail End -->
 
+
+<table class="table table-striped ">
+  <caption><center>PURCHASE DETAILS</center></caption>
+  <thead>
+  <tr>
+    <th width="20">No.</th>
+    <th>Name Of Item</th>
+    <th width="175">Qty *</th>
+    <th width="100">Price</th>
+  </tr>
+
+  </thead>
+  <tbody>
 <?php foreach ($modelBooking as $key => $value): ?>
+  <tr>
+    <th scope="row"><?= $key+1 ?></th>
+    <td ><?= $value->idTrip->idBoat->idCompany->name." | ".$value->idTrip->idRoute->departureHarbor->name." -> ".$value->idTrip->idRoute->arrivalHarbor->name." | ".date('D, d M Y',strtotime($value->idTrip->date)) ?></td>
+    <td >
+      <span><?= count($value->affectedPassengers) ?> Pax</span>
+      <br>
+      
+    </td>
+    <td >
+      <span><?= $value->currency." ".$value->total_price ?></span><br>
+      <span style="color: #616161; font-size: 10px;">IDR <?= number_format($value->total_idr,0) ?></span>
+    </td>
 
-<?php 
-$isi_teks = "http://gilitraansfers.com/".$value->id;
-$namafile = "QrCode-".$value->id.".png";
-$quality = 'L'; //ada 4 pilihan, L (Low), M(Medium), Q(Good), H(High)
-$ukuran = 1; //batasan 1 paling kecil, 10 paling besar
-$padding = 1;
-QRCode::png($isi_teks,$tempdir.$namafile,$quality,$ukuran,$padding);
-?>
-
-  <b align="center" class="judul">
-    <?= $value->id ?>
-  </b>
-  <img class="pull-right" alt="Logo" style="width:10%; height:10%;" src="<?php echo $tempdir.$namafile ?>" border="0">
-
-<!-- Trip Description start-->
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
-
-<tr>
-
-
-  <td style="background-color: #ccc; border-top:2px solid #ccc; border-bottom:2px solid #ccc;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Trip Description
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #ccc;border-right:none;border-left:none;color: #333333 !important;">
-
-</td>
-
-
-</tr>
-<tr>
-<td width="30%">
-Boat
-</td>
-  <td>: <?= $value->idTrip->idBoat->name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Route
-</td>
-  <td>: <?= $value->idTrip->idRoute->departureHarbor->name." -> ".$value->idTrip->idRoute->arrivalHarbor->name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Date Of Trip
-</td>
-  <td>: <?= date('d-m-Y',strtotime($value->idTrip->date)) ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Departure Time
-</td>
-  <td>: <?= date('H:i',strtotime($value->idTrip->dept_time)) ?> WITA
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Total Passengers
-</td>
-  <td>: <?= $findPassenger->where(['id_booking'=>$value->id])->count() ?>
-</td>
-</tr>
-
-
-
-</tbody>
-</table>
+  </tr>
 
 
 <?php endforeach; ?>
-<!-- Trip Description end-->
+<tr>
+  <td style="border-top: 1.5px solid black;">
+    
+  </td>
+  <td style="border-top: 1.5px solid black;">
+    
+  </td>
+  <td style="border-top: 1.5px solid black; font-weight: bold">
+    Grand Total
+  </td>
+  <td style="border-top: 1.5px solid black; font-weight: bold">
+    <span><?= $modelPayment->currency." ".$modelPayment->total_payment ?></span>
+    <br>
+    <span style="color: #616161; font-size: 10px;">IDR <?= number_format($modelPayment->total_payment_idr,0) ?></span>
+  </td>
+</tr>
+</tbody>
+</table>
+<span style="font-size: 10px;" class="ports text-danger">*Infant not Included</span>
+<img src="<?= Yii::$app->basePath."/E-Ticket/stamp.png" ?>">
+<!-- Passenger Table End -->
+

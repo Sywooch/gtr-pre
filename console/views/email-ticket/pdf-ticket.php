@@ -1,5 +1,7 @@
 <?php
 use yii\helpers\Html;
+use common\models\TShuttleTime;
+
 
 require_once Yii::$app->basePath."/phpqrcode/qrlib.php"; //<-- LOKASI FILE UTAMA PLUGINNYA
 $tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama Folder file QR Code kita nantinya akan ?>
@@ -7,12 +9,21 @@ $tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama
 
 
 <?php foreach ($modelBooking as $key => $value): ?>
-<div style="border-bottom: 2px solid #BDBDBD; padding-bottom: 25px;" class="col-md-12">
-<span>
-<span style="font-size: 20px;" class="pull-left">E-Ticket</span>
-<img class="pull-right" src="<?= Yii::$app->basePath."/E-Ticket/logo.png" ?>" style="height:50px;">
-</span>
-</div>
+<table cellspacing="0" width="100%" align="center">
+
+<tr>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
+    <span style="font-size: 20px; font-weight: bold;" class="pull-left">E-Ticket</span>
+  </td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;"></td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;text-align: right;">
+    <img src="<?= Yii::$app->basePath."/E-Ticket/logo.png" ?>" style="height:50px;"><br>
+    <span style="text-align: center;" class="ports">reservation@gilitransfers.com / +62-813-5330-4990</span>
+    </td>
+</tr>
+
+</table>
+
 <?php 
 $isi_teks = "http://gilitraansfers.com/".$modelPayment->token;
 $namafile = "QrCode-".$value->id.".png";
@@ -30,10 +41,10 @@ QRCode::png($isi_teks,$tempdir.$namafile,$quality,$ukuran,$padding);
     <td class="secondary-text" rowspan="2" style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px; padding-top: 15px;">
        <img alt="Logo" style="width:100px;" src="<?= $value->idTrip->idBoat->idCompany->logo_path ?>" border="0"><br>
         <span style="text-align: center; font-weight: bold; color: #212121"><?= $value->idTrip->idBoat->idCompany->name ?></span><br>
-        <span style="font-size: 10px;"><?= $value->idTrip->idBoat->name ?></span>
+        <span style="font-size: 11px;"><?= $value->idTrip->idBoat->idCompany->phone ?></span><br>
     </td>
     <td class="secondary-text" style="padding-top: 15px;">
-      <?= date('H:i',strtotime($value->idTrip->dept_time)) ?> WITA<br>
+      <?= date('H:i',strtotime($value->idTrip->dept_time)) ?><br>
       <?= $value->idTrip->idEstTime->est_time ?>
     </td>
     <td class="secondary-text" style="padding-top: 15px; border-bottom: 1.5px solid #BDBDBD;">
@@ -48,7 +59,9 @@ QRCode::png($isi_teks,$tempdir.$namafile,$quality,$ukuran,$padding);
   </tr>
   <tr>
     <td class="secondary-text" style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
-      <?= $findPassenger->where(['id_booking'=>$value->id])->count() ?> Pax
+      <span><?= count($value->affectedPassengers) ?> Pax*</span>
+      <br>
+      <span style="font-size: 10px;" class="ports text-danger">*Infant not Included</span>
     </td>
     <td class="secondary-text" style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
       <span class="island"><?= $value->idTrip->idRoute->arrivalHarbor->idIsland->island ?></span><br>
@@ -70,10 +83,9 @@ QRCode::png($isi_teks,$tempdir.$namafile,$quality,$ukuran,$padding);
 <!-- Trip description End -->
 
 <!-- Shuttle Start -->
-<?php $shuttleList = $findShuttle->where(['id_booking'=>$value->id])->all(); ?>
 <?php
-if(!empty($shuttleList)):
-  foreach($shuttleList as $indexShuttle => $valShuttle):
+if(isset($value->tShuttles)):
+  //foreach($shuttleList as $indexShuttle => $value->tShuttles):
  ?>
 
 <table class="table">
@@ -89,15 +101,24 @@ if(!empty($shuttleList)):
   </thead>
   <tbody>
  <tr>
-    <td><?= $valShuttle->idArea->area ?></td>
-    <td><?= $valShuttle->location_name ?></td>
-    <td><?= $valShuttle->address ?></td>
-    <td><?= $valShuttle->phone ?></td>
+    <td><?php 
+        echo $value->tShuttles->idArea->area;
+        if($value->idTrip->idRoute->departureHarbor->id_island == '1'){
+          if (($modelShuttleTime = TShuttleTime::find()->where(['id_company'=>$value->idTrip->idBoat->id_company,'id_route'=>$value->idTrip->id_route,'dept_time'=>$value->idTrip->dept_time,'id_area'=>$value->tShuttles->id_area])->one()) !== null) {
+                  echo "<br> <i style='font-size: 10px;'>".date('H:i',strtotime($modelShuttleTime->shuttle_time_start))." - ".date('H:i',strtotime($modelShuttleTime->shuttle_time_end))."</i>";
+              }else{
+                  echo "";
+              }
+        }
+         ?></td>
+    <td><?= $value->tShuttles->location_name ?></td>
+    <td><?= $value->tShuttles->address ?></td>
+    <td><?= $value->tShuttles->phone ?></td>
   </tr>
 </tbody>
 </table>
 <?php 
-endforeach;
+//endforeach;
 endif;
 ?>
 <!-- Shuttle End -->
@@ -137,56 +158,25 @@ endif;
 
   </thead>
   <tbody>
-
-  <!-- Adult Start -->
-<?php $adultList = $findPassenger->where(['id_booking'=>$value->id])->andWhere(['id_type'=>'1'])->all(); ?>
-<?php foreach($adultList as $indexAdult => $valAdult): ?>
+<?php foreach($value->tPassengers as $indexAdult => $valAdult): ?>
   <tr>
     <th scope="row"><?= $indexAdult+1 ?></th>
     <td><?= $valAdult->name?></td>
     <td><?= $valAdult->idNationality->nationality ?></td>
-    <td>Adult</td>
+    <td><?= $valAdult->idType->type ?></td>
 
   </tr>
 <?php endforeach;?>
-  <!-- Adult End -->
-
-  <!-- Child Start-->
-  <?php $childList = $findPassenger->where(['id_booking'=>$value->id])->andWhere(['id_type'=>'2'])->orderBy(['birthday'=>SORT_ASC])->all(); ?>
-  <?php if(!empty($childList)): ?>
-  <?php foreach($childList as $indexChild => $valChild): ?>
-  <tr>
-    <th scope="row"><?= $indexAdult+$indexChild+2 ?></th>
-    <td><?= $valChild->name ?></td>
-    <td><?= $valChild->idNationality->nationality ?></td>
-    <td>Child</td>
-  </tr>
-  <?php endforeach;?>
-<?php endif; ?>
-  <!-- Child End -->
-  <!-- Infants Start-->
-  <?php $InfantList = $findPassenger->where(['id_booking'=>$value->id])->andWhere(['id_type'=>'3'])->orderBy(['birthday'=>SORT_ASC])->all(); ?>
-<?php if(!empty($InfantList)): ?>
-<?php foreach($InfantList as $indexinfants => $valInfant): ?>
-  <tr>
-    <th scope="row"><?= $indexAdult+$indexChild+$indexinfants+3 ?></th>
-    <td><?= $valInfant->name ?></td>
-    <td><?= $valInfant->idNationality->nationality ?></td>
-    <td>Infants</td>
-  </tr>
-<?php endforeach;?>
-<?php endif; ?>
-<!-- Infants End -->
-
 </tbody>
 </table>
 <!-- Passenger Table End -->
+<!-- Passenger Table End -->
 
 <!-- Contact Fastboat Start -->
-<table class="table">
+<table align="right" class="pull-right">
   <thead>
     <tr>
-      
+      <td></td>
     </tr>
   </thead>
 </table>

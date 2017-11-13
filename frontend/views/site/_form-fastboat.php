@@ -4,7 +4,6 @@ use kartik\form\ActiveForm;
 use yii\widgets\Pjax;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
-use rmrevin\yii\fontawesome\AssetBundle;
 use kartik\widgets\TouchSpin;
 ?>
 
@@ -26,25 +25,15 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 <?php $form = ActiveForm::begin(); ?>
 <div class="row col-md-12 col-sm-12 col-xs-12">
     <div class="col-md-3 col-sm-6 col-xs-12">
-    <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->widget(Select2::classname(), [
-      'data' => $listDept,
-      'size' => Select2::SMALL,
-      'options' => ['id' => 'drop-dept'],
-      'pluginOptions' => [
-          'allowClear' => false,
-      ],
-    ]); ?>
+    <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->dropDownList($listDept,
+      ['id' => 'drop-dept']
+    ); ?>
 
     </div>
     <div class="col-md-3 col-sm-6 col-xs-12">
-    <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->widget(Select2::classname(), [
-      'data' => $listDept,
-      'size' => Select2::SMALL,
-      'options' => ['id' => 'drop-arv',],
-      'pluginOptions' => [
-          'allowClear' => false,
-      ],
-    ]); ?>
+    <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->dropDownList($listDept,
+      ['id' => 'drop-arv']
+    ); ?>
     </div>
 
     <div class="col-md-3 col-sm-12 col-xs-12">

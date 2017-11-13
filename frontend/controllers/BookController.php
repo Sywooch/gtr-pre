@@ -460,7 +460,7 @@ class BookController extends Controller
     public function actionAddToCart($tripDeparture,$tripReturn = null){
         $session = Yii::$app->session;
         $now = date('Y-m-d H:i:s');
-        $session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 10000 MINUTES',strtotime($now)));
+        $session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 30 MINUTES',strtotime($now)));
         if (!isset($session['session_key'])) {
             $session['session_key']= Yii::$app->getSecurity()->generateRandomString(25);
         }

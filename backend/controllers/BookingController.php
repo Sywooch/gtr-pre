@@ -38,6 +38,10 @@ class BookingController extends Controller
         ];
     }
 
+    public function actionCekNotif(){
+        
+    }
+
     public function actionShuttleTime(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -128,7 +132,12 @@ class BookingController extends Controller
     }
 
 protected function findAllBooking(){
-    return TBooking::find()->all();
+    if(Helper::checkRoute('/booking/*')){
+        return TBooking::find()->all();
+    }else{
+        return TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->all();
+    }
+
 }
     /**
      * Lists all TBooking models.

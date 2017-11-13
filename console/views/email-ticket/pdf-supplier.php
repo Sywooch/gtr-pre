@@ -1,5 +1,6 @@
 <?php
 use yii\helpers\Html;
+use common\models\TShuttleTime;
 
 require_once Yii::$app->basePath."/phpqrcode/qrlib.php"; //<-- LOKASI FILE UTAMA PLUGINNYA
 $tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
@@ -10,60 +11,40 @@ $tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama
 
 
 ?>
-<div class="col-md-12">
-<div class="col-md-3">
-  <img src="<?= Yii::$app->basePath."/E-Ticket/logo.png" ?>" width="100">
-</div>
-</div>
-<?php 
-$tokenPayment = "http://gilitraansfers.com/".$modelPayment->token;
-$tokenQrfileName = "QrCode-".$modelPayment->token.".png";
-$quality = 'L'; //ada 4 pilihan, L (Low), M(Medium), Q(Good), H(High)
-$ukuran = 1; //batasan 1 paling kecil, 10 paling besar
-$padding = 1;
-QRCode::png($tokenPayment,$tempdir.$tokenQrfileName,$quality,$ukuran,$padding);
-?>
-
-  <b align="center" class="judul">
-    <img class="pull-right" alt="Logo" style="width:10%; height:10%;" src="<?php echo $tempdir.$tokenQrfileName ?>" border="0">
-  </b>
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
-<tr>
-<td style="background-color: #00BCD4; border-top:2px solid #00BCD4; border-bottom:2px solid #00BCD4;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Customer Data
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #00BCD4;border-right:none;border-left:none;color: #333333 !important;">
-</td>
-</tr>
-<tr>
-<td width="30%">
-Name
-</td>
-  <td>: <?= $modelPayment->name?>
-</td>
-</tr>
+<table cellspacing="0" width="100%" align="center">
 
 <tr>
-<td width="30%">
-Email
-</td>
-  <td>: <?= $modelPayment->email ?>
-</td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
+    <span style="font-size: 12px; font-weight: bold;" class="pull-left">Trip Detail</span>
+  </td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;"></td>
+  <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;text-align: right;">
+    <img src="<?= Yii::$app->basePath."/E-Ticket/logo.png" ?>" style="height:40px;"><br>
+    <span style="text-align: center;" class="ports">reservation@gilitransfers.com / +62-813-5330-4990</span>
+    </td>
 </tr>
-
-<tr>
-<td width="30%">
-Phone
-</td>
-  <td>: <?= $modelPayment->phone ?>
-</td>
-</tr>
-
-
-</tbody>
 </table>
-<div class="page-break"> </div>
+
+<!-- Trip description Start -->
+<table cellspacing="0" width="100%" align="center">
+  <tr>
+    <td class="primary-text" colspan="4" style="border-bottom: 2px solid #BDBDBD;padding-bottom: 15px; padding-top: 15px; text-align: center;font-weight: bold; font-size: 15px;"><?= date('l, d F Y',strtotime($modelBooking->idTrip->date)) ?></td>
+  </tr>
+  <tr>
+    <td class="secondary-text" rowspan="2" style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px; padding-top: 15px;">
+       <img alt="Logo" style="width:100px;" src="<?= $modelBooking->idTrip->idBoat->idCompany->logo_path ?>" border="0"><br>
+        <span style="text-align: center; font-weight: bold; color: #212121"><?= $modelBooking->idTrip->idBoat->idCompany->name ?></span><br>
+        <span style="font-size: 11px;"><?= $modelBooking->idTrip->idBoat->idCompany->phone ?></span><br>
+    </td>
+    <td class="secondary-text" style="padding-top: 15px;">
+      <?= date('H:i',strtotime($modelBooking->idTrip->dept_time)) ?> WITA<br>
+      <?= $modelBooking->idTrip->idEstTime->est_time ?>
+    </td>
+    <td class="secondary-text" style="padding-top: 15px; border-bottom: 1.5px solid #BDBDBD;">
+      <span class="island"><?= $modelBooking->idTrip->idRoute->departureHarbor->idIsland->island ?></span><br>
+      <span class="ports"><?= $modelBooking->idTrip->idRoute->departureHarbor->name ?></span>
+
+    </td>
 <?php 
 $isi_teks = "http://gilitraansfers.com/".$modelPayment->token;
 $namafile = "QrCode-".$modelBooking->id.".png";
@@ -72,258 +53,112 @@ $ukuran = 1; //batasan 1 paling kecil, 10 paling besar
 $padding = 1;
 QRCode::png($isi_teks,$tempdir.$namafile,$quality,$ukuran,$padding);
 ?>
-  <img alt="Logo" style="height:50px;" src="<?= $modelBooking->idTrip->idBoat->idCompany->logo_path ?>" border="0">
-  <img class="pull-right" alt="QrCode" style="width:10%; height:10%;" src="<?php echo $tempdir.$namafile ?>" border="0">
+    <td align="center" class="secondary-text" rowspan="2" style="padding-top: 15px; border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
+     <img class="img-responsive pull-right" alt="QrCode" style="width:10%; height:10%;" src="<?php echo $tempdir.$namafile ?>" border="0"><br>
+     <b style="text-align: center; color: #212121"><?= $modelBooking->id ?></b>
+    </td>
+  </tr>
+  <tr>
+    <td class="secondary-text" style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
+      <?= $findPassenger->where(['id_booking'=>$modelBooking->id])->count() ?> Pax
+    </td>
+    <td class="secondary-text" style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
+      <span class="island"><?= $modelBooking->idTrip->idRoute->arrivalHarbor->idIsland->island ?></span><br>
+      <span class="ports"><?= $modelBooking->idTrip->idRoute->arrivalHarbor->name ?></span>
+    </td>
+    
+  </tr>
+</table>
 
-<!-- Trip Description start-->
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
+<!-- Buyer Detail Start -->
+<br>
+<table class="table table-striped ">
+  <caption><center>Contact Detail</center></caption>
+  <thead>
+  <tr>
+    <th>Name</th>
+    <th width="175">Phone</th>
+    <th width="174">Email</th>
+  </tr>
 
-<tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><?= $modelPayment->name?></td>
+    <td><?= $modelPayment->phone ?></td>
+    <td><?= $modelPayment->email ?></td>
 
-
-  <td style="background-color: #ccc; border-top:2px solid #ccc; border-bottom:2px solid #ccc;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Trip Description
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #ccc;border-right:none;border-left:none;color: #333333 !important;">
-
-</td>
-
-
-</tr>
-<tr>
-<td width="30%">
-Boat
-</td>
-  <td>: <?= $modelBooking->idTrip->idBoat->name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Route
-</td>
-  <td>: <?= $modelBooking->idTrip->idRoute->departureHarbor->name." -> ".$modelBooking->idTrip->idRoute->arrivalHarbor->name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Date Of Trip
-</td>
-  <td>: <?= date('d-m-Y',strtotime($modelBooking->idTrip->date)) ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Departure Time
-</td>
-  <td>: <?= date('H:i',strtotime($modelBooking->idTrip->dept_time)) ?> WITA
-</td>
-</tr>
-<tr>
-<td width="30%">
-Total Passengers
-</td>
-  <td>: <?= $findPassenger->where(['id_booking'=>$modelBooking->id])->count() ?>
-</td>
-</tr>
-
-
-
+  </tr>
 </tbody>
 </table>
-<!-- Trip Description End-->
-<?php $shuttleList = $findShuttle->where(['id_booking'=>$modelBooking->id])->all(); ?>
+<!-- Buyer Detail End -->
+
+<!-- Shuttle Start -->
 <?php
-if(!empty($shuttleList)):
-  foreach($shuttleList as $indexShuttle => $valShuttle):
+if(isset($modelBooking->tShuttles)):
+  //foreach($shuttleList as $indexShuttle => $modelBooking->tShuttles):
  ?>
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
 
-<tr>
+<table class="table">
+  <caption><center><?php if($modelBooking->idTrip->idRoute->departureHarbor->id_island == '1'){ echo 'Pickup';}else{ echo 'Drop Off';} ?>  Detail</center></caption>
+  <thead>
+  <tr>
+    <th>Area</th>
+    <th>Location</th>
+    <th>Address</th>
+    <th>Phone</th>
+  </tr>
 
-
-  <td style="background-color:  #ccc; border-top:2px solid  #ccc; border-bottom:2px solid  #ccc;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-<?php if($modelBooking->idTrip->idRoute->departureHarbor->id_island == '1'){ echo 'Pickup';}else{ echo 'Drop Off';} ?>
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #ccc;border-right:none;border-left:none;color: #333333 !important;">
-
-</td>
-
-
-</tr>
-<tr>
-<td width="30%">
-Area
-</td>
-  <td>: <?= $valShuttle->idArea->area ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Location
-</td>
-  <td>: <?= $valShuttle->location_name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Address
-</td>
-  <td>: <?= $valShuttle->address ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Phone
-</td>
-  <td>: <?= $valShuttle->phone ?>
-</td>
-</tr>
+  </thead>
+  <tbody>
+ <tr>
+    <td><?php 
+        echo $modelBooking->tShuttles->idArea->area;
+        if($modelBooking->idTrip->idRoute->departureHarbor->id_island == '1'){
+          if (($modelShuttleTime = TShuttleTime::find()->where(['id_company'=>$modelBooking->idTrip->idBoat->id_company,'id_route'=>$modelBooking->idTrip->id_route,'dept_time'=>$modelBooking->idTrip->dept_time,'id_area'=>$modelBooking->tShuttles->id_area])->one()) !== null) {
+                  echo "<br> <i style='font-size: 10px;'>".date('H:i',strtotime($modelShuttleTime->shuttle_time_start))." - ".date('H:i',strtotime($modelShuttleTime->shuttle_time_end))."</i>";
+              }else{
+                  echo "";
+              }
+        }
+         ?></td>
+    <td><?= $modelBooking->tShuttles->location_name ?></td>
+    <td><?= $modelBooking->tShuttles->address ?></td>
+    <td><?= $modelBooking->tShuttles->phone ?></td>
+  </tr>
 </tbody>
 </table>
-
 <?php 
-endforeach;
+//endforeach;
 endif;
 ?>
-<!-- Pickup End-->
-
-<!-- Adult Start-->
-<?php $adultList = $findPassenger->where(['id_booking'=>$modelBooking->id])->andWhere(['id_type'=>'1'])->all(); ?>
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
-<tr>
-<td style="background-color: #00BCD4; border-top:2px solid #00BCD4; border-bottom:2px solid #00BCD4;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Adult Passengers
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #00BCD4;border-right:none;border-left:none;color: #333333 !important;">
-</td>
-</tr>
-
-<?php foreach($adultList as $indexAdult => $valAdult): ?>
-
-<tr>
-<td width="30%">
-Name
-</td>
-  <td>: <?= $valAdult->name?>
-</td>
-</tr>
-
-<tr>
-<td width="30%" style="border-bottom:2px solid #00BCD4;">
-Nationality
-</td>
-  <td style="border-bottom:2px solid #00BCD4;">: <?= $valAdult->idNationality->nationality ?>
-</td>
-</tr>
+<!-- Shuttle End -->
 
 
+<!-- Passenger Table Start -->
+<table class="table table-striped ">
+  <caption><center>Passenger Detail</center></caption>
+  <thead>
+  <tr>
+    <th width="20">No.</th>
+    <th>Name</th>
+    <th width="175">Nationality</th>
+    <th width="100">Type</th>
+  </tr>
 
+  </thead>
+  <tbody>
+<?php foreach($modelBooking->tPassengers as $indexAdult => $valAdult): ?>
+  <tr>
+    <th scope="row"><?= $indexAdult+1 ?></th>
+    <td><?= $valAdult->name?></td>
+    <td><?= $valAdult->idNationality->nationality ?></td>
+    <td><?= $valAdult->idType->type ?></td>
+
+  </tr>
 <?php endforeach;?>
 </tbody>
 </table>
-<!-- Adult End -->
-
-<!-- Child Start-->
-<?php $childList = $findPassenger->where(['id_booking'=>$modelBooking->id])->andWhere(['id_type'=>'2'])->orderBy(['birthday'=>SORT_ASC])->all(); ?>
-<?php if(!empty($childList)): ?>
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
-<tr>
-<td style="background-color: #FFC400; border-top:2px solid #FFC400; border-bottom:2px solid #FFC400;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Child Passengers
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #FFC400;border-right:none;border-left:none;color: #333333 !important;">
-</td>
-</tr>
-
-<?php foreach($childList as $indexChild => $valChild): ?>
-
-<tr>
-<td width="30%">
-Name
-</td>
-  <td>: <?= $valChild->name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Birtday
-</td>
-  <td>: <?= date('d-m-Y',strtotime( $valChild->birthday)) ?> 
-</td>
-</tr>
-
-<tr>
-<td width="30%" style="border-bottom:2px solid #FFC400;">
-Nationality
-</td>
-  <td style="border-bottom:2px solid #FFC400;">: <?= $valChild->idNationality->nationality ?>
-</td>
-</tr>
-
-
-
-<?php endforeach;?>
-</tbody>
-</table>
-<?php endif; ?>
-<!-- Child End -->
-
-<!-- Infants Start-->
-<?php $InfantList = $findPassenger->where(['id_booking'=>$modelBooking->id])->andWhere(['id_type'=>'3'])->orderBy(['birthday'=>SORT_ASC])->all(); ?>
-<?php if(!empty($InfantList)): ?>
-<table class="table table-striped" style="margin-bottom: 20px;" width="100%" align="center">
-<tbody>
-<tr>
-<td style="background-color: #FFFF00; border-top:2px solid #FFFF00; border-bottom:2px solid #FFFF00;border-right:none;border-left:none;padding-top:10px;padding-right: 5px; padding-bottom: 10px; padding-left: 15px;color: #333333 !important; font-weight:bold;">
-Infant Passengers
-</td>
-<td style="text-align: right;border-top: none; border-bottom:2px solid #FFFF00;border-right:none;border-left:none;color: #333333 !important;">
-</td>
-</tr>
-
-<?php foreach($InfantList as $indexinfants => $valInfant): ?>
-
-<tr>
-<td width="30%">
-Name
-</td>
-  <td>: <?= $valInfant->name ?>
-</td>
-</tr>
-
-<tr>
-<td width="30%">
-Birtday
-</td>
-  <td>: <?= date('d-m-Y',strtotime($valInfant->birthday)) ?> 
-</td>
-</tr>
-
-<tr>
-<td width="30%" style="border-bottom:2px solid #FFFF00;">
-Nationality
-</td>
-  <td style="border-bottom:2px solid #FFFF00;">: <?= $valInfant->idNationality->nationality ?>
-</td>
-</tr>
-
-
-
-<?php endforeach;?>
-</tbody>
-</table>
-<?php endif; ?>
-<!-- Infants End -->
+<!-- Passenger Table End -->
 
 <div class="page-break"> </div>

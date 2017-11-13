@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+use rmrevin\yii\fontawesome\AssetBundle;
 
 /* @var $this yii\web\View */
 $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nusa Lembongan';
@@ -60,18 +61,18 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valBoat->slug], [
+                              <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valBoat['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
-                                    'alt'=>'thumbnail'.$valBoat->slug,
+                                    'alt'=>'thumbnail'.$valBoat['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valBoat->slug]); ?>
+                                    ]), ['/content/view','slug'=>$valBoat['slug']]); ?>
                           </div>
                           <div class="media-body">
-                          <h4 class="media-heading"><?= $valBoat->title ?></h4>
-                          <?= substr($valBoat->description,0,100) ?>
+                          <h4 class="media-heading"><?= $valBoat['title'] ?></h4>
+                          <?= substr($valBoat['description'],0,100) ?>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valBoat->slug], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?>
+                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valBoat['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?>
                               
                           </div>                 
                          </div>
@@ -97,18 +98,18 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valDestination->slug], [
+                              <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valDestination['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
-                                    'alt'=>'thumbnail'.$valDestination->slug,
+                                    'alt'=>'thumbnail'.$valDestination['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valDestination->slug]); ?>
+                                    ]), ['/content/view','slug'=>$valDestination['slug']]); ?>
                           </div>
                           <div class="media-body">
-                          <h4 class="media-heading"><?= $valDestination->title ?></h4>
-                          <?= substr($valDestination->description,0,100) ?>
+                          <h4 class="media-heading"><?= $valDestination['title'] ?></h4>
+                          <?= substr($valDestination['description'],0,100) ?>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valDestination->slug], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
+                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valDestination['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
                               
                           </div>                 
                          </div>
@@ -134,18 +135,18 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                                  <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valArticle->slug], [
+                                  <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valArticle['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
-                                    'alt'=>'thumbnail'.$valArticle->slug,
+                                    'alt'=>'thumbnail'.$valArticle['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valArticle->slug]); ?>
+                                    ]), ['/content/view','slug'=>$valArticle['slug']]); ?>
                           </div>
                           <div class="media-body">
-                          <h4 class="media-heading"><?= $valArticle->title ?></h4>
-                          <?= substr($valArticle->description,0,100) ?>
+                          <h4 class="media-heading"><?= $valArticle['title'] ?></h4>
+                          <?= substr($valArticle['description'],0,100) ?>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valArticle->slug], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
+                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valArticle['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
                               
                           </div>                 
                          </div>
@@ -172,19 +173,19 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
                               
-                                  <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valPorts->slug], [
+                                  <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valPorts['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
-                                    'alt'=>'thumbnail'.$valPorts->slug,
+                                    'alt'=>'thumbnail'.$valPorts['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valPorts->slug]); ?>
+                                    ]), ['/content/view','slug'=>$valPorts['slug']]); ?>
                               
                           </div>
                           <div class="media-body">
-                          <h4 class="media-heading"><?= $valPorts->title ?></h4>
-                          <?= substr($valPorts->description,0,100) ?>
+                          <h4 class="media-heading"><?= $valPorts['title'] ?></h4>
+                          <?= substr($valPorts['description'],0,100) ?>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valPorts->slug], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
+                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valPorts['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
                               
                           </div>                 
                          </div>
@@ -203,19 +204,19 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
         </div>
         <?php if(!empty($keywordPuller)): ?>
        <div class="panel panel-default material-panel material-panel_primary">
-      <h5 class="panel-heading material-panel__heading"><?= $keywordPuller->title ?></h5>
+      <h5 class="panel-heading material-panel__heading"><?= $keywordPuller['title'] ?></h5>
       <div class="panel-body material-panel__body">
-        <?= $keywordPuller->content ?>
+        <?= $keywordPuller['content'] ?>
       </div>
       </div>
       <?php 
       $this->registerMetaTag([
           'name' => 'description',
-          'content' => $keywordPuller->description,
+          'content' => $keywordPuller['description'],
       ]);
       $this->registerMetaTag([
           'name' => 'keywords',
-          'content' => $keywordPuller->keywords,
+          'content' => $keywordPuller['keywords'],
       ]);
        ?>
     <?php else: 

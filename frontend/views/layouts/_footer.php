@@ -43,6 +43,13 @@ use yii\helpers\Html;
           <li><a target="_blank" href="https://plus.google.com/114019474249953149637"><i class="fa fa-google-plus social-icon google" aria-hidden="true"></i></a></li>
         </ul>
       </div>
+       <div class="col-md-3 col-sm-6 footer-col">
+        <h6 class="heading7">Payment Channel</h6>
+        <ul class="footer-social">
+          <li><img style="height: 100px; width: auto;"  src="/img/paypal.png"></div></li>
+         
+        </ul>
+      </div>
     </div>
   </div>
 </footer>
@@ -71,7 +78,6 @@ use yii\helpers\Html;
 <?php 
 $customCss = <<< SCRIPT
   @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,300);
-@import url(https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css);
 ul,li{
     padding:0;
     margin:0;

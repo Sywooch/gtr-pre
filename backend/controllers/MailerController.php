@@ -43,10 +43,9 @@ class MailerController extends Controller
 
     public function actionPaypal(){
         
-        
         if (($modelQueue = TMailQueue::find()->where(['status'=>1])->andWhere(['id_type'=>1])->orderBy(['datetime'=>SORT_ASC])->one()) !== null) {
             $modelPayment = TPayment::findOne($modelQueue->id_payment);
-            $modelBooking = TBooking::find()->where(['id_payment'=>$modelPayment->id])->all();
+            $modelBooking = $modelPayment->tBookings;
             $findShuttle = $this->findShuttle();
             $findPassenger = $this->findPassenger();
             $savePath =  Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/";
@@ -94,11 +93,13 @@ class MailerController extends Controller
                                             '
                                             , 
                             //set mPDF properties on the fly
-                            'options'   => ['title' => 'E-Ticket Traviora'],
+                            'options'   => ['title' => 'E-Ticket Gilitransfers'],
                             // call mPDF methods on the fly
                             'methods'   => [ 
                             'SetHeader' =>['E-Ticket Gilitransfers'], 
-                            'SetFooter' =>['Please take this Ticket on your trip as a justification'],
+                            'SetFooter' =>[
+                                'Please take this Ticket on your trip as a justification<br>
+                                <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>'],
                     ]
                 ]);
                 $Ticket->render();
@@ -127,6 +128,10 @@ class MailerController extends Controller
                                                     text-color: #212121;
                                                     font-size:25px;
                                                 }
+                                                .ports{
+                                                color: #616161;
+                                                font-size:10px;
+                                                }
                                                 ', 
                                 //set mPDF properties on the fly
                                 'options'   => ['title' => 'Receipt Gilitransfers'],
@@ -137,7 +142,7 @@ class MailerController extends Controller
                         ]
                     ]);
                 $Receipt->render();
-               Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
+               /*Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
                 ->setTo($modelPayment->email)
                 ->setBcc('istanatravel94@gmail.com')
                 ->setSubject('E-Ticket GiliTransfers')
@@ -147,7 +152,7 @@ class MailerController extends Controller
                     ]))
                 ->attach($savePath."E-Ticket.pdf")
                 ->attach($savePath."Receipt.pdf")
-                ->send();
+                ->send();*/
                 foreach ($modelBooking as $key => $value) {
                     $PdfSupplier = new Pdf([
                 'filename'=>$savePath.$value->id.'.pdf',
@@ -172,26 +177,26 @@ class MailerController extends Controller
                                                     font-size:25px;
                                                 }', 
                                 //set mPDF properties on the fly
-                                'options'   => ['title' => 'Receipt Gilitransfers'],
+                                'options'   => ['title' => 'Supplier Reservation Gilitransfers'],
                                 // call mPDF methods on the fly
                                 'methods'   => [ 
                                 'SetHeader' =>['Supplier Reservation Gilitransfers'], 
-                                'SetFooter' =>['Document automatically printed by system'],
+                                'SetFooter' =>['This Document automatically printed by system'],
                         ]
                     ]);
                     $PdfSupplier->render();
                     $attach = $savePath.$value->id.".pdf";
 
-                    if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
+                   /* if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
                         $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $attach,$value, $modelPayment);
                     }else{
                         $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali, $attach, $value, $modelPayment);
-                    }
+                    }*/
                     
                 }
-                $modelQueue->status = '3';
+                /*$modelQueue->status = '3';
                 $modelQueue->save();
-                FileHelper::removeDirectory($savePath);
+                FileHelper::removeDirectory($savePath);*/
         }else{
             return true;
         }
@@ -214,7 +219,7 @@ class MailerController extends Controller
          $modelQueue = TMailQueue::find()->where(['status'=>1])->andWhere(['id_type'=>2])->orderBy(['datetime'=>SORT_DESC])->one();
         if ($modelQueue != null) {
             $modelPayment = TPayment::findOne($modelQueue->id_payment);
-            $modelBooking = TBooking::find()->where(['id_payment'=>$modelPayment->id])->all();
+            $modelBooking = $modelPayment->tBookings;
             $findShuttle = $this->findShuttle();
             $findPassenger = $this->findPassenger();
 

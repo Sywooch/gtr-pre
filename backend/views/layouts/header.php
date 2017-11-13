@@ -1,17 +1,45 @@
 <?php
 use yii\helpers\Html;
 use mdm\admin\components\Helper;
+use yii\helpers\Url;
 /* @var $this \yii\web\View */
 /* @var $content string */
 $Valbook = Yii::$app->gilitransfers->Valbook();
-/*
+
 $this->registerJs("
 
 if (Notification.permission !== \"granted\")
     Notification.requestPermission();
-    notifikasi(); 
+    hitungMundur(); 
+
+function hitungMundur(){
+    setTimeout(function(){
+        //cekNotif();
+        }, 5000);
+}
+
+function cekNotif(){
+    $.ajax({
+        url:'".Url::to(['/site/cek-notif'])."',
+        type: 'POST',
+        async: true,
+        success:function(data){
+            if (data == 'kosong') {
+                alert('kosong');
+                hitungMundur();
+            }else{
+                notifikasi(data);
+            }
+            
+        },
+        error: function(){
+            console.log('Notification Error');
+            hitungMundur();
+        },
+    });
+};
                 
-function notifikasi() {
+function notifikasi(data) {
     if (!Notification) {
         alert('Browsermu tidak mendukung Web Notification. Silahkan Upgrade Browser yg mendukung seperti Mozila Versi Terbaru'); 
         return;
@@ -26,19 +54,16 @@ function notifikasi() {
             body: \"Silahkan Periksa Dengan Klik Notifikasi Ini\",
        });
         notifikasi.onclick = function () {
-            window.location.href = '".\yii\helpers\Url::to(['/booking/index'])."';   
+            window.location.href = '".Url::to(['/booking/index'])."';   
         };
         setTimeout(function(){
             notifikasi.close();
-            cek();
-        }, 10000);
+            hitungMundur();
+        }, 5000);
     }
 };
 
-function cek(){
-    notifikasi();
-};
-    ", \yii\web\View::POS_READY);*/
+    ", \yii\web\View::POS_READY);
 ?>
 <header class="main-header">
 

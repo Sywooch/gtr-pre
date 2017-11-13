@@ -87,7 +87,7 @@ class TBookingSearch extends TBooking
             
         }else{
             if ($this->date == null && $this->bookdate == null) {
-             $query->andFilterWhere(['>','t_trip.date',date('Y-m-d')]);
+            // $query->andFilterWhere(['>','t_trip.date',date('Y-m-d')]);
             }else{
              $query->andFilterWhere(['t_trip.date' => $this->date]);
             }

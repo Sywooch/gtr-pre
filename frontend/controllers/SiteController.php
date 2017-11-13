@@ -169,8 +169,56 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-
         $session =Yii::$app->session;
+        $modelBookForm = new BookForm();
+        $modelHotel = new Hotel();
+        
+         if ($modelBookForm->load(Yii::$app->request->post()) && $modelBookForm->validate()){
+             $session->open();
+             $session['currency'] = $modelBookForm->currency;
+
+             $kurs = $this->findKurs()->where(['currency'=>$session['currency']])->one();
+            if ($modelBookForm->type == '1') {
+                 $formData = [
+                    'departurePort' =>$modelBookForm->departurePort,
+                    'arrivalPort'   =>$modelBookForm->arrivalPort,
+                    'departureDate' =>$modelBookForm->departureDate,
+                    'returnDate'    =>$modelBookForm->returnDate,
+                    'adults'        =>$modelBookForm->adults,
+                    'childs'        =>$modelBookForm->childs,
+                    'infants'       =>$modelBookForm->infants,
+                    'type'          =>'2',
+                   // 'currency'      =>$kurs->currency,
+                    'exchange'      =>$kurs->kurs,
+                ];
+                
+            }else{
+                $formData = [
+                    'departurePort' =>$modelBookForm->departurePort,
+                    'arrivalPort'   =>$modelBookForm->arrivalPort,
+                    'departureDate' =>$modelBookForm->departureDate,
+                   // 'returnDate' =>$modelBookForm->returnDate,
+                    'adults'        =>$modelBookForm->adults,
+                    'childs'        =>$modelBookForm->childs,
+                    'infants'       =>$modelBookForm->infants,
+                    'type'          =>'1',
+                   // 'currency'      =>$kurs->currency,
+                    'exchange'      =>$kurs->kurs,
+                    
+                ];
+               
+            }/*else{
+                $session            = session_unset();
+                return $this->goHome();
+            }*/
+
+            $session['formData'] = $formData;
+            $session['timeout'] = date('d-m-Y H:i:s');
+            $session->close();
+            
+            return $this->redirect(['result','formData'=>$formData]);
+        }else{
+
       if ($session['route'] == 'none') {
            // $session      = session_unset();
             echo Growl::widget([
@@ -231,72 +279,21 @@ class SiteController extends Controller
         }
       $session =Yii::$app->session;
       $session->open();
-        $modelBookForm = new BookForm();
-        $modelHotel = new Hotel();
-        
-         if ($modelBookForm->load(Yii::$app->request->post()) && $modelBookForm->validate()){
-             $session->open();
-             $session['currency'] = $modelBookForm->currency;
-
-             $kurs = $this->findKurs()->where(['currency'=>$session['currency']])->one();
-            if ($modelBookForm->type == '1') {
-                 $formData = [
-                    'departurePort' =>$modelBookForm->departurePort,
-                    'arrivalPort'   =>$modelBookForm->arrivalPort,
-                    'departureDate' =>$modelBookForm->departureDate,
-                    'returnDate'    =>$modelBookForm->returnDate,
-                    'adults'        =>$modelBookForm->adults,
-                    'childs'        =>$modelBookForm->childs,
-                    'infants'       =>$modelBookForm->infants,
-                    'type'          =>'2',
-                   // 'currency'      =>$kurs->currency,
-                    'exchange'      =>$kurs->kurs,
-                ];
-                
-            }else{
-                $formData = [
-                    'departurePort' =>$modelBookForm->departurePort,
-                    'arrivalPort'   =>$modelBookForm->arrivalPort,
-                    'departureDate' =>$modelBookForm->departureDate,
-                   // 'returnDate' =>$modelBookForm->returnDate,
-                    'adults'        =>$modelBookForm->adults,
-                    'childs'        =>$modelBookForm->childs,
-                    'infants'       =>$modelBookForm->infants,
-                    'type'          =>'1',
-                   // 'currency'      =>$kurs->currency,
-                    'exchange'      =>$kurs->kurs,
-                    
-                ];
-               
-            }/*else{
-                $session            = session_unset();
-                return $this->goHome();
-            }*/
-
-            $session['formData'] = $formData;
-            $session['timeout'] = date('d-m-Y H:i:s');
-            $session->close();
-            
-            return $this->redirect(['result','formData'=>$formData]);
-        }else{
-        $listCurrency = ArrayHelper::map($this->findKurs()->select(['currency','name','CONCAT(currency, "-",name) AS Alias'])->asArray()->orderBy(['currency'=>SORT_ASC])->all(), 'currency', 'Alias','name');
-        $route = $this->findHarbor()->all();
+        $listCurrency = ArrayHelper::map($this->findKurs()->select(['currency','name','CONCAT(currency, " - ",name) AS Alias'])->asArray()->orderBy(['currency'=>SORT_ASC])->all(), 'currency', 'Alias','name');
+        $route = $this->findHarbor()->joinWith('idIsland')->asArray()->all();
         foreach ($route as $key => $value) {
-            $arrayRoute[] = ['id'=>$value->id,'name'=>$value->name,'island'=>$value->idIsland->island];
+            $arrayRoute[] = ['id'=>$value['id'],'name'=>$value['name'],'island'=>$value['idIsland']['island']];
         }
-       /* $bali[] = ['id'=>'1000','name'=>'Bali (All Port)','island'=>' '];
-        $mergered = ArrayHelper::merge($bali,$arrayRoute);
-        $listDept =ArrayHelper::map($mergered, 'id', 'name', 'island');*/
          $listDept =ArrayHelper::map($arrayRoute, 'id', 'name', 'island');
         $adultList = ['1'=>'1','2','3','4','5','6','7','8','9'];
         $childList = ['0','1','2','3','4','5'];
         $now = date('d-m-Y');
         $limitdate = date('d-m-Y',strtotime('+1 days',strtotime($now)));
-        $listBoats = TContent::find()->where(['id_type_content'=>1])->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
-        $listPorts = TContent::find()->where(['id_type_content'=>2])->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
-        $listDestinations = TContent::find()->where(['id_type_content'=>3])->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
-        $keywordPuller = TContent::findOne(['id_type_content'=>5]);
-        $listArticle = TContent::find()->where(['id_type_content'=>4])->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
+        $listBoats = TContent::find()->where(['id_type_content'=>1])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
+        $listPorts = TContent::find()->where(['id_type_content'=>2])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
+        $listDestinations = TContent::find()->where(['id_type_content'=>3])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
+        $keywordPuller = TContent::find(['id_type_content'=>5])->asArray()->one();
+        $listArticle = TContent::find()->where(['id_type_content'=>4])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         return $this->render('index',[
             'modelBookForm'=>$modelBookForm,
             'modelHotel'=>$modelHotel,
