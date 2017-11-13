@@ -174,7 +174,10 @@ class ContentController extends Controller
                 $model->keywords = join(', ',$model->keywords);
                 $model->thumb = UploadedFile::getInstance($model, 'thumb');
                 if ($model->thumb != null) {
-                    //unlink($model->thumbnail);
+                    if (file_exists($model->thumbnail)) {
+                       unlink($model->thumbnail);
+                    }
+                    
                     $path = Yii::$app->basePath.'/content/'.$model->slug.'/';
                     FileHelper::createDirectory($path, $mode = 0777, $recursive = true);
                     $model->thumbnail = $path.$model->thumb->baseName.'.'.$model->thumb->extension;
