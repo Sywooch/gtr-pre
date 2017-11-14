@@ -49,7 +49,7 @@ $this->registerCss($customCss);
     <div class="modal-content material-modal__content">
       <div class="modal-header material-modal__header">
         <button class="close material-modal__close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title material-modal__title">Round Trip Detail</h4>
+        <h4 class="modal-title material-modal__title">Trip Detail</h4>
       </div>
       <div class="modal-body material-modal__body">
         <div id="detail" class="col-md-12">
@@ -115,7 +115,7 @@ $durations = $value->id_est_time;
     <div class="funkyradio">
     <div class="funkyradio-warning">
     <?= Html::radio('id_dept', $checked = false,['id'=>$value->id,'value'=>$value->id,'class'=>'radio-dept  ']); ?>
-               <?= Html::label('Book!', $value->id); ?>
+               <?= Html::label('Select', $value->id); ?>
     </div>
     </div>               
   </div>
@@ -128,7 +128,7 @@ $durations = $value->id_est_time;
 <center>
   <h2>Sorry</h2>
   <p>
-    Boat is Unavaible for this time, or sheat is not enought
+    We Are Fully Booked
   </p>
   </center>
 <?php endif;  ?>
@@ -180,7 +180,7 @@ $this->registerCss($customCss);
     /*min-width: 400px;*/
     width: 100%;
     border-radius: 3px;
-    border: 1px solid #D1D3D4;
+    border: 2px solid #f2a12e;
     font-weight: normal;
 }
 .funkyradio input[type="radio"]:empty {
@@ -205,7 +205,7 @@ $this->registerCss($customCss);
     left: 0;
     content:'';
     width: 2.5em;
-    background: #D1D3D4;
+    background: #ECEFF1;
     border-radius: 3px 0 0 3px;
 }
 .funkyradio input[type="radio"]:hover:not(:checked) ~ label:before {

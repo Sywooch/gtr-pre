@@ -54,8 +54,8 @@ public function returnvalidate($attribute, $params, $validator){
         return [
             'departurePort' => 'From',
             'arrivalPort' => 'To',
-            'departureDate' => 'Departure Date',
-            'returnDate' => 'Return Date',
+            'departureDate' => 'Departure',
+            'returnDate' => 'Return',
             'type' => 'type',
             'adults' => 'adults',
             'childs' => 'childs',

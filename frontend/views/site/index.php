@@ -10,7 +10,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
 
 ?>
  <div class="row"> 
-<div class="col-md-12">
+<div class="col-md-9">
       <div class="panel-group material-tabs-group">
       <h4 class="panel-heading"><center>Booking Form</center></h4>
         <ul class="nav nav-tabs material-tabs material-tabs_primary">
@@ -18,7 +18,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
           <li><a href="#hotels" class="material-tabs__tab-link" data-toggle="tab">Hotels</a></li>
         </ul>
         <div class="tab-content materail-tabs-content">
-          <div class="tab-pane fade active in" id="fastboats">
+          <div class="tab-pane book-form fade active in" id="fastboats">
             <div class="row"> 
 
             <?= $this->render('_form-fastboat.php',[
@@ -31,7 +31,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
             ])?>
             </div>
           </div>
-          <div class="tab-pane fade" id="hotels">
+          <div class="tab-pane book-form fade" id="hotels">
            <div class="row"> 
             <?= $this->render('_form-hotels.php',[
             'modelHotel'=>$modelHotel,
@@ -41,6 +41,18 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
           </div>
         </div>
       </div>
+</div>
+<div class="col-md-3">
+  <div class="panel panel-default material-panel material-panel_primary">
+    <h5 class="panel-heading material-panel__heading">Contact Us</h5>
+    <div class="panel-body material-panel__body">
+      <div class="row">
+          <p><span class="fa fa-phone"> </span> +62-813-5330-4990<br></p>
+          <p><span class="fa fa-envelope"> </span> reservation@gilitransfers.com</p>
+          <img alt="payment-logo" style="height: 90px; width: 250px;"  src="/img/paypal.png">
+      </div>
+    </div>
+  </div>
 </div>
 </div>
   <div class="panel-group material-tabs-group">
@@ -245,6 +257,9 @@ $customCss = <<< SCRIPT
 }
 .art-tab{
   min-height: 390px;
+}
+.book-form{
+  min-height: 205px;
 }
 #btn-scroll {
     position:fixed;

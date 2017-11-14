@@ -103,7 +103,7 @@ class SiteController extends Controller
             $currency = $this->findKurs()->where(['currency'=>$session['currency']])->one();
             if ($data['retv'] != 'false') {
                $tripReturn    = $this->findOneTrip($data['retv']);
-               echo $this->renderAjax('detail-modal',[
+               return $this->renderAjax('detail-modal',[
                         'tripDeparture'=>$tripDeparture,
                         'tripReturn'=>$tripReturn,
                         'currency'=>$currency,
@@ -112,7 +112,7 @@ class SiteController extends Controller
                         'paxChild'=>$paxChild,
                         ]);
             }else{
-                echo $this->renderAjax('detail-modal-one',[
+                return $this->renderAjax('detail-modal-one',[
                         'tripDeparture'=>$tripDeparture,
                         'currency'=>$currency,
                         'session'=>$session,

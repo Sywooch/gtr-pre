@@ -37,6 +37,7 @@ class TBookingSearch extends TBooking
         ];
     }
 
+
     /**
      * @inheritdoc
      */
@@ -57,9 +58,9 @@ class TBookingSearch extends TBooking
 
     public function summarySearch($params){
         if(Helper::checkRoute('/booking/*')){
-        $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',self::STATUS_PAID,self::STATUS_RESCHEDULE])->groupBy('t_boat.id_company,t_trip.id_route,t_trip.date,t_trip.dept_time')->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
+        $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',self::STATUS_PAID,self::STATUS_RESCHEDULE])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
        }else{
-        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany','idTrip.idRoute')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',self::STATUS_PAID,self::STATUS_RESCHEDULE])->orderBy(['t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);;
+        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany','idTrip.idRoute')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',self::STATUS_PAID,self::STATUS_RESCHEDULE])->orderBy(['t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
        }
 
         // add conditions that should always apply here
@@ -87,7 +88,7 @@ class TBookingSearch extends TBooking
             
         }else{
             if ($this->date == null && $this->bookdate == null) {
-            // $query->andFilterWhere(['>','t_trip.date',date('Y-m-d')]);
+            //$query->andFilterWhere(['>','t_trip.date',date('Y-m-d')]);
             }else{
              $query->andFilterWhere(['t_trip.date' => $this->date]);
             }
@@ -102,6 +103,8 @@ class TBookingSearch extends TBooking
             't_route.departure' => $this->departure,
             't_trip.id_route' => $this->id_route,
             't_boat.id_company'=>$this->id_company,
+            't_trip.date' => $this->date,
+
         ]);
 
 

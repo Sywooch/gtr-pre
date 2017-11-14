@@ -130,8 +130,8 @@ class BookController extends Controller
         //$token = Yii::$app->getSecurity()->generateRandomString(25);
        // $saveCustomer->name = 
            foreach ($cartList as $key => $cartValue) {
-                 $adultPrice               = $cartValue->idTrip->adult_price/$cartValue->exchange*$cartValue->adult;
-                 $childPrice               = $cartValue->idTrip->child_price/$cartValue->exchange*$cartValue->child;
+                 $adultPrice               = round($cartValue->idTrip->adult_price/$cartValue->exchange*$cartValue->adult,0,PHP_ROUND_HALF_UP);
+                 $childPrice               = round($cartValue->idTrip->child_price/$cartValue->exchange*$cartValue->child,0,PHP_ROUND_HALF_UP);
                  $saveBooking              = new TBooking();
                  $saveBooking->id          = $saveBooking->generateBookingNumber("id");
                  $saveBooking->id_trip     = $cartValue->id_trip;
@@ -215,7 +215,7 @@ class BookController extends Controller
             $session->open();
             $session['cust_id'] = $modelPayment->id;
             $session['token']   = $modelPayment->token;
-            $session['timeout']   = 'on-payment';
+            $session['timeout'] = 'on-payment';
             $session->close();
             $transaction->commit();
        } catch(\Exception $e) {

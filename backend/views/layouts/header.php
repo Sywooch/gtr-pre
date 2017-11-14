@@ -20,7 +20,7 @@ function hitungMundur(){
 
 function cekNotif(){
     $.ajax({
-        url:'".Url::to(['/site/cek-notif'])."',
+        url:'".Url::to(['/site/index'])."',
         type: 'POST',
         async: true,
         success:function(data){

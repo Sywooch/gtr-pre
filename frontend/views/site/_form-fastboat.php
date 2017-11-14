@@ -23,23 +23,23 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
 $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphicon-map-marker"></i>']]];
 ?>
 <?php $form = ActiveForm::begin(); ?>
-<div class="row col-md-12 col-sm-12 col-xs-12">
-    <div class="col-md-3 col-sm-6 col-xs-12">
+<!--<div class="row col-md-12 col-sm-12 col-xs-12">-->
+    <div class="col-md-4 col-sm-6 col-xs-12">
     <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->dropDownList($listDept,
       ['id' => 'drop-dept']
     ); ?>
 
     </div>
-    <div class="col-md-3 col-sm-6 col-xs-12">
+    <div class="col-md-4 col-sm-6 col-xs-12">
     <?= $form->field($modelBookForm, 'arrivalPort',$layoutMarker)->dropDownList($listDept,
       ['id' => 'drop-arv']
     ); ?>
     </div>
 
-    <div class="col-md-3 col-sm-12 col-xs-12">
+    <div style="margin-bottom: 20px;" class="col-md-4 col-sm-12 col-xs-12">
     <label class="control-label">No Of Passengers</label>
       <div id="pax-list" class="dropdown material-dropdown main-container__column">
-          <li style="padding: 5px 15px 5px 15px; text-align: center; " class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
+          <li style="padding: 5px 15px 5px 15px; text-align: center;" class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
            <span class="fa fa-group"></span> Adult <span id="span-adult">1 </span>, Childs <span id="span-child"> 0</span>, Infants <span id="span-infants"> 0</span>
           </li>
         <div class="dropdown-menu">
@@ -148,29 +148,9 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
         </div>
       </div> 
     </div>
-</div>
+<!--</div>-->
 
-<div class="col-md-1 col-md-offset-0 col-sm-6 col-sm-offset-5 col-xs-6 col-xs-offset-5">
-<label></label>
-<div class="main-container__column material-checkbox-group material-checkbox-group_primary">
-    <?= Html::activeCheckbox($modelBookForm,'type', [ 
-          'label'=>false,
-          'class' => 'material-checkbox',
-          'id'=>'checkbox-type',
-          'onchange'=>'
-          if ($(this).is(":checked")) {
-            $("#div-return").css("visibility", "visible");
-          }else{
-            $("#div-return").css("visibility", "hidden");
-
-          }
-          '
-          ]); ?>
-    <label class="material-checkbox-group__label" for="checkbox-type"> Return</label>
-</div>
-
-</div>
-					<div class="col-md-2 col-sm-4 col-xs-6">
+					<div class="col-md-4 col-sm-4 col-xs-6">
 					<?= $form->field($modelBookForm, 'departureDate')->widget(kato\pickadate\Pickadate::classname(), [
 						'isTime' => false,
 						//'id'=>'dept-date',
@@ -182,13 +162,31 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 					]); ?>
 					</div>
 <?php Pjax::begin(['id'=>'pjax-return-date']); ?>					
-					<div class="col-md-2 col-sm-4 col-xs-6" id="div-return">
+					<div class="col-md-4 col-sm-4 col-xs-6">
+            <div class="main-container__column material-checkbox-group material-checkbox-group_primary">
+        <?= Html::activeCheckbox($modelBookForm,'type', [ 
+                  'label'=>false,
+                  'class' => 'material-checkbox',
+                  'id'=>'checkbox-type',
+                  'onchange'=>'
+                  if ($(this).is(":checked")) {
+                    $("#div-return").css("visibility", "visible");
+                  }else{
+                    $("#div-return").css("visibility", "hidden");
+
+                  }
+                  '
+                  ]); ?>
+        <label class="material-checkbox-group__label" for="checkbox-type"> Return</label>
+        </div>
+          <div id="div-return">
 					<?= $form->field($modelBookForm, 'returnDate')->widget(kato\pickadate\Pickadate::classname(), [
 						'isTime' => false,
 						'id'=>'return-date',
 						'options'=>['id'=>'return-date','class'=>'input-sm form-control'],
 
-					]); ?>
+					])->label(false); ?>
+          </div>
 					</div>
 <?php 
 $this->registerJs("
@@ -253,7 +251,7 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
  ?>
 <?php Pjax::end(); ?> 
 
-<div id="div-currency" class="col-md-3 col-sm-4 col-xs-12">
+<div id="div-currency" class="col-md-4 col-sm-4 col-xs-12">
 <?= $form->field($modelBookForm, 'currency',['addon' => ['prepend' => ['content'=>'<i class="fa fa-money"></i>']]])->widget(Select2::classname(), [
     'data' => $listCurrency,
     'size' => Select2::SMALL,
@@ -265,6 +263,45 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 </div>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">
          
-          <?= Html::submitButton(Yii::t('app', 'Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block']) ?>
+          <?= Html::submitButton(Yii::t('app', ' Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block glyphicon glyphicon-search']) ?>
           </div>     
 <?php ActiveForm::end(); ?>
+
+<?php
+$customCss = <<< SCRIPT
+.material-checkbox-group__label {
+    position: relative;
+    display: block;
+    cursor: pointer;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 30px;
+}
+.material-checkbox-group__label::after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    opacity: .9;
+    border-right: 2px solid #eee;
+    border-top: 2px solid #eee;
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    -webkit-transform: scaleX(-1) rotate(135deg);
+    transform: scaleX(-1) rotate(135deg);
+    -webkit-transform-origin: left top;
+    transform-origin: left top;
+}
+.material-checkbox-group__label::before {
+    content: "";
+    display: block;
+    border: 2px solid;
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    left: 0;
+}
+SCRIPT;
+$this->registerCss($customCss);
+ ?>

@@ -133,9 +133,9 @@ class BookingController extends Controller
 
 protected function findAllBooking(){
     if(Helper::checkRoute('/booking/*')){
-        return TBooking::find()->all();
+        return TBooking::find()->where(['between','id_status',4,6])->all();
     }else{
-        return TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->all();
+        return TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['between','id_status',4,6])->andWhere(['t_company.id_user'=>Yii::$app->user->identity->id])->all();
     }
 
 }

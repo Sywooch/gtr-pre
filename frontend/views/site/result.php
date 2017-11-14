@@ -1,6 +1,7 @@
 <?php
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\bootstrap\Modal;
 
 $this->title = 'Choose FastBoats';
 
@@ -9,33 +10,44 @@ $this->registerJs("
 $('.radio-dept, .radio-return').on('change',function(){
  var dept = $('input[name=id_dept]:radio:checked').val();
  var ret = $('input[name=id_return]:radio:checked').val();
+ 
   if(dept != undefined && ret != undefined){
+  $(this).parents('.panel').css({'box-shadow': '0 4px 10px 0 rgba(1, 87, 155,1.0)'});
+    $('#myModal').modal({
+              backdrop: 'static',
+              keyboard: false
+          });
+          
+    $('#detail').html('<i class=\"fa fa-spinner fa-spin\"></i>');
     $.ajax({
       url: '". Url::to('/site/detail-modal')."',
       type: 'POST',
       data: {deptv: dept, retv: ret},
       success: function(data){
           $('#detail').html(data);
-          $('#myModal').modal({
-              backdrop: 'static',
-              keyboard: false
-          });
+          
         }
     });
   }else if(dept != undefined && ret == undefined){
+    $('.departure > .panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
+    $(this).parents('.panel').css({'box-shadow': '0 4px 10px 0 rgba(1, 87, 155,1.0)'});
     $('html, body').animate({
           scrollTop: $('#div-return').offset().top
         }, 1000); 
-        return false; 
+        return false;
   }else if(dept == undefined && ret != undefined){
+    $('.return > .panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
+    $(this).parents('.panel').css({'box-shadow': '0 4px 10px 0 rgba(1, 87, 155,1.0)'});
     $('html, body').animate({
           scrollTop: $('#div-dept').offset().top
         }, 1000); 
+    $(this).css('background-color','red');
         return false; 
   }
 });
 
 $('#myModal').on('hide.bs.modal',function(){
+  $('.panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
   $('input:radio').attr('checked', false);
 })
 
@@ -77,7 +89,7 @@ $priceDept = round($valDept->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_H
 $timeDept = date('H:i',strtotime($valDept->dept_time));
 $durDept = $valDept->id_est_time;
  ?>
-<div id="<?= $priceDept ?>" times="<?= $timeDept ?>" duration="<?= $durDept ?>">
+<div class="departure" id="<?= $priceDept ?>" times="<?= $timeDept ?>" duration="<?= $durDept ?>">
   <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
@@ -97,7 +109,7 @@ $durDept = $valDept->id_est_time;
 <span class="text-muted timer">
     <span class="col-md-12 col-sm-12">
       <span class="glyphicon glyphicon-time"></span> 
-      Dept Time: <?= $timeDept ?> WITA
+      Dept Time: <?= $timeDept ?>
       <span class="glyphicon glyphicon-menu-right"></span> 
       <?= $valDept->idEstTime->est_time ?> Duration
     </span>
@@ -112,12 +124,12 @@ $durDept = $valDept->id_est_time;
     } ?>
  </span> 
 <span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceDept ?></span>
-              <div class="funkyradio">
+          <div class="funkyradio">
               <div class="funkyradio-warning">
-              <?= Html::radio('id_dept', $checked = false,['id'=>'radio-dept'.$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept']); ?>
-             <?= Html::label('Book!', 'radio-dept'.$valDept->id); ?>
+               <?= Html::radio('id_dept', $checked = false,['id'=>'radio-dept'.$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept']); ?>
+               <?= Html::label('Select', 'radio-dept'.$valDept->id); ?>
               </div>
-              </div>
+          </div>
               
            
           </div>
@@ -130,7 +142,7 @@ $durDept = $valDept->id_est_time;
 <center>
   <h2>Sorry</h2>
   <p>
-    Boat is Unavaible for this time, or sheat is not enought
+    We Are Fully Booked
   </p>
   </center>
 <?php endif;  ?>
@@ -154,7 +166,7 @@ $priceRetr = round($valRetr->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_H
 $timeRetr = date('H:i',strtotime($valRetr->dept_time));
 $durRetr = $valRetr->id_est_time;
  ?>
-<div id="<?= $priceRetr ?>" times="<?= $timeRetr ?>" duration="<?= $durRetr ?>">
+<div class="return" id="<?= $priceRetr ?>" times="<?= $timeRetr ?>" duration="<?= $durRetr ?>">
     <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
@@ -174,7 +186,7 @@ $durRetr = $valRetr->id_est_time;
 <span class="text-muted timer">
     <span class="col-md-12s col-sm-12">
       <span class="glyphicon glyphicon-time"></span> 
-      Dept Time: <?= $timeRetr ?> WITA 
+      Dept Time: <?= $timeRetr ?> 
       <span class="glyphicon glyphicon-menu-right"></span>
       <?= $valRetr->idEstTime->est_time ?> Duration 
     </span>
@@ -192,7 +204,7 @@ $durRetr = $valRetr->id_est_time;
               <div class="funkyradio">
               <div class="funkyradio-warning">
               <?= Html::radio('id_return', $checked = false,['id'=>'radio-return'.$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return']); ?>
-             <?= Html::label('Book!', 'radio-return'.$valRetr->id); ?>
+             <?= Html::label('Select', 'radio-return'.$valRetr->id); ?>
               </div>
               </div>
               
@@ -206,7 +218,7 @@ $durRetr = $valRetr->id_est_time;
 <center>
   <h2>Sorry</h2>
   <p>
-    Boat is Unavaible for this time, or sheat is not enought
+    We Are Fully Booked
   </p>
   </center>
 <?php endif;  ?>
@@ -258,7 +270,7 @@ $this->registerCss($customCss);
     /*min-width: 400px;*/
     width: 100%;
     border-radius: 3px;
-    border: 1px solid #D1D3D4;
+    border: 2px solid #f2a12e;
     font-weight: normal;
 }
 .funkyradio input[type="radio"]:empty {
@@ -283,7 +295,7 @@ $this->registerCss($customCss);
     left: 0;
     content:'';
     width: 2.5em;
-    background: #D1D3D4;
+    background: #ECEFF1;
     border-radius: 3px 0 0 3px;
 }
 .funkyradio input[type="radio"]:hover:not(:checked) ~ label:before {
