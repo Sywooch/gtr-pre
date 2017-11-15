@@ -17,7 +17,7 @@ use kartik\widgets\TouchSpin;
 <?= Html::hiddenInput('pcs', $value = 1, ['option' => 'value']); ?>
 <?= Html::hiddenInput('hl', $value = 'en', ['option' => 'value']); ?>
 <div class="col-md-2">
-<label class="control-label" for="city">City</label>
+<label class="control-label" for="city">Location</label>
 <?= Html::dropDownList('city', '', ['17193'=>'Bali','16842'=>'Lombok'], ['class' => 'form-control']); ?>
 
 </div>

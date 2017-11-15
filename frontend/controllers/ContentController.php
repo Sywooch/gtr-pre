@@ -57,7 +57,28 @@ class ContentController extends Controller
 	 public function actionView($slug)
     {
         return $this->render('view', [
-            'model' => $this->findModel($slug),
+            'model' => $this->findOneBySlug($slug),
+        ]);
+    }
+
+    public function actionHotels(){
+       $listContent = $this->findByType('9');
+
+        return $this->render('content', [
+            'listContent'=>$listContent,
+        ]);
+    }
+
+    public function actionTermsConditions(){
+        $contentTC = $this->findOneByType('10');
+        return $this->render('term', [
+            'model'=>$contentTC,
+        ]);
+    }
+    public function actionPrivacyPolicy(){
+        $contentTC = $this->findOneByType('11');
+        return $this->render('term', [
+            'model'=>$contentTC,
         ]);
     }
 
@@ -114,13 +135,23 @@ class ContentController extends Controller
     protected function findByType($type){
     	return TContent::find()->where(['id_type_content'=>$type])->all();
     }
+    protected function findOneByType($type){
+        return TContent::find()->where(['id_type_content'=>$type])->asArray()->one();
+    }
 
     protected function findCart(){
         return TCart::find();
     }
+    protected function findOneBySlug($slug){
+        if (($model = TContent::find(['slug'=>$slug])->joinWith('idTypeContent')->asArray()->one()) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('This Page is broken or under Development');
+        }
+    }
 
 
- protected function findModel($slug)
+    protected function findModel($slug)
     {
         if (($model = TContent::findOne(['slug'=>$slug])) !== null) {
             return $model;

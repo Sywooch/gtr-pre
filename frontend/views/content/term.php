@@ -5,7 +5,6 @@ use yii\helpers\Html;
 /* @var $model common\models\TContent */
 
 $this->title = $model['title'];
-$this->params['breadcrumbs'][] = ['label' => $model['idTypeContent']['type'], 'url' => ['content/'.strtolower(str_replace([" ","/","&"], "-", $model['idTypeContent']['type']))]];
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerMetaTag([

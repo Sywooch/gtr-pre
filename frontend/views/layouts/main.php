@@ -10,6 +10,7 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
 use yii\helpers\Url;
+use rmrevin\yii\fontawesome\AssetBundle;
 
 AppAsset::register($this);
 ?>
@@ -37,7 +38,11 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        
+        [
+        'label' => 'Home',
+        'url' => Yii::$app->homeUrl,
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
         [
         'label' => 'Fast Boat',
         'url' => ['/content/fastboats'],
@@ -52,6 +57,10 @@ AppAsset::register($this);
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
+        'label' => 'Hotels', 'url' => ['/content/hotels'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
         'label' => 'Article', 'url' => ['/content/articles'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
@@ -63,10 +72,7 @@ AppAsset::register($this);
         'label' => 'How To Book', 'url' => ['/site/how-to-book'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
-        [
-        'label' => 'About', 'url' => ['/site/about'],
-        'linkOptions'=>['class'=>'material-navbar__link'],
-        ],
+        
         [
         'label' => 'FAQ', 'url' => ['/site/faq'],
         'linkOptions'=>['class'=>'material-navbar__link'],

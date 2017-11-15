@@ -8,9 +8,10 @@ use yii\helpers\Html;
   <div class="container">
     <div class="row">
       <div class="col-md-3 col-sm-6 footer-col">
-        <div class="logofooter"><img style="height: 40px; width: auto;"  src="/img/logo.png"></div>
+        <div class="logofooter"><?=Html::a(Html::img('/img/logo.png', ['style'=>'height: 40px; width: auto;','alt' => 'footer-logo']), Yii::$app->homeUrl, ['option' => 'value']); ?>
+</div>
         <p>Transfer from Bali to Gili Trawangan, Gili Air, Gili Meno, and Lombok by Fast Boat or Flight. Easy online booking. Pay in your currency and save money.</p>
-        <p><i class="fa fa-map-pin"></i> +62, Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</p>
+        <p><i class="fa fa-map-pin"></i> Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</p>
         <p><i class="fa fa-phone"></i> Phone (Indonesia) : +62-813-5330-4990</p>
         <p><i class="fa fa-envelope"></i> E-mail :reservation@gilitransfers.com</p>
         
@@ -18,13 +19,11 @@ use yii\helpers\Html;
       <div class="col-md-3 col-sm-6 footer-col">
         <h6 class="heading7">GENERAL LINKS</h6>
         <ul class="footer-ul">
-          <li><a href="/"> Home</a></li>
-          <li><a href="/content/destinations">Destination</a></li>
-          <li><a href="/content/ports">Ports</a></li>
-          <li><a href="/content/articles">Article</a></li>
-          <li><a href="/site/about">About</a></li>
-          <li><a href="/site/contact">Contact Us</a></li>
-          <li><a href="#"> Terms & Conditions</a></li>
+          <li><?= Html::a('Home', Yii::$app->homeUrl); ?></li>
+          <li><?= Html::a('Contact Us', ['/site/contact']); ?></li>
+          <li><?= Html::a('Terms & Conditions', ['/content/terms-conditions']); ?></li>
+          <li><?= Html::a('Privacy Policy', ['/content/privacy-policy']); ?></li>
+          <li><?= Html::a('About Us', ['/site/about']); ?></li>
         </ul>
       </div>
       <div class="col-md-3 col-sm-6 footer-col">
