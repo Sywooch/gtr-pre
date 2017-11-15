@@ -26,7 +26,7 @@ $this->registerMetaTag([
     </div>
 
      <div class="material-card__footer">
-        <?= Html::a('Read more', ['view','slug'=>$valContent->slug,],['class'=>'btn material-btn material-btn_warning main-container__column material-btn_md btn-block']); ?>
+        <?= Html::a('Read more', ['/content/view','slug'=>$valContent->slug,],['class'=>'btn material-btn material-btn_warning main-container__column material-btn_md btn-block']); ?>
      </div>
     </div>
 </div>

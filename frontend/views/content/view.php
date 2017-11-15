@@ -22,6 +22,7 @@ $this->registerMetaTag([
 
     <h1><?= Html::encode($this->title) ?></h1>
 <?= 
-$model['content']
+$model['content'];
+var_dump($model);
 ?>
 </div>

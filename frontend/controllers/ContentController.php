@@ -143,7 +143,7 @@ class ContentController extends Controller
         return TCart::find();
     }
     protected function findOneBySlug($slug){
-        if (($model = TContent::find(['slug'=>$slug])->joinWith('idTypeContent')->asArray()->one()) !== null) {
+        if (($model = TContent::find()->joinWith('idTypeContent')->where(['slug'=>$slug])->asArray()->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('This Page is broken or under Development');
