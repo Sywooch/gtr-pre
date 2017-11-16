@@ -11,13 +11,13 @@ use yii\helpers\Html;
         <div class="logofooter"><?=Html::a(Html::img('/img/logo.png', ['style'=>'height: 40px; width: auto;','alt' => 'footer-logo']), Yii::$app->homeUrl, ['option' => 'value']); ?>
 </div>
         <p>Transfer from Bali to Gili Trawangan, Gili Air, Gili Meno, and Lombok by Fast Boat or Flight. Easy online booking. Pay in your currency and save money.</p>
-        <p><i class="fa fa-map-pin"></i> Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</p>
+        <p><i class="fa fa-map-pin"></i> Perum Bukit pratama Jl Goa Gong Gg.Gong Suling 2 No.10 Jimbaran. Kab.Badung Kuta Selatan Bali - Indonesia.</p>
         <p><i class="fa fa-phone"></i> Phone (Indonesia) : +62-813-5330-4990</p>
         <p><i class="fa fa-envelope"></i> E-mail :reservation@gilitransfers.com</p>
         
       </div>
       <div class="col-md-3 col-sm-6 footer-col">
-        <h6 class="heading7">GENERAL LINKS</h6>
+        <h6 class="heading7">RELATED LINKS</h6>
         <ul class="footer-ul">
           <li><?= Html::a('Home', Yii::$app->homeUrl); ?></li>
           <li><?= Html::a('Contact Us', ['/site/contact']); ?></li>
