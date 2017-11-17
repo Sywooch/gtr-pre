@@ -75,7 +75,7 @@ foreach ($endList as $key => $value) {
         ],
         'pluginOptions'=>[
             'initialPreview'=>[
-               '/content/thumbnail?id='.$model->id,
+               Url::to(['thumbnail','id'=>$model->id]),
             ],
             'initialPreviewAsData'=>true,
             'initialCaption'=>"Company Logo",
@@ -118,7 +118,7 @@ foreach ($endList as $key => $value) {
                 ]
     ]
 ])?>
-<?= $form->field($modelGalery, 'galery')->widget(FileInput::classname(), [
+<?= $form->field($modelGalery, 'galery[]')->widget(FileInput::classname(), [
         'options' => [
         'multiple'=>true,
         'accept' => 'image/*',
@@ -128,7 +128,7 @@ foreach ($endList as $key => $value) {
             'showCaption' => false,
             'showRemove' => true,
             'showUpload' => false,
-            'browseClass' => 'btn btn-primary btn-block',
+            'browseClass' => 'btn btn-warning btn-block',
             'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
             'browseLabel' =>  'Select Image For galery'
         ],

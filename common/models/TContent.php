@@ -97,6 +97,12 @@ class TContent extends \yii\db\ActiveRecord
         return $this->hasOne(TTypeContent::className(), ['id' => 'id_type_content']);
     }
 
+    public function getGaleris()
+    {
+        return $this->hasMany(TGalery::className(), ['id_parent' => 'id']);
+    }
+
+
     /**
      * @return \yii\db\ActiveQuery
      */

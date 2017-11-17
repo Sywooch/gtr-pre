@@ -10,7 +10,7 @@ use yii\filters\AccessControl;
 use common\models\TContent;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
-use common\models\TCart;
+use common\models\TGalery;
 
 
 /**
@@ -54,6 +54,20 @@ class ContentController extends Controller
                 'inline' => true
         ]);
     }
+
+    public function actionGalery($id){
+        $modelGalery = $this->findOneGalery($id);
+        $response = Yii::$app->getResponse();
+        return $response->sendFile($modelGalery['filename'],$modelGalery['name'], [
+                //'mimeType' => 'image/jpg',
+               'fileSize' => $modelGalery['size'],
+                'inline' => true
+        ]);
+    }
+    protected function findOneGalery($id){
+        return TGalery::find()->where(['id'=>$id])->asArray()->one();
+    }
+
 	 public function actionView($slug)
     {
         return $this->render('view', [
@@ -139,11 +153,9 @@ class ContentController extends Controller
         return TContent::find()->where(['id_type_content'=>$type])->asArray()->one();
     }
 
-    protected function findCart(){
-        return TCart::find();
-    }
+
     protected function findOneBySlug($slug){
-        if (($model = TContent::find()->joinWith('idTypeContent')->where(['slug'=>$slug])->asArray()->one()) !== null) {
+        if (($model = TContent::find()->joinWith(['idTypeContent','galeris'])->where(['slug'=>$slug])->asArray()->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('This Page is broken or under Development');

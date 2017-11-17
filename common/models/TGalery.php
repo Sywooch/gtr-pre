@@ -37,7 +37,7 @@ class TGalery extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'filename', 'size', 'id_parent', 'id_type_galery'], 'required'],
-            [['galery'], 'file', 'skipOnEmpty' => false, 'extensions' => 'png, jpg, jpeg','maxFiles'=>50],
+            [['galery'], 'file', 'skipOnEmpty' => true, 'extensions' => 'png, jpg, jpeg','maxFiles'=>50],
             [['filename'], 'string'],
             [['size', 'id_parent', 'id_type_galery'], 'integer'],
             [['datetime'], 'safe'],

@@ -56,7 +56,7 @@ foreach ($endList as $key => $value) {
             'showCaption' => false,
             'showRemove' => true,
             'showUpload' => false,
-            'browseClass' => 'btn btn-primary btn-block',
+            'browseClass' => 'btn btn-warning btn-block',
             'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
             'browseLabel' =>  'Select Thumbnail'
         ],
@@ -78,7 +78,7 @@ foreach ($endList as $key => $value) {
             'showCaption' => false,
             'showRemove' => false,
             'showUpload' => false,
-            'browseClass' => 'btn btn-primary btn-block',
+            'browseClass' => 'btn btn-warning btn-block',
             'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
             'browseLabel' =>  'Select Thumbnail'
         ],
@@ -99,7 +99,7 @@ foreach ($endList as $key => $value) {
 ])->label('Keyword ( Pisahkan dengan Koma ) '); ?>
     <?= $form->field($model, 'description')->textArea()
      ?>
-    
+
 <?= $form->field($model, 'content')->widget(\yii\redactor\widgets\Redactor::className(), [
     'clientOptions' => [
         'plugins' => [
@@ -115,6 +115,45 @@ foreach ($endList as $key => $value) {
     ]
 ])?>
 
+<?php if ($model->isNewRecord): ?>
+<?= $form->field($modelGalery, 'galery[]')->widget(FileInput::classname(), [
+        'options' => [
+        'multiple'=>true,
+        'accept' => 'image/*',
+        'resizeImages'=>true,
+        ],
+        'pluginOptions' => [
+            'showCaption' => false,
+            'showRemove'  => true,
+            'showUpload'  => false,
+            'browseClass' => 'btn btn-warning btn-block',
+            'browseIcon'  => '<i class="glyphicon glyphicon-camera"></i> ',
+            'browseLabel' =>  'Select Image For galery'
+            ],
+    ])->label(false); ?>
+<?php else: ?>
+    <?php foreach($modelGalerys as $index => $modelGalery): ?>
+    <?php $galeryPreview[] = [Url::to(['galery','id'=>$modelGalery->id])]; ?>
+    <?= $form->field($modelGalery, 'galery[]')->widget(FileInput::classname(), [
+            'options' => [
+            'multiple'=>true,
+            'accept' => 'image/*',
+            'resizeImages'=>true,
+            ],
+            'pluginOptions'=>[
+                'initialPreview'       =>$galeryPreview,
+                'initialPreviewAsData' =>true,
+                'initialCaption'       =>"Company Logo",
+                'showCaption'          => false,
+                'showRemove'           => true,
+                'showUpload'           => false,
+                'browseClass'          => 'btn btn-warning btn-block',
+                'browseIcon'           => '<i class="glyphicon glyphicon-camera"></i> ',
+                'browseLabel'          =>  'Select Image For galery'
+            ],
+        ])->label(false); ?>
+    <?php endforeach; ?>
+<?php endif; ?>
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', ' Save'), ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-floppy-saved']) ?>
     </div>

@@ -46,8 +46,8 @@ class TContentCompany extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_company' => Yii::t('app', 'Id Company'),
-            'id_content' => Yii::t('app', 'Id Content'),
+            'id_company' => Yii::t('app', 'Company'),
+            'id_content' => Yii::t('app', 'Content'),
             'datetime' => Yii::t('app', 'Datetime'),
         ];
     }
