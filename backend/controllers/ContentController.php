@@ -126,7 +126,7 @@ class ContentController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $transaction = Yii::$app->db->beginTransaction();
-            $basepath = Yii::getAlias('@frontend').'/contentImage/fastboat/'.$model->slug;
+            $basepath = Yii::getAlias('@frontend').'/contentImage/destination/'.$model->slug;
             try {
                 $model->keywords = join(', ',$model->keywords);
                 $model->thumb = UploadedFile::getInstance($model, 'thumb');
