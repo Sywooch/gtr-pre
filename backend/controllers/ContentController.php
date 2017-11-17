@@ -7,6 +7,9 @@ use common\models\TContent;
 use common\models\TTypeContent;
 use common\models\TBooking;
 use app\models\ContentSearch;
+use common\models\TGalery;
+use common\models\TCompany;
+use common\models\TContentCompany;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -138,7 +141,55 @@ class ContentController extends Controller
             ]);
         }
     }
-
+    public function actionCreateFastboat()
+    {
+        $model                       = new TContent();
+        $modelContentCompany         = new TContentCompany();
+        $modelGalery                 = new TGalery();
+        $listType                    = ArrayHelper::map($this->findAllCompany(), 'id', 'name');
+        $listKeywords                = ArrayHelper::map($this->findContentByColumn("keywords"), 'keywords', 'keywords');
+        $model->id_type_content      = '1';
+        $modelGalery->id_type_galery = '1';
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $model->keywords = join(', ',$model->keywords);
+                $model->thumb = UploadedFile::getInstance($model, 'thumb');
+                if ($model->thumb != null) {
+               // $model->saveThumbnail($model->slug);
+                $path = Yii::getAlias('@frontend').'/content/'.$model->slug.'/';
+                FileHelper::createDirectory($path, $mode = 0777, $recursive = true);
+                $model->thumbnail = $path.$model->thumb->baseName.'.'.$model->thumb->extension;
+                $model->save(false);
+                $model->thumb->saveAs($path.$model->thumb->baseName.'.'.$model->thumb->extension);
+                //$modelGalery->
+                }else{
+                    $model->save(false);
+                }
+                $transaction->commit();
+                return $this->redirect(['index']);
+                
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+            
+        } else {
+            return $this->render('_form-fastboat', [
+                'model'               => $model,
+                'listType'            => $listType,
+                'listKeywords'        => $listKeywords,
+                'modelContentCompany' => $modelContentCompany,
+                'modelGalery'         => $modelGalery,
+            ]);
+        }
+    }
+    protected function findAllCompany(){
+        return TCompany::find()->select('id,name')->asArray()->all();
+    }
+    protected function findContentByColumn($column){
+        return TContent::find()->select($column)->asArray()->all();
+    }
     protected function findAllSlug(){
         return TContent::find()->all();
     }

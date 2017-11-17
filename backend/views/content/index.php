@@ -14,6 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="tcontent-index">
     <p>
         <?= Html::a('', ['create'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
+        <?= Html::a(' Fastboat', ['create-fastboat'], ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
 
 <?php if(Helper::checkRoute('/*')): ?>
         <?= Html::a(' Type', ['/type-content/index'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-list']) ?>

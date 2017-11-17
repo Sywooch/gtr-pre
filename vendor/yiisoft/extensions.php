@@ -345,4 +345,22 @@ return array (
       '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug',
     ),
   ),
+  'kowap/yii2-lightgallery' => 
+  array (
+    'name' => 'kowap/yii2-lightgallery',
+    'version' => '1.0.2.0',
+    'alias' => 
+    array (
+      '@kowap/lightGallery' => $vendorDir . '/kowap/yii2-lightgallery',
+    ),
+  ),
+  '2amigos/yii2-gallery-widget' => 
+  array (
+    'name' => '2amigos/yii2-gallery-widget',
+    'version' => '0.1.0.0',
+    'alias' => 
+    array (
+      '@dosamigos/gallery' => $vendorDir . '/2amigos/yii2-gallery-widget',
+    ),
+  ),
 );

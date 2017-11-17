@@ -19,7 +19,7 @@ use yii\helpers\Url;
     		[
     		'id'=>'drop-depart',
     		'prompt'=>'-> Select Departure Harbor <-',
-    		'onchange'=>'
+    		/*'onchange'=>'
     			var dptv = $("#drop-depart").val();
     			$.ajax({
     				url: "'.Url::to("arrival-list").'",
@@ -32,12 +32,12 @@ use yii\helpers\Url;
 
 
 
-    			',
+    			',*/
     		]) ?>
 
     <?php 
     if ($model->isNewRecord) {
-    	echo $form->field($model, 'arrival')->dropdownList([],['id'=>'drop-arriv','prompt'=>'-> Select Departure Harbor First <-']); 
+    	echo $form->field($model, 'arrival')->dropdownList($listHarbor,['id'=>'drop-arriv','prompt'=>'-> Select Departure Harbor <-']); 
     }else{
     	echo $form->field($model, 'arrival')->dropdownList($listHarbor,['id'=>'drop-arriv']); 
     }

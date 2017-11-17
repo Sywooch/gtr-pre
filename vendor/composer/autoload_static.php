@@ -44,6 +44,7 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         ),
         'k' => 
         array (
+            'kowap\\lightGallery\\' => 19,
             'kato\\pickadate\\' => 15,
             'kartik\\widgets\\' => 15,
             'kartik\\typeahead\\' => 17,
@@ -76,6 +77,7 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         'd' => 
         array (
             'dosamigos\\highcharts\\' => 21,
+            'dosamigos\\gallery\\' => 18,
             'dmstr\\' => 6,
         ),
         'c' => 
@@ -174,6 +176,10 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         'mdm\\admin\\' => 
         array (
             0 => __DIR__ . '/..' . '/mdmsoft/yii2-admin',
+        ),
+        'kowap\\lightGallery\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kowap/yii2-lightgallery',
         ),
         'kato\\pickadate\\' => 
         array (
@@ -290,6 +296,10 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         'dosamigos\\highcharts\\' => 
         array (
             0 => __DIR__ . '/..' . '/2amigos/yii2-highcharts-widget',
+        ),
+        'dosamigos\\gallery\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/2amigos/yii2-gallery-widget',
         ),
         'dmstr\\' => 
         array (

@@ -30,7 +30,7 @@
         "dmstr/yii2-adminlte-asset": "2.*",
         "2amigos/yii2-highcharts-widget": "*",
         "yiidoc/yii2-redactor": "*",
-        "kartik-v/yii2-ipinfo": "*"
+        "2amigos/yii2-gallery-widget": "*"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

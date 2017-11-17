@@ -5443,5 +5443,97 @@
             "testing",
             "xunit"
         ]
+    },
+    {
+        "name": "kowap/yii2-lightgallery",
+        "version": "1.0.2",
+        "version_normalized": "1.0.2.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/kowap/yii2-lightgallery.git",
+            "reference": "9f962cd6b4fb0850273d3e4071db81eadc828490"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/kowap/yii2-lightgallery/zipball/9f962cd6b4fb0850273d3e4071db81eadc828490",
+            "reference": "9f962cd6b4fb0850273d3e4071db81eadc828490",
+            "shasum": ""
+        },
+        "require": {
+            "yiisoft/yii2": "*"
+        },
+        "time": "2017-06-30T20:25:35+00:00",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "kowap\\lightGallery\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Biloborodov Ilya",
+                "email": "biloborodov.ilya@gmail.com"
+            }
+        ],
+        "description": "lightgallery",
+        "keywords": [
+            " gallery",
+            " lightgallery",
+            " photo",
+            " plugin",
+            " video",
+            "extension",
+            "yii2"
+        ]
+    },
+    {
+        "name": "2amigos/yii2-gallery-widget",
+        "version": "0.1.0",
+        "version_normalized": "0.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/2amigos/yii2-gallery-widget.git",
+            "reference": "9a9808c26df93e5a07cdde88b27b55b3c27a9a51"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/2amigos/yii2-gallery-widget/zipball/9a9808c26df93e5a07cdde88b27b55b3c27a9a51",
+            "reference": "9a9808c26df93e5a07cdde88b27b55b3c27a9a51",
+            "shasum": ""
+        },
+        "require": {
+            "yiisoft/yii2": "*"
+        },
+        "time": "2014-04-07T22:24:40+00:00",
+        "type": "yii2-extension",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "dosamigos\\gallery\\": ""
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Antonio Ramirez",
+                "email": "ramirez.cobos@gmail.com",
+                "homepage": "http://www.ramirezcobos.com"
+            }
+        ],
+        "description": "BlueImp Gallery Widget for Yii2.",
+        "keywords": [
+            "extension",
+            "gallery",
+            "widget",
+            "yii"
+        ]
     }
 ]
