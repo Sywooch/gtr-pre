@@ -7,8 +7,6 @@ use mdm\admin\components\Helper;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ContentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
- $session       = Yii::$app->session;
- var_dump($session['test']);
 $this->title = 'Content';
 $this->params['breadcrumbs'][] = $this->title;
 ?>

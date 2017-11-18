@@ -22,6 +22,7 @@ $this->registerMetaTag([
 <div class="tcontent-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
+<?= Html::img(['thumbnail','slug'=>$model['slug']], ['class' => 'img-responsive']); ?>
 <?= 
 $model['content'];
 ?>

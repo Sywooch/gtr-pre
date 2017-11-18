@@ -18,7 +18,7 @@ $this->registerMetaTag([
 
     <div class="iam thumbnail material-card">
         <div class="material-card__header">
-        <?= Html::img(['thumbnail','slug'=>$valContent->slug], ['height'=>'200px','width'=>'350px;','alt'=>'thumbnail'.$valContent->slug]); ?>
+        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['alt'=>'thumbnail'.$valContent->slug]),['/content/view','slug'=>$valContent->slug,]); ?>
         </div>
     <div class="material-card__content">
         <h5 class="material-card__title"><?= Html::a($valContent->title, ['view','slug'=>$valContent->slug]); ?></h5>
@@ -33,6 +33,24 @@ $this->registerMetaTag([
 <?php endforeach;	?>
 <?php
 $customCss = <<< SCRIPT
+    .material-card__header{
+        width: 350px;
+        height: 200px;
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        margin: 0;
+    }
+    .material-card__header > img{
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        right: 50%;
+        min-height: 100%;
+        min-width: 100%;
+        transform: translate(-50%, -50%);
+    }
     .iam{
         min-height: 425px;
         height: auto;

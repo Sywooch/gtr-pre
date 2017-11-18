@@ -3,6 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
+<?= Html::img(['thumbnail','slug'=>$model->slug], ['class' => 'img-responsive']); ?>
 <?= $model->content ?>
 <?php if(!empty($model->galeris)): ?>
 <?php
