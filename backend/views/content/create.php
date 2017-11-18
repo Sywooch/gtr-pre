@@ -17,7 +17,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'listType' => $listType,
         'listSlug' => $listSlug,
         'listKeywords' => $listKeywords,
-        'modelGalery' => $modelGalery,
     ]) ?>
 
 </div>

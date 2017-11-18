@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = Yii::t('app', 'Update');
 		'listType' => $listType,
     	'listSlug' => $listSlug,
     	 'listKeywords' => $listKeywords,
-    	 'modelGalerys' => $modelGalerys,
     ]) ?>
 
 </div>

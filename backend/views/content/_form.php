@@ -10,7 +10,7 @@ use yii\helpers\ArrayHelper;
 /* @var $model common\models\TContent */
 /* @var $form yii\widgets\ActiveForm */
 $layout = ['template'=>"{input}\n{error}\n{hint}"];
-$model->keywords = explode(",", $model->keywords);
+
 $list = implode(",", $listKeywords);
 $endList = explode(",",$list);
 
@@ -84,6 +84,8 @@ foreach ($endList as $key => $value) {
         ],
         
     ]);
+//UPDATE TAG KEYWORD
+$model->keywords = explode(",", $model->keywords);
     } ?>
     
 
@@ -115,45 +117,6 @@ foreach ($endList as $key => $value) {
     ]
 ])?>
 
-<?php if ($model->isNewRecord): ?>
-<?= $form->field($modelGalery, 'galery[]')->widget(FileInput::classname(), [
-        'options' => [
-        'multiple'=>true,
-        'accept' => 'image/*',
-        'resizeImages'=>true,
-        ],
-        'pluginOptions' => [
-            'showCaption' => false,
-            'showRemove'  => true,
-            'showUpload'  => false,
-            'browseClass' => 'btn btn-warning btn-block',
-            'browseIcon'  => '<i class="glyphicon glyphicon-camera"></i> ',
-            'browseLabel' =>  'Select Image For galery'
-            ],
-    ])->label(false); ?>
-<?php else: ?>
-    <?php foreach($modelGalerys as $index => $modelGalery): ?>
-    <?php $galeryPreview[] = [Url::to(['galery','id'=>$modelGalery->id])]; ?>
-    <?= $form->field($modelGalery, 'galery[]')->widget(FileInput::classname(), [
-            'options' => [
-            'multiple'=>true,
-            'accept' => 'image/*',
-            'resizeImages'=>true,
-            ],
-            'pluginOptions'=>[
-                'initialPreview'       =>$galeryPreview,
-                'initialPreviewAsData' =>true,
-                'initialCaption'       =>"Company Logo",
-                'showCaption'          => false,
-                'showRemove'           => true,
-                'showUpload'           => false,
-                'browseClass'          => 'btn btn-warning btn-block',
-                'browseIcon'           => '<i class="glyphicon glyphicon-camera"></i> ',
-                'browseLabel'          =>  'Select Image For galery'
-            ],
-        ])->label(false); ?>
-    <?php endforeach; ?>
-<?php endif; ?>
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', ' Save'), ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-floppy-saved']) ?>
     </div>

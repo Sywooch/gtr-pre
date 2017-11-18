@@ -7,15 +7,14 @@ use mdm\admin\components\Helper;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\ContentSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-
+ $session       = Yii::$app->session;
+ var_dump($session['test']);
 $this->title = 'Content';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tcontent-index">
     <p>
         <?= Html::a('', ['create'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
-        <?= Html::a(' Fastboat', ['create-fastboat'], ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
-
 <?php if(Helper::checkRoute('/*')): ?>
         <?= Html::a(' Type', ['/type-content/index'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-list']) ?>
 <?php endif; ?>
@@ -76,6 +75,18 @@ $this->params['breadcrumbs'][] = $this->title;
                         'data-target'=>"#modalPreview",
                         'data-title'=>"Content Preview",
                         ])."</center>";
+            }
+            ],
+            [
+            'header'=>'Galery',
+            'format'=>'raw',
+            'value'=>function($model){
+                if ($model->id_type_content == '1' || $model->id_type_content == '2' || $model->id_type_content == '3' || $model->id_type_content == '4' ) {
+                    return Html::a('', ['add-galery','id_content'=>$model->id], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_xs glyphicon glyphicon-plus']);
+                }else{
+                    return "-";
+                }
+                
             }
             ],
             [

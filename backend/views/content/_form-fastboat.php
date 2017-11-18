@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = ['label' => 'Content List', 'url' => ['index']]
 $this->params['breadcrumbs'][] = $this->title;
 
 $layout = ['template'=>"{input}\n{error}\n{hint}"];
-$model['keywords'] = explode(",", $model['keywords']);
+
 $list = implode(",", $listKeywords);
 $endList = explode(",",$list);
 
@@ -29,9 +29,11 @@ foreach ($endList as $key => $value) {
         'options'=>['enctype'=>'multipart/form-data']
     ]); ?>
 
-    <?= $form->field($modelContentCompany, 'id_company')->dropDownList($listType, ['prompt' => 'Select Fastboat...']); ?>
+    <?= $form->field($modelContentCompany, 'id_company')->dropDownList($listType, ['prompt' => 'Select Fastboat...','class'=>'form-control form-dir-name','id'=>'form-company']); ?>
     <?= $form->field($model, 'title')->textInput([
                         'placeholder'=>'Content Title',
+                        'class'=>'form-control form-dir-name',
+                        'id'=>'form-title',
                         'onblur'=>'
                                 var ttl = $(this).val();
                                  $.ajax({
@@ -64,8 +66,9 @@ foreach ($endList as $key => $value) {
             'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
             'browseLabel' =>  'Select Thumbnail'
         ],
-    ])->label(false);
+        ])->label(false);
     }else{
+
        echo $form->field($model, 'thumb')->widget(FileInput::classname(), [
         'options' => [
 
@@ -87,8 +90,12 @@ foreach ($endList as $key => $value) {
             'browseLabel' =>  'Select Thumbnail'
         ],
         
-    ]);
-    } ?>
+        ]);
+//UPDATE TAG KEYWORD
+$model->keywords = explode(",", $model->keywords);
+    } 
+
+    ?>
     
     
     <?= $form->field($model, 'keywords')->widget(Select2::classname(), [
@@ -101,7 +108,7 @@ foreach ($endList as $key => $value) {
         'maximumInputLength' => 100,
     ],
 ])->label('Keyword ( Pisahkan dengan Koma ) '); ?>
-    <?= $form->field($model, 'description')->textArea()
+    <?= $form->field($model, 'description')->textArea(['id'=>'form-description'])
      ?>
     
 <?= $form->field($model, 'content')->widget(\yii\redactor\widgets\Redactor::className(), [
@@ -118,21 +125,6 @@ foreach ($endList as $key => $value) {
                 ]
     ]
 ])?>
-<?= $form->field($modelGalery, 'galery[]')->widget(FileInput::classname(), [
-        'options' => [
-        'multiple'=>true,
-        'accept' => 'image/*',
-        'resizeImages'=>true,
-        ],
-        'pluginOptions' => [
-            'showCaption' => false,
-            'showRemove' => true,
-            'showUpload' => false,
-            'browseClass' => 'btn btn-warning btn-block',
-            'browseIcon' => '<i class="glyphicon glyphicon-camera"></i> ',
-            'browseLabel' =>  'Select Image For galery'
-        ],
-    ])->label(false); ?>
 
     <div class="form-group">
         <?= Html::submitButton(Yii::t('app', ' Save'), ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-floppy-saved']) ?>

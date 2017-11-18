@@ -10,12 +10,14 @@ use app\models\ContentSearch;
 use common\models\TGalery;
 use common\models\TCompany;
 use common\models\TContentCompany;
+use app\models\UploadGalery;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\helpers\ArrayHelper;
 use yii\web\UploadedFile;
 use yii\helpers\FileHelper;
+use yii\helpers\Url;
 
 /**
  * ContentController implements the CRUD actions for TContent model.
@@ -36,6 +38,7 @@ class ContentController extends Controller
             ],
         ];
     }
+
 
     public function actionThumbnail($id)
     {
@@ -111,6 +114,69 @@ class ContentController extends Controller
         ]);
     }
 
+    public function actionUploadGalery(){
+        if (Yii::$app->request->isAjax) {
+            $session        = Yii::$app->session;
+            $files          = $_FILES['TGalery'];
+            $id_parent      = $_POST['id_parent'];
+            $id_type_galery = $_POST['id_type_galery'];
+            $slug           = $_POST['slug'];
+            $type_galery_dir = $_POST['type_galery_dir'];
+            $basepath       = Yii::getAlias('@frontend').'/contentImage/'.$type_galery_dir.'/'.$slug.'/galery/';
+            FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true);
+            move_uploaded_file($files['tmp_name']['galery'][0], $basepath.$files['name']['galery'][0]);
+            $modelGalery = new TGalery();
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $modelGalery->name           = $files['name']['galery'][0];
+                $modelGalery->filename       = $basepath.$files['name']['galery'][0];
+                $modelGalery->size           = $files['size']['galery'][0];
+                $modelGalery->id_parent      = $id_parent;
+                $modelGalery->id_type_galery = $id_type_galery;
+                $modelGalery->save(false);
+                $transaction->commit();
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                unlink($basepath.$files['name']['galery'][0]);
+                throw $e;
+            }
+            return true;
+
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    public function actionAddGalery($id_content){
+        $modelContent = $this->findModel($id_content);
+        $modelPreview = TGalery::find()->select('id')->where(['id_parent'=>$modelContent->id])->asArray()->all();
+        foreach($modelPreview as $index => $modelGalery){
+           $galeryPreview[] = [Url::to(['galery','id'=>$modelGalery['id']])];
+        }
+        $modelGalery = new TGalery();
+        if (Yii::$app->request->isPost) {
+            return $this->redirect(['index']);
+        }else{
+            return $this->render('_form-galery', [
+                'modelContent' => $modelContent,
+                'modelGalery'=>$modelGalery,
+                'galeryPreview'=>isset($galeryPreview) ? $galeryPreview : ['/logo.png'],
+            ]);
+        }
+    }
+
+    public function actionSetDirGalery(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $session                            = $session       = Yii::$app->session;
+            $session['dir_galery.company_name'] = $data['company'];
+            $session['dir_galery.slug']         = $data['slug'];
+            return true;
+        }else{
+            return "Something Its Wrong. Try To Reload The Page";
+        }
+    }
+
     /**
      * Creates a new TContent model.
      * If creation is successful, the browser will be redirected to the 'view' page.
@@ -120,7 +186,7 @@ class ContentController extends Controller
     {
         $model        = new TContent();
         $modelGalery  = new TGalery();
-        $listType     = ArrayHelper::map(TTypeContent::find()->where(['!=','id',1])->all(), 'id', 'type');
+        $listType     = ArrayHelper::map(TTypeContent::find()->select('id, type')->asArray()->all(), 'id', 'type');
         $listSlug     = ArrayHelper::map($this->findAllSlug(), 'slug', 'slug');
         $listKeywords = ArrayHelper::map($this->findAllSlug(), 'keywords', 'keywords');
 
@@ -169,78 +235,13 @@ class ContentController extends Controller
             }
             
         } else {
+
             return $this->render('create', [
                 'model' => $model,
                 'listType' => $listType,
                 'listSlug' => $listSlug,
                 'listKeywords' => $listKeywords,
                 'modelGalery' => $modelGalery,
-            ]);
-        }
-    }
-    public function actionCreateFastboat()
-    {
-        $model                       = new TContent();
-        $modelContentCompany         = new TContentCompany();
-        $modelGalery                 = new TGalery();
-        $listType                    = ArrayHelper::map($this->findAllCompany(), 'id', 'name');
-        $listKeywords                = ArrayHelper::map($this->findContentByColumn("keywords"), 'keywords', 'keywords');
-        $model->id_type_content      = '1';
-        
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $transaction = Yii::$app->db->beginTransaction();
-            $basepath = Yii::getAlias('@frontend').'/contentImage/fastboat/'.$model->slug;
-            try {
-                $model->keywords = join(', ',$model->keywords);
-                $model->thumb = UploadedFile::getInstance($model, 'thumb');
-                if ($model->thumb != null) {
-               // $model->saveThumbnail($model->slug);
-               
-                $thumbPath = $basepath.'/thumbnail/';
-                FileHelper::createDirectory($thumbPath, $mode = 0777, $recursive = true);
-                $model->thumbnail = $thumbPath.$model->thumb->baseName.'.'.$model->thumb->extension;
-                $model->save(false);
-                $model->thumb->saveAs($thumbPath.$model->thumb->baseName.'.'.$model->thumb->extension);
-
-                //$modelGalery->
-                }else{
-                    $model->save(false);
-                }
-                $modelGalery->galery = UploadedFile::getInstances($modelGalery, 'galery');
-                if ($modelGalery->galery != null) {
-                    $galPath = $basepath.'/galery/';
-                    FileHelper::createDirectory($galPath, $mode = 0777, $recursive = true);
-                    foreach ($modelGalery->galery as $file) {
-                        $newGalery                 = new TGalery();
-                        $file->saveAs($galPath.$file->baseName.'.'.$file->extension);
-                        $newGalery->name           = $file->baseName.'.'.$file->extension;
-                        $newGalery->filename       = $galPath.$file->baseName.'.'.$file->extension;
-                        $newGalery->size           = $file->size;
-                        $newGalery->id_parent      = $model->id;
-                        $newGalery->id_type_galery = '1';
-                        $newGalery->save(false);
-                        
-                    }
-                    
-                }
-                $modelContentCompany->load(Yii::$app->request->post());
-                $modelContentCompany->id_content = $model->id;
-                $modelContentCompany->save(false);
-                $transaction->commit();
-                return $this->redirect(['index']);
-                
-            } catch(\Exception $e) {
-                $transaction->rollBack();
-                throw $e;
-            }
-            
-        } else {
-            return $this->render('_form-fastboat', [
-                'model'               => $model,
-                'listType'            => $listType,
-                'listKeywords'        => $listKeywords,
-                'modelContentCompany' => $modelContentCompany,
-                'modelGalery'         => $modelGalery,
             ]);
         }
     }
@@ -274,10 +275,9 @@ class ContentController extends Controller
      */
     public function actionUpdate($id)
     {
-        $model = $this->findModel($id);
-        $modelGalerys = TGalery::find()->where(['id_parent'=>$id])->indexBy('id')->all();
-        $listType = ArrayHelper::map($this->findAllType(), 'id', 'type');
-        $listSlug = ArrayHelper::map($this->findAllSlug(), 'slug', 'slug');
+        $model        = $this->findModel($id);
+        $listType     = ArrayHelper::map($this->findAllType(), 'id', 'type');
+        $listSlug     = ArrayHelper::map($this->findAllSlug(), 'slug', 'slug');
         $listKeywords = ArrayHelper::map($this->findAllSlug(), 'keywords', 'keywords');
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
@@ -314,7 +314,6 @@ class ContentController extends Controller
                 'listType' => $listType,
                 'listSlug' => $listSlug,
                 'listKeywords' => $listKeywords,
-                'modelGalerys' => $modelGalerys,
             ]);
         }
     }
