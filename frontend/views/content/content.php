@@ -14,11 +14,11 @@ $this->registerMetaTag([
 
 ?>
 <?php foreach ($listContent as $keyAr => $valContent): ?>
-<div class="col-md-4 col-sm-6 col-xs-12">
+<div class=" col-sm-6 col-md-4">
 
     <div class="iam thumbnail material-card">
         <div class="material-card__header">
-        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img-thumb img-responsive','alt'=>'thumbnail'.$valContent->slug]),['/content/view','slug'=>$valContent->slug,]); ?>
+        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img-thumb','alt'=>'thumbnail'.$valContent->slug]),['/content/view','slug'=>$valContent->slug,]); ?>
         </div>
     <div class="material-card__content">
         <h5 class="material-card__title"><?= Html::a($valContent->title, ['view','slug'=>$valContent->slug]); ?></h5>
@@ -32,21 +32,24 @@ $this->registerMetaTag([
 </div>
 <?php endforeach;	?>
 <?php
-
-?>
-<style type="text/css">
-     .material-card__header{
+$customCss = <<< SCRIPT
+    .material-card__header{
         width: 350px;
         height: 200px;
+        position: relative;
+        display: inline-block;
+        overflow: hidden;
+        margin: 0;
     }
     .img-thumb{
         box-sizing: border-box;
         max-width: 350px;
         max-height: 200px;
-        height: 200px;
+        min-height: 200px;
+        min-width: 350px;
         display: block;
         width: 100%;
-        overflow: hidden;
+        height: 100%
     }
     .iam{
         min-height: 425px;
@@ -56,4 +59,6 @@ $this->registerMetaTag([
         min-height: 140px;
         height: auto;
     }
-</style>
+SCRIPT;
+$this->registerCss($customCss);
+?>
