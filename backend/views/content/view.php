@@ -4,7 +4,7 @@ use yii\helpers\Url;
 ?>
 <h1><?= Html::encode($this->title) ?></h1>
 <?= $model->content ?>
-<?php if(isset($model->galeris)): ?>
+<?php if(!empty($model->galeris)): ?>
 <?php
 
 foreach ($model->galeris as $key => $value) {
