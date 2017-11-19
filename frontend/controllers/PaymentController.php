@@ -11,11 +11,21 @@ use yii\helpers\Url;
 use frontend\models\TConfirmPayment;
 use common\models\TBooking;
 use yii\web\NotFoundHttpException;
+use yii\helpers\Json;
 /**
  * Content controller
  */
 class PaymentController extends Controller
 {
+
+    public function beforeAction($action)
+    {    
+        if ($action->id == 'web-hook' || $action->id == 'hasil-web-hook') {
+		$this->enableCsrfValidation = false;
+		}
+		    return parent::beforeAction($action);  
+    }
+
 	public function actionConfirm($token = null){
 		$this->layout = 'no-cart';
 		if ($token != null && ($modelPayment = $this->findPaymentMaskToken($token)) !== null) {
@@ -52,5 +62,29 @@ class PaymentController extends Controller
         }else{
             return null;
         }
+	}
+
+
+	public function actionWebHook(){
+		if (Yii::$app->request->isPost) {
+			/*$request =Yii::$app->request;
+			$nama = $request->post('nama','unamed');
+			$alamat = $request->post('alamat','unadreess');
+			$array = ['nama'=>$nama,'Alamat'=>$alamat];
+			$textjson = Json::encode($array);*/
+			$textjson = file_get_contents('php://input');
+			echo $jsonfile =  Yii::getAlias('@frontend/E-Ticket/web-hook.json');
+			$fp = fopen($jsonfile, 'w+');
+			fwrite($fp, $textjson);
+			fclose($fp);
+			//return $this->redirect(['hasil-web-hook','hasil'=>$array]);
+		}else{
+			return $this->render('form-web-hook');
+		}
+
+	}
+
+	public function actionHasilWebHook(array $hasil){
+		//return $this->render('web-hook',['hasil'=>$hasil]);
 	}
 }
