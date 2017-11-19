@@ -72,11 +72,17 @@ class PaymentController extends Controller
 			$alamat = $request->post('alamat','unadreess');
 			$array = ['nama'=>$nama,'Alamat'=>$alamat];
 			$textjson = Json::encode($array);*/
-			$textjson = file_get_contents('php://input');
-			echo $jsonfile =  Yii::getAlias('@frontend/E-Ticket/web-hook.json');
+			try {
+				$textjson = file_get_contents('php://input');
+			$jsonfile =  Yii::getAlias('@frontend/E-Ticket/web-hook.json');
 			$fp = fopen($jsonfile, 'w+');
 			fwrite($fp, $textjson);
 			fclose($fp);
+				return true;
+			} catch (Exception $e) {
+				return false;
+			}
+			
 			//return $this->redirect(['hasil-web-hook','hasil'=>$array]);
 		}else{
 			return $this->render('form-web-hook');
@@ -85,6 +91,6 @@ class PaymentController extends Controller
 	}
 
 	public function actionHasilWebHook(array $hasil){
-		//return $this->render('web-hook',['hasil'=>$hasil]);
+		return $this->render('web-hook',['hasil'=>"ok"]);
 	}
 }
