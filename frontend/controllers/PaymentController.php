@@ -75,8 +75,8 @@ class PaymentController extends Controller
 			try {
 				$textjson = file_get_contents('php://input');
 			$jsonfile =  Yii::getAlias('@frontend/E-Ticket/web-hook.json');
-			$fp = fopen($jsonfile, 'w+');
-			fwrite($fp, $textjson);
+			$fp = fopen($jsonfile, 'a');
+			fwrite($fp, "\n". $textjson);
 			fclose($fp);
 				return true;
 			} catch (Exception $e) {
