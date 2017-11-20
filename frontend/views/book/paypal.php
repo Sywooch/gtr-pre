@@ -20,6 +20,13 @@ $this->registerJs("
 
             env: 'sandbox', // sandbox | production
 
+            style: {
+            label: 'pay',
+            size:  'responsive', // small | medium | large | responsive
+            shape: 'pill',   // pill | rect
+            color: 'gold'   // gold | blue | silver | black
+        },
+
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
             client: {
@@ -46,8 +53,7 @@ $this->registerJs("
                                 item_list: {
                                         items: [
                                         {
-                                        name: 'Payment Gilitranfers From : ".$modelpembayaranPaypal->name."/".$modelpembayaranPaypal->email."',
-                                        description: '".count($modelpembayaranPaypal->tBookings)." Trip',
+                                        name: 'Payment Gilitranfers From : ".$modelpembayaranPaypal->name." | ".$modelpembayaranPaypal->email." | ".count($modelpembayaranPaypal->tBookings)." Trip',
                                         quantity: '1',
                                         price: '".$total."',
                                         currency: '".$currency."'
@@ -64,18 +70,16 @@ $this->registerJs("
             onAuthorize: function(data, actions) {
 
                 // Make a call to the REST api to execute the payment
-                return actions.payment.execute().then(function() {
+                return actions.payment.execute().then(function(data) {
                     $('#rad-method').hide(100);
-                     var mtk = '".$maskToken."';
                      $('#body-form').html('<center><img src=../../loading.svg></center>');
-
                      $.ajax({
-                     url : '".Url::to(["success"])."',
+                     url : '".Url::to(["/payment/success"])."',
                      type: 'POST',
                      async: 'true',
-                     data: {umk: mtk},
+                     data: {umk: data},
                      success: function (div) {
-                     alert('Payment Succesfull');
+                        alert('Payment Succesfull');
                      },
                    });
 

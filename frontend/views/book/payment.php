@@ -85,7 +85,7 @@ $(document).ready(function(){
     <?php $form = ActiveForm::begin(); ?>
 <?php echo AlertBlock::widget([
             'useSessionFlash' => true,
-            'type' => AlertBlock::TYPE_GROWL
+            'type' => AlertBlock::TYPE_GROWL 
             ]);
 
       ?>
@@ -96,7 +96,7 @@ $(document).ready(function(){
       <div id="body-form">  
         <div class="panel-body material-panel__body">
          <?=  
-           $form->field($modelPayment, 'payment')->radioList(['1'=>'Paypal','2'=>'local Bank Transfers',],[
+           $form->field($modelPayment, 'payment')->radioList(['1'=>'Paypal <span class="fa fa-paypal"></span> <span class="fa fa-credit-card "></span> <span class="fa fa-cc-discover"></span> <span class="fa fa-cc-mastercard"></span>','2'=>'local Bank Transfers <span class="fa fa-bank"></span>',],[
             'id'=>'rad-method',
             'onchange'=>'
               var metod = $("#rad-method :radio:checked").val();
@@ -149,3 +149,11 @@ $(document).ready(function(){
     <?php ActiveForm::end(); ?>
 
 </div>
+<?php
+$customCss = <<< SCRIPT
+  .fa {
+    font-size: 100em;
+  }
+SCRIPT;
+$this->registerCss($customCss);
+?>

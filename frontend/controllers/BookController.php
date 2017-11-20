@@ -333,18 +333,18 @@ class BookController extends Controller
             foreach ($modelBooking as $key => $valBooking) {
                   $valBooking->id_status = '4';
                   $valBooking->validate();
-                  $valBooking->save(false);
+                  //$valBooking->save(false);
                  }
                  $modelpembayaranPaypal->id_payment_method = '1';
-                 $modelpembayaranPaypal->save(false);
+                 //$modelpembayaranPaypal->save(false);
                  $modelQueue                               = new TMailQueue();
                  $modelQueue->id_payment                   = $modelpembayaranPaypal->id;
                  $modelQueue->status                       = '1';
                  $modelQueue->id_type                      = '1';
                  $modelQueue->validate();
-                 $modelQueue->save(false);
+                 //$modelQueue->save(false);
                  $transaction->commit();
-                 $session                                  = session_unset();
+                 //$session                                  = session_unset();
                  $session                                  = Yii::$app->session;
                  $session->open();
                  $session['payment']                       = 'sukses';
@@ -460,7 +460,7 @@ class BookController extends Controller
     public function actionAddToCart($tripDeparture,$tripReturn = null){
         $session = Yii::$app->session;
         $now = date('Y-m-d H:i:s');
-        $session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 30 MINUTES',strtotime($now)));
+        $session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 1000 MINUTES',strtotime($now)));
         if (!isset($session['session_key'])) {
             $session['session_key']= Yii::$app->getSecurity()->generateRandomString(25);
         }
