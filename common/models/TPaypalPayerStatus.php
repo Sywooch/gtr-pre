@@ -28,7 +28,7 @@ class TPaypalPayerStatus extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'status'], 'required'],
+            [['status'], 'required'],
             [['id'], 'integer'],
             [['status'], 'string', 'max' => 50],
         ];

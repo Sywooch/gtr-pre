@@ -16,6 +16,7 @@ use common\models\TPaypalIntent;
 use common\models\TPaypalStatus;
 use common\models\TWebhook;
 use common\models\TWebhookEvent;
+use common\models\TPaypalPayerStatus;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
 /**
@@ -72,10 +73,71 @@ class PaymentController extends Controller
 
     public function actionSuccess(){
 	    if (Yii::$app->request->isAjax) {
-			$data                                = Yii::$app->request->post();
+			//$data                                = Yii::$app->request->post();
+			$json = '{
+	"id":"PAY-1CN193682K5796124LIIVPEA",
+	"intent":"sale",
+	"state":"approved",
+	"cart":"3M3194058P4398129",
+	"create_time":"2017-11-19T10:06:22Z",
+"payer":{
+		"payment_method":"paypal",
+		"status":"VERIFIED",
+		"payer_info":{
+			"email":"mastuyink94-buyer@gmail.com",
+			"first_name":"test",
+			"middle_name":"test",
+			"last_name":"buyer",
+			"payer_id":"J6HNCKBADB4MG",
+			"country_code":"US",
+			"shipping_address":{
+				"recipient_name":"test buyer",
+				"line1":"1 Main St",
+				"city":"San Jose",
+				"state":"CA",
+				"postal_code":"95131",
+				"country_code":"US"
+			}
+		}
+	},
+"transactions":[{
+	"amount":{
+		"total":"70.00",
+		"currency":"USD"
+	},
+	"item_list":{
+		"items":[{
+			"name":"Payment Gilitranfers From : sayyidina/aziest99@gmail.com",
+			"price":"70.00",
+			"currency":"USD",
+			"quantity":"1",
+			"description":"1 Trip"
+		}]
+	},
+	"related_resources":[{
+		"sale":{
+			"id":"8G122845J1386645F",
+			"state":"completed",
+			"payment_mode":"INSTANT_TRANSFER",
+			"protection_eligibility":"ELIGIBLE",
+			"parent_payment":"PAY-1CN193682K5796124LIIVPEA",
+			"create_time":"2017-11-19T10:06:21Z",
+			"update_time":"2017-11-19T10:06:21Z",
+			"amount":{
+				"total":"70.00",
+				"currency":"USD",
+				"details":{
+					"subtotal":"70.00"
+				}
+			}
+		}
+	}]
+}]
+}';
+			$data['umk'] = Json::decode($json, $asArray = true);
 			$transaction = Yii::$app->db->beginTransaction();
 			try {
-				$PayerId                             = $this->checkPayer($data['umk']['payer']['payer_info']);
+				$PayerId                             = $this->checkPayer($data['umk']['payer']);
 				$arrayTransaction                    = $data['umk']['transactions'][0]['related_resources'][0]['sale'];
 				$modelPaypalTransaction              = new TPaypalTransaction();
 				$modelPaypalTransaction->id          = $arrayTransaction['id'];
@@ -122,16 +184,23 @@ class PaymentController extends Controller
 	}
 
 	protected function checkPayer(array $arrayPayer){
-		if (($modelPayer = TPaypalPayer::findOne($arrayPayer['payer_id'])) !== null ) {
+		if (($modelPayer = TPaypalPayer::findOne($arrayPayer['payer_info']['payer_id'])) !== null ) {
 			return $modelPayer->id;
 		}else{
 				$modelPayer             = new TPaypalPayer();
-				$modelPayer->id         = $arrayPayer['payer_id'];
-				$modelPayer->full_name  = $arrayPayer['first_name']." ".$arrayPayer['middle_name']." ".$arrayPayer['last_name'];
-				$modelPayer->email      = $arrayPayer['email'];
-				$modelPayer->address    = "Street : ".$arrayPayer['shipping_address']['line1']." | City: ".$arrayPayer['shipping_address']['city']." | State : ".$arrayPayer['shipping_address']['state']." | Post Code : ".$arrayPayer['shipping_address']['postal_code'];
-				$modelPayer->id_country = $arrayPayer['country_code'];
-				$modelPayer->id_status  = "1";
+				$modelPayer->id         = $arrayPayer['payer_info']['payer_id'];
+				$modelPayer->full_name  = $arrayPayer['payer_info']['first_name']." ".$arrayPayer['payer_info']['middle_name']." ".$arrayPayer['payer_info']['last_name'];
+				$modelPayer->email      = $arrayPayer['payer_info']['email'];
+				$modelPayer->address    = "Street : ".$arrayPayer['payer_info']['shipping_address']['line1']." | City: ".$arrayPayer['payer_info']['shipping_address']['city']." | State : ".$arrayPayer['payer_info']['shipping_address']['state']." | Post Code : ".$arrayPayer['payer_info']['shipping_address']['postal_code'];
+				$modelPayer->id_country = $arrayPayer['payer_info']['country_code'];
+				if (($modelPayerStatus = TPaypalPayerStatus::find()->where(['status'=>$arrayPayer['payer_info']['status']])->asArray()->one()) !== null) {
+					$modelPayer->id_status = $modelPayerStatus['id'];
+				}else{
+					$newPayerStatus = new TPaypalPayerStatus();
+					$newPayerStatus->status = $arrayPayer['payer_info']['status'];
+					$newPayerStatus->save();
+					$modelPayer->id_status = $newPayerStatus->id;
+				}
 				$modelPayer->save(false);
 			    $transaction->commit();
 			    return $modelPayer->id;
@@ -144,64 +213,29 @@ class PaymentController extends Controller
 
     }
 
+    public function actionCurlTest(){
+    	/*$response = curl -v -X GET https://api.sandbox.paypal.com/v1/payments/payment/PAY-0US81985GW1191216KOY7OXA \
+-H "Content-Type:application/json" \
+-H "Authorization: Bearer Access-Token" \
+-d '{}'
+
+	$uri = 'https://api.sandbox.paypal.com/v1/payments/payment/PAY-0US81985GW1191216KOY7OXA';
+$ch = curl_init($uri);
+curl_setopt_array($ch, array(
+    CURLOPT_HTTPHEADER  => array('Authorization: 123456'),
+    CURLOPT_RETURNTRANSFER  =>true,
+    CURLOPT_VERBOSE     => 1
+));
+$out = curl_exec($ch);
+curl_close($ch);
+// echo response output
+echo $out;*/
+    }
+
 
 	public function actionWebHook(){
 		if (Yii::$app->request->isPost) {
 				$WebHookJson = file_get_contents('php://input');
-				/*$WebHookJson = '{
-						"id": "WH-2WR32451HC0233532-67976317FL4543714",
-						"create_time": "2014-10-23T17:23:52Z",
-						"resource_type": "sale",
-						"event_type": "PAYMENT.SALE.COMPLETED",
-						"summary": "A successful sale payment was made for $ 0.48 USD",
-						"resource": {
-							"amount": {
-								"total": "0.48",
-								"currency": "USD"
-							},
-							"id": "80021663DE681814L",
-							"parent_payment": "PAY-1PA12106FU478450MKRETS4A",
-							"update_time": "2014-10-23T17:23:04Z",
-							"clearing_time": "2014-10-30T07:00:00Z",
-							"state": "completed",
-							"payment_mode": "ECHECK",
-							"create_time": "2014-10-23T17:22:56Z",
-							"links": [
-								{
-									"href": "https://api.paypal.com/v1/payments/sale/80021663DE681814L",
-									"rel": "self",
-									"method": "GET"
-								},
-								{
-									"href": "https://api.paypal.com/v1/payments/sale/80021663DE681814L/refund",
-									"rel": "refund",
-									"method": "POST"
-								},
-								{
-									"href": "https://api.paypal.com/v1/payments/payment/PAY-1PA12106FU478450MKRETS4A",
-									"rel": "parent_payment",
-									"method": "GET"
-								}
-							],
-							"protection_eligibility_type": "ITEM_NOT_RECEIVED_ELIGIBLE,UNAUTHORIZED_PAYMENT_ELIGIBLE",
-							"protection_eligibility": "ELIGIBLE"
-						},
-						"links": [
-							{
-								"href": "https://api.paypal.com/v1/notifications/webhooks-events/WH-2WR32451HC0233532-67976317FL4543714",
-								"rel": "self",
-								"method": "GET",
-								"encType": "application/json"
-							},
-							{
-								"href": "https://api.paypal.com/v1/notifications/webhooks-events/WH-2WR32451HC0233532-67976317FL4543714/resend",
-								"rel": "resend",
-								"method": "POST",
-								"encType": "application/json"
-							}
-						],
-						"event_version": "1.0"
-					}';*/
 				$WebHookArray = Json::decode($WebHookJson, $asArray = true);
 				$transaction = Yii::$app->db->beginTransaction();
 				try {
@@ -214,6 +248,7 @@ class PaymentController extends Controller
 					$modelWebHook->amount                = $WebHookArray['resource']['amount']['total'];
 					$modelWebHook->currency              = $WebHookArray['resource']['amount']['currency'];
 					$modelWebHook->id_paypal_transaction = $WebHookArray['resource']['id'];
+					$modelWebHook->id_parent_payment     = $WebHookArray['resource']['parent_payment'];
 					$modelWebHook->paypal_time           = $WebHookArray['create_time'];
 					$modelWebHook->datetime              = date('Y-m-d H:i:s');
 					$modelWebHook->validate();

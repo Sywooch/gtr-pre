@@ -15,6 +15,7 @@ use Yii;
  * @property double $amount
  * @property string $currency
  * @property string $id_paypal_transaction
+ * @property string $id_parent_payment
  * @property string $paypal_time
  * @property string $datetime
  *
@@ -39,11 +40,11 @@ class TWebhook extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id', 'id_resource_type', 'id_event', 'id_status', 'description', 'amount', 'currency', 'id_paypal_transaction', 'paypal_time', 'datetime'], 'required'],
+            [['id', 'id_resource_type', 'id_event', 'id_status', 'description', 'amount', 'currency', 'id_paypal_transaction', 'id_parent_payment', 'paypal_time', 'datetime'], 'required'],
             [['id_resource_type', 'id_event', 'id_status'], 'integer'],
             [['amount'], 'number'],
             [['datetime'], 'safe'],
-            [['id'], 'string', 'max' => 40],
+            [['id', 'id_parent_payment'], 'string', 'max' => 40],
             [['description'], 'string', 'max' => 100],
             [['currency'], 'string', 'max' => 5],
             [['id_paypal_transaction'], 'string', 'max' => 20],
@@ -62,13 +63,14 @@ class TWebhook extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'id_resource_type' => Yii::t('app', 'Id Resource Type'),
-            'id_event' => Yii::t('app', 'Id Event'),
-            'id_status' => Yii::t('app', 'Id Status'),
+            'id_resource_type' => Yii::t('app', 'Resource Type'),
+            'id_event' => Yii::t('app', 'Event'),
+            'id_status' => Yii::t('app', 'Status'),
             'description' => Yii::t('app', 'Description'),
             'amount' => Yii::t('app', 'Amount'),
             'currency' => Yii::t('app', 'Currency'),
             'id_paypal_transaction' => Yii::t('app', 'Id Paypal Transaction'),
+            'id_parent_payment' => Yii::t('app', 'Id Parent Payment'),
             'paypal_time' => Yii::t('app', 'Paypal Time'),
             'datetime' => Yii::t('app', 'Datetime'),
         ];

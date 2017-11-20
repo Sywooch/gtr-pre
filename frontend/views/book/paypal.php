@@ -54,6 +54,7 @@ $this->registerJs("
                                         items: [
                                         {
                                         name: 'Payment Gilitranfers From : ".$modelpembayaranPaypal->name." | ".$modelpembayaranPaypal->email." | ".count($modelpembayaranPaypal->tBookings)." Trip',
+                                        description: '".$modelpembayaranPaypal->token."',
                                         quantity: '1',
                                         price: '".$total."',
                                         currency: '".$currency."'
@@ -68,7 +69,6 @@ $this->registerJs("
 
 
             onAuthorize: function(data, actions) {
-
                 // Make a call to the REST api to execute the payment
                 return actions.payment.execute().then(function(data) {
                     $('#rad-method').hide(100);
@@ -87,12 +87,16 @@ $this->registerJs("
             },
 
              onCancel: function (data, actions) {
-                 alert('Payment Canceled');
+                 alert(data);
              },
 
-             onError: function (err) {
-                alert('Payment Error Please try Again Later');
-             console.error('checkout.js error', err);
+             onError: function (data, actions) {
+                $('#rad-method').hide(100);
+                     $('#body-form').html('<center><img src=../../loading.svg></center>');
+                     $.ajax({
+                     url : '".Url::to(["/payment/success"])."',
+                     type: 'POST',
+                   });
              }
 
         }, '#hasil-ajax');
