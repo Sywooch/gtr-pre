@@ -8,12 +8,13 @@ $this->title = 'Payment Error';
 
       <!-- Icons source http://dribbble.com/shots/913555-Flat-Web-Elements -->
       <div class="notify errorbox">
-        <h1>SORRY</h1>
+        <h1>SORRY..!!!</h1>
         <span class="alerticon"><img width="50" src="/error.png" alt="checkmark" /></span>
-        <p><b>Your Booking UnSuccessfully...!</b>
-        <br>Our System Detected Payment Errors.
+        <p><b>Your Booking Is UnSuccessfully...!</b>
+        <br>Our System Detected Payment Pending Or Errors From Paypal.
+        <br>We'll continue to try to check and confirm your payment as soon as possible.
         <br>If You Have True Make Payments.
-        <br>Please Contact Us Via Links Below.</p>
+        <br>Please Contact Us Via Links Below and including your paypal transaction number.</p>
         <?= Html::a('Contact Us', ['/site/contact'], ['class' => 'btn material-btn material-btn_success main-container__column material-btn_lg']); ?>
         <?= Html::a('Go Home', ['/'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg']); ?>
       </div>

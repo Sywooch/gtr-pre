@@ -7,6 +7,7 @@ use kartik\widgets\DatePicker;
 use kartik\widgets\Typeahead;
 use mdm\admin\components\Helper;
 use kartik\widgets\Select2;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\TBookingSearch */
@@ -133,10 +134,17 @@ $model->rangeType = $rangeType;
                 ]) ?>
 
     <?php endif; ?>
-        <?= Html::submitButton(' ', [
+        <?= Html::button(' ', [
                 'class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
                 'data-toggle'=>'tooltip',
                 'title'=>'Apply Filter',
+                'onclick'=>'
+                    var base = 
+                    $.pjax.reload({
+                        url:"'.Url::to(['index']).'"
+                        container: "#pjax-validate",
+                    })
+                '
                 ]) ?>
         <?= Html::a('',['index'], [
                 'class' => 'btn material-btn material-btn_success main-container__column material-btn_lg glyphicon glyphicon-refresh',

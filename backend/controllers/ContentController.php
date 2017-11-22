@@ -116,13 +116,13 @@ class ContentController extends Controller
 
     public function actionUploadGalery(){
         if (Yii::$app->request->isAjax) {
-            $session        = Yii::$app->session;
-            $files          = $_FILES['TGalery'];
-            $id_parent      = $_POST['id_parent'];
-            $id_type_galery = $_POST['id_type_galery'];
-            $slug           = $_POST['slug'];
+            $session         = Yii::$app->session;
+            $files           = $_FILES['TGalery'];
+            $id_parent       = $_POST['id_parent'];
+            $id_type_galery  = $_POST['id_type_galery'];
+            $slug            = $_POST['slug'];
             $type_galery_dir = $_POST['type_galery_dir'];
-            $basepath       = Yii::getAlias('@frontend').'/contentImage/'.$type_galery_dir.'/'.$slug.'/galery/';
+            $basepath        = Yii::getAlias('@frontend').'/contentImage/'.$type_galery_dir.'/'.$slug.'/galery/';
             FileHelper::createDirectory($basepath, $mode = 0775, $recursive = true);
             move_uploaded_file($files['tmp_name']['galery'][0], $basepath.$files['name']['galery'][0]);
             $modelGalery = new TGalery();
@@ -192,7 +192,7 @@ class ContentController extends Controller
 
         if ($model->load(Yii::$app->request->post()) && $model->validate()) {
             $transaction = Yii::$app->db->beginTransaction();
-            $basepath = Yii::getAlias('@frontend').'/contentImage/destination/'.$model->slug;
+            $basepath = Yii::getAlias('@frontend').'/contentImage/FastBoat/'.$model->slug;
             try {
                 $model->keywords = join(', ',$model->keywords);
                 $model->thumb = UploadedFile::getInstance($model, 'thumb');
@@ -289,7 +289,7 @@ class ContentController extends Controller
                     if (file_exists($model->thumbnail)) {
                        unlink($model->thumbnail);
                     }
-                     $basepath = Yii::getAlias('@frontend').'/contentImage/fastboat/'.$model->slug;
+                     $basepath = Yii::getAlias('@frontend').'/contentImage/'.$model->idTypeContent->type.'/'.$model->slug;
                      $thumbPath = $basepath.'/thumbnail/';
                      FileHelper::createDirectory($thumbPath, $mode = 0777, $recursive = true);
                      $model->thumbnail = $thumbPath.$model->thumb->baseName.'.'.$model->thumb->extension;

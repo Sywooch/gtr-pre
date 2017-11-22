@@ -84,4 +84,33 @@ class TPaypalPayer extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TPaypalTransaction::className(), ['id_payer' => 'id']);
     }
+
+    public function checkPayer(array $arrayPayer){
+        if (($modelPayer = TPaypalPayer::findOne($arrayPayer['payer_info']['payer_id'])) !== null ) {
+            return $modelPayer->id;
+        }else{
+            try {
+                $modelPayer             = new TPaypalPayer();
+                $modelPayer->id         = $arrayPayer['payer_info']['payer_id'];
+                $modelPayer->full_name  = $arrayPayer['payer_info']['first_name']." ".$arrayPayer['payer_info']['last_name'];
+                $modelPayer->email      = $arrayPayer['payer_info']['email'];
+                $modelPayer->address    = "Street : ".$arrayPayer['payer_info']['shipping_address']['line1']." | City: ".$arrayPayer['payer_info']['shipping_address']['city']." | State : ".$arrayPayer['payer_info']['shipping_address']['state']." | Post Code : ".$arrayPayer['payer_info']['shipping_address']['postal_code'];
+                $modelPayer->id_country = $arrayPayer['payer_info']['country_code'];
+                if (($modelPayerStatus = TPaypalPayerStatus::find()->where(['status'=>$arrayPayer['status']])->asArray()->one()) !== null) {
+                    $modelPayer->id_status = $modelPayerStatus['id'];
+                }else{
+                    $newPayerStatus = new TPaypalPayerStatus();
+                    $newPayerStatus->status = $arrayPayer['status'];
+                    $newPayerStatus->save();
+                    $modelPayer->id_status = $newPayerStatus->id;
+                }
+                $modelPayer->validate();
+                $modelPayer->save(false);
+                return $modelPayer->id;
+            } catch (Exception $e) {
+                return "failed-insert";
+            }
+               
+        }
+    }
 }

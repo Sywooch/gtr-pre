@@ -19,7 +19,8 @@ use yii\helpers\Html;
 </table>
 
 <?php 
-$tokenPayment = "http://gilitraansfers.com/".$modelPayment->token;
+$tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/";
+$tokenPayment = "https://gilitraansfers.com/site/book-view/".$modelPayment->token;
 $tokenQrfileName = "QrCode-".$modelPayment->token.".png";
 $quality = 'L'; //ada 4 pilihan, L (Low), M(Medium), Q(Good), H(High)
 $ukuran = 1; //batasan 1 paling kecil, 10 paling besar

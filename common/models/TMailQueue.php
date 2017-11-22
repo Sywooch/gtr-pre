@@ -20,6 +20,10 @@ use Yii;
  */
 class TMailQueue extends \yii\db\ActiveRecord
 {
+    const STATUS_QUEUE   = "1"; // SAME FOR ETicket
+    const STATUS_PROCESS = "2"; // SAME FOR INVOICe
+    const STATUS_SUCCESS = "3";
+    const STATUS_RETRY   = "4";
     /**
      * @inheritdoc
      */
@@ -37,6 +41,8 @@ class TMailQueue extends \yii\db\ActiveRecord
             [['id_payment', 'id_type', 'status'], 'required'],
             [['id_payment', 'id_type', 'status', 'processor'], 'integer'],
             [['datetime'], 'safe'],
+            [['id_type'],'in','range'=>[self::STATUS_QUEUE,self::STATUS_PROCESS]],
+            [['status'],'in','range'=>[self::STATUS_QUEUE,self::STATUS_PROCESS,self::STATUS_SUCCESS,self::STATUS_RETRY]],
             [['id_payment'], 'exist', 'skipOnError' => true, 'targetClass' => TPayment::className(), 'targetAttribute' => ['id_payment' => 'id']],
             [['processor'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['processor' => 'id']],
             [['id_type'], 'exist', 'skipOnError' => true, 'targetClass' => TTypeQueue::className(), 'targetAttribute' => ['id_type' => 'id']],
@@ -81,4 +87,35 @@ class TMailQueue extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TTypeQueue::className(), ['id' => 'id_type']);
     }
+
+    public function addTicketQueue($id_payment){
+        $modelQueue = new TMailQueue();
+        $modelQueue->id_payment = $id_payment;
+        $modelQueue->status = self::STATUS_QUEUE;
+        $modelQueue->id_type = self::STATUS_QUEUE; // Type E Ticket
+        $modelQueue->save(false);
+    }
+
+    public function addInvoiceQueue($id_payment){
+        $modelQueue = new TMailQueue();
+        $modelQueue->id_payment = $id_payment;
+        $modelQueue->status = self::STATUS_QUEUE;
+        $modelQueue->id_type = self::STATUS_PROCESS; // TYpe Invoice
+        $modelQueue->save(false);
+    }
+
+    public function getQueueList($type){
+        if(($Queue = TMailQueue::find()->where(['status'=>self::STATUS_RETRY])->andWhere(['id_type'=>$type])->orderBy(['datetime'=>SORT_ASC])->one())!== null){
+            return $Queue;
+        }else{
+            return TMailQueue::find()->where(['status'=>self::STATUS_QUEUE])->andWhere(['id_type'=>$type])->orderBy(['datetime'=>SORT_ASC])->one();
+        }
+    }
+
+    public function setQueueStatus($status){
+        $this->status = $status;
+        $this->save(false);
+    }
+
+
 }

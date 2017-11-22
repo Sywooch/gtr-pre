@@ -19,7 +19,7 @@ class Gilitransfers extends Component{
 	}
 	
 	public function Valbook(){
-		return count(TBooking::find()->joinWith('idPayment')->where(['t_payment.id_payment_method'=>2])->andWhere(['between','t_booking.id_status',2,3])->all());
+		return TBooking::find()->joinWith('idPayment')->where(['t_payment.id_payment_method'=>2])->andWhere(['between','t_booking.id_status',2,3])->groupBy('id_payment')->count();
 	}
 
 	public function Countcart(){

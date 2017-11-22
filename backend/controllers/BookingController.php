@@ -199,12 +199,7 @@ protected function findAllBooking(){
                     $val->validate();
                     $val->save(false);
                 }
-                 $modelQueue                               = new TMailQueue();
-                 $modelQueue->id_payment                   = $idPayment;
-                 $modelQueue->status                       = '1';
-                 $modelQueue->id_type                      = '1';
-                 $modelQueue->validate();
-                 $modelQueue->save(false);
+                $modelQueue = TMailQueue::addTicketQueue($idPayment);
                 $transaction->commit();
                 return true;
             } catch(\Exception $e) {

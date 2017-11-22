@@ -14,14 +14,14 @@ $this->registerMetaTag([
 
 ?>
 <?php foreach ($listContent as $keyAr => $valContent): ?>
-<div class=" col-sm-6 col-md-4">
+<div class="col-sm-6 col-md-4 col-xs-12">
 
-    <div class="iam thumbnail material-card">
-        <div class="material-card__header">
-        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img-thumb','alt'=>'thumbnail'.$valContent->slug]),['/content/view','slug'=>$valContent->slug,]); ?>
+    <div class="div-card thumbnail material-card">
+        <div class="material-card__header header-card">
+        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img','alt'=>'thumbnail'.$valContent->slug]),['/content/view','slug'=>$valContent->slug,]); ?>
         </div>
     <div class="material-card__content">
-        <h5 class="material-card__title"><?= Html::a($valContent->title, ['view','slug'=>$valContent->slug]); ?></h5>
+        <h2 class="material-card__title"><?= Html::a($valContent->title, ['view','slug'=>$valContent->slug]); ?></h2>
         <p style="text-align: justify;"><?= substr($valContent->description, 0,100) ?></p>
     </div>
 
@@ -33,25 +33,32 @@ $this->registerMetaTag([
 <?php endforeach;	?>
 <?php
 $customCss = <<< SCRIPT
-    .material-card__header{
-        width: 350px;
-        height: 200px;
-        position: relative;
-        display: inline-block;
-        overflow: hidden;
-        margin: 0;
+    h2{
+        font-size: 20px;
+        font-weight: bold;
     }
-    .img-thumb{
-        box-sizing: border-box;
-        max-width: 350px;
-        max-height: 200px;
-        min-height: 200px;
-        min-width: 350px;
-        display: block;
-        width: 100%;
-        height: 100%
+    .material-card__header {
+        text-align: center;
     }
-    .iam{
+    
+    @media (max-width: 990px) {
+        .img {
+        min-height : 200px;
+        max-height : 200px;
+        height: auto;
+        }
+    }
+
+    @media (min-width: 500px) {
+        .img {
+        width: auto;
+        min-height : 200px;
+        max-height : 200px;
+        height: auto;
+        }
+    }
+
+    .div-card{
         min-height: 425px;
         height: auto;
     }

@@ -23,6 +23,8 @@ use yii\helpers\Html;
           <li><?= Html::a('Contact Us', ['/site/contact']); ?></li>
           <li><?= Html::a('Terms & Conditions', ['/content/terms-conditions']); ?></li>
           <li><?= Html::a('Privacy Policy', ['/content/privacy-policy']); ?></li>
+          <li><?= Html::a('FAQ', ['/site/faq']); ?></li>
+          <li><?= Html::a('How To Book', ['/site/how-to-book']); ?></li>
           <li><?= Html::a('About Us', ['/site/about']); ?></li>
         </ul>
       </div>

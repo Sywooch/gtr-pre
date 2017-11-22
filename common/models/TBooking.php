@@ -18,7 +18,7 @@ use Yii;
  * @property integer $id_status
  * @property integer $id_payment_method
  * @property double $send_amount
- * @property string $token
+ * @property string $
  * @property integer $process_by
  * @property string $datetime
  *
@@ -32,9 +32,15 @@ use Yii;
  */
 class TBooking extends \yii\db\ActiveRecord
 {
-    const PASSENGER_ADULT  = '1';
-    const PASSENGER_CHILD  = '2';
-    const PASSENGER_INFANT = '3';
+    const STATUS_ON_BOOK        = 1; // ADULT
+    const STATUS_UNPAID         = 2; //CHILD
+    const STATUS_VALIDATION     = 3; //INFANT
+    const STATUS_PAID           = 4;
+    const STATUS_SUCCESS        = 5;
+    const STATUS_REFUND_PARTIAL = 6;
+    const STATUS_REFUND_FULLL   = 7;
+    const STATUS_EXPIRED        = 99;
+    const STATUS_INVALID        = 100;
     /**
      * @inheritdoc
      */
@@ -49,17 +55,14 @@ class TBooking extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','id_payment', 'id_trip', 'trip_price', 'total_price', 'currency', 'total_idr', 'exchange', 'token'], 'required'],
-            [['id_trip', 'total_idr', 'exchange', 'id_status', 'id_payment_method', 'process_by'], 'integer'],
-            [['trip_price', 'total_price', 'send_amount'], 'number'],
-            [['token','phone'], 'string'],
-            [['email'],'email'],
+            [['id','id_payment', 'id_trip', 'trip_price', 'total_price', 'currency', 'total_idr', 'exchange'], 'required'],
+            [['id_trip', 'total_idr', 'exchange', 'id_status', 'process_by'], 'integer'],
+            [['trip_price', 'total_price'], 'number'],
             [['datetime'], 'safe'],
             [['id'], 'string', 'max' => 6],
-            [['phone'], 'string', 'max' => 20],
             [['currency'], 'string', 'max' => 5],
+            [['id_status'],'in','range'=>[self::STATUS_ON_BOOK, self::STATUS_UNPAID, self::STATUS_VALIDATION, self::STATUS_PAID, self::STATUS_SUCCESS, self::STATUS_REFUND_PARTIAL, self::STATUS_REFUND_FULLL, self::STATUS_EXPIRED, self::STATUS_INVALID]],
             [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => TBookingStatus::className(), 'targetAttribute' => ['id_status' => 'id']],
-            [['id_payment_method'], 'exist', 'skipOnError' => true, 'targetClass' => TPaymentMethod::className(), 'targetAttribute' => ['id_payment_method' => 'id']],
             [['currency'], 'exist', 'skipOnError' => true, 'targetClass' => TKurs::className(), 'targetAttribute' => ['currency' => 'currency']],
             [['id_trip'], 'exist', 'skipOnError' => true, 'targetClass' => TTrip::className(), 'targetAttribute' => ['id_trip' => 'id']],
              [['id_payment'], 'exist', 'skipOnError' => true, 'targetClass' => TPayment::className(), 'targetAttribute' => ['id_payment' => 'id']],
@@ -100,9 +103,6 @@ public function generateBookingNumber($attribute, $length = 4){
             'total_idr' => Yii::t('app', 'Total Idr'),
             'exchange' => Yii::t('app', 'Exchange'),
             'id_status' => Yii::t('app', 'Status'),
-            'id_payment_method' => Yii::t('app', 'Payment Method'),
-            'send_amount' => Yii::t('app', 'Send Amount'),
-            'token' => Yii::t('app', 'Token'),
             'process_by' => Yii::t('app', 'Process By'),
             'datetime' => Yii::t('app', 'Datetime'),
         ];
@@ -116,13 +116,7 @@ public function generateBookingNumber($attribute, $length = 4){
         return $this->hasOne(TBookingStatus::className(), ['id' => 'id_status']);
     }
 
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getIdPaymentMethod()
-    {
-        return $this->hasOne(TPaymentMethod::className(), ['id' => 'id_payment_method']);
-    }
+
 
     /**
      * @return \yii\db\ActiveQuery
@@ -154,19 +148,24 @@ public function generateBookingNumber($attribute, $length = 4){
     }
     public function getAffectedPassengers()
     {
-        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['!=','id_type',self::PASSENGER_INFANT]);
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['!=','id_type',self::STATUS_VALIDATION]);
     }
     public function getAdultPassengers()
     {
-        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::PASSENGER_ADULT]);
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::STATUS_ON_BOOK]);
     }
     public function getChildPassengers()
     {
-        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::PASSENGER_CHILD]);
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::STATUS_UNPAID]);
     }
     public function getInfantPassengers()
     {
-        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::PASSENGER_INFANT]);
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::STATUS_VALIDATION]);
+    }
+
+    public function getPassengersByType($type)
+    {
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>$type]);
     }
     /**
      * @return \yii\db\ActiveQuery

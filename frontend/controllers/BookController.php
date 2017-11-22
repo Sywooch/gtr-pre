@@ -132,18 +132,16 @@ class BookController extends Controller
            foreach ($cartList as $key => $cartValue) {
                  $adultPrice               = round($cartValue->idTrip->adult_price/$cartValue->exchange*$cartValue->adult,0,PHP_ROUND_HALF_UP);
                  $childPrice               = round($cartValue->idTrip->child_price/$cartValue->exchange*$cartValue->child,0,PHP_ROUND_HALF_UP);
-                 $saveBooking              = new TBooking();
-                 $saveBooking->id          = $saveBooking->generateBookingNumber("id");
-                 $saveBooking->id_trip     = $cartValue->id_trip;
-                 $saveBooking->id_payment = $modelPayment->id;
-                // $saveBooking->email       = $modelPayment->email;
-                // $saveBooking->phone       = $modelPayment->phone;
-                 $saveBooking->trip_price  = $adultPrice+$childPrice;
-                 $saveBooking->total_price = $adultPrice+$childPrice;
-                 $saveBooking->currency    = $cartValue->currency;
-                 $saveBooking->total_idr   = $cartValue->idTrip->adult_price*$cartValue->adult + $cartValue->idTrip->child_price*$cartValue->child;
-                 $saveBooking->exchange    = $cartValue->exchange;
-                 //$saveBooking->token    = $cartValue->exchange;
+                 $saveBooking               = new TBooking();
+                 $saveBooking->id           = $saveBooking->generateBookingNumber("id");
+                 $saveBooking->id_trip      = $cartValue->id_trip;
+                 $saveBooking->id_payment   = $modelPayment->id;
+                 $saveBooking->trip_price   = $adultPrice+$childPrice;
+                 $saveBooking->total_price  = $adultPrice+$childPrice;
+                 $saveBooking->currency     = $cartValue->currency;
+                 $saveBooking->total_idr    = $cartValue->idTrip->adult_price*$cartValue->adult + $cartValue->idTrip->child_price*$cartValue->child;
+                 $saveBooking->exchange     = $cartValue->exchange;
+                 //$saveBooking->token      = $cartValue->exchange;
                  $saveBooking->expired_time = $expired_time;
                  $saveBooking->validate();
                  $saveBooking->save(false);
@@ -258,12 +256,7 @@ class BookController extends Controller
 
                  $paymentData->id_payment_method = '2';
                  $paymentData->save(false);
-                 $modelQueue                     = new TMailQueue();
-                 $modelQueue->id_payment         = $paymentData->id;
-                 $modelQueue->status             = '1';
-                 $modelQueue->id_type            = '2';
-                 $modelQueue->validate();
-                 $modelQueue->save(false);
+                 $modelQueue                     = TMailQueue::addInvoiceQueue($paymentData->id);
                  $transaction->commit();
                  $session                        = session_unset();
                  $session                        = Yii::$app->session;
@@ -295,16 +288,11 @@ class BookController extends Controller
     }
 
     public function actionPaypal(){
-
          $session       = Yii::$app->session;
          $modelpembayaranPaypal = $this->findPayment($session['token']);
-         $maskToken =  Yii::$app->getSecurity()->maskToken($modelpembayaranPaypal->token);
-         echo $this->renderAjax('paypal',[
+         return $this->renderAjax('paypal',[
          'modelpembayaranPaypal'=>$modelpembayaranPaypal,
-         'maskToken'=>$maskToken,
-         ]);
-         
-         
+         ]);    
     }
 
         public function actionLogo($id)
@@ -318,55 +306,14 @@ class BookController extends Controller
         ]);
     }
 
-    public function actionSuccess(){
-  
-    if (Yii::$app->request->isAjax) {
-        $data                  = Yii::$app->request->post();
-        $modelpembayaranPaypal = $this->findPaymentByToken($data['umk']);
-        $modelBooking          = $this->findBookingByPayment($modelpembayaranPaypal->id);
-        $findShuttle = $this->findShuttle();
-        $findPassenger = $this->findPassenger();
-            try {
-              $transaction = Yii::$app->db->beginTransaction();
-              $modelpembayaranPaypal->validate();
-              $session = Yii::$app->session;
-            foreach ($modelBooking as $key => $valBooking) {
-                  $valBooking->id_status = '4';
-                  $valBooking->validate();
-                  //$valBooking->save(false);
-                 }
-                 $modelpembayaranPaypal->id_payment_method = '1';
-                 //$modelpembayaranPaypal->save(false);
-                 $modelQueue                               = new TMailQueue();
-                 $modelQueue->id_payment                   = $modelpembayaranPaypal->id;
-                 $modelQueue->status                       = '1';
-                 $modelQueue->id_type                      = '1';
-                 $modelQueue->validate();
-                 //$modelQueue->save(false);
-                 $transaction->commit();
-                 //$session                                  = session_unset();
-                 $session                                  = Yii::$app->session;
-                 $session->open();
-                 $session['payment']                       = 'sukses';
-                 return $this->redirect(['thank-you']);    
-            } catch (Exception $e) {
-                $transaction->rollback();
-                throw $e;
-            }
-                 
-
-        }else{
-          return $this->goHome();  
-        }
-    }
 
     public function actionThankYou(){
         $session = Yii::$app->session;
-       // if ($session['payment'] == 'sukses') {
+        if ($session['payment'] == 'sukses') {
             return $this->render('thank-you');
-       // }else{
+        }else{
             return $this->goHome();
-       // }
+        }
         
     }
 

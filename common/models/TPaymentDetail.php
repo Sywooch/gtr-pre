@@ -54,7 +54,12 @@ class TPaymentDetail extends \yii\db\ActiveRecord
     }
 
      public function generatePaymentToken($attribute, $length = 25){
-       $token = Yii::$app->getSecurity()->generateRandomString($length);
+       //$token = Yii::$app->getSecurity()->generateRandomString($length);
+        $pool = array_merge(range(0,9),range('A', 'Z')); 
+    for($i=0; $i < $length; $i++) {
+        $key[] = $pool[mt_rand(0, count($pool) - 1)];
+    }
+        $token = join($key);
 
         if(!$this->findOne([$attribute => $token])) {
             return $token;

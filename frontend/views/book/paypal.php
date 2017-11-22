@@ -87,14 +87,14 @@ $this->registerJs("
             },
 
              onCancel: function (data, actions) {
-                 alert(data);
+                 alert('Payment Cancelled');
              },
 
              onError: function (data, actions) {
                 $('#rad-method').hide(100);
                      $('#body-form').html('<center><img src=../../loading.svg></center>');
                      $.ajax({
-                     url : '".Url::to(["/payment/success"])."',
+                     url : '".Url::to(["/payment/pending"])."',
                      type: 'POST',
                    });
              }

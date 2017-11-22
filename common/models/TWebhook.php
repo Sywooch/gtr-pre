@@ -3,7 +3,7 @@
 namespace common\models;
 
 use Yii;
-
+use yii\helpers\Json;
 /**
  * This is the model class for table "t_webhook".
  *
@@ -26,6 +26,10 @@ use Yii;
  */
 class TWebhook extends \yii\db\ActiveRecord
 {
+
+    const PAYMENT_SALE_COMPLETED = 1;
+    const PAYMENT_SALE_PENDING   = 2;
+    //const USERNAME = ""
     /**
      * @inheritdoc
      */
@@ -49,6 +53,7 @@ class TWebhook extends \yii\db\ActiveRecord
             [['currency'], 'string', 'max' => 5],
             [['id_paypal_transaction'], 'string', 'max' => 20],
             [['paypal_time'], 'string', 'max' => 25],
+            [['id_paypal_transaction'], 'exist', 'skipOnError' => false, 'targetClass' => TPaypalTransaction::className(), 'targetAttribute' => ['id_paypal_transaction' => 'id']],
             [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => TPaypalStatus::className(), 'targetAttribute' => ['id_status' => 'id']],
             [['currency'], 'exist', 'skipOnError' => true, 'targetClass' => TKurs::className(), 'targetAttribute' => ['currency' => 'currency']],
             [['id_event'], 'exist', 'skipOnError' => true, 'targetClass' => TWebhookEvent::className(), 'targetAttribute' => ['id_event' => 'id']],
@@ -74,6 +79,11 @@ class TWebhook extends \yii\db\ActiveRecord
             'paypal_time' => Yii::t('app', 'Paypal Time'),
             'datetime' => Yii::t('app', 'Datetime'),
         ];
+    }
+
+    public function getPaypalTransaction()
+    {
+        return $this->hasOne(TPaypalTransaction::className(), ['id' => 'id_paypal_transaction']);
     }
 
     /**
@@ -106,5 +116,111 @@ class TWebhook extends \yii\db\ActiveRecord
     public function getIdResourceType()
     {
         return $this->hasOne(TPaypalIntent::className(), ['id' => 'id_resource_type']);
+    }
+
+    public function addWebHook(array $WebHookArray){
+        if (($model = TWebhook::findOne($WebHookArray['id'])) === null) {
+                    $modelWebHook                        = new TWebhook();
+                    $modelWebHook->id                    = $WebHookArray['id'];
+                    $modelWebHook->id_resource_type      = TPaypalIntent::checkIntent($WebHookArray['resource_type']);
+                    $modelWebHook->id_event              = TWebhookEvent::checkEvent($WebHookArray['event_type']);
+                    $modelWebHook->id_status             = TPaypalStatus::checkStatus($WebHookArray['resource']['state']);
+                    $modelWebHook->description           = $WebHookArray['summary'];
+                    $modelWebHook->amount                = $WebHookArray['resource']['amount']['total'];
+                    $modelWebHook->currency              = $WebHookArray['resource']['amount']['currency'];
+                    $modelWebHook->id_paypal_transaction = $WebHookArray['resource']['id'];
+                    $modelWebHook->id_parent_payment     = $WebHookArray['resource']['parent_payment'];
+                    $modelWebHook->paypal_time           = $WebHookArray['create_time'];
+                    $modelWebHook->datetime              = date('Y-m-d H:i:s');
+                    $modelWebHook->validate();
+                    $modelWebHook->save(false);
+                    return true;
+        }else{
+            return true;
+        }
+        
+    }
+
+    public function afterSave($insert, $changedAttributes)
+    {
+        if ($this->id_event == self::PAYMENT_SALE_COMPLETED || $this->id_event == self::PAYMENT_SALE_PENDING) {
+            if (empty($this->paypalTransaction)) {
+                $token = $this->requestToken();
+                $paymentDetail = $this->requestPaymentDetail($token,$this->id_parent_payment);
+                    $modelPaypalTransaction = TPaypalTransaction::addTransactionData($paymentDetail);
+                    return true;
+            }
+        }else{
+            return "Empty";
+        }
+    }
+
+    public function requestPaymentDetail($token,$parent_payment){
+        try {
+            $curl = curl_init();
+                curl_setopt_array($curl, array(
+                        CURLOPT_URL            => "https://api.sandbox.paypal.com/v1/payments/payment/".$parent_payment."",
+                        CURLOPT_RETURNTRANSFER => true,
+                        CURLOPT_ENCODING       => "",
+                        CURLOPT_MAXREDIRS      => 10,
+                        CURLOPT_TIMEOUT        => 30,
+                        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
+                        CURLOPT_CUSTOMREQUEST  => "GET",
+                        CURLOPT_HTTPHEADER     => array(
+                        "authorization: Bearer ".$token."",
+                        "cache-control: no-cache",
+                        "content-type: application/json",
+                        ),
+                ));
+
+                $response = curl_exec($curl);
+                $err = curl_error($curl);
+
+                curl_close($curl);
+
+                if ($err) {
+                  return $this->requestPaymentDetail();
+                } else {
+                  return Json::decode($response, $asArray = true);
+                }
+            } catch (Exception $e) {
+                return $this->requestPaymentDetail();
+            }
+    }
+
+    public function requestToken(){
+        try {
+            $curl = curl_init();
+
+            curl_setopt_array($curl, array(
+              CURLOPT_URL => "https://api.sandbox.paypal.com/v1/oauth2/token",
+              CURLOPT_RETURNTRANSFER => true,
+              CURLOPT_ENCODING => "",
+              CURLOPT_MAXREDIRS => 10,
+              CURLOPT_TIMEOUT => 30,
+              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+              CURLOPT_CUSTOMREQUEST => "POST",
+              CURLOPT_POSTFIELDS => "grant_type=client_credentials",
+              CURLOPT_HTTPHEADER => array(
+                "authorization: Basic QVpvOHhfdmJoMHlFcXdiUmY2Yl9Ka1ZtQUFfRFBrTXdxOXVzNHl1V3NYMXVyclVtT2NDY3d1OU41dlh3azFtdXFrdktJVEJNcWpVOXdWUUs6RUhzekNYTnZUS3JPODllUVZYQ2tSWTBSOHN3S1hUNlhvS1hoTEctNDU1MlpFVDNFRW4xMjZvNi1qeWR5V3ZWYlRiaWY5ckQzc0tZdDM5VEI=",
+                "cache-control: no-cache",
+                "content-type: application/x-www-form-urlencoded",
+              ),
+            ));
+
+            $response = curl_exec($curl);
+            $err = curl_error($curl);
+
+            curl_close($curl);
+
+            if ($err) {
+              return $this->requestToken();
+            } else {
+                $result = Json::decode($response, $asArray = true);
+              return $result['access_token'];
+            }
+        } catch (Exception $e) {
+            return $this->requestToken();
+        }
     }
 }

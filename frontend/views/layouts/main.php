@@ -68,15 +68,6 @@ AppAsset::register($this);
         'label' => 'Contact', 'url' => ['/site/contact'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
-        [
-        'label' => 'How To Book', 'url' => ['/site/how-to-book'],
-        'linkOptions'=>['class'=>'material-navbar__link'],
-        ],
-        
-        [
-        'label' => 'FAQ', 'url' => ['/site/faq'],
-        'linkOptions'=>['class'=>'material-navbar__link'],
-        ],
         
     ];
     $menuItems[] ='<li><a class="material-navbar__link" href="/book/detail-data" id="cart"><i class="fa fa-shopping-cart"></i> Cart <span class="badge">'.Yii::$app->gilitransfers->Countcart().'</span></a></li>';
