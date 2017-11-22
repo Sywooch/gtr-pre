@@ -73,9 +73,10 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valBoat['slug']], [
+                              <?=  Html::a(Html::img(["#"], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valBoat['slug'],
+                                    'id'=>$valBoat['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
                                     ]), ['/content/view','slug'=>$valBoat['slug']]); ?>
                           </div>
@@ -110,9 +111,10 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valDestination['slug']], [
+                              <?=  Html::a(Html::img(["#"], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valDestination['slug'],
+                                    'id'=>$valDestination['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
                                     ]), ['/content/view','slug'=>$valDestination['slug']]); ?>
                           </div>
@@ -147,9 +149,10 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                                  <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valArticle['slug']], [
+                                  <?=  Html::a(Html::img(["#"], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valArticle['slug'],
+                                    'id'=>$valArticle['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
                                     ]), ['/content/view','slug'=>$valArticle['slug']]); ?>
                           </div>
@@ -185,9 +188,10 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
                               
-                                  <?=  Html::a(Html::img(['/content/thumbnail','slug'=>$valPorts['slug']], [
+                                  <?=  Html::a(Html::img(['#'], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valPorts['slug'],
+                                    'id'=>$valPorts['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
                                     ]), ['/content/view','slug'=>$valPorts['slug']]); ?>
                               
@@ -244,9 +248,22 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
     <?php endif; ?>
       </div>
 
-
+<img src="/thanks.png" id="test">HERE</img>
         
 <?php 
+
+$this->registerJs('
+
+
+var classes = $(".media-object"),
+    values = [];
+for(var i = 0; i < classes.length; i++) {
+    var slug = classes[i].getAttribute("id");
+    $("#"+slug).attr("src","'.Url::to(["/content/thumbnail"]).'?slug="+slug);
+}
+
+  ', \yii\web\View::POS_READY);
+
 $customCss = <<< SCRIPT
 .bar{
   width : 150px;
