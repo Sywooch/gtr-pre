@@ -73,7 +73,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(["#"], [
+                              <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valBoat['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valBoat['slug'],
                                     'id'=>$valBoat['slug'],
@@ -111,7 +111,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(["#"], [
+                              <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valDestination['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valDestination['slug'],
                                     'id'=>$valDestination['slug'],
@@ -149,7 +149,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
-                                  <?=  Html::a(Html::img(["#"], [
+                                  <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valArticle['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valArticle['slug'],
                                     'id'=>$valArticle['slug'],
@@ -188,7 +188,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                   <div class="media material-media">
                           <div class="media-left material-media__column material-media__column_vertical-middle">
                               
-                                  <?=  Html::a(Html::img(['#'], [
+                                  <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valPorts['slug']], [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valPorts['slug'],
                                     'id'=>$valPorts['slug'],
