@@ -144,7 +144,7 @@ class MailerController extends Controller
                         ]
                     ]);
                 $Receipt->render();
-               /*Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
+               Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
                 ->setTo($modelPayment->email)
                 ->setBcc('istanatravel94@gmail.com')
                 ->setSubject('E-Ticket GiliTransfers')
@@ -154,7 +154,7 @@ class MailerController extends Controller
                     ]))
                 ->attach($savePath."E-Ticket.pdf")
                 ->attach($savePath."Receipt.pdf")
-                ->send();*/
+                ->send();
                 foreach ($modelBooking as $key => $value) {
                     $PdfSupplier = new Pdf([
                 'filename'=>$savePath.$value->id.'.pdf',
@@ -189,16 +189,16 @@ class MailerController extends Controller
                     $PdfSupplier->render();
                     $attach = $savePath.$value->id.".pdf";
 
-                   /* if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
+                    if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
                         $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $attach,$value, $modelPayment);
                     }else{
                         $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali, $attach, $value, $modelPayment);
-                    }*/
+                    }
                     
                 }
-                /*
+                
 
-                FileHelper::removeDirectory($savePath);*/
+                FileHelper::removeDirectory($savePath);
                 
                 $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
             } catch(\Exception $e) {

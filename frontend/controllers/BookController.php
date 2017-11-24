@@ -108,13 +108,13 @@ class BookController extends Controller
     $helperAdult     = ArrayHelper::map($cartList, 'id_trip', 'adult', 'id_trip');
     $helperChild     = ArrayHelper::map($cartList, 'id_trip', 'child', 'id_trip');
     $helperInfant    = ArrayHelper::map($cartList, 'id_trip', 'infant', 'id_trip');
-    $listPickup      = ArrayHelper::map($this->findShuttleLocation(), 'id', 'area');
+    $listPickup      = ArrayHelper::map(TShuttleArea::find()->asArray()->all(), 'id', 'area');
     $modelShuttle    = [new TShuttleLocationTmp()];
     $modelPayment    = new TPaymentDetail();
     $modelAdults     = [new TPassenger()];
     $modelChilds     = [new TPassengerChildInfant()];
     $modelInfants    = [new TPassengerChildInfant()];
-    $listNationality = ArrayHelper::map(TNationality::find()->all(), 'id', 'nationality');
+    $listNationality = ArrayHelper::map(TNationality::find()->asArray()->all(), 'id', 'nationality');
 
     if ($modelPayment->load(Yii::$app->request->post())) {
        $transaction = Yii::$app->db->beginTransaction();
@@ -141,53 +141,49 @@ class BookController extends Controller
                  $saveBooking->currency     = $cartValue->currency;
                  $saveBooking->total_idr    = $cartValue->idTrip->adult_price*$cartValue->adult + $cartValue->idTrip->child_price*$cartValue->child;
                  $saveBooking->exchange     = $cartValue->exchange;
-                 //$saveBooking->token      = $cartValue->exchange;
                  $saveBooking->expired_time = $expired_time;
                  $saveBooking->validate();
                  $saveBooking->save(false);
                  
-                 $loadShuttle = Yii::$app->request->post('TShuttle');
-                $loadPassengersAdult =  Yii::$app->request->post('TPassenger');
-                $loadPassengersChildInfant =  Yii::$app->request->post('TPassengerChildInfant');
-               // $adult = $loadPassengersAdult[$cartValue->id_trip]['adult'];
-                //$test = $test[$cartValue->id_trip];
+                 $loadShuttle               = Yii::$app->request->post('TShuttle');
+                 $loadPassengersAdult       = Yii::$app->request->post('TPassenger');
+                 $loadPassengersChildInfant = Yii::$app->request->post('TPassengerChildInfant');
+
                 foreach ($loadPassengersAdult[$cartValue->id_trip]['adult'] as $x => $value) {
                          $saveAdult                 = new TPassenger();
                          $saveAdult->id_booking     = $saveBooking->id;
                          $saveAdult->name           = $value['name'];
                          $saveAdult->id_nationality = $value['id_nationality'];
-                         $saveAdult->id_type        = '1';
+                         $saveAdult->id_type        = $saveAdult::TYPE_ADULT;
                          $saveAdult->validate();
                          $saveAdult->save(false);       
                 }
                 if (!empty($loadPassengersChildInfant[$cartValue->id_trip]['child'])) {
-                    foreach ($loadPassengersChildInfant[$cartValue->id_trip]['child'] as $x => $value) {
-                         $saveAdult                 = new TPassengerChildInfant();
-                         $saveAdult->id_booking     = $saveBooking->id;
-                         $saveAdult->name           = $value['name'];
-                         $saveAdult->id_nationality = $value['id_nationality'];
-                         $saveAdult->birthday       = $value['birthday'];
-                         $saveAdult->id_type        = '2';
-                         $saveAdult->validate();
-                         $saveAdult->save(false);       
+                    foreach ($loadPassengersChildInfant[$cartValue->id_trip]['child'] as $x => $valueChild) {
+                         $saveChild                 = new TPassengerChildInfant();
+                         $saveChild->id_booking     = $saveBooking->id;
+                         $saveChild->name           = $valueChild['name'];
+                         $saveChild->id_nationality = $valueChild['id_nationality'];
+                         $saveChild->birthday       = $valueChild['birthday'];
+                         $saveChild->id_type        = $saveChild::TYPE_CHILD;
+                         $saveChild->validate();
+                         $saveChild->save(false);       
                 }
                 }
                 
                 if (!empty($loadPassengersChildInfant[$cartValue->id_trip]['infant'])) {
-                    foreach ($loadPassengersChildInfant[$cartValue->id_trip]['infant'] as $x => $value) {
-                         $saveAdult                 = new TPassengerChildInfant();
-                         $saveAdult->id_booking     = $saveBooking->id;
-                         $saveAdult->name           = $value['name'];
-                         $saveAdult->id_nationality = $value['id_nationality'];
-                         $saveAdult->birthday       = $value['birthday'];
-                         $saveAdult->id_type        = '3';
-                         $saveAdult->validate();
-                         $saveAdult->save(false);       
-                }
+                    foreach ($loadPassengersChildInfant[$cartValue->id_trip]['infant'] as $x => $valueInfant) {
+                         $saveInfant                 = new TPassengerChildInfant();
+                         $saveInfant->id_booking     = $saveBooking->id;
+                         $saveInfant->name           = $valueInfant['name'];
+                         $saveInfant->id_nationality = $valueInfant['id_nationality'];
+                         $saveInfant->birthday       = $valueInfant['birthday'];
+                         $saveInfant->id_type        = $saveInfant::TYPE_INFANT;
+                         $saveInfant->validate();
+                         $saveInfant->save(false);       
+                    }
                 }
                 
-
-                $test = $saveAdult;
                 $loadShuttle =  Yii::$app->request->post('TShuttleLocationTmp');
                 if (!empty($loadShuttle[$cartValue->id_trip]['id_area'])) {
                     $saveShuttle                = new TShuttleLocationTmp();
@@ -200,20 +196,20 @@ class BookController extends Controller
                     $saveShuttle->validate();
                     $saveShuttle->save(false) ;
                 }
-            $payment[] = $saveBooking->total_price;
+            $payment[]     = $saveBooking->total_price;
             $payment_idr[] = $saveBooking->total_idr;
             $cartValue->delete();
             
          }
-            $modelPayment->total_payment   = array_sum($payment);
-            $modelPayment->total_payment_idr   = array_sum($payment_idr);
+            $modelPayment->total_payment     = array_sum($payment);
+            $modelPayment->total_payment_idr = array_sum($payment_idr);
             $modelPayment->save();
-            $session            = session_unset();
-            $session            = Yii::$app->session;
+            $session                         = session_unset();
+            $session                         = Yii::$app->session;
             $session->open();
-            $session['cust_id'] = $modelPayment->id;
-            $session['token']   = $modelPayment->token;
-            $session['timeout'] = 'on-payment';
+            $session['cust_id']              = $modelPayment->id;
+            $session['token']                = $modelPayment->token;
+            $session['timeout']              = 'on-payment';
             $session->close();
             $transaction->commit();
        } catch(\Exception $e) {
@@ -240,28 +236,23 @@ class BookController extends Controller
     }
 
     public function actionPayment(){
-        $modelPayment = new PaymentModel();
-        $session       = Yii::$app->session;
-        $paymentData = $this->findPayment($session['token']);
-        $modelBooking          = $this->findBookingByPayment($paymentData->id);
+        $session      = Yii::$app->session;
+        $modelPayment  = $this->findPayment($session['token']);
+        $modelBooking = $modelPayment->tBookings;
 
         if ($modelPayment->load(Yii::$app->request->post()) && $modelPayment->validate()) {
             $transaction = Yii::$app->db->beginTransaction();
             try {
-                  foreach ($modelBooking as $key => $valBooking) {
-                      $valBooking->id_status = '2';
-                      $valBooking->validate();
-                      $valBooking->save(false);
-                  }
-
-                 $paymentData->id_payment_method = '2';
-                 $paymentData->save(false);
-                 $modelQueue                     = TMailQueue::addInvoiceQueue($paymentData->id);
-                 $transaction->commit();
-                 $session                        = session_unset();
-                 $session                        = Yii::$app->session;
-                 $session->open();
-                 $session['payment']             = 'sukses';
+                  $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_UNCONFIRMED,$modelPayment::STATUS_PENDING);
+                  //PAYMENT STATUS 1 BOOKING UNPAID (2)
+                  $modelPayment->save(false);
+                  $modelPayment->save();
+                  $modelQueue         = TMailQueue::addInvoiceQueue($modelPayment->id);
+                  $transaction->commit();
+                  // $session         = session_unset();
+                  $session            = Yii::$app->session;
+                  $session->open();
+                  $session['payment'] = 'sukses';
                  return $this->redirect(['thank-you']); 
             } catch(\Exception $e) {
                 $transaction->rollBack();
@@ -272,8 +263,6 @@ class BookController extends Controller
         }else{
             return $this->render('payment',[
                 'modelPayment'=>$modelPayment,
-               // 'maskToken'=>$maskToken,
-                'paymentData'=>$paymentData,
                 ]);
         }
 

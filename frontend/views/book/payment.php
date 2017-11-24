@@ -8,7 +8,7 @@ use kartik\widgets\AlertBlock;
 /* @var $this yii\web\View */
 /* @var $modelPayment app\models\TPembayaran */
 /* @var $form yii\widgets\ActiveForm */
-$modelPayment->payment = 1;
+$modelPayment->id_payment_method = 1;
 ?>
 <?php
 $customCss = <<< SCRIPT
@@ -96,7 +96,7 @@ $(document).ready(function(){
       <div id="body-form">  
         <div class="panel-body material-panel__body">
          <?=  
-           $form->field($modelPayment, 'payment')->radioList(['1'=>'Paypal <span class="fa fa-paypal"></span> <span class="fa fa-credit-card "></span> <span class="fa fa-cc-discover"></span> <span class="fa fa-cc-mastercard"></span>','2'=>'local Bank Transfers <span class="fa fa-bank"></span>',],[
+           $form->field($modelPayment, 'id_payment_method')->radioList(['1'=>'Paypal <span class="fa fa-paypal"></span> <span class="fa fa-credit-card "></span> <span class="fa fa-cc-discover"></span> <span class="fa fa-cc-mastercard"></span>','2'=>'local Bank Transfers <span class="fa fa-bank"></span>',],[
             'id'=>'rad-method',
             'onchange'=>'
               var metod = $("#rad-method :radio:checked").val();
@@ -131,8 +131,8 @@ $(document).ready(function(){
           }'
             ])->label(false) ?>
     <center>
-    <b style="display: none;" class="payment-harga" id="harga-ext" ><?= $paymentData->currency." ".$paymentData->total_payment ?></b>
-    <b class="payment-harga" id="harga-idr"><?= "IDR ".number_format($paymentData->total_payment_idr) ?></b>
+    <b style="display: none;" class="payment-harga" id="harga-ext" ><?= $modelPayment->currency." ".$modelPayment->total_payment ?></b>
+    <b class="payment-harga" id="harga-idr"><?= "IDR ".number_format($modelPayment->total_payment_idr) ?></b>
     </center>   
     <div  style="display: none;" id="div-submit" class="form-group">
             <?= Html::submitButton( Yii::t('app', 'Confirm') , ['id'=>'btn-trasanfer','class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block']) ?>

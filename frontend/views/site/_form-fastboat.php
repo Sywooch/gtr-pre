@@ -49,7 +49,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
             <div class="col-md-12">
               <?php 
 
-              echo '<label class="control-label">Adults</label>';
+              echo '<label class="control-label">Adults <span class="text-muted">(12+ years)</span></label>';
               echo TouchSpin::widget([
                 'model'         => $modelBookForm,
                 'attribute'     => 'adults',
@@ -78,7 +78,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
             </div>
             <div class="col-md-12">
                 <?php
-                echo '<label class="control-label">Childs</label>';
+                echo '<label class="control-label">Childs <span class="text-muted">(2-12 years)</span></label>';
                 echo TouchSpin::widget([
                   'model'         => $modelBookForm,
                   'attribute'     => 'childs',
@@ -107,7 +107,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
               </div>
               <div class="col-md-12">
                 <?php
-                echo '<label class="control-label">Infants</label>';
+                echo '<label class="control-label">Infants <span class="text-muted">(0-2 years) without seat</span></label>';
                 echo TouchSpin::widget([
                   'model'         => $modelBookForm,
                   'attribute'     => 'infants',
@@ -269,6 +269,9 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 
 <?php
 $customCss = <<< SCRIPT
+.text-muted{
+  font-size: 10px;
+}
 .material-checkbox-group__label {
     position: relative;
     display: block;

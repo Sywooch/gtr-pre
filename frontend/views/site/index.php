@@ -248,7 +248,6 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
     <?php endif; ?>
       </div>
 
-<img src="/thanks.png" id="test">HERE</img>
         
 <?php 
 

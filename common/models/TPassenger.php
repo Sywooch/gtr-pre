@@ -21,6 +21,10 @@ use Yii;
  */
 class TPassenger extends \yii\db\ActiveRecord
 {
+
+    const TYPE_ADULT  = 1;
+    const TYPE_CHILD  = 2;
+    const TYPE_INFANT = 3;
     /**
      * @inheritdoc
      */
@@ -40,6 +44,7 @@ class TPassenger extends \yii\db\ActiveRecord
             [['birthday', 'datetime'], 'safe'],
             [['id_booking'], 'string', 'max' => 5],
             [['name'], 'string', 'max' => 50],
+            [['id_type'],'in','range'=>[self::TYPE_ADULT,self::TYPE_CHILD,self::TYPE_INFANT]],
             [['id_booking'], 'exist', 'skipOnError' => true, 'targetClass' => TBooking::className(), 'targetAttribute' => ['id_booking' => 'id']],
             [['id_type'], 'exist', 'skipOnError' => true, 'targetClass' => TPassengerType::className(), 'targetAttribute' => ['id_type' => 'id']],
             [['id_nationality'], 'exist', 'skipOnError' => true, 'targetClass' => TNationality::className(), 'targetAttribute' => ['id_nationality' => 'id']],
@@ -84,5 +89,9 @@ class TPassenger extends \yii\db\ActiveRecord
     public function getIdNationality()
     {
         return $this->hasOne(TNationality::className(), ['id' => 'id_nationality']);
+    }
+
+    public function savePassengers($id_booking, $type, $birthday = null){
+        
     }
 }

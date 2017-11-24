@@ -120,10 +120,6 @@ class SiteController extends Controller
                         'paxChild'=>$paxChild,
                         ]);
             }
-            
-            
-            
-            
         }
     }
 
@@ -158,8 +154,6 @@ class SiteController extends Controller
                 echo "<option value=".$value->id.">".$value->name."</option>";
                      
             }
-
-           // $fromRoute = 
         }
     }
     /**
@@ -217,8 +211,7 @@ class SiteController extends Controller
             $session->close();
             
             return $this->redirect(['result','formData'=>$formData]);
-        }else{
-
+      }else{
       if ($session['route'] == 'none') {
            // $session      = session_unset();
             echo Growl::widget([
@@ -315,7 +308,6 @@ class SiteController extends Controller
 
     protected function findRoute($departure,$return){
      return TRoute::find()->where(['departure'=>$departure])->andWhere(['arrival'=>$return])->one();
-        
     }
 
     protected function findTrip($date,$formData,$route){

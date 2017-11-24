@@ -23,10 +23,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
                 ]); ?>
 </div>
+<center><b id="loading-pjax"></b></center>
 <span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
 <div class="row col-md-12">
 
-<?php Pjax::begin(); ?>
+<?php Pjax::begin(['id'=>'pjax-table-booking']); ?>
 <?= GridView::widget([
         'dataProvider'    => $dataProvider,
         'filterModel'     => $searchModel,
@@ -88,7 +89,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'vAlign'=>'middle',
         'format'=>'raw',
         'value'=>function($model){
-            return "<span class='dept-time'><span class='fa fa-clock-o'></span>".$model->idTrip->dept_time."</span>";
+            return "<span class='dept-time'><span class='fa fa-clock-o'></span> ".date('H:i',strtotime($model->idTrip->dept_time))."</span>";
         },
         'group'=>true,  // enable grouping
         //'groupedRow'=>true,

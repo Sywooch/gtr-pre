@@ -38,7 +38,7 @@ class TBooking extends \yii\db\ActiveRecord
     const STATUS_PAID           = 4;
     const STATUS_SUCCESS        = 5;
     const STATUS_REFUND_PARTIAL = 6;
-    const STATUS_REFUND_FULLL   = 7;
+    const STATUS_REFUND_FULL    = 7;
     const STATUS_EXPIRED        = 99;
     const STATUS_INVALID        = 100;
     /**
@@ -61,7 +61,7 @@ class TBooking extends \yii\db\ActiveRecord
             [['datetime'], 'safe'],
             [['id'], 'string', 'max' => 6],
             [['currency'], 'string', 'max' => 5],
-            [['id_status'],'in','range'=>[self::STATUS_ON_BOOK, self::STATUS_UNPAID, self::STATUS_VALIDATION, self::STATUS_PAID, self::STATUS_SUCCESS, self::STATUS_REFUND_PARTIAL, self::STATUS_REFUND_FULLL, self::STATUS_EXPIRED, self::STATUS_INVALID]],
+            [['id_status'],'in','range'=>[self::STATUS_ON_BOOK, self::STATUS_UNPAID, self::STATUS_VALIDATION, self::STATUS_PAID, self::STATUS_SUCCESS, self::STATUS_REFUND_PARTIAL, self::STATUS_REFUND_FULL, self::STATUS_EXPIRED, self::STATUS_INVALID]],
             [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => TBookingStatus::className(), 'targetAttribute' => ['id_status' => 'id']],
             [['currency'], 'exist', 'skipOnError' => true, 'targetClass' => TKurs::className(), 'targetAttribute' => ['currency' => 'currency']],
             [['id_trip'], 'exist', 'skipOnError' => true, 'targetClass' => TTrip::className(), 'targetAttribute' => ['id_trip' => 'id']],
@@ -174,8 +174,43 @@ public function generateBookingNumber($attribute, $length = 4){
     {
         return $this->hasOne(TShuttleLocationTmp::className(), ['id_booking' => 'id']);
     }
+
     public function getShuttleTmp()
     {
         return $this->hasOne(TShuttleLocationTmp::className(), ['id_booking' => 'id']);
+    }
+
+    public function getBookingGroupPayment($model){
+        return TBooking::find()->joinWith(['idTrip.idBoat'])->where(['t_boat.id_company'=>$model['idTrip']['idBoat']['id_company']])->andWhere(['t_trip.id_route'=>$model['idTrip']['id_route']])->andWhere(['t_trip.date'=>$model['idTrip']['date']])->andWhere(['t_trip.dept_time'=>$model['idTrip']['dept_time']])->andWhere(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->all();
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        if ($this->id_status == self::STATUS_INVALID || $this->id_status == self::STATUS_EXPIRED ) {
+            $modelTrip          = $this->idTrip;
+            $affectedPassengers = count($this->affectedPassengers);
+            $modelTrip->stock   = $modelTrip->stock+$affectedPassengers;
+            $modelTrip->process = $modelTrip->process-$affectedPassengers;
+            $modelTrip->cancel  = $modelTrip->cancel+$affectedPassengers;
+            $modelTrip->save(false);
+        }
+        return true;
+    }
+
+    public function beforeDelete()
+    {
+        if (!parent::beforeDelete()) {
+            return false;
+        }
+        $modelTrip          = $this->idTrip;
+        $affectedPassengers = count($this->affectedPassengers);
+        $modelTrip->stock   = $modelTrip->stock+$affectedPassengers;
+        $modelTrip->process = $modelTrip->process-$affectedPassengers;
+        $modelTrip->cancel  = $modelTrip->cancel+$affectedPassengers;
+        $modelTrip->save(false);
+        return true;
     }
 }

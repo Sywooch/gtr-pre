@@ -5,7 +5,6 @@ use kartik\widgets\ActiveForm;
 use kato\pickadate\Pickadate;
 use kartik\widgets\DatePicker;
 use kartik\widgets\Typeahead;
-use mdm\admin\components\Helper;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
 
@@ -20,11 +19,27 @@ $template2 = ['template'=>"
 ?>
 
 <div class="tbooking-search">
+<?php
+ 
+$this->registerJs(
+   '$("document").ready(function(){
+        $("#pjax-form-search").on("pjax:start", function() {
+            $("#loading-pjax").html(\'<img src="/spinner.svg">\');
+        }); 
+        $("#pjax-form-search").on("pjax:end", function() {
+            $.pjax.reload({container:"#pjax-table-booking"});  //Reload GridView
+            $("#loading-pjax").empty();
 
+        });
+    });'
+);
+?>
+
+<?php yii\widgets\Pjax::begin(['id' => 'pjax-form-search']) ?>
     <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
+        'options' => ['data-pjax' => true ],
+        'action'  => ['index'],
+        'method'  => 'get',]); ?>
 
     <?= $form->field($model, 'id', [
     'template'=>"
@@ -124,36 +139,21 @@ $model->rangeType = $rangeType;
 </div>
 
 
+
     <div class="form-group col-md-12">
-    <?php  if(Helper::checkRoute('/booking/createss')): ?>
-
-        <?= Html::a('', ['create'], [
-                'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg glyphicon glyphicon-plus',
-                'data-toggle'=>'tooltip',
-                'title'=>'Add Booking',
-                ]) ?>
-
-    <?php endif; ?>
-        <?= Html::button(' ', [
-                'class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
-                'data-toggle'=>'tooltip',
-                'title'=>'Apply Filter',
-                'onclick'=>'
-                    var base = 
-                    $.pjax.reload({
-                        url:"'.Url::to(['index']).'"
-                        container: "#pjax-validate",
-                    })
-                '
-                ]) ?>
+        <?= Html::submitButton(' ', ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
+                // 'data-toggle'=>'tooltip',
+                // 'title'=>'Apply Filter',
+                ]); ?>
         <?= Html::a('',['index'], [
                 'class' => 'btn material-btn material-btn_success main-container__column material-btn_lg glyphicon glyphicon-refresh',
-                'data-toggle'=>'tooltip',
-                'title'=>'Reset Filter',
+                // 'data-toggle'=>'tooltip',
+                // 'title'=>'Reset Filter',
                 ]) ?>
   
 
       </div>
-    <?php ActiveForm::end(); ?>
+<?php ActiveForm::end(); ?>
+<?php yii\widgets\Pjax::end() ?>
 
 </div>

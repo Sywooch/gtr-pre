@@ -58,14 +58,15 @@ class TPayment extends \yii\db\ActiveRecord
             [['id_payment_method', 'total_payment_idr', 'exchange', 'status'], 'integer'],
             [['total_payment', 'send_amount'], 'number'],
             [['exp', 'update_at'], 'safe'],
-            [['name', 'email'], 'string', 'max' => 50],
+            [['name'], 'string', 'max' => 50],
+            [['email'],'email'],
             [['phone'], 'string', 'max' => 20],
             [['currency'], 'string', 'max' => 5],
             [['token'], 'string', 'max' => 25],
             [['token'], 'unique'],
             [['status'], 'default', 'value' => self::STATUS_UNCONFIRMED],
             [['status'], 'in', 'range' => [self::STATUS_UNCONFIRMED, self::STATUS_PENDING, self::STATUS_CONFIRM_NOT_RECEIVED, self::STATUS_CONFIRM_RECEIVED, self::STATUS_PARTIAL_REFUND, self::STATUS_FULl_REFUND, self::STATUS_EXPIRED , self::STATUS_INVALID, self::STATUS_INVALID]],
-            [['id_payment_method'],'in','range'=>[self::STATUS_UNCONFIRMED, self::STATUS_CONFIRM_NOT_RECEIVED]],
+            [['id_payment_method'],'in','range'=>[self::STATUS_UNCONFIRMED,self::STATUS_PENDING, self::STATUS_CONFIRM_NOT_RECEIVED]],
             [['currency'], 'exist', 'skipOnError' => true, 'targetClass' => TKurs::className(), 'targetAttribute' => ['currency' => 'currency']],
             [['id_payment_method'], 'exist', 'skipOnError' => true, 'targetClass' => TPaymentMethod::className(), 'targetAttribute' => ['id_payment_method' => 'id']],
             [['status'], 'exist', 'skipOnError' => true, 'targetClass' => TPaymentStatus::className(), 'targetAttribute' => ['status' => 'id']],
@@ -143,6 +144,17 @@ class TPayment extends \yii\db\ActiveRecord
         return $this->hasOne(TPaypalTransaction::className(), ['payment_token' => 'token']); 
     }
 
+    public function getConfirmPayment() 
+    { 
+        return $this->hasOne(TConfirmPayment::className(), ['id' => 'id']); 
+    }
+
+    // public function afterSave($insert, $changedAttributes){
+    //     if ($this->status == self::STATUS_CONFIRM_NOT_RECEIVED || $this->status == self::STATUS_CONFIRM_RECEIVED || $this->status == self::STAT) {
+    //         # code...
+    //     }
+    // }
+
     public function setPaymentStatus($status){
         $this->status = $status;
         $this->save();
@@ -152,6 +164,20 @@ class TPayment extends \yii\db\ActiveRecord
     public function setPaymentMethod($id_payment_method){
         $this->id_payment_method = $id_payment_method;
         return true;
+    }
+
+    public function setPaymentBookingStatus($payment_status, $booking_status){
+        $this->status = $payment_status;
+        // if ($payment_status == self::STATUS_INVALID) {
+        //     foreach ($this->tBookings as $key => $valBooking) {
+        //         $valBooking->delete();
+        //     }
+        // }else{
+            foreach ($this->tBookings as $key => $valBooking) {
+                $valBooking->id_status = $booking_status;
+                $valBooking->save();
+            }
+        //}
     }
 
 

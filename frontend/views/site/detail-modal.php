@@ -1,14 +1,14 @@
 <?php
 use yii\helpers\Html;
-$totalPax = $paxAdult+$paxChild;
 ?>
 <?php 
-$aD = $tripDeparture->adult_price/$currency->kurs*$paxAdult;
-$cD = $tripDeparture->child_price/$currency->kurs*$paxChild;
-$totalD = $aD+$cD;
-$aR = $tripReturn->adult_price/$currency->kurs*$paxAdult;
-$cR = $tripReturn->child_price/$currency->kurs*$paxChild;
-$totalR = $aR+$cR;
+$totalPax = $paxAdult+$paxChild;
+$aD       = $tripDeparture->adult_price/$currency->kurs*$paxAdult;
+$cD       = $tripDeparture->child_price/$currency->kurs*$paxChild;
+$totalD   = $aD+$cD;
+$aR       = $tripReturn->adult_price/$currency->kurs*$paxAdult;
+$cR       = $tripReturn->child_price/$currency->kurs*$paxChild;
+$totalR   = $aR+$cR;
 //echo $totalD."<br>".$totalR."<br>";
  ?>
 <div class="panel panel-info">

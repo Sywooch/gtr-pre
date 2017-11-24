@@ -21,12 +21,12 @@ class BookingValidate extends TBooking
     public function rules()
     {
         return [
-            [['id', 'email', 'phone', 'currency', 'token', 'expired_time', 'datetime'], 'safe'],
+            [['id', 'currency', 'expired_time', 'datetime'], 'safe'],
             ['date','default','value'=>date('Y-m-d')],
             ['show_all','boolean'],
             ['show_all','default','value'=>false],
-            [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'id_payment_method', 'process_by'], 'integer'],
-            [['trip_price', 'total_price', 'send_amount'], 'number'],
+            [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'process_by'], 'integer'],
+            [['trip_price', 'total_price'], 'number'],
         ];
     }
 
@@ -89,8 +89,6 @@ class BookingValidate extends TBooking
             'total_idr' => $this->total_idr,
             'exchange' => $this->exchange,
             'id_status' => $this->id_status,
-            'id_payment_method' => $this->id_payment_method,
-            'send_amount' => $this->send_amount,
             'process_by' => $this->process_by,
             'expired_time' => $this->expired_time,
             'datetime' => $this->datetime,
@@ -99,10 +97,7 @@ class BookingValidate extends TBooking
        
 
         $query->andFilterWhere(['like', 'id', $this->id])
-            ->andFilterWhere(['like', 'email', $this->email])
-            ->andFilterWhere(['like', 'phone', $this->phone])
-            ->andFilterWhere(['like', 'currency', $this->currency])
-            ->andFilterWhere(['like', 'token', $this->token]);
+            ->andFilterWhere(['like', 'currency', $this->currency]);
 
         return $dataProvider;
     }

@@ -39,8 +39,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'id_payment',
                 'width'=>'auto',
                 'format'=>'raw',
-                'value'=>function ($model, $key, $index, $widget) { 
-                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('D d-m-Y H:i',strtotime($model->idPayment->update_at))."<span class='pull-right'>".
+                'value'=>function ($model, $key, $index, $widget) {
+                
+                $confirmdata = isset($model->idPayment->confirmPayment) ? "<br><span class='fa fa-user'></span> ".$model->idPayment->confirmPayment->name." <span class='fa fa-money'></span> Rp ".number_format($model->idPayment->confirmPayment->amount,0)."<span class='fa fa-book'></span> ".$model->idPayment->confirmPayment->note : " ";
+
+
+                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->idPayment->update_at)).$confirmdata."<span class='pull-right'>".
                     Html::a('', '#', [
                                     'class'       => 'btn material-btn material-btn_primary main-container__column material-btn_sm glyphicon glyphicon-check',
                                     'data-toggle' =>'tooltip',
@@ -136,9 +140,9 @@ $this->params['breadcrumbs'][] = $this->title;
                                 </div>
                                 ";
                     if (!empty($model->shuttleTmp->id_booking)) {
-                        return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom'><span class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b> ( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br> Required ".$model->shuttleTmp->type." in ".$model->shuttleTmp->idArea->area."-".$model->shuttleTmp->location_name."-".$model->shuttleTmp->address."-".$model->shuttleTmp->phone.$popover;
+                        return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."' data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b> ( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br> Required ".$model->shuttleTmp->type." in ".$model->shuttleTmp->idArea->area."-".$model->shuttleTmp->location_name."-".$model->shuttleTmp->address."-".$model->shuttleTmp->phone.$popover;
                     }else{
-                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom'><b style='color:black;'>".$model->idTrip->idBoat->idCompany->name."</b> </a>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br>".$popover;
+                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br>".$popover;
                 }
                 }
             ],

@@ -59,7 +59,7 @@ $model->isNewRecord ? $model->id_season_type = 1 : $model->id_season_type = $mod
 </div>
 <div class="col-md-12">
     <?= $form->field($model, 'adult_price')->widget(MaskedInput::className(), [
-    'mask'               => '999,999',
+    'mask'               => ['99,999','999,999'],
     'clientOptions'      => [
     'removeMaskOnSubmit' => true,
     ]
@@ -67,7 +67,7 @@ $model->isNewRecord ? $model->id_season_type = 1 : $model->id_season_type = $mod
 </div>
 <div class="col-md-12">
     <?= $form->field($model, 'child_price')->widget(MaskedInput::className(), [
-    'mask'               => '999,999',
+    'mask'               => ['99,999','999,999'],
     'clientOptions'      => [
     'removeMaskOnSubmit' => true,
     ]
@@ -75,7 +75,7 @@ $model->isNewRecord ? $model->id_season_type = 1 : $model->id_season_type = $mod
 </div>
 <div class="col-md-12">
     <?= $form->field($model, 'infant_price')->widget(MaskedInput::className(), [
-    'mask'               => '999,999',
+    'mask'               => ['99,999','999,999'],
     'clientOptions'      => [
     'removeMaskOnSubmit' => true,
     ]

@@ -30,14 +30,14 @@ $this->params['breadcrumbs'][] = $this->title;
           <div class="panel-body">
  <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'panel'=>['type'=>'info', 'heading'=>''],
-        'striped'      =>true,
-        'bordered'  => true,
-        'responsive'=>true,
-        'hover'        =>true,
-        'pjax'         =>false,
-       
+        'filterModel'  => $searchModel,
+        'panel'        => ['type'=>'info', 'heading'=>''],
+        'striped'      => true,
+        'bordered'     => true,
+        'responsive'   => true,
+        'hover'        => true,
+        'pjax'         => false,
+        
         'columns' => [
             [
               'class' => 'yii\grid\SerialColumn',

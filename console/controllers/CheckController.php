@@ -22,18 +22,11 @@ Class CheckController extends Controller
     }
 
     public function actionPaymentTimeout(){
-    	if (($modelPayment = TPayment::find()->where(['status'=>1])->andWhere(['<','exp',date('Y-m-d H:i:s')])->orderBy(['exp'=>SORT_DESC])->one()) !== null) {
-    		$modelBooking = TBooking::find()->where(['id_payment'=>$modelPayment->id])->all();
+    	if (($modelPayment = TPayment::find()->where(['status'=>1])->andWhere(['<','exp',date('Y-m-d H:i:s')])->orderBy(['exp'=>SORT_DESC])->all()) !== null) {
     		$transaction = Yii::$app->db->beginTransaction();
     		try {
-    		    foreach ($modelBooking as $key => $value) {
-    		    	$affectedStock = count(TPassenger::find()->where(['id_booking'=>$value->id])->andWhere(['!=','id_type',3])->all());
-    		    	$modelTrip = TTrip::findOne($value->id_trip);
-    		    	$modelTrip->stock = $modelTrip->stock+$affectedStock;
-    		    	$modelTrip->save();
-    		    	$value->delete();
-    		    }
-    		    $modelPayment->delete();
+    		    $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_EXPIRED,$modelPayment::STATUS_EXPIRED);
+                $modelPayment->save(false);
     		    $transaction->commit();
     		} catch(\Exception $e) {
     		    $transaction->rollBack();

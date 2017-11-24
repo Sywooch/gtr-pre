@@ -42,16 +42,15 @@ $this->registerCss($customCss);
             <?php foreach ($cartList as $index => $value): ?>
                     
 					<ul class="list-group">
-					<li class="list-group-item"><span class="fa fa-ship"></span> <b><?= $value->idTrip->idBoat->idCompany->name ?></b> - <?=  $value->idTrip->idBoat->name ?>
-          <?php if(count($cartList) > 1 ): ?>
-          <?= $value->type == '1' ? '<span class="material-label material-label_xs material-label_primary">One Way' : '<span class="material-label material-label_xs material-label_success">Return' ?>
-        <?php else: ?>
-          <span class="material-label material-label_xs material-label_primary">One Way
-        <?php endif; ?>
-          </span>
+					<li class="list-group-item"><span class="fa fa-ship"></span>
+          <b><?= $value->idTrip->idBoat->idCompany->name ?></b>
+          | </span> <?= $value->idTrip->idRoute->departureHarbor->name." <span class='fa fa-arrow-right'></span> ".$value->idTrip->idRoute->arrivalHarbor->name ?>
+          | <span class="fa fa-calendar"></span> <?= date('d-m-Y',strtotime($value->idTrip->date)) ?>
           <span class="pull-right">
 					<?= Html::a('', ['remove-cart','id'=>$value->id], [
 						'class' => 'btn material-btn material-btn_danger main-container__column material-btn_xs pull-right glyphicon glyphicon-trash',
+            'data-toggle' =>'tooltip',
+            'title'       =>'Delete This Item',
 						'data' => [
               'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
 						  'method' => 'post',
@@ -59,7 +58,6 @@ $this->registerCss($customCss);
 					]); ?>
           </span>
 					</li>
-					<li class="list-group-item"><span class="fa fa-code-fork"></span> <?= $value->idTrip->idRoute->departureHarbor->name." <span class='fa fa-arrow-right'></span> ".$value->idTrip->idRoute->arrivalHarbor->name ?></li>
 					<li class="list-group-item"><span class="fa fa-money"></span>
 						<?=  $value->adult != '0' ? $value->adult." Adult = <b>".$value->currency." ".round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)."</b>" : " " ?>
 
@@ -73,7 +71,10 @@ $this->registerCss($customCss);
           <?php $grandTotal[] = round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP);  ?> 
             <?php endforeach; ?>
             
-<?= Html::a('Add Another Trip', Yii::$app->homeUrl, ['class' => 'pull-left btn material-btn material-btn_warning main-container__column material-btn_lg pull-right']); ?>
+<?= Html::a('Add Another Trip', Yii::$app->homeUrl, [
+            'class'       => 'pull-left btn material-btn material-btn_warning main-container__column material-btn_lg pull-right',
+            
+            ]); ?>
 <?php if(!empty($cartList)):  ?> 
 <span class="pull-right" id="grand-total">TOTAl <?= $cartList[0]['currency']." ".array_sum($grandTotal) ?></span>
   </div>
@@ -351,8 +352,11 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                     }
                   }
 
-                  $shuttleParameter = $cartValue->idTrip->idRoute->departureHarbor->id_island;
-                  if ($shuttleParameter == 1 ) {
+                  $departureIsland = $cartValue->idTrip->idRoute->departureHarbor->id_island;
+                  $arrivalIsland = $cartValue->idTrip->idRoute->arrivalHarbor->id_island;
+                  if ($departureIsland == $arrivalIsland) {
+                    
+                  }elseif ($departureIsland == 1 ) {
                     $type = 'pickup';
                     foreach ($modelShuttle as $k => $valShuttle) {
 
@@ -376,7 +380,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                           'listPickup'=>$listPickup,
                           ])."</div>";
                   }
-                      }elseif ($shuttleParameter == 2) {
+                      }elseif ($departureIsland == 2) {
                         $type = 'drop-off';
                         foreach ($modelShuttle as $k => $valShuttle) {
                         echo "<div class='col-md-12'>".Html::checkbox('check-drop', $checked = false, ['class' => 'checkbox','value'=>1,'unchecked'=>0,'class'=>'checkbox-drop-'.$cartValue->id_trip,

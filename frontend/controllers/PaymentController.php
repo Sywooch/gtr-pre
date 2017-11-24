@@ -17,8 +17,10 @@ use common\models\TPaypalStatus;
 use common\models\TWebhook;
 use common\models\TWebhookEvent;
 use common\models\TPaypalPayerStatus;
+use common\models\TConfirmPayment;
 use yii\web\NotFoundHttpException;
 use yii\helpers\Json;
+use yii\web\UploadedFile;
 /**
  * Content controller
  */
@@ -36,11 +38,22 @@ class PaymentController extends Controller
 	public function actionConfirm($token = null){
 		$this->layout = 'no-cart';
 		if ($token != null && ($modelPayment = $this->findPaymentMaskToken($token)) !== null) {
-			
-			if ($modelPayment->load(Yii::$app->request->post()) && $modelPayment->validate()) {
+			$modelConfirmPayment = new TConfirmPayment();
+			$modelConfirmPayment->id = $modelPayment->id;
+			if ($modelConfirmPayment->load(Yii::$app->request->post())) {
 				$transaction = Yii::$app->db->beginTransaction();
 				try {
-					$modelPayment->setPaymentStatus($modelPayment::STATUS_PENDING);
+					$modelPayment         = $modelConfirmPayment->tPayment;
+					$modelPayment->status = $modelPayment::STATUS_PENDING;
+					$modelBooking         = $modelConfirmPayment->tPayment->tBookings;
+					foreach ($modelBooking as $key => $valBooking) {
+						$valBooking->id_status = $valBooking::STATUS_VALIDATION;
+						$valBooking->save();
+					}
+					$modelConfirmPayment->imageFiles = UploadedFile::getInstance($modelConfirmPayment, 'imageFiles');
+					$modelConfirmPayment->uploadProof();
+					$modelPayment->save(false);
+					$modelConfirmPayment->save(false);
 				    $transaction->commit();
 				    $session = Yii::$app->session;
 				    $session['timeout'] = 'confirm';
@@ -52,7 +65,7 @@ class PaymentController extends Controller
 			}else{
 
 				return $this->render('payment', [
-					'modelPayment' => $modelPayment,
+					'modelConfirmPayment' => $modelConfirmPayment,
 				]);
 
 			}
@@ -98,7 +111,7 @@ class PaymentController extends Controller
 				$transaction = Yii::$app->db->beginTransaction();
 				try {
 				    $modelPayment->status = $modelPayment::STATUS_PENDING;
-				    $modelPayment->id_payment_method = $modelPayment::STATUS_UNCONFIRMED;
+				    $modelPayment->id_payment_method = $modelPayment::STATUS_UNCONFIRMED; //PAYPAL
 				    foreach ($modelBooking as $key => $valBooking) {
 						$valBooking->id_status = $valBooking::STATUS_VALIDATION;
 						$valBooking->save();

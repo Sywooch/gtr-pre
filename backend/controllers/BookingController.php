@@ -13,6 +13,8 @@ use common\models\TMailQueue;
 use common\models\TTrip;
 use common\models\TCompany;
 use common\models\TShuttleTime;
+use common\models\TConfirmPayment;
+use common\models\TPayment;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -42,6 +44,16 @@ class BookingController extends Controller
         
     }
 
+    public function actionPaymentSlip($id){
+        $modelSlip = TConfirmPayment::find()->where(['id'=>$id])->asArray()->one();
+        $response = Yii::$app->getResponse();
+        return $response->sendFile($modelSlip['proof_payment'],'slip.jpg', [
+                //'mimeType' => 'image/jpg',
+               //'fileSize' => '386',
+                'inline' => true
+        ]);
+    }
+
     public function actionShuttleTime(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
@@ -64,7 +76,7 @@ class BookingController extends Controller
     }
 
     public function actionCountPassenger(array $var){
-        $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->select('t_booking.id')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->all();
+        $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->select('t_booking.id')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->andWhere(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->all();
         foreach ($modelBooking as $key => $value) {
             $jumlahPax[] = count($value->affectedPassengers);
         }
@@ -73,14 +85,14 @@ class BookingController extends Controller
     }
 
     public function actionCountBooking(array $var){
-        $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->count();
+        $modelBooking = TBooking::find()->joinWith('idTrip.idBoat')->where(['t_boat.id_company'=>$var['id_company']])->andWhere(['t_trip.id_route'=>$var['id_route']])->andWhere(['t_trip.date'=>$var['date']])->andWhere(['t_trip.dept_time'=>$var['dept_time']])->andWhere(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->count();
         return $modelBooking;
 
     }
     public function actionDetail(){
         if (isset($_POST['expandRowKey'])) {
             $model = $this->findModel($_POST['expandRowKey']);
-            $modelBooking = TBooking::find()->joinWith(['idTrip.idBoat'])->where(['t_boat.id_company'=>$model->idTrip->idBoat->id_company])->andWhere(['t_trip.id_route'=>$model->idTrip->id_route])->andWhere(['t_trip.date'=>$model->idTrip->date])->andWhere(['t_trip.dept_time'=>$model->idTrip->dept_time])->all();
+            $modelBooking = TBooking::getBookingGroupPayment($model);
            //$modelPassenger = TPassenger::find();
             return $this->renderAjax('_detail-booking', [
                 'modelBooking'=>$modelBooking,
@@ -88,7 +100,16 @@ class BookingController extends Controller
                 //'mode'
                 ]);
         } else {
-            return '<div class="alert alert-danger">No data found</div>';
+            return '<div class="alert alert-danger">Data Not Found</div>';
+        }
+    }
+
+    protected function findOneBookingArray($id){
+        if (($modelBooking = TBooking::find()->where(['id'=>$id])->asArray()->one()) !== null) {
+            return $modelBooking;
+        }else{
+            throw new Exception("Error Processing Request");
+            
         }
     }
 
@@ -148,13 +169,14 @@ protected function findAllBooking(){
         $searchModel = new TBookingSearch();
         $dataProvider = $searchModel->summarySearch(Yii::$app->request->queryParams);
         $findPassengers = TPassenger::find();
-        $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
+        
         $listCompany = ArrayHelper::map(TCompany::find()->asArray()->all(), 'id', 'name');
 
         foreach ($this->findAllBooking() as $key => $value) {
             $res[] = $value->id;
         }
         if(Helper::checkRoute('/booking/*')){
+            $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -164,6 +186,7 @@ protected function findAllBooking(){
                 'listCompany' => $listCompany,
             ]);
         }else{
+            $listDept = ArrayHelper::map(TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->asArray()->all(), 'idRoute.departure', 'idRoute.departureHarbor.name');
             return $this->render('supplier/index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
@@ -179,27 +202,23 @@ protected function findAllBooking(){
     {
         $searchModel = new BookingValidate();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $findPassengers = TPassenger::find();
         return $this->render('validation', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'findPassengers' => $findPassengers,
         ]);
     }
 
     public function actionValidationAccept(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
-            $idPayment = $data['id'];
-            $bookingList = $this->findBookingByPayment($idPayment);
+            $modelPayment = $this->findPayment($data['id']);
             $transaction = Yii::$app->db->beginTransaction();
             try {
-                foreach ($bookingList as $x => $val) {
-                    $val->id_status = '4';
-                    $val->validate();
-                    $val->save(false);
-                }
-                $modelQueue = TMailQueue::addTicketQueue($idPayment);
+                $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_CONFIRM_NOT_RECEIVED,$modelPayment::STATUS_CONFIRM_RECEIVED);
+                $modelPayment->validate();
+                $modelPayment->save(false);
+                //payment status 3 booking status 4;
+                $modelQueue = TMailQueue::addTicketQueue($modelPayment->id);
                 $transaction->commit();
                 return true;
             } catch(\Exception $e) {
@@ -212,18 +231,23 @@ protected function findAllBooking(){
         }
     }
 
+    protected function findPayment($id){
+        if (($modelPayment = TPayment::findOne($id)) !== null) {
+            return $modelPayment;
+        }else{
+            throw new Exception("Error Processing Request");
+        }
+    }
         public function actionValidationReject(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
             $idPayment = $data['id'];
-            $bookingList = $this->findBookingByPayment($idPayment);
+            $modelPayment = $this->findPayment($data['id']);
             $transaction = Yii::$app->db->beginTransaction();
-            try {
-                foreach ($bookingList as $x => $val) {
-                    $val->id_status = '100';
-                    $val->validate();
-                    $val->save(false);
-                }
+           try {
+                $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_INVALID,$modelPayment::STATUS_INVALID);
+                $modelPayment->save(false);
+                //payment status 100 booking status 100;
                 $transaction->commit();
             } catch(\Exception $e) {
                 $transaction->rollBack();

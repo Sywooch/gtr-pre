@@ -26,10 +26,11 @@ $this->params['breadcrumbs'][] = $this->title;
     
 
 </div>
+<center><b id="loading-pjax"></b></center>
 <span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
 <div class="col-md-12">
 
-<?php Pjax::begin(); ?>
+<?php Pjax::begin(['id'=>'pjax-table-booking']); ?>
 <?= GridView::widget([
         'dataProvider'    => $dataProvider,
         'filterModel'     => $searchModel,
@@ -75,19 +76,19 @@ $this->params['breadcrumbs'][] = $this->title;
                     'content'=>[             // content to show in each summary cell
                         0=>'Summary By Company (' . $model->idTrip->idBoat->idCompany->name . ')',
                        // 4=>GridView::F_AVG,
-                        5=>GridView::F_SUM,
                         6=>GridView::F_SUM,
+                        7=>GridView::F_SUM,
                     ],
                     'contentFormats'=>[      // content reformatting for each summary cell
                         //4=>['format'=>'number', 'decimals'=>2],
-                        5=>['format'=>'number', 'decimals'=>0],
                         6=>['format'=>'number', 'decimals'=>0],
+                        7=>['format'=>'number', 'decimals'=>0],
                     ],
                     'contentOptions'=>[      // content html attributes for each summary cell
                         0=>['style'=>'font-size:15px; font-variant:small-caps'],
                        // 4=>['style'=>'text-align:right'],
-                        5=>['style'=>'text-align:center'],
                         6=>['style'=>'text-align:center'],
+                        7=>['style'=>'text-align:center'],
                     ],
                     // html attributes for group summary row
                     'options'=>['class'=>'info','style'=>'font-weight:bold;']
@@ -96,7 +97,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         [
-            'attribute'=>'idTrip.id_route', 
             'width'=>'100px',
             'vAlign'=>'top',
             'value'=>function ($model, $key, $index, $widget) { 
@@ -116,18 +116,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     'content'=>[              // content to show in each summary cell
                         2=>'Summary By Route(' . $model->idTrip->idRoute->departureHarbor->name." -> ".$model->idTrip->idRoute->arrivalHarbor->name . ')',
                        // 4=>GridView::F_AVG,
-                        5=>GridView::F_SUM,
                         6=>GridView::F_SUM,
+                        7=>GridView::F_SUM,
                     ],
                     'contentFormats'=>[      // content reformatting for each summary cell
                        // 4=>['format'=>'number', 'decimals'=>2],
-                        5=>['format'=>'number', 'decimals'=>0],
                         6=>['format'=>'number', 'decimals'=>0],
+                        7=>['format'=>'number', 'decimals'=>0],
                     ],
                     'contentOptions'=>[      // content html attributes for each summary cell
                        // 4=>['style'=>'text-align:right'],
-                        5=>['style'=>'text-align:center'],
                         6=>['style'=>'text-align:center'],
+                        7=>['style'=>'text-align:center'],
                     ],
                     // html attributes for group summary row
                     'options'=>['class'=>'success','style'=>'font-weight:bold;']
@@ -140,6 +140,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'attribute'=>'idTrip.dept_time',
             'group'=>true,
            
+        ],
+        [
+            'header' => 'Date Trip',
+            'format' => 'raw',
+            'value'  => function($model){
+                return date('d-m-Y',strtotime($model->idTrip->date));
+            }
         ],
         [
         'class'=>'kartik\grid\ExpandRowColumn',
@@ -178,37 +185,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'pageSummary'=>true,
             'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
-        /*[
-            'attribute'=>'Child',
-            'width'=>'50px',
-            'hAlign'=>'center',
-            'value'=>function($model){
-
-            },
-        ],
-        [
-            'attribute'=>'Infant',
-            'width'=>'50px',
-            'hAlign'=>'center',
-            'value'=>function($model){
-
-            },
-        ],*/
-
-        ],
+        
+    ],
     ]); ?>
-    </div>
-<!--<div class="col-md-12">
-<div class=" col-md-8 panel panel-default material-panel material-panel_warning">
-            <h5 class="panel-heading material-panel__heading">Summary Passengers</h5>
-            <div id="body-summary" class="panel-body material-panel__body">
-                Something Its Wrong..Try To reload page or contact Us
-                
-
-</div>
-</div>
-</div>-->
 <?php Pjax::end(); ?>
+</div>
 </div>
 <?php 
 $customCss = <<< SCRIPT

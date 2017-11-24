@@ -20,12 +20,27 @@ $template2 = ['template'=>"
 ?>
 
 <div class="tbooking-search">
+<?php
+ 
+$this->registerJs(
+   '$("document").ready(function(){
+        $("#pjax-form-search").on("pjax:start", function() {
+            $("#loading-pjax").html(\'<img src="/spinner.svg">\');
+        }); 
+        $("#pjax-form-search").on("pjax:end", function() {
+            $.pjax.reload({container:"#pjax-table-booking"});  //Reload GridView
+            $("#loading-pjax").empty();
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-    ]); ?>
-
+        });
+    });
+    '
+);
+?>
+<?php yii\widgets\Pjax::begin(['id' => 'pjax-form-search']) ?>
+<?php $form = ActiveForm::begin([
+        'options' => ['data-pjax' => true ],
+        'action'  => ['index'],
+        'method'  => 'get',]); ?>
     <?= $form->field($model, 'id', [
     'template'=>"
                 <div class='col-md-2'>{label}\n{input}\n{error}\n{hint}</div>
@@ -122,24 +137,25 @@ $model->rangeType = $rangeType;
 
     ?>
 <br>
-        <?= Html::activeRadioList($model, 'rangeType', ['1'=>'Trip Date','2'=>'Book Date'], ['id' => 'radio-range-type']); ?>
+        <?= Html::activeHiddenInput($model, 'rangeType', ['value' => '1']); ?>
     </div>
 
 
     <div class="form-group col-md-12">
         <?= Html::submitButton(' ', [
                 'class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
-                'data-toggle'=>'tooltip',
-                'title'=>'Apply Filter',
+                // 'data-toggle'=>'tooltip',
+                // 'title'=>'Apply Filter',
                 ]) ?>
         <?= Html::a('',['index'], [
                 'class' => 'btn material-btn material-btn_success main-container__column material-btn_lg glyphicon glyphicon-refresh',
-                'data-toggle'=>'tooltip',
-                'title'=>'Reset Filter',
+                // 'data-toggle'=>'tooltip',
+                // 'title'=>'Reset Filter',
                 ]) ?>
   
 
       </div>
     <?php ActiveForm::end(); ?>
+<?php yii\widgets\Pjax::end() ?>
 
 </div>

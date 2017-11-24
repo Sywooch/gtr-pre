@@ -21,6 +21,8 @@ use Yii;
  */
 class TPassengerChildInfant extends \yii\db\ActiveRecord
 {
+    const TYPE_CHILD  = 2;
+    const TYPE_INFANT = 3;
     /**
      * @inheritdoc
      */

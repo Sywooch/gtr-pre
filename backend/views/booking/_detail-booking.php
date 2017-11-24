@@ -14,6 +14,7 @@ use yii\bootstrap\Modal;
 	<th width="125px">Email</th>
 	<th width="20px">Book Date</th>
 	<th width="20px">Payment</th>
+	<th width="20px">Pax*</th>
 	<th width="20px">Detail</th>
 	<th>Shuttle</th>
 	
@@ -29,7 +30,8 @@ use yii\bootstrap\Modal;
 	<td rid="<?= $value->id ?>" class="header-row"><?= $value->idPayment->phone ?></td>
 	<td rid="<?= $value->id ?>" class="header-row"><?= $value->idPayment->email ?></td>
 	<td rid="<?= $value->id ?>" class="header-row"><?= date('d-m-Y',strtotime($value->idPayment->exp)) ?></td>
-	<td rid="<?= $value->id ?>" class="header-row"><?= $value->idPayment->idPaymentMethod->method ?></td>
+	<td rid="<?= $value->id ?>" class="header-row"><?= $value->idPayment->idPaymentMethod->method."<br>".$value->idPayment->statusPayment->status ?></td>
+	<td rid="<?= $value->id ?>" class="header-row"><?= count($value->affectedPassengers) ?> Pax</td>
 	<td><?= Html::a('', ['detail-modal','id_booking'=>$value->id], [
 			'class' => 'btn btn-xs btn-warning glyphicon glyphicon-modal-window',
 			'data-toggle'=>"modal",
@@ -68,6 +70,7 @@ use yii\bootstrap\Modal;
 ?>
 
 <?php endforeach; ?>
+<span class="text-danger pull-left fa fa-warning">* Infant Not Included </span>
 <?php foreach ($modelBooking as $key => $value):?>
 <?php
 

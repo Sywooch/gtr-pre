@@ -130,6 +130,7 @@ use yii\helpers\Html;
 					<div class="row">
 					<div class="col-md-12">
 						<table class="table table-stripped">
+						<caption>Related Trip</caption>
 						<thead>
 							<tr class="warning">
 								<th width="10px">No</th>
@@ -173,6 +174,90 @@ use yii\helpers\Html;
 							</tr>
 						</tbody>
 						</table>
+						<div class="alert material-alert material-alert_warning">Payment History</div>
+						<!-- Payment History Start -->
+						<!-- PAyapal Transaction Start -->
+						<?php if($modelBooking->idPayment->id_payment_method == "1" && isset($modelBooking->idPayment->paypalTransaction)): ?>
+						<table class="table table-stripped">
+						 <caption>Payment Data From Paypal</caption>
+							<thead>
+							<tr class="danger">
+								<th width="10px">ID</th>
+								<th>Payer</th>
+								<th width="10px">Amount</th>
+								<th>Status</th>
+								<th width="10px">Time</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td><?= $modelBooking->idPayment->paypalTransaction->id ?></td>
+								<td><?= $modelBooking->idPayment->paypalTransaction->idPayer->full_name ?></td>
+								<td><?= $modelBooking->idPayment->paypalTransaction->amount." ".$modelBooking->idPayment->paypalTransaction->currency ?></td>
+								<td><?= $modelBooking->idPayment->paypalTransaction->idStatus->status ?></td>
+								<td><?= date('d-m-Y H:i', strtotime($modelBooking->idPayment->paypalTransaction->datetime)) ?></td>
+							</tr>
+						</tbody>
+						</table>
+
+						<!-- PAyapal Transaction End -->
+						<!-- WebHook Start -->
+					<?php if(isset($modelBooking->idPayment->paypalTransaction->tWebhook)): ?>
+						<table class="table table-stripped">
+						 <caption>Notification From Paypal (WebHook)</caption>
+							<thead>
+							<tr class="success">
+								<th width="10px">No</th>
+								<th>Event</th>
+								<th width="10px">Amount</th>
+								<th>Status</th>
+								<th width="10px">Time</th>
+							</tr>
+						</thead>
+						<tbody>
+						<?php
+						$webHookData = $modelBooking->idPayment->paypalTransaction->tWebhook;
+						 foreach($webHookData as $index => $valWebHook): 
+						 	$number = $index+1;
+						?>
+							<tr>
+								<td><?= $number ?></td>
+								<td><?= $valWebHook->idEvent->event ?></td>
+								<td><?= $valWebHook->amount." ".$valWebHook->currency ?></td>
+								<td><?= $valWebHook->idStatus->status ?></td>
+								<td><?= date('d-m-Y H:i', strtotime($valWebHook->datetime)) ?></td>
+							</tr>
+						<?php endforeach; ?>
+					<?php endif; ?>
+						</tbody>
+						</table>
+						<!-- WebHook End -->
+						<?php elseif($modelBooking->idPayment->id_payment_method == "2" && isset($modelBooking->idPayment->confirmPayment)): ?>
+							<table class="table table-stripped">
+						 	<caption>Payment data Bank Transfers (From Customer)</caption>
+							<thead>
+								<tr class="success">
+									<th width="10px">Token</th>
+									<th>Payer</th>
+									<th width="10px">Amount</th>
+									<th>Status</th>
+									<th width="10px">Time</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td><?= $modelBooking->idPayment->token ?></td>
+									<td><?= $modelBooking->idPayment->confirmPayment->name ?></td>
+									<td>Rp <?= number_format($modelBooking->idPayment->confirmPayment->amount,0) ?></td>
+									<td><?= $modelBooking->idPayment->statusPayment->status ?></td>
+									<td><?= date('d-m-Y H:i', strtotime($modelBooking->idPayment->exp)) ?></td>
+								</tr>
+							</tbody>
+							</table>
+
+							<center><?= Html::img(['payment-slip','id'=>$modelBooking->id_payment], ['class' => 'img-responsive','onerror'=>'this.src="/error.png"']); ?></center>
+						<?php endif; ?>
+						<!-- Payment History End -->
 
 						</div>
 				</div>

@@ -83,7 +83,7 @@ class TWebhook extends \yii\db\ActiveRecord
 
     public function getPaypalTransaction()
     {
-        return $this->hasOne(TPaypalTransaction::className(), ['id' => 'id_paypal_transaction']);
+        return $this->hasMany(TPaypalTransaction::className(), ['id' => 'id_paypal_transaction']);
     }
 
     /**

@@ -13,9 +13,8 @@ use mdm\admin\components\Helper;
  */
 class TBookingSearch extends TBooking
 {
-    const STATUS_VALIDATION = '3';
-    const STATUS_PAID = '4';
-    const STATUS_RESCHEDULE = '6';
+    const STATUS_VALIDATION = 3;
+    const STATUS_PAID = 4;
     public $date;
     public $startDate;
     public $endDate;
@@ -30,10 +29,10 @@ class TBookingSearch extends TBooking
     public function rules()
     {
         return [
-            [['id', 'email', 'phone', 'currency', 'token', 'expired_time', 'datetime','startDate','endDate','bookdate','date'], 'safe'],
+            [['id', 'currency', 'expired_time', 'datetime','startDate','endDate','bookdate','date'], 'safe'],
             //['date','default','value'=>date('Y-m-d')],
-            [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'id_payment_method', 'process_by','departure','id_route','id_company','rangeType'], 'integer'],
-            [['trip_price', 'total_price', 'send_amount'], 'number'],
+            [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'process_by','departure','id_route','id_company','rangeType'], 'integer'],
+            [['trip_price', 'total_price'], 'number'],
         ];
     }
 
@@ -58,9 +57,9 @@ class TBookingSearch extends TBooking
 
     public function summarySearch($params){
         if(Helper::checkRoute('/booking/*')){
-        $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',self::STATUS_PAID,self::STATUS_RESCHEDULE])->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
+        $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
        }else{
-        $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany','idTrip.idRoute')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',self::STATUS_PAID,self::STATUS_RESCHEDULE])->orderBy(['t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
+        $query = TBooking::find()->joinWith(['idTrip.idBoat.idCompany','idTrip.idRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->orderBy(['t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC]);
        }
 
         // add conditions that should always apply here
@@ -97,7 +96,6 @@ class TBookingSearch extends TBooking
          // grid filtering conditions
         $query->andFilterWhere([
             'id_status' => $this->id_status,
-            'id_payment_method' => $this->id_payment_method,
             'process_by' => $this->process_by,
             'expired_time' => $this->expired_time,
             't_route.departure' => $this->departure,
