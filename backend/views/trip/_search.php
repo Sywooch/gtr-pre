@@ -103,7 +103,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
       <div class="tab-pane fade" id="update">
         <div class="row">
           <div class="panel-group material-accordion material-accordion_warning" id="accordion2">
-      <div class="panel panel-default material-accordion__panel material-accordion__panel">
+<!-- SEARCH FORM BUTTON START -->
+  <div class="panel panel-default material-accordion__panel material-accordion__panel">
         <div class="panel-heading material-accordion__heading" id="acc2_headingOne">
           <h4 class="panel-title">
             <a data-toggle="collapse" data-parent="#accordion2" href="#acc2_collapseOne" class="material-accordion__title">Search Form Based</a>
@@ -220,6 +221,8 @@ HTML;
           </div>
         </div>
       </div>
+<!-- SEARCH FORM BUTTON END -->
+<!-- CHECKBOX BUTTON START -->
       <div class="panel panel-default material-accordion__panel">
         <div class="panel-heading material-accordion__heading">
           <h4 class="panel-title">
@@ -261,11 +264,12 @@ HTML;
                     '
             ]) ?>
             <?= Html::button(' Update', ['id'=>'btn-update-checkbox','class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-upload']); ?>
-        </div>
+          </div>
             </div>
           </div>
         </div>
       </div>
+<!-- CHECKBOX BUTTON END -->
     </div>
       </div>
       </div>
@@ -314,6 +318,8 @@ $this->registerJs("
         
 ");
 ?>
+
+
 <div class="modal material-modal material-modal_primary fade" id="myModal">
   <div class="modal-dialog modal-lg">
     <div class="modal-content material-modal__content">
@@ -403,8 +409,13 @@ $this->registerJs("
               if ($(this).is(":checked")) {
                 $("#check-up").prop("checked", false);
               }'
-            ]); ?>
+            ]);  
+            ?>
         </div>
+        </div>
+        <div class="col-md-12">
+          <label>Description</label>
+          <?= Html::textarea('modal-text-area', null, ['id'=>'form-description','class'=>'form-control']); ?>
         </div>
         <div style="display: none;" id="btn-modal-form" class="col-md-12">
           <?= Html::button('Submit Changes', [
@@ -424,6 +435,7 @@ $this->registerJs("
                         var uadult = $("#update-adult-price").val();
                         var uchild = $("#update-child-price").val();
                         var type = $(".check:checkbox:checked").val();
+                        var desc = $("#form-description").val();
                        
                            if(confirm("Confirm \\r\\n Data On Filtered Will be Updated? ")){
                             $("#btn-close-modal").hide();
@@ -432,7 +444,7 @@ $this->registerJs("
                                 url: "'.Url::to(["update-multiple"]).'",
                                 type: "POST",
                                 async: true, 
-                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type, adult: uadult, child: uchild},
+                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type, adult: uadult, child: uchild, desc: desc},
                                 success: function() {
                                      location.reload();
                                 }, 
@@ -458,6 +470,7 @@ $this->registerJs("
                     var sts = $("#drop-update-status").val();
                     var uadult = $("#update-adult-price").val();
                     var uchild = $("#update-child-price").val();
+                    var desc = $("#form-description").val();
                   if (idtrip == "") {
                     alert("Select Trip First");
                     return false;
@@ -469,7 +482,7 @@ $this->registerJs("
                       url: "'.Url::to(["update-multiple"]).'",
                       type: "POST",
                       async: true, 
-                      data: {idtrip: idtrip, dept: dept, est: est, stock: stock, sts: sts, type: typ, adult: uadult, child: uchild},
+                      data: {idtrip: idtrip, dept: dept, est: est, stock: stock, sts: sts, type: typ, adult: uadult, child: uchild, desc: desc},
                       success: function() {
                                 location.reload();
                       }, 

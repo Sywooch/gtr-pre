@@ -42,8 +42,9 @@ class TVisitorSearch extends TVisitor
     public function search($params)
     {
         //$sql = "SELECT * FROM t_visitor GROUP BY ip,DATE_FORMAT(created_at, '%d/%m/%Y %H:%i') ORDER BY updated_at DESC";
-        $sql = "SELECT * FROM t_visitor ORDER BY updated_at DESC";
-        $query = TVisitor::findBySql($sql);  
+        // $sql = "SELECT * FROM t_visitor ORDER BY updated_at DESC";
+        // $query = TVisitor::findBySql($sql);  
+        $query = TVisitor::find();
 
         // add conditions that should always apply here
 
@@ -65,6 +66,7 @@ class TVisitorSearch extends TVisitor
             'id_timezone' => $this->id_timezone,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'url' => $this->url,
         ]);
 
         $query->andFilterWhere(['like', 'ip', $this->ip])
@@ -73,7 +75,7 @@ class TVisitorSearch extends TVisitor
             ->andFilterWhere(['like', 'city', $this->city])
             ->andFilterWhere(['like', 'latitude', $this->latitude])
             ->andFilterWhere(['like', 'longitude', $this->longitude])
-            ->andFilterWhere(['like', 'url', $this->url])
+           // ->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'user_agent', $this->user_agent]);
 
         return $dataProvider;

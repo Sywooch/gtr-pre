@@ -87,6 +87,7 @@ class TripController extends Controller
     public function actionUpdateMultiple(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
+            // Update By Form Start
          if (!isset($data['idtrip'])) {
                 $TripList = $this->findTrip()->where(['t_boat.id_company'=>$data['company']])->andWhere(['id_route'=>$data['route']])->andWhere(['dept_time'=>$data['dtime']])->andWhere(['between','date',$data['start'],$data['end']])->all();
 
@@ -121,6 +122,9 @@ class TripController extends Controller
                                 $value->child_price = $child_price;
                                 $value->id_price_type = '2';
                             }
+                            if ($data['desc'] != null) {
+                                $value->description = $data['desc'];
+                            }
                             $value->save(false);
                         }
                         $transaction->commit();
@@ -132,6 +136,8 @@ class TripController extends Controller
                 }else{
                     return true;
                 }
+            // UPdate By Form  End
+            // UPdate By Checkbox Start
             }else{
                  $transaction = Yii::$app->db->beginTransaction();
                     try {
@@ -164,6 +170,10 @@ class TripController extends Controller
                                 $value->child_price = $child_price;
                                 $value->id_price_type = '2';
                             }
+
+                            if ($data['desc'] != null) {
+                                $value->description = $data['desc'];
+                            }
                             $value->save(false);
                         }
                         $transaction->commit();
@@ -172,6 +182,7 @@ class TripController extends Controller
                         throw $e;
                     }
             }
+        // Update By Checkbox End
          }else{
             return $this->goBack();
          }
