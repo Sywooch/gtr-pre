@@ -15,7 +15,7 @@ $this->title = 'Booking Data';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="tbooking-index">
-<div class="col-md-12">
+<div class="row col-md-12">
     <?php  echo $this->render('_search', [
                 'model' => $searchModel,
                 'bookingList' => $bookingList,
@@ -65,7 +65,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'groupedRow'=>true,
             'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
                 return [
-                    'mergeColumns'=>[[0, 2]], // columns to merge in summary
+                    'mergeColumns'=>[[0, 3]], // columns to merge in summary
                     'content'=>[              // content to show in each summary cell
                         0=>'Summary By Route(' . $model->idTrip->idRoute->departureHarbor->name."<span class='fa fa-arrow-right'></span>".$model->idTrip->idRoute->arrivalHarbor->name . ')',
                         5=>GridView::F_SUM,
@@ -84,7 +84,7 @@ $this->params['breadcrumbs'][] = $this->title;
             
         ],
         [
-        'header'=>'Dept Time',
+        'header'=>'Dept<br>Time',
         'attribute'=>'idTrip.dept_time',
         'vAlign'=>'middle',
         'format'=>'raw',
@@ -96,9 +96,9 @@ $this->params['breadcrumbs'][] = $this->title;
        // 'subGroupOf'=>1,
         'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
                 return [
-                    'mergeColumns'=>[[2, 4]], // columns to merge in summary
+                    'mergeColumns'=>[[3, 4]], // columns to merge in summary
                     'content'=>[              // content to show in each summary cell
-                        2=>'Summary By Dept Time ( '.date("H:i",strtotime($model->idTrip->dept_time)).' )',
+                        3=>'Summary By Dept Time ( '.date("H:i",strtotime($model->idTrip->dept_time)).' )',
                         5=>GridView::F_SUM,
                        
                     ],
@@ -112,8 +112,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     'options'=>['class'=>'danger','style'=>'font-weight:bold;']
                 ];
             },
-        'pageSummary'=>'Grand Total',
-        'pageSummaryOptions'=>['class'=>'grand-total'],
         
         ],
         [
@@ -128,6 +126,8 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             
         },
+        'pageSummary'=>'Grand Total',
+        'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
         [
         'header'=>'<span class="fa fa-calendar"></span> Trip Date',

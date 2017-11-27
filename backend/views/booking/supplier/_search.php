@@ -13,7 +13,7 @@ use kartik\widgets\Select2;
 /* @var $model app\models\TBookingSearch */
 /* @var $form yii\widgets\ActiveForm */
 $template2 = ['template'=>"
-                <div class='col-md-2'>{label}\n{input}\n{error}\n{hint}</div>
+                <div class='col-md-2 col-sm-4 col-xs-6'>{label}\n{input}\n{error}\n{hint}</div>
             "
             ];
 
@@ -41,9 +41,10 @@ $this->registerJs(
         'options' => ['data-pjax' => true ],
         'action'  => ['index'],
         'method'  => 'get',]); ?>
+
     <?= $form->field($model, 'id', [
     'template'=>"
-                <div class='col-md-2'>{label}\n{input}\n{error}\n{hint}</div>
+                <div class='col-md-2 col-sm-4 col-xs-6'>{label}\n{input}\n{error}\n{hint}</div>
             ",
     'addon' => [
         'append' => [
@@ -97,7 +98,7 @@ $.ajax({
         'format' => 'yyyy-mm-dd',
     ]
     ])->label('Book Date'); ?>
-    <div class="col-md-4">
+    <div class="col-md-4 col-sm-12 col-xs-12">
     <?php 
     $layout3 = <<< HTML
     {input1}
@@ -141,7 +142,7 @@ $model->rangeType = $rangeType;
     </div>
 
 
-    <div class="form-group col-md-12">
+    <div class="form-group col-md-12 col-sm-12 col-xs-12">
         <?= Html::submitButton(' ', [
                 'class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
                 // 'data-toggle'=>'tooltip',
