@@ -118,7 +118,7 @@ class TWebhook extends \yii\db\ActiveRecord
         return $this->hasOne(TPaypalIntent::className(), ['id' => 'id_resource_type']);
     }
 
-    public function addWebHook(array $WebHookArray){
+    public static function addWebHook(array $WebHookArray){
         if (($model = TWebhook::findOne($WebHookArray['id'])) === null) {
                     $modelWebHook                        = new TWebhook();
                     $modelWebHook->id                    = $WebHookArray['id'];
@@ -155,7 +155,7 @@ class TWebhook extends \yii\db\ActiveRecord
         }
     }
 
-    public function requestPaymentDetail($token,$parent_payment){
+    public static function requestPaymentDetail($token,$parent_payment){
         try {
             $curl = curl_init();
                 curl_setopt_array($curl, array(
@@ -188,7 +188,7 @@ class TWebhook extends \yii\db\ActiveRecord
             }
     }
 
-    public function requestToken(){
+    public static function requestToken(){
         try {
             $curl = curl_init();
 

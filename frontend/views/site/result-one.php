@@ -10,7 +10,7 @@ $('.radio-dept').on('change',function(){
  var dept = $('input[name=id_dept]:radio:checked').val();
  var ret = false; 
     $.ajax({
-      url: '". Url::to('/site/detail-modal')."',
+      url: '". Url::to(['/site/detail-modal'])."',
       type: 'POST',
       data: {deptv: dept, retv: ret},
       success: function(data){

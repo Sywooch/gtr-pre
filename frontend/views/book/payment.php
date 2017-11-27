@@ -64,22 +64,8 @@ $(document).ready(function(){
 
 
 <center id="page-loading"><img src=/loading.svg></center>
-
-<!DOCTYPE html>
-
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-</head>
 
-<body>
-    
-
-    <script>
-        
-
-    </script>
-</body>
 
 <div id="form-payment" style="display: none;" class="tpembayaran-form">
     <?php $form = ActiveForm::begin(); ?>

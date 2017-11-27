@@ -3,14 +3,6 @@ use yii\helpers\Html;
 use yii\helpers\Url;
  ?>
 
-
-<!DOCTYPE html>
-
-<head>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
-</head>
-<body>
 <?php
 $total = $modelpembayaranPaypal->total_payment;
 $currency = $modelpembayaranPaypal->currency;
@@ -30,7 +22,7 @@ $this->registerJs("
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
             client: {
-                sandbox:    'AZo8x_vbh0yEqwbRf6b_JkVmAA_DPkMwq9us4yuWsX1urrUmOcCcwu9N5vXwk1muqkvKITBMqjU9wVQK', //Sandbox akun mastuyink 94
+                sandbox:    'ASmiPp9P_Oc31W24wvJB8KPSjS_FJkwB1sOt0-hjH3cttD94VmMP-TCfwYQ8a1hhQwjoKX26m3bCdXQL', //Sandbox akun mastuyink 94
                // production: 'AfJ2JcfQX0dwGOgVCYSqAm4V-6RHmN726doLwsA3vUMtgeCOJct59jMH9Z0PHyobxAUGIw_tDQJ0g1Qf' // ;live akun istana media
             },
 
@@ -117,5 +109,5 @@ $this->registerJs("
                    });"]);*/ ?>
 <center><li style="display: none;" class="list-group-item" id="hasil-ajax"></li></center>
 <center><div id="load-email"></div></center>
-</body>
+
 

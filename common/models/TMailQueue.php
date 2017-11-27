@@ -88,7 +88,7 @@ class TMailQueue extends \yii\db\ActiveRecord
         return $this->hasOne(TTypeQueue::className(), ['id' => 'id_type']);
     }
 
-    public function addTicketQueue($id_payment){
+    public static function addTicketQueue($id_payment){
         $modelQueue = new TMailQueue();
         $modelQueue->id_payment = $id_payment;
         $modelQueue->status = self::STATUS_QUEUE;
@@ -96,7 +96,7 @@ class TMailQueue extends \yii\db\ActiveRecord
         $modelQueue->save(false);
     }
 
-    public function addInvoiceQueue($id_payment){
+    public static function addInvoiceQueue($id_payment){
         $modelQueue = new TMailQueue();
         $modelQueue->id_payment = $id_payment;
         $modelQueue->status = self::STATUS_QUEUE;
@@ -104,7 +104,7 @@ class TMailQueue extends \yii\db\ActiveRecord
         $modelQueue->save(false);
     }
 
-    public function getQueueList($type){
+    public static function getQueueList($type){
         if(($Queue = TMailQueue::find()->where(['status'=>self::STATUS_RETRY])->andWhere(['id_type'=>$type])->orderBy(['datetime'=>SORT_ASC])->one())!== null){
             return $Queue;
         }else{
@@ -112,7 +112,7 @@ class TMailQueue extends \yii\db\ActiveRecord
         }
     }
 
-    public function setQueueStatus($status){
+    public static function setQueueStatus($status){
         $this->status = $status;
         $this->save(false);
     }

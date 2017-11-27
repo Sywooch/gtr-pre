@@ -20,7 +20,7 @@ $('.radio-dept, .radio-return').on('change',function(){
           
     $('#detail').html('<i class=\"fa fa-spinner fa-spin\"></i>');
     $.ajax({
-      url: '". Url::to('/site/detail-modal')."',
+      url: '". Url::to(['/site/detail-modal'])."',
       type: 'POST',
       data: {deptv: dept, retv: ret},
       success: function(data){
