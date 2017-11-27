@@ -217,7 +217,7 @@ class BookController extends Controller
            throw $e;
        }
 
-       return $this->redirect('payment');
+       return $this->redirect(['payment']);
 
     }
 
@@ -261,6 +261,7 @@ class BookController extends Controller
            
 
         }else{
+            $this->layout = 'payment';
             return $this->render('payment',[
                 'modelPayment'=>$modelPayment,
                 ]);
