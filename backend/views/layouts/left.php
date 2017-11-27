@@ -11,6 +11,27 @@ use mdm\admin\components\Helper;
                 'items' => [
                     // ['label' => 'Home', 'url' => ['/site/index']],
                     ['label'    => 'Content','icon'=>'dashboard', 'url' => ['/content/index']],
+                    [
+                        'label' => 'Private Trip',
+                       // 'icon' => 'share',
+                        'url' => '#',
+                        'items' => [
+                            ['label' => 'Booking', 'icon' => 'book', 'url' => ['/private-booking/index'],],
+                            [
+                                'label' => 'Data',
+                                'icon' => 'bars',
+                                'url' => '#',
+                                'items' => [
+                                    ['label'    => 'Trip', 'url' => ['/private-trip/index']],
+                                    ['label'    => 'Route', 'url' => ['/private-route/index']],
+                                    ['label'    => 'Location', 'url' => ['/private-location/index']],
+
+                                ],
+                            ],
+                            
+                            
+                        ],
+                    ],
                     ['label'    => 'Booking','icon' => 'book', 'url' => '/booking/index'],
                     ['label'    => 'Validate','icon' => 'check-square', 'url' => ['/booking/validation']],
                     ['label'    => 'Avb Template', 'url' => ['/avaibility-template/index']],
@@ -26,10 +47,11 @@ use mdm\admin\components\Helper;
                     ['label'    => 'Est Time','icon'=>'clock-o', 'url' => ['/estimation-time/index']],
                     ['label'    => 'Shuttle Area','icon'=>'map', 'url' => ['/shuttle-area/index']],
                     ['label'    => 'Shuttle Time','icon'=>'clock-o', 'url' => ['/shuttle-time/index']],
+                    ['label'    => 'Paypal','icon'=>'paypal', 'url' => ['/paypal/index'], 'visible' => Helper::checkRoute('/kurs/*')],
                     ['label'    => 'Kurs','icon'=>'money', 'url' => ['/kurs/index'], 'visible' => Helper::checkRoute('/kurs/*')],
                     ['label'    => 'Visitor','icon'=>'line-chart', 'url' => ['/visitor/index'], 'visible' => Helper::checkRoute('/*')],
                     // ['label' => 'Price','icon'=>'money', 'url' => ['/shuttle-price/index']],
-                    
+                    ['label'    => 'Time List','icon'=>'clock-o', 'url' => ['/time/index']],
                     ['label'    => 'Change Password','icon'=>'lock', 'url' => ['/admin/user/change-password']],
                     [
                         'label' => 'Dev tools',

@@ -6,7 +6,7 @@ use mdm\admin\components\Helper;
 
 /* @var $this yii\web\View */
 /* @var $searchModel mdm\admin\models\searchs\User */
-/* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $dataProvider yii\data\ActiveDataProvider */ 
 
 $this->title = Yii::t('rbac-admin', 'Users');
 $this->params['breadcrumbs'][] = $this->title;
@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+<?= Html::a('', ['signup'], ['class' => 'btn btn-danger btn-lg glyphicon glyphicon-plus']); ?>
     <?=
     GridView::widget([
         'dataProvider' => $dataProvider,

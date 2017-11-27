@@ -105,9 +105,11 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
                 ]
                 ]);?>
               </div>
+              
               <div class="col-md-12">
+              <label class="control-label">Infants <a data-placement="left" data-popover-content="#a1" data-toggle="popover" data-trigger="focus hover" href="#" tabindex="0"><span class="text-muted"> (0-2) Years Without Seat</span> <span class="fa fa-question-circle"></span></a></label>
                 <?php
-                echo '<label class="control-label">Infants <span class="text-muted">(0-2 years) without seat</span></label>';
+                // echo '';
                 echo TouchSpin::widget([
                   'model'         => $modelBookForm,
                   'attribute'     => 'infants',
@@ -305,6 +307,35 @@ $customCss = <<< SCRIPT
     position: absolute;
     left: 0;
 }
+p{
+  text-align: justify;
+}
 SCRIPT;
 $this->registerCss($customCss);
+ ?>
+
+<div class="hidden" id="a1">
+  <div class="popover-heading">
+    Info
+  </div>
+
+  <div class="popover-body">
+   <p>If the infant 0-2 years old choose to sit personally please include into child passenger calculations because they are charged</p>
+  </div>
+</div>
+<?php
+$this->registerJs('
+$(function(){
+    $("[data-toggle=popover]").popover({
+        html : true,
+        content: function() {
+          var content = $(this).attr("data-popover-content");
+          return $(content).children(".popover-body").html();
+        },
+        title: function() {
+          var title = $(this).attr("data-popover-content");
+          return $(title).children(".popover-heading").html();
+        }
+    });
+});');
  ?>
