@@ -144,7 +144,7 @@ class MailerController extends Controller
                         ]
                     ]);
                 $Receipt->render();
-               Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
+               Yii::$app->mailReservation->compose()
                 ->setTo($modelPayment->email)
                 ->setBcc('istanatravel94@gmail.com')
                 ->setSubject('E-Ticket GiliTransfers')
@@ -213,7 +213,7 @@ class MailerController extends Controller
     }
 
     protected function sendMailSupplier($to, $attach,$modelBooking,$modelPayment){
-        Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
+        Yii::$app->mailReservation->compose()
                     ->setTo($to)
                     ->setSubject('Supplier Reservation GiliTransfers')
                     ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[

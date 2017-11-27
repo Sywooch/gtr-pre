@@ -112,7 +112,7 @@ class TMailQueue extends \yii\db\ActiveRecord
         }
     }
 
-    public static function setQueueStatus($status){
+    public function setQueueStatus($status){
         $this->status = $status;
         $this->save(false);
     }
