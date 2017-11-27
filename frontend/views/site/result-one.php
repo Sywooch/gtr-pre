@@ -9,16 +9,18 @@ $this->registerJs("
 $('.radio-dept').on('change',function(){
  var dept = $('input[name=id_dept]:radio:checked').val();
  var ret = false; 
+ $('#myModal').modal({
+              backdrop: 'static',
+              keyboard: false
+          });
+    $('#detail').html('<i class=\"fa fa-spinner fa-spin\"></i>');
     $.ajax({
       url: '". Url::to(['/site/detail-modal'])."',
       type: 'POST',
       data: {deptv: dept, retv: ret},
       success: function(data){
           $('#detail').html(data);
-          $('#myModal').modal({
-              backdrop: 'static',
-              keyboard: false
-          });
+          
         }
     });
   

@@ -180,7 +180,7 @@ public function generateBookingNumber($attribute, $length = 4){
         return $this->hasOne(TShuttleLocationTmp::className(), ['id_booking' => 'id']);
     }
 
-    public function getBookingGroupPayment($model){
+    public static function getBookingGroupPayment($model){
         return TBooking::find()->joinWith(['idTrip.idBoat'])->where(['t_boat.id_company'=>$model['idTrip']['idBoat']['id_company']])->andWhere(['t_trip.id_route'=>$model['idTrip']['id_route']])->andWhere(['t_trip.date'=>$model['idTrip']['date']])->andWhere(['t_trip.dept_time'=>$model['idTrip']['dept_time']])->andWhere(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->all();
     }
 

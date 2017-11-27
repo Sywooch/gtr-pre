@@ -129,13 +129,13 @@ class TPaypalTransaction extends \yii\db\ActiveRecord
     {
             $modelpembayaranPaypal = $this->paymentToken;
             $modelBooking          = $this->paymentToken->tBookings;
-            $modelWebHook          = $this->tWebhook;
-            if ($modelWebHook->id_event == $modelWebHook::PAYMENT_SALE_COMPLETED) {
+            //$modelWebHook          = $this->tWebhook;
+            if ($this->id_status == self::EVENT_SALE_COMPLETED) {
 
                $statusPayment = $modelpembayaranPaypal::STATUS_CONFIRM_RECEIVED;
                $statusBooking = $modelpembayaranPaypal::STATUS_PARTIAL_REFUND; //SUKSES
 
-            }elseif($modelWebHook->id_event == $modelWebHook::PAYMENT_SALE_PENDING){
+            }elseif($this->id_status == self::EVENT_SALE_PENDING){
 
                $statusPayment = $modelpembayaranPaypal::STATUS_CONFIRM_NOT_RECEIVED;
                $statusBooking = $modelpembayaranPaypal::STATUS_CONFIRM_RECEIVED; //PAID
@@ -153,9 +153,10 @@ class TPaypalTransaction extends \yii\db\ActiveRecord
                  $modelpembayaranPaypal->validate();
                  $modelpembayaranPaypal->save(false);
                  $modelQueue                               = TMailQueue::addTicketQueue($modelpembayaranPaypal->id);
+                 return true;
     }
 
-    public function addTransactionData(array $data){
+    public static function addTransactionData(array $data){
         $arrayTransaction                          = $data['transactions'][0]['related_resources'][0]['sale'];
         if (($modelPaypalTransaction               = TPaypalTransaction::findOne($arrayTransaction['id'])) === null) {
             $PayerId                               = TPaypalPayer::checkPayer($data['payer']);

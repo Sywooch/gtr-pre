@@ -88,6 +88,7 @@ class PaymentController extends Controller
 				$modelPaypalTransaction = TPaypalTransaction::addTransactionData($data['umk']);
 				$transaction->commit();
 				$session                = session_unset();
+				$session                = Yii::$app->session;
 				$session->open();
 				$session['payment']     = 'sukses';
 				return $this->redirect(['/book/thank-you']);

@@ -22,7 +22,7 @@ $this->registerJs("
             // PayPal Client IDs - replace with your own
             // Create a PayPal app: https://developer.paypal.com/developer/applications/create
             client: {
-                sandbox:    'ASmiPp9P_Oc31W24wvJB8KPSjS_FJkwB1sOt0-hjH3cttD94VmMP-TCfwYQ8a1hhQwjoKX26m3bCdXQL', //Sandbox akun mastuyink 94
+                sandbox:    'AZo8x_vbh0yEqwbRf6b_JkVmAA_DPkMwq9us4yuWsX1urrUmOcCcwu9N5vXwk1muqkvKITBMqjU9wVQK', //Sandbox akun mastuyink 94
                // production: 'AfJ2JcfQX0dwGOgVCYSqAm4V-6RHmN726doLwsA3vUMtgeCOJct59jMH9Z0PHyobxAUGIw_tDQJ0g1Qf' // ;live akun istana media
             },
 

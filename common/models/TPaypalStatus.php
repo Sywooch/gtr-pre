@@ -53,7 +53,7 @@ class TPaypalStatus extends \yii\db\ActiveRecord
         return $this->hasMany(TPaypalTransaction::className(), ['id_status' => 'id']);
     }
 
-    public function checkStatus($status){
+    public static function checkStatus($status){
         if (($modelStatus = TPaypalStatus::find()->where(['status'=>$status])->asArray()->one()) !== null) {
             return $modelStatus['id'];
         }else{

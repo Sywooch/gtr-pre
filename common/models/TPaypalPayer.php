@@ -85,7 +85,7 @@ class TPaypalPayer extends \yii\db\ActiveRecord
         return $this->hasMany(TPaypalTransaction::className(), ['id_payer' => 'id']);
     }
 
-    public function checkPayer(array $arrayPayer){
+    public static function checkPayer(array $arrayPayer){
         if (($modelPayer = TPaypalPayer::findOne($arrayPayer['payer_info']['payer_id'])) !== null ) {
             return $modelPayer->id;
         }else{

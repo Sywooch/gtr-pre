@@ -53,7 +53,7 @@ class TPaypalIntent extends \yii\db\ActiveRecord
         return $this->hasMany(TPaypalTransaction::className(), ['id_intent' => 'id']);
     }
 
-    public function checkIntent($intent){
+    public static function checkIntent($intent){
         if (($modelIntent = TPaypalIntent::find()->where(['intent'=>$intent])->asArray()->one()) !== null) {
             return $modelIntent['id'];
         }else{
