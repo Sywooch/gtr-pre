@@ -5,6 +5,7 @@ use yii\widgets\Pjax;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
 use kartik\widgets\TouchSpin;
+use rmrevin\yii\fontawesome\AssetBundle;
 ?>
 
 <?php
