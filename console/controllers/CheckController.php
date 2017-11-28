@@ -22,7 +22,7 @@ Class CheckController extends Controller
     }
 
     public function actionPaymentTimeout(){
-    	if (($modelPayment = TPayment::find()->where(['status'=>1])->andWhere(['<','exp',date('Y-m-d H:i:s')])->orderBy(['exp'=>SORT_DESC])->all()) !== null) {
+    	if (($modelPayment = TPayment::find()->where(['status'=>1])->andWhere(['<','exp',date('Y-m-d H:i:s')])->orderBy(['exp'=>SORT_DESC])->one()) !== null) {
     		$transaction = Yii::$app->db->beginTransaction();
     		try {
     		    $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_EXPIRED,$modelPayment::STATUS_EXPIRED);
