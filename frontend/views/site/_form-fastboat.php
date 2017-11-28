@@ -7,7 +7,7 @@ use yii\helpers\Url;
 use kartik\widgets\TouchSpin;
 //use rmrevin\yii\fontawesome\AssetBundle;
 ?>
-
+<link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <?php
 $modelBookForm->arrivalPort = 4;
 $modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
@@ -41,7 +41,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
     <label class="control-label">No Of Passengers</label>
       <div id="pax-list" class="dropdown material-dropdown main-container__column">
           <li style="padding: 5px 15px 5px 15px; text-align: center;" class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
-           <span class="fa fa-group"></span> Adult <span id="span-adult">1 </span>, Childs <span id="span-child"> 0</span>, Infants <span id="span-infants"> 0</span>
+           <span class="glyphicon glyphicon-user"></span> Adult <span id="span-adult">1 </span>, Childs <span id="span-child"> 0</span>, Infants <span id="span-infants"> 0</span>
           </li>
         <div class="dropdown-menu">
         <div class="panel panel-default material-panel material-panel_primary">
