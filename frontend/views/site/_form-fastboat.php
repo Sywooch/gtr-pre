@@ -255,7 +255,7 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 <?php Pjax::end(); ?> 
 
 <div id="div-currency" class="col-md-4 col-sm-4 col-xs-12">
-<?= $form->field($modelBookForm, 'currency',['addon' => ['prepend' => ['content'=>'<i class="fa fa-money"></i>']]])->widget(Select2::classname(), [
+<?= $form->field($modelBookForm, 'currency',['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphicon-usd"></i>']]])->widget(Select2::classname(), [
     'data' => $listCurrency,
     'size' => Select2::SMALL,
     'options' => ['placeholder' => 'Select Currency'],
