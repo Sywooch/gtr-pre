@@ -321,7 +321,7 @@ IDR <?= $modelPayment->total_payment_idr ?>
 <td colspan="3" style="width:100%;text-align:right; padding:10px 0 20px 0;">
 <center>
 <p>After Making Payment Please Fill Form Confirmation via link below</p>
-<a class="button_blue" href="http://gilitransfers-local.com/payment/confirm?token=<?php echo $maskToken ?> ">Confirmation</a>
+<a class="button_blue" href="http://gilitransfers.com/payment/confirm?token=<?php echo $maskToken ?> ">Confirmation</a>
 </center>
 </td>
 </tr>
