@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
-use rmrevin\yii\fontawesome\AssetBundle;
+//use rmrevin\yii\fontawesome\AssetBundle;
 
 /* @var $this yii\web\View */
 $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nusa Lembongan';
@@ -82,7 +82,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valBoat['title'] ?></h4>
-                          <?= substr($valBoat['description'],0,100) ?>
+                          <p><?= substr($valBoat['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
                                <?= Html::a(' Read  More ', ['/content/view','slug'=>$valBoat['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?>
@@ -120,7 +120,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valDestination['title'] ?></h4>
-                          <?= substr($valDestination['description'],0,100) ?>
+                          <p><?= substr($valDestination['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
                                <?= Html::a(' Read  More ', ['/content/view','slug'=>$valDestination['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
@@ -158,7 +158,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valArticle['title'] ?></h4>
-                          <?= substr($valArticle['description'],0,100) ?>
+                          <p><?= substr($valArticle['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
                                <?= Html::a(' Read  More ', ['/content/view','slug'=>$valArticle['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
@@ -198,7 +198,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valPorts['title'] ?></h4>
-                          <?= substr($valPorts['description'],0,100) ?>
+                          <p><?= substr($valPorts['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
                                <?= Html::a(' Read  More ', ['/content/view','slug'=>$valPorts['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
@@ -264,6 +264,9 @@ for(var i = 0; i < classes.length; i++) {
   ', \yii\web\View::POS_READY);
 
 $customCss = <<< SCRIPT
+p{
+  text-align: justify;
+}
 .bar{
   width : 150px;
 }

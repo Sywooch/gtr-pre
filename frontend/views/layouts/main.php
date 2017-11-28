@@ -10,7 +10,7 @@ use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
 use common\widgets\Alert;
 use yii\helpers\Url;
-use rmrevin\yii\fontawesome\AssetBundle;
+//use rmrevin\yii\fontawesome\AssetBundle;
 
 AppAsset::register($this);
 ?>
@@ -18,6 +18,7 @@ AppAsset::register($this);
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
+    <link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
