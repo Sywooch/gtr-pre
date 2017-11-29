@@ -160,20 +160,21 @@ class TWebhook extends \yii\db\ActiveRecord
     public static function requestPaymentDetail($token,$parent_payment){
         try {
             $curl = curl_init();
-                curl_setopt_array($curl, array(
-                        CURLOPT_URL            => "https://api.sandbox.paypal.com/v1/payments/payment/".$parent_payment."",
-                        CURLOPT_RETURNTRANSFER => true,
-                        CURLOPT_ENCODING       => "",
-                        CURLOPT_MAXREDIRS      => 10,
-                        CURLOPT_TIMEOUT        => 30,
-                        CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-                        CURLOPT_CUSTOMREQUEST  => "GET",
-                        CURLOPT_HTTPHEADER     => array(
-                        "authorization: Bearer ".$token."",
-                        "cache-control: no-cache",
-                        "content-type: application/json",
-                        ),
-                ));
+            curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api.sandbox.paypal.com/v1/payments/payment/PAY-1U323187FR444474WLIPI3RI",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "GET",
+            CURLOPT_HTTPHEADER => array(
+            "authorization: Bearer ".$token."",
+            "cache-control: no-cache",
+            "content-type: application/json",
+            "postman-token: 209203db-d4c0-6516-6e77-5a066d0b34c1"
+            ),
+            ));
 
                 $response = curl_exec($curl);
                 $err = curl_error($curl);
@@ -195,19 +196,20 @@ class TWebhook extends \yii\db\ActiveRecord
             $curl = curl_init();
 
             curl_setopt_array($curl, array(
-              CURLOPT_URL => "https://api.sandbox.paypal.com/v1/oauth2/token",
-              CURLOPT_RETURNTRANSFER => true,
-              CURLOPT_ENCODING => "",
-              CURLOPT_MAXREDIRS => 10,
-              CURLOPT_TIMEOUT => 30,
-              CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-              CURLOPT_CUSTOMREQUEST => "POST",
-              CURLOPT_POSTFIELDS => "grant_type=client_credentials",
-              CURLOPT_HTTPHEADER => array(
-                "authorization: Basic QVpvOHhfdmJoMHlFcXdiUmY2Yl9Ka1ZtQUFfRFBrTXdxOXVzNHl1V3NYMXVyclVtT2NDY3d1OU41dlh3azFtdXFrdktJVEJNcWpVOXdWUUs6RUhzekNYTnZUS3JPODllUVZYQ2tSWTBSOHN3S1hUNlhvS1hoTEctNDU1MlpFVDNFRW4xMjZvNi1qeWR5V3ZWYlRiaWY5ckQzc0tZdDM5VEI=",
-                "cache-control: no-cache",
-                "content-type: application/x-www-form-urlencoded",
-              ),
+            CURLOPT_URL => "https://api.sandbox.paypal.com/v1/oauth2/token",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_POSTFIELDS => "grant_type=client_credentials",
+            CURLOPT_HTTPHEADER => array(
+            "authorization: Basic QVpvOHhfdmJoMHlFcXdiUmY2Yl9Ka1ZtQUFfRFBrTXdxOXVzNHl1V3NYMXVyclVtT2NDY3d1OU41dlh3azFtdXFrdktJVEJNcWpVOXdWUUs6RUhzekNYTnZUS3JPODllUVZYQ2tSWTBSOHN3S1hUNlhvS1hoTEctNDU1MlpFVDNFRW4xMjZvNi1qeWR5V3ZWYlRiaWY5ckQzc0tZdDM5VEI=",
+            "cache-control: no-cache",
+            "content-type: application/x-www-form-urlencoded",
+            "postman-token: 9c9745ef-12a4-5c0d-c7d0-ac98262d5c72"
+            ),
             ));
 
             $response = curl_exec($curl);

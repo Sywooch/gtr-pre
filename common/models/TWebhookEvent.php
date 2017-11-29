@@ -55,7 +55,7 @@ class TWebhookEvent extends \yii\db\ActiveRecord
         return $this->hasMany(TWebhook::className(), ['id_event' => 'id']);
     }
 
-    public function checkEvent($Event){
+    public static function checkEvent($Event){
         if (($modelEvent = TWebhookEvent::find()->where(['event'=>$Event])->asArray()->one()) !== null) {
             return $modelEvent['id'];
         }else{
