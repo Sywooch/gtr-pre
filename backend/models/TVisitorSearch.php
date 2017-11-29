@@ -19,7 +19,7 @@ class TVisitorSearch extends TVisitor
     {
         return [
             [['id', 'id_timezone', 'created_at', 'updated_at'], 'integer'],
-            [['ip', 'id_country', 'region', 'city', 'latitude', 'longitude', 'url', 'user_agent'], 'safe'],
+            [['ip', 'id_country', 'region', 'city', 'latitude', 'longitude', 'url', 'user_agent','datetime'], 'safe'],
         ];
     }
 
@@ -50,6 +50,12 @@ class TVisitorSearch extends TVisitor
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=>[
+                'defaultOrder'=>[
+                'datetime'=>SORT_DESC,
+                //'dept_time'=>SORT_ASC
+                ]
+            ]
         ]);
 
         $this->load($params);

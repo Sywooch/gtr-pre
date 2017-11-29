@@ -42,7 +42,7 @@ class TVisitor extends \yii\db\ActiveRecord
         return [
             [['ip', 'id_country', 'region', 'city', 'id_timezone', 'latitude', 'longitude', 'url', 'user_agent'], 'required'],
             [['id_timezone'], 'integer'],
-            [['created_at','updated_at'],'safe'],
+            [['created_at','updated_at','datetime'],'safe'],
             [['url', 'user_agent'], 'string'],
             [['ip'], 'string', 'max' => 20],
             [['id_country'], 'string', 'max' => 2],

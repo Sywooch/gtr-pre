@@ -118,9 +118,20 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'Any Page...'],
             ],
-            'created_at:datetime',
-            'updated_at:datetime',
-            'user_agent:ntext',
+            [
+            'header'=>'datetime',
+            'format'=>'raw',
+            'value'=>function($model){
+                return date('d-m-Y H:i',strtotime($model->datetime));
+            }
+            ],
+            [
+            'header'=>'User Agent',
+            'format'=>'raw',
+            'value'=>function($model){
+                return substr($model->user_agent,0,50);
+            }
+            ],
         ],
     ]); ?>
 <?php Pjax::end(); ?></div>
