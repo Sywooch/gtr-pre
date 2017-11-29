@@ -118,8 +118,8 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
             'filterInputOptions'=>['placeholder'=>'Any Page...'],
             ],
-            'created_at',
-            'updated_at',
+            'created_at:datetime',
+            'updated_at:datetime',
             'user_agent:ntext',
         ],
     ]); ?>
