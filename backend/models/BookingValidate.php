@@ -52,9 +52,9 @@ class BookingValidate extends TBooking
 
             // $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['id_status'=>2])->orWhere(['id_status'=>3]);
         if ($this->show_all == false) {
-            $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['id_status'=>2])->orWhere(['id_status'=>3]);
+            $query = TBooking::find()->joinWith('idTrip.idBoat')->where(['id_status'=>2])->orWhere(['id_status'=>3]);
         }else{
-            $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany');
+            $query = TBooking::find()->joinWith('idTrip.idBoat');
         }
        
        

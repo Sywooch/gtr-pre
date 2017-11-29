@@ -135,11 +135,3 @@ $(document).ready(function(){
     <?php ActiveForm::end(); ?>
 
 </div>
-<?php
-$customCss = <<< SCRIPT
-  .fa {
-    font-size: 100em;
-  }
-SCRIPT;
-$this->registerCss($customCss);
-?>
