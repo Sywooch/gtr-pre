@@ -116,7 +116,7 @@ class TTrip extends \yii\db\ActiveRecord
         ];
     }
 
-    public function saveRangeTrip($model,$date,$deptTime){
+    public static function saveRangeTrip($model,$date,$deptTime){
         $modelTrip = new TTrip();
         $modelTrip->id_boat     = $model->id_boat;
         $modelTrip->id_route    = $model->id_route;
@@ -125,7 +125,7 @@ class TTrip extends \yii\db\ActiveRecord
         $modelTrip->dept_time   = $deptTime;
         $modelTrip->id_est_time = $model->id_est_time;
         $modelTrip->description = $model->description;
-        if (($modelSeasonPrice = TSeasonPriceSet::find()->where(['id_company'=>$model->id_company])->andWhere(['id_route'=>$modelTrip->id_route])->one()) !== null )  {
+        if (($modelSeasonPrice = TSeasonPriceSet::find()->where(['id_company'=>$model->idBoat->id_company])->andWhere(['id_route'=>$modelTrip->id_route])->one()) !== null )  {
             $start_ts = strtotime($modelSeasonPrice->start_date);
             $end_ts = strtotime($modelSeasonPrice->end_date);
             $tripDate = strtotime($modelTrip->date);

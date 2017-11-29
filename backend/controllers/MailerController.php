@@ -44,7 +44,7 @@ class MailerController extends Controller
     public function actionPaypal(){
         
         if (($modelQueue = TMailQueue::getQueueList(TMailQueue::STATUS_QUEUE)) !== null) {
-            $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
+            //$modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
             $modelPayment = TPayment::findOne($modelQueue->id_payment);
             $modelBooking = $modelPayment->tBookings;
             $findShuttle = $this->findShuttle();
@@ -147,7 +147,7 @@ class MailerController extends Controller
                Yii::$app->mailReservation->compose()
                 ->setFrom('reservation@gilitransfers.com')
                 ->setTo($modelPayment->email)
-                ->setBcc('reservation@gilitransfers.com')
+                //->setBcc('reservation@gilitransfers.com')
                 ->setSubject('E-Ticket GiliTransfers')
                 ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
                     'modelBooking'=>$modelBooking,
@@ -157,43 +157,43 @@ class MailerController extends Controller
                 ->attach($savePath."Receipt.pdf")
                 ->send();
                 foreach ($modelBooking as $key => $value) {
-                    $PdfSupplier = new Pdf([
-                'filename'=>$savePath.$value->id.'.pdf',
-                // A4 paper format
-                'format' => Pdf::FORMAT_A4, 
-                // portrait orientation
-                'orientation' => Pdf::ORIENT_PORTRAIT, 
-                // simpan file
-                'destination' => Pdf::DEST_FILE,
-                'content' => "
-                    ".$this->renderAjax('/email-ticket/pdf-supplier',[
-                        'modelPayment'  =>$modelPayment,
-                        'modelBooking'  =>$value,
-                        'findShuttle'   =>$findShuttle,
-                        'findPassenger' =>$findPassenger,
-                        ])." ",
-                                // any css to be embedded if required
-                                'cssInline' => '.kv-heading-1{
-                                                    font-size:18px
-                                                }
-                                                .judul{
-                                                    font-size:25px;
-                                                }', 
-                                //set mPDF properties on the fly
-                                'options'   => ['title' => 'Supplier Reservation Gilitransfers'],
-                                // call mPDF methods on the fly
-                                'methods'   => [ 
-                                'SetHeader' =>['Supplier Reservation Gilitransfers'], 
-                                'SetFooter' =>['This Document automatically printed by system'],
-                        ]
-                    ]);
-                    $PdfSupplier->render();
-                    $attach = $savePath.$value->id.".pdf";
+                //     $PdfSupplier = new Pdf([
+                // 'filename'=>$savePath.$value->id.'.pdf',
+                // // A4 paper format
+                // 'format' => Pdf::FORMAT_A4, 
+                // // portrait orientation
+                // 'orientation' => Pdf::ORIENT_PORTRAIT, 
+                // // simpan file
+                // 'destination' => Pdf::DEST_FILE,
+                // 'content' => "
+                //     ".$this->renderAjax('/email-ticket/pdf-supplier',[
+                //         'modelPayment'  =>$modelPayment,
+                //         'modelBooking'  =>$value,
+                //         'findShuttle'   =>$findShuttle,
+                //         'findPassenger' =>$findPassenger,
+                //         ])." ",
+                //                 // any css to be embedded if required
+                //                 'cssInline' => '.kv-heading-1{
+                //                                     font-size:18px
+                //                                 }
+                //                                 .judul{
+                //                                     font-size:25px;
+                //                                 }', 
+                //                 //set mPDF properties on the fly
+                //                 'options'   => ['title' => 'Supplier Reservation Gilitransfers'],
+                //                 // call mPDF methods on the fly
+                //                 'methods'   => [ 
+                //                 'SetHeader' =>['Supplier Reservation Gilitransfers'], 
+                //                 'SetFooter' =>['This Document automatically printed by system'],
+                //         ]
+                //     ]);
+                //     $PdfSupplier->render();
+                //     $attach = $savePath.$value->id.".pdf";
 
                     if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
-                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $attach,$value, $modelPayment);
+                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment);
                     }else{
-                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali, $attach, $value, $modelPayment);
+                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment);
                     }
                     
                 }
@@ -213,16 +213,15 @@ class MailerController extends Controller
         }
     }
 
-    protected function sendMailSupplier($to, $attach,$modelBooking,$modelPayment){
+    protected function sendMailSupplier($to,$modelBooking,$modelPayment){
         Yii::$app->mailReservation->compose()
                     ->setFrom('reservation@gilitransfers.com')
                     ->setTo($to)
-                    ->setSubject('Supplier Reservation GiliTransfers')
+                    ->setSubject('Booking For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
                     ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
                         'modelBooking'  =>$modelBooking,
                         'modelPayment'  =>$modelPayment,
                         ]))
-                    ->attach($attach)
                     ->send();
         return true;
     }

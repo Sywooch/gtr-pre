@@ -175,9 +175,7 @@ payment Token: <strong><?= $modelPayment->token ?></strong><br><br>
 <table contenteditable="false">
 <tbody>
 <tr>
-<td valign="bottom">Dear <?= $modelPayment->name ?>. <p>thanks for your trust to choose Gilitransfers.com as your travel companion. here we send the bill details.
-please make payment before the expired time.
-if until the specified time limit we have not received payment or confirmation from you, then we assume you have canceled the booking.</p><span style="display:inline;">
+<td valign="bottom">Dear <?= $modelPayment->name ?>. <p>Thank you for choosing Gilitransfers.com as your travel companion. Here we send you the invoice details and please make the payment before the specific date and time. If we are not receiving your payment before the time and date mentioned, then we assume you are canceled the reservation.</p><span style="display:inline;">
 <span style="font-weight:bold;color:#333333;">Buyer Information</span>
   </td>
   <td></td>

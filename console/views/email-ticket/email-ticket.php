@@ -30,7 +30,7 @@
                         <tbody><tr valign="bottom">    
                             <td style="border-bottom:2px solid black;" width="20" valign="top" align="center"> </td>
                             <td style="border-bottom:2px solid black;" height="64" align="left">
-                                <img alt="Logo" style="width:85%; height:85%;" src="https://Gilitransfers.com/Gilitransfers.png" border="0"><br><br>
+                                <img alt="Logo" style="width:85%; height:85%;" src="https://gilitransfers.com/img/logo.png" border="0"><br><br>
                             </td>   
                             <td style="border-bottom:2px solid black;" width="40" valign="top" align="center"> </td>
                             <td style="border-bottom:2px solid black;" align="right">
@@ -39,7 +39,7 @@
 
 <span style="display:inline;">
 </span>
-E-ticket Confirmation Gilitransfers
+E-ticket Gilitransfers
 
 <span style="display:inline;">
 <br>
@@ -61,12 +61,12 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
                                     <p><!-- EmailGreeting : start -->
 <!-- EmailGreeting : end --></p>
 <div style="margin-top: 10px;color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px;">
-<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">E-Ticket Confirmation</span>
+<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">E-Ticket Gilitransfers</span>
 </center>
 <table contenteditable="false">
 <tbody>
 <tr>
-<td valign="bottom" align="justify">Dear <?= $modelPayment->name ?>. <p>Thank's for trust to choose Gilitransfers as your travel partner. We have confirmed your order and payment. Together with this email we send the e-ticket contained in the attachment. Please take the tiket on the departure of your trip as a justification. If any information related to your trip we will contact you leader through the following contact</p><span style="display:inline;">
+<td valign="bottom" align="justify">Dear <?= $modelPayment->name ?>. <p>Thank you for choosing Gilitransfers.com to reserve your Fast Boat transfers. We have confirmed your order and received your payment. Please find and check the attached E-Ticket in this email as your proof of reservation. If there is any information related to your reservation then we will contact you as mentioned in contact details below:</p><span style="display:inline;">
   </span></td>
 
   </tr>
@@ -76,7 +76,7 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
   <table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
 <tbody><tr style="border-bottom:2px solid #ccc;">
 <td style="padding-top:5px;" width="50%" valign="top">
-<!-- EmailContentSellerBuyerDetails : start --><span style="color:#333333;font-weight:bold; font-size:20px;">Leader Contact</span><br>
+<!-- EmailContentSellerBuyerDetails : start --><span style="color:#333333;font-weight:bold; font-size:20px;">Buyer Information</span><br>
 
 <span style="display:inline;">Name 
 <br>
@@ -126,8 +126,8 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 
 
 <center>
-<p>Thank you for your order, we always look forward to your arrival again, if any criticism and suggestion can be contsct by email or can contact us at contact form, which can be accessed from following link.</p>
-<a class="button_blue" href="http://gilitransfers-local.com/contact" target="_BLANK" style="text-decoration:none;
+<p>Thank you for your order and we are pleased to assist you anytime. If there is any criticism and suggestion please contact us directly through our contact form or using the following link</p>
+<a class="button_blue" href="http://gilitransfers.com/site/contact" target="_BLANK" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
         font-weight:300;
@@ -146,7 +146,6 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 </center><br>
 
 <!-- EmailContentPayeeTransaction : end -->
-Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
 <span style="font-size:11px;color:#333;">Please do not reply to this email. This mailbox is not monitored and you will not receive a response.</span><br>
  <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
  <li>+62-813-5330-4990</li>

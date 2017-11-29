@@ -1,7 +1,7 @@
 <html><head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=no">
-        <title>Supplier Reservation Gilitransfers</title>
+        <title>Fastboat Reservation GiliTransfers</title>
 </head>
    <body style="padding:0; margin:0; background:#f2f2f2;">  
       
@@ -30,7 +30,7 @@
                         <tbody><tr valign="bottom">    
                             <td style="border-bottom:2px solid black;" width="20" valign="top" align="center"> </td>
                             <td style="border-bottom:2px solid black;" height="64" align="left">
-                                <img alt="Logo" style="width:85%; height:85%;" src="https://Gilitransfers.com/Gilitransfers.png" border="0"><br><br>
+                                <img alt="Logo" style="width:85%; height:85%;" src="https://gilitransfers.com/img/logo.png" border="0"><br><br>
                             </td>   
                             <td style="border-bottom:2px solid black;" width="40" valign="top" align="center"> </td>
                             <td style="border-bottom:2px solid black;" align="right">
@@ -38,12 +38,11 @@
                                         <!-- EmailContentHeader : start -->
 
 <span style="display:inline;">
+Fastboat Reservation GiliTransfers
 </span>
-Supplier Reservation Gilitransfers
-
 <span style="display:inline;">
 <br>
-Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
+Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
 </span>
 
 <!-- EmailContentHeader : end -->
@@ -61,22 +60,23 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
                                     <p><!-- EmailGreeting : start -->
 <!-- EmailGreeting : end --></p>
 <div style="margin-top: 10px;color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px;">
-<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">E-Ticket Confirmation</span>
+<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">Fastboat Reservation GiliTransfers</span>
 </center>
 <table contenteditable="false">
 <tbody>
 <tr>
-<td valign="bottom" align="justify">Dear Reservation Team <?= $modelBooking->idTrip->idBoat->idCompany->name ?> <p>our system has received and processed orders for your fastboat. here we inform the customer data and details of passengers are contained in this email attachment</p><span style="display:inline;">
+<td valign="bottom" align="justify">Dear Reservation Team <?= $modelBooking->idTrip->idBoat->idCompany->name ?> <p>Our reservation system has received an order for your Fast Boat transfer. Please confirm our booking below:</p><span style="display:inline;">
   </span></td>
 
   </tr>
   </tbody>
-  </table><br>
-  <!-- EmailContentPayeeTransaction : start -->
-  <table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
+  </table>
+
+<!-- Buyer Info Start -->
+<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
 <tbody><tr style="border-bottom:2px solid #ccc;">
 <td style="padding-top:5px;" width="50%" valign="top">
-<!-- EmailContentSellerBuyerDetails : start --><span style="color:#333333;font-weight:bold; font-size:20px;">Customer Contact</span><br>
+<span style="color:#333333;font-weight:bold; font-size:15px;">Customer/Buyer Information</span><br>
 
 <span style="display:inline;">Name 
 <br>
@@ -89,16 +89,8 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 <span style="display:inline;">Phone Number
 <br>
 </span>
-
-
-
-<!-- EmailContentSellerBuyerDetails : end -->
 </td>
 <td style="padding-top:5px;padding-left:10px;" width="50%" valign="top">
-<!-- EmailContentBuyerNote : start -->
-
-
-
 <span style="color:#333333;"></span>
   <br>
 <span style="display: inline;">
@@ -110,26 +102,82 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
   <span style="display: inline;">
 : <?= $modelPayment->phone ?>
 </span>
-
-<!-- EmailContentBuyerNote : end -->
 </td>
 </tr>
 
 
 </tbody>
 </table>
+<!-- Buyer Info End -->
+<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
+<caption style="text-align: left; font-size: 15px; font-weight: bold;">Trip Detail</caption>
+<tbody>
+  <tr>
+    <td>
+      <?= $modelBooking->idTrip->idRoute->departureHarbor->name." -> ".$modelBooking->idTrip->idRoute->arrivalHarbor->name." (".date('H:i',strtotime($modelBooking->idTrip->dept_time)).")" ?> 
+      <?= date('d, F Y',strtotime($modelBooking->idTrip->date)) ?>
+    </td>
+  </tr>
+</tbody>
+</table>
 
+<!-- Shuttle Start -->
+<?php if(isset($modelBooking->tShuttles)): ?>
 
-<div>
-</div>
+<table  style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
+  <caption style="text-align: left; font-size: 15px; font-weight: bold;"><?php if($modelBooking->idTrip->idRoute->departureHarbor->id_island == '1'){ echo 'Pickup';}else{ echo 'Drop Off';} ?>  Detail</caption>
+  <thead>
+  <tr>
+    <th style="text-align: left;">Area</th>
+    <th style="text-align: left;">Location</th>
+    <th style="text-align: left;">Address</th>
+    <th style="text-align: left;">Phone</th>
+  </tr>
 
+  </thead>
+  <tbody>
+ <tr>
+    <td><?= $modelBooking->tShuttles->idArea->area ?></td>
+    <td><?= $modelBooking->tShuttles->location_name ?></td>
+    <td><?= $modelBooking->tShuttles->address ?></td>
+    <td><?= $modelBooking->tShuttles->phone ?></td>
+  </tr>
+</tbody>
+</table>
+<?php endif; ?>
+<!-- Shuttle End -->
+
+<!-- Passenger Table Start -->
+<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0" class="table table-striped ">
+  <caption style="text-align: left; font-size: 15px; font-weight: bold;">Passengers Detail</caption>
+  <thead>
+  <tr>
+    <th width="40">No.</th>
+    <th style="text-align: left;">Name</th>
+    <th style="text-align: left;" width="175">Nationality</th>
+    <th style="text-align: left;" width="100">Type</th>
+  </tr>
+
+  </thead>
+  <tbody>
+<?php foreach($modelBooking->tPassengers as $indexAdult => $valAdult): ?>
+  <tr>
+    <th scope="row"><?= $indexAdult+1 ?></th>
+    <td><?= $valAdult->name?></td>
+    <td><?= $valAdult->idNationality->nationality ?></td>
+    <td><?= $valAdult->idType->type ?></td>
+
+  </tr>
+<?php endforeach;?>
+</tbody>
+</table>
+<!-- Passenger Table End -->
 
 
 <br>
 
 <!-- EmailContentPayeeTransaction : end -->
 Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
-<span style="font-size:11px;color:#333;">Please do not reply to this email. This mailbox is not monitored and you will not receive a response.</span><br>
  <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
  <li>+62-813-5330-4990</li>
  <li><a id="button_text" style="text-decoration: none; font-size: 110%" class="applefix" href="Gilitransfers.com">https://Gilitransfers.com</a></li>

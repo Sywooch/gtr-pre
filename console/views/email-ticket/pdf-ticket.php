@@ -125,7 +125,7 @@ endif;
 
 <!-- Buyer Detail Start -->
 <table class="table table-striped ">
-  <caption><center>Contact Detail</center></caption>
+  <caption><center>Buyer/Contact Detail</center></caption>
   <thead>
   <tr>
     <th>Name</th>
@@ -147,7 +147,7 @@ endif;
 
 <!-- Passenger Table Start -->
 <table class="table table-striped ">
-  <caption><center>Passenger Detail</center></caption>
+  <caption><center>Passengers Detail</center></caption>
   <thead>
   <tr>
     <th width="20">No.</th>
@@ -169,7 +169,6 @@ endif;
 <?php endforeach;?>
 </tbody>
 </table>
-<!-- Passenger Table End -->
 <!-- Passenger Table End -->
 
 <!-- Contact Fastboat Start -->

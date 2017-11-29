@@ -35,7 +35,7 @@ QRCode::png($tokenPayment,$tempdir.$tokenQrfileName,$quality,$ukuran,$padding);
 <!-- Buyer Detail Start -->
 <br>
 <table class="table table-striped ">
-  <caption><center>Customer Detail</center></caption>
+  <caption><center>Buyer Detail</center></caption>
   <thead>
   <tr>
     <th>Name</th>

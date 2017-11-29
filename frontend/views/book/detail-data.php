@@ -45,7 +45,8 @@ $this->registerCss($customCss);
 					<li class="list-group-item"><span class="fa fa-ship"></span>
           <b><?= $value->idTrip->idBoat->idCompany->name ?></b>
           | </span> <?= $value->idTrip->idRoute->departureHarbor->name." <span class='fa fa-arrow-right'></span> ".$value->idTrip->idRoute->arrivalHarbor->name ?>
-          | <span class="fa fa-calendar"></span> <?= date('d-m-Y',strtotime($value->idTrip->date)) ?>
+          <br><span class="fa fa-calendar"></span> <?= date('d-m-Y',strtotime($value->idTrip->date)) ?>
+          | <span class="fa fa-clock-o"></span> <?= date('H:i',strtotime($value->idTrip->dept_time)) ?>
           <span class="pull-right">
 					<?= Html::a('', ['remove-cart','id'=>$value->id], [
 						'class' => 'btn material-btn material-btn_danger main-container__column material-btn_xs pull-right glyphicon glyphicon-trash',
