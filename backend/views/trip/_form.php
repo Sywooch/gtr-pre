@@ -178,7 +178,7 @@ $this->registerJs($customScript, \yii\web\View::POS_READY);
 </div>
 
     <div class="form-group col-sm-12">
-        <?= Html::submitButton($model->isNewRecord ? Yii::t('app', 'Create') : Yii::t('app', 'Update'), ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton(' Save ', ['class' =>  'btn btn-danger btn-lg btn-block']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

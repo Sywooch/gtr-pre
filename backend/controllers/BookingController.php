@@ -193,7 +193,6 @@ protected function findAllBooking(){
                 'findPassengers' => $findPassengers,
                 'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
                 'listDept' => $listDept,
-                'listCompany' => $listCompany,
             ]);
         }
     }

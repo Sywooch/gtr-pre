@@ -9,12 +9,10 @@ use kartik\widgets\TouchSpin;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TTripSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title = Yii::t('app', 'Trip List');
+$this->title =  'Trip List';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="ttrip-index col-md-12">
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-<?php Pjax::begin(['id'=>'pjax-trip','class'=>'col-lg-12']); ?>
+
 <?php  
 $varmonth = $monthYear;
 $month= date('m',strtotime($monthYear));
@@ -54,7 +52,36 @@ $('.trip-text').mouseenter(function(){
 });
 });
     ");
- ?>   
+ ?>
+  <?php 
+
+$this->registerJs('
+  var vcom   = '.$session['filter']['company'].';
+  var vroute = '.$session['filter']['route'].';
+  var vtime  = "'.$session['filter']['time'].'";
+  $("#header-trip-schedule").html("<center>Please Wait...<br><img height=\'50px\' src=\'/spinner.svg\'></center>");
+$.ajax({
+      url:"'.Url::to(["header-trip-schedule"]).'",
+      type: "POST",
+      data:{
+          company: vcom,
+          route: vroute,
+          time: vtime,
+        },
+      success:function(data){
+        $("#header-trip-schedule").html(data);
+      },
+      error:function(data){
+        $("#header-trip-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
+      },
+    });
+  ', \yii\web\View::POS_READY);
+ ?>
+ <div class="row">
+   <div id="header-trip-schedule" class="col-md-12">
+     
+   </div>
+ </div>   
 <?php 
 echo "<div class='col-md-12' id='judul-table'><h2 align='center'>".Html::encode(date('F',strtotime($monthYear)))." ".Html::encode(date('Y',strtotime($monthYear)))."</h2>";
 echo '<span class="pull-left"><div class="main-container__column material-checkbox-group material-checkbox-group_primary">
@@ -121,7 +148,7 @@ for ($d=1;$d<=$endDate;$d++) {
     if (!empty($trips)) {
         foreach ($trips as $key => $value) {
           if ($value->id_season == null) {
-            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", '#detail', ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", null, ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
           }else{
             if ($value->status == 1) {
               $warna_text = "trip-text pull-left text-success append text-info tip";
@@ -131,7 +158,7 @@ for ($d=1;$d<=$endDate;$d++) {
               $warna_text = "trip-text pull-left bg-danger text-danger append tip";
             }
             echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")",
-           '#detail', ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+           null, ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
 
           }
         //checkbox per trip
@@ -194,6 +221,4 @@ for ($d=1;$d<=$endDate;$d++) {
 }
 echo '</table></tbody>';
 ?>
-<?php Pjax::end(); ?></div>
 
-</style>

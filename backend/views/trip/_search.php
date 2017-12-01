@@ -55,7 +55,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 var tahun = $("#form-tahun").val();
                 $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                 $.ajax({
-                url:"'.Url::to("/trip/index").'/"+tahun+month,
+                url:"'.Url::to(["index"]).'/"+tahun+month,
                 type: "POST",
                     success:function(data){
                       $("#div-schedule").html(data);
@@ -70,7 +70,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 'onclick'=>'
                      $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                     $.ajax({
-                    url:"'.Url::to(["/trip/index","month"=>$blnUrlMin]).'",
+                    url:"'.Url::to(["index","month"=>$blnUrlMin]).'",
                     type: "POST",
                     success:function(data){
                       $("#div-schedule").html(data);
@@ -85,7 +85,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 'onclick'=>'
                     $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                     $.ajax({
-                    url:"'.Url::to(["/trip/index","month"=>$blnUrlPlus]).'",
+                    url:"'.Url::to(["index","month"=>$blnUrlPlus]).'",
                     type: "POST",
                     success:function(data){
                       $("#div-schedule").html(data);

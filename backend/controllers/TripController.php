@@ -379,7 +379,7 @@ protected function findTrip(){
     public function actionIndex($month = null,$company = null)
     {
 
-       if (Yii::$app->request->isAjax || Yii::$app->request->isPjax) {
+       if (Yii::$app->request->isPost) {
         $request = Yii::$app->request;
         $session = Yii::$app->session;
         if ($request->post('company') != null) {

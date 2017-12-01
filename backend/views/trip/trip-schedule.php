@@ -227,7 +227,7 @@ for ($d=1;$d<=$endDate;$d++) {
           //popover end
       }
     }else{
-      echo "<span class='text-danger'>Not Avaible</span>";
+      echo "<span class='text-danger'>Not Available</span>";
     }
     
     echo "</span></td>";

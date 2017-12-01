@@ -17,8 +17,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
 <div class="panel-group material-tabs-group">
     <ul class="nav nav-tabs material-tabs material-tabs_primary">
         <li class="active"><a href="#filter" class="material-tabs__tab-link" data-toggle="tab">Filter</a></li>
-        <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Stock</a></li>
-        <li><a href="#edit" class="material-tabs__tab-link" data-toggle="tab">Status</a></li>
+        <li><a href="#topup" class="material-tabs__tab-link" data-toggle="tab">Update Data</a></li>
         
     </ul>       
     <div class="tab-content materail-tabs-content">
@@ -53,7 +52,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 var tahun = $("#form-tahun").val();
                  $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                 $.ajax({
-                url:"'.Url::to("/trip/index").'/"+tahun+month,
+                url:"'.Url::to(["index"]).'/"+tahun+month,
                 type: "POST",
                     success:function(data){
                       $("#div-schedule").html(data);
@@ -100,12 +99,13 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         </div>
         <div class="tab-pane fade" id="topup">
         <div class="row">
-        <div class="col-md-3">
-      <div class="col-md-12">
+        <div class="col-md-12">
+        <div class="col-md-2">
       <label>Update Stock</label>
         <?= TouchSpin::widget([
               'name' => 'topup-stok',
               'id' =>'form-topup',
+              'readonly'=>true,
               'pluginOptions' => [
                 'verticalbuttons' => true,
                 'initval'         => 1,
@@ -118,14 +118,21 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
 
         ?>
         </div>
+        <div class="col-md-2">
+            <label>Change Status</label>
+            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
+            </div>
         <div class="col-md-12">
          <div class="col-md-9">
         <?= Html::radioList('type-topup', $selection = '1', $items = ['1'=>'Up','2'=>'Down'], ['id' => 'radio-topup-type']); ?>
 
         </div>
+          
+        </div>
+        <div class="row col-md-12">
          <div class="col-md-2">
 
-        <?= Html::a('Submit Status',null,[
+        <?= Html::a('Save',null,[
             'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
             'onclick'=>'
                     var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
@@ -148,7 +155,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                                   $.pjax.reload({
                                   timeout:10000,
                                   container:"#pjax-trip",
-                                  })
+                                  });
+                                  $("#hidden-panel").trigger("click");
                             }, 
                         });
                       }else{
@@ -158,20 +166,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 '
         ]) ?>
        </div>
-          
-        </div>
-      </div>
-        </div>
-        </div>
-        <div class="tab-pane fade" id="edit">
-        <div class="row">
-            <div class="col-md-2">
-            <label>Change Status</label>
-            <?= Html::dropDownList('status', $selection = null, ['1'=>'ON','2'=>'Off'], ['prompt'=>'Select Status','class' => 'form-control','id'=>'drop-status']); ?>
-            </div>
-           <div class="row col-md-12">
           <div class="col-md-2">
-            <?= Html::a(' Submit ',null,[
+            <?= Html::a(' Save ',null,[
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
                 'onclick'=>'
                         var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
@@ -195,7 +191,8 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                                       $.pjax.reload({
                                       timeout:10000,
                                       container:"#pjax-trip",
-                                      })
+                                      });
+                                      $("#hidden-panel").trigger("click");
                                 }, 
                             });
                           }else{
@@ -204,10 +201,14 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                         }  
                     '
             ]) ?>
-          </div>
+        </div>
+       
+        </div>
+      </div>
         </div>
         </div>
-        </div>
+            
+           
 
 
     </div>

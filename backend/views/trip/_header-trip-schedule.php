@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use mdm\admin\components\Helper;
 
 $customCss = <<< SCRIPT
 .boat-logo{
@@ -20,6 +21,11 @@ $this->registerCss($customCss);
 ?>
 <li class="list-group-item">
 <?= Html::img(['/company/logo','logo'=>$company['logo_path']], ['class' => 'boat-logo']); ?>
+<?php if (Helper::checkRoute('/booking/validation')): ?>
 <span class="header-trip"> <span class="fa fa-small fa-random"> </span> <?= $route->departureHarbor->name." <span class='fa fa-small fa-arrow-right'> </span> ".$route->arrivalHarbor->name." <span class='fa fa-small fa-clock-o'> </span> ".date('H:i',strtotime($time))." <span class='fa fa-small fa-phone'> </span> ".$company['phone']." <span class='fa fa-small fa-envelope'> </span> ".$company['email_bali']."/".$company['email_gili'] ?>
 </span>
+<?php else: ?>
+<span class="header-trip"> <span class="fa fa-small fa-random"> </span> <?= $route->departureHarbor->name." <span class='fa fa-small fa-arrow-right'> </span> ".$route->arrivalHarbor->name." <span class='fa fa-small fa-clock-o'> </span> ".date('H:i',strtotime($time)); ?>
+</span>
+<?php endif; ?>
 </li>

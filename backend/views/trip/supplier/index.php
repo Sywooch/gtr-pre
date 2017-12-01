@@ -5,7 +5,7 @@ use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-use mdm\admin\components\Helper;
+
 
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TTripSearch */
@@ -13,8 +13,10 @@ use mdm\admin\components\Helper;
 $this->title = Yii::t('app', 'Trip List');
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?= Html::a('', ['create'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
-<?= Html::a('', ['index'], ['class' => 'btn material-btn material-btn_success main-container__column material-btn_lg glyphicon glyphicon-refresh']) ?>
+<?= Html::a('', ['create'], ['class' => 'btn btn-lg btn-danger glyphicon glyphicon-plus']) ?>
+<?= Html::a('', ['index'], ['class' => 'btn btn-lg btn-success glyphicon glyphicon-refresh']) ?>
+
+
  <b style="font-size: 25px;"><center>Trip Summary</center></b>
  <div class="panel-group material-accordion material-accordion_primary" id="grid-summary">
   <div class="panel panel-default material-accordion__panel material-accordion__panel">
@@ -32,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'striped'      =>true,
         'bordered'  => true,
         'hover'        =>true,
-        'pjax'         =>false,
+        'pjax'         =>true,
        
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
@@ -79,15 +81,9 @@ $this->params['breadcrumbs'][] = $this->title;
 
             ],
             [
-            'header'=>'start',
+            'header'=>'Available',
             'value'=>function($model){
-              return date('d-m-Y',strtotime($model->minDate));
-            }
-            ],
-            [
-            'header'=>'End',
-            'value'=>function($model){
-              return date('d-m-Y',strtotime($model->maxDate));
+              return date('d-m-Y',strtotime($model->minDate))." - ".date('d-m-Y',strtotime($model->maxDate));
             }
             ],
             [
@@ -102,6 +98,35 @@ $this->params['breadcrumbs'][] = $this->title;
                       'data-toggle'=>'tooltip',
                       'title'=>'View Schedule',
                       'data-placement'=>'left',
+                      'onclick'=>'var idc  = $(this).attr("cid");
+                      var idr  = $(this).attr("route");
+                      var time = $(this).attr("time");
+                      var cb   = "btn btn-xs btn-warning glyphicon glyphicon-calendar";
+                      var cl   = "fa fa-spinner fa-spin";
+                      $(this).removeClass(cb);
+                      $(this).addClass(cl);
+                      
+                      $("#div-schedule").html("<center>Please Wait...<br><img src=\'/spinner.svg\'></center>");
+                      $.ajax({
+                        url:"'.Url::to(["index"]).'",
+                        type: "POST",
+                        data:{
+                        company:idc,
+                        route: idr,
+                        time: time,
+                        },
+                      success:function(data){
+                        $("#div-schedule").html(data);
+                        $("#hidden-panel").trigger("click");
+                        $(".btn-view-schedule").removeClass(cl);
+                        $(".btn-view-schedule").addClass(cb);
+                      },
+                      error:function(data){
+                        $("#div-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
+                        $(".btn-view-schedule").removeClass(cl);
+                        $(".btn-view-schedule").addClass(cb);
+                      },
+    });'
                       ]);
             }
             ]
@@ -114,48 +139,18 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 </div>
 <div class="row">
-
-<div id="div-schedule" class="col-md-12">
 <?php Pjax::begin(['id'=>'pjax-trip','class'=>'col-lg-12']); ?>
+<div id="div-schedule" class="col-md-12">
   <b><center>Select Summary To View Schedule</center></b>
-<?php Pjax::end(); ?>
 </div>
-
+<?php Pjax::end(); ?>
 </div>
 
 <?php
 $this->registerJs('
 $(".btn-view-schedule").on("click",function(){
 
-  var idc  = $(this).attr("cid");
-  var idr  = $(this).attr("route");
-  var time = $(this).attr("time");
-  var cb   = "btn btn-xs btn-warning glyphicon glyphicon-calendar";
-  var cl   = "fa fa-spinner fa-spin";
-  $(this).removeClass(cb);
-  $(this).addClass(cl);
-
-  $("#div-schedule").html("<center>Please Wait...<br><img src=\'/spinner.svg\'></center>");
-    $.ajax({
-      url:"'.Url::to(["index"]).'",
-      type: "POST",
-      data:{
-          company:idc,
-          route: idr,
-          time: time,
-        },
-      success:function(data){
-        $("#div-schedule").html(data);
-        $("#hidden-panel").trigger("click");
-        $(".btn-view-schedule").removeClass(cl);
-        $(".btn-view-schedule").addClass(cb);
-      },
-      error:function(data){
-        $("#div-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
-        $(".btn-view-schedule").removeClass(cl);
-        $(".btn-view-schedule").addClass(cb);
-      },
-    });
+  
 
 });
   ');
