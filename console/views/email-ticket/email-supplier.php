@@ -194,7 +194,7 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
       5 Seat
     </td>
     <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=5" style="text-decoration:none;
+      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=5" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
         font-weight:300;
@@ -217,7 +217,7 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
       10 Seat
     </td>
     <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=10" style="text-decoration:none;
+      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=10" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
         font-weight:300;
@@ -240,7 +240,7 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
       15 Seat
     </td>
     <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=15" style="text-decoration:none;
+      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=15" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
         font-weight:300;
@@ -263,7 +263,7 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
       20 Seat
     </td>
     <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=20" style="text-decoration:none;
+      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=20" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
         font-weight:300;

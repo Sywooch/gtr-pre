@@ -127,7 +127,7 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 
 <center>
 <p>Thank you for your order and we are pleased to assist you anytime. If there is any criticism and suggestion please contact us directly through our contact form or using the following link</p>
-<a class="button_blue" href="http://gilitransfers.com/site/contact" target="_BLANK" style="text-decoration:none;
+<a class="button_blue" href="https://gilitransfers.com/site/contact" target="_BLANK" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
         font-weight:300;
