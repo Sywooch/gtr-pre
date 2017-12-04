@@ -44,7 +44,7 @@ class MailerController extends Controller
     public function actionPaypal(){
         
         if (($modelQueue = TMailQueue::getQueueList(TMailQueue::STATUS_QUEUE)) !== null) {
-            // $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
+            $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
             $modelPayment = TPayment::findOne($modelQueue->id_payment);
             $modelBooking = $modelPayment->tBookings;
             $findShuttle = $this->findShuttle();
@@ -144,18 +144,18 @@ class MailerController extends Controller
                         ]
                     ]);
                 $Receipt->render();
-               // Yii::$app->mailReservation->compose()
-               //  ->setFrom('reservation@gilitransfers.com')
-               //  ->setTo($modelPayment->email)
-               //  ->setBcc('reservation@gilitransfers.com')
-               //  ->setSubject('E-Ticket GiliTransfers')
-               //  ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
-               //      'modelBooking'=>$modelBooking,
-               //      'modelPayment'=>$modelPayment,
-               //      ]))
-               //  ->attach($savePath."E-Ticket.pdf")
-               //  ->attach($savePath."Receipt.pdf")
-               //  ->send();
+               Yii::$app->mailReservation->compose()
+                ->setFrom('reservation@gilitransfers.com')
+                ->setTo($modelPayment->email)
+                ->setBcc('reservation@gilitransfers.com')
+                ->setSubject('E-Ticket GiliTransfers')
+                ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
+                    'modelBooking'=>$modelBooking,
+                    'modelPayment'=>$modelPayment,
+                    ]))
+                ->attach($savePath."E-Ticket.pdf")
+                ->attach($savePath."Receipt.pdf")
+                ->send();
 
                 foreach ($modelBooking as $key => $value) {
                 //     $PdfSupplier = new Pdf([
@@ -202,7 +202,7 @@ class MailerController extends Controller
 
                 FileHelper::removeDirectory($savePath);
                 
-                // $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
+                $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
             } catch(\Exception $e) {
                 $modelQueue->setQueueStatus(TMailQueue::STATUS_RETRY);
                  FileHelper::removeDirectory($savePath);
