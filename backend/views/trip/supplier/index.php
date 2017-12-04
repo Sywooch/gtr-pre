@@ -56,8 +56,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
             'header'=>'Route',
             'attribute'=>'id_route',
+            'format'=>'raw',
             'value'=>function($model){
-              return $model->idRoute->departureHarbor->name." -> ".$model->idRoute->arrivalHarbor->name;
+              return $model->idRoute->departureHarbor->idIsland->island." <span class='fa fa-arrow-right'>to</span> ".$model->idRoute->arrivalHarbor->idIsland->island;
             },
             'filterType'=>GridView::FILTER_SELECT2,
             'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route','island'), 
@@ -87,19 +88,26 @@ $this->params['breadcrumbs'][] = $this->title;
             }
             ],
             [
+            'header'=>'Island',
+            'format'=>'raw',
+            'value'=>function($model){
+              return $model->islandRoute;
+            },
+            ],
+            [
             'header'=>'View',
             'format'=>'raw',
             'value'=>function($model){
               return Html::a('', $url = null, [
                       'cid'=>$model->idBoat->id_company,
-                      'route'=>$model->id_route,
+                      'islandRoute'=>$model->islandRoute,
                       'time' => $model->dept_time,
                       'class' =>'btn-view-schedule btn btn-xs btn-warning glyphicon glyphicon-calendar',
                       'data-toggle'=>'tooltip',
                       'title'=>'View Schedule',
                       'data-placement'=>'left',
                       'onclick'=>'var idc  = $(this).attr("cid");
-                      var idr  = $(this).attr("route");
+                      var isR  = $(this).attr("islandRoute");
                       var time = $(this).attr("time");
                       var cb   = "btn btn-xs btn-warning glyphicon glyphicon-calendar";
                       var cl   = "fa fa-spinner fa-spin";
@@ -112,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         type: "POST",
                         data:{
                         company:idc,
-                        route: idr,
+                        islandRoute: isR,
                         time: time,
                         },
                       success:function(data){

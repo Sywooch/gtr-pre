@@ -13,6 +13,7 @@ use mdm\admin\components\Helper;
 class TTripSearch extends TTrip
 {
     public $id_company;
+    public $islandRoute;
 
   //  public $
     /**
@@ -23,7 +24,7 @@ class TTripSearch extends TTrip
         return [
             [['id', 'id_boat', 'id_route', 'status', 'id_est_time'], 'integer'],
 
-            [['date', 'dept_time', 'description', 'datetime','id_company'], 'safe'],
+            [['date', 'dept_time', 'description', 'datetime','id_company','islandRoute'], 'safe'],
         ];
     }
 
@@ -46,11 +47,11 @@ class TTripSearch extends TTrip
     public function search($params)
     {
         if(Helper::checkRoute('/booking/*')){
-        $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate');
+        $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
         }else{
-            $query = TTrip::find()->joinWith('idBoat.idCompany')->select('id_route,id_boat,dept_time,MIN(date) AS minDate,MAX(date) maxDate')->where(['t_company.id_user'=>Yii::$app->user->identity->id]);
+            $query = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->select(['id_route','id_boat','dept_time,MIN(date) AS minDate','MAX(date) maxDate','CONCAT( departure.id_island, "-", arrival.id_island) as islandRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('islandRoute, dept_time')->orderBy(['islandRoute'=>SORT_ASC,'dept_time'=>SORT_ASC]);
         }
-        $query->groupBy('id_boat,id_route,dept_time')->orderBy(['t_company.name'=>SORT_ASC]);
+        //$query
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([

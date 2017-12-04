@@ -6,6 +6,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use kartik\switchinput\SwitchInput;
 use kartik\widgets\TouchSpin;
+use common\models\TTrip;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TTripSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -57,7 +58,7 @@ $('.trip-text').mouseenter(function(){
 
 $this->registerJs('
   var vcom   = '.$session['filter']['company'].';
-  var vroute = '.$session['filter']['route'].';
+  var vroute = '.$session['filter']['islandRoute'].';
   var vtime  = "'.$session['filter']['time'].'";
   $("#header-trip-schedule").html("<center>Please Wait...<br><img height=\'50px\' src=\'/spinner.svg\'></center>");
 $.ajax({
@@ -124,10 +125,10 @@ for ($d=1;$d<=$endDate;$d++) {
     if (date("d",mktime (0,0,0,$month,$d,$year)) == "Sun") {  }
       $today = date("Y-m-d",mktime (0,0,0,$month,$d,$year));
 
-            $trips = $model2->where('t_company.id_user = :userid',[':userid'=>Yii::$app->user->identity->id])->andWhere(['id_company'=>$session['filter']['company'] ])->andWhere(['id_route'=>$session['filter']['route']])->andWhere(['dept_time'=>$session['filter']['time']])->andWhere(['date'=>$today])->andWhere(['date'=>$today])->orderBy(['dept_time'=>SORT_ASC])->all();
+            $trips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->select(['t_trip.*','CONCAT( departure.id_island, "-", arrival.id_island) as islandRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id,'id_company'=>$session['filter']['company'],'dept_time'=>$session['filter']['time'],'date'=>$today,'CONCAT( departure.id_island, "-", arrival.id_island)'=>$session['filter']['islandRoute']])->groupBy(['islandRoute'])->orderBy(['dept_time'=>SORT_ASC])->all();
 
       
-    //tanggal
+    //tanggal 
     echo "<td style=\"font-family:arial;color:#333333\" align=center valign=middle> <span><li style='list-style: none; background-color: #ccc;'>".date("d",mktime (0,0,0,$month,$d,$year));
 
      
@@ -148,7 +149,8 @@ for ($d=1;$d<=$endDate;$d++) {
     if (!empty($trips)) {
         foreach ($trips as $key => $value) {
           if ($value->id_season == null) {
-            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", null, ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", '#detail', ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+
           }else{
             if ($value->status == 1) {
               $warna_text = "trip-text pull-left text-success append text-info tip";
@@ -157,12 +159,12 @@ for ($d=1;$d<=$endDate;$d++) {
             }else{
               $warna_text = "trip-text pull-left bg-danger text-danger append tip";
             }
-            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")",
-           null, ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+           echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")",
+           '#detail', ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
 
           }
         //checkbox per trip
-        echo Html::checkbox('checkbox-'.$value->id, $checked = false, ['class' => 'pull-right checkbox-trip checkbox-'.$today,'value'=>$value->id,'id'=>'checkbox-'.$value->id])."<br>";
+        echo Html::checkbox('checkbox-'.$value->id, $checked = false, ['class' => 'pull-right checkbox-trip checkbox-'.$today,'dept-time'=>$value->dept_time,'date'=>$value->date,'island-route'=>$value->islandRoute,'id'=>'checkbox-'.$value->id])."<br>";
 
         // Popover Start
         echo "<div id='".$value->id."' class='hidden panel panel-primary'>
@@ -179,7 +181,7 @@ for ($d=1;$d<=$endDate;$d++) {
           <div class='popover-body list-group col-lg-12' >
           <div class='col-sm-3' style='font-weight:bold;'>Date</div><div class='col-sm-9'>".date('d-m-Y',strtotime($value->date))."</div>
           <div class='col-sm-3' style='font-weight:bold;'>Boat</div><div class='col-sm-9'>".$value->idBoat->name."</div>
-          <div class='col-sm-3' style='font-weight:bold;'>Route</div><div class='col-sm-9'>".$value->idRoute->departureHarbor->name." -> ".$value->idRoute->arrivalHarbor->name."</div>
+          <div class='col-sm-3' style='font-weight:bold;'>Route</div><div class='col-sm-9'>".$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island."</div>
           <div class='col-sm-3'style='font-weight:bold;'>Avaibile</div><div class='col-sm-9'>".$value->stock."</div>";
           if ($value->status == 1) {
             echo "<div class='col-sm-3'style='font-weight:bold;'>Status</div><div class='col-sm-9 text-success'>".$value->status0->status."</div>";

@@ -135,22 +135,25 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         <?= Html::a('Save',null,[
             'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
             'onclick'=>'
-                    var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
-                    return $(this).val();
-                    }).get();
+                    var vdtime = $("#table-trip .checkbox-trip:checkbox:checked").attr("dept-time");
+                    var vdate = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("date");
+                        }).get();
+                    var viroute = $("#table-trip .checkbox-trip:checkbox:checked").attr("island-route");
+
                     var topval = $("#form-topup").val();
                     var toptype = $("#radio-topup-type :radio:checked").val();
-                    if (idtrip == "" || topval == "") {
+                    if (toptype == "" || topval == "" || vdtime == "" || vdate == ""|| viroute == "") {
                       alert("Select Trip and fill topup value First");
                       return false;
                     }else{
                       if(confirm("Confirm \\r\\n Selected Trip will be Topup Stock? ")){
                         $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                         $.ajax({
-                            url: "'.Url::to(["topup"]).'",
+                            url: "'.Url::to(["update-stock-by-island"]).'",
                             type: "POST",
                             async: true, 
-                            data: {id: idtrip, topup: topval, type: toptype},
+                            data: {dtime: vdtime, date: vdate, iroute: viroute, topup: topval, type: toptype},
                             success: function() {
                                   $.pjax.reload({
                                   timeout:10000,
@@ -167,26 +170,31 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         ]) ?>
        </div>
           <div class="col-md-2">
-            <?= Html::a(' Save ',null,[
+            <?= Html::a(' Update Status ',null,[
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
                 'onclick'=>'
-                        var idtrip = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
-                        return $(this).val();
+                        var vdtime = $("#table-trip .checkbox-trip:checkbox:checked").attr("dept-time");
+                        var vdate = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("date");
                         }).get();
+                        var viroute = $("#table-trip .checkbox-trip:checkbox:checked").attr("island-route");
+
+                        // alert(vdtime);
+                        // alert(vdate);
+                        // alert(viroute);
 
                         var stsv = $("#drop-status").val();
-                        var stst = $("#drop-status").text();
-                        if (idtrip == "" || stsv == "") {
+                        if (vdtime == "" || stsv == "" || vdate == ""|| viroute == "") {
                           alert("Select Trip and Status First");
                           return false;
                         }else{
                           if(confirm("Confirm \\r\\n Selected Trip will be change status? ")){
                             $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
                             $.ajax({
-                                url: "'.Url::to(["change-status"]).'",
+                                url: "'.Url::to(["change-status-by-island"]).'",
                                 type: "POST",
                                 async: true, 
-                                data: {id: idtrip, sts: stsv},
+                                data: {dtime: vdtime, date: vdate, iroute: viroute, sts: stsv},
                                 success: function() {
                                       $.pjax.reload({
                                       timeout:10000,
@@ -198,7 +206,7 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                           }else{
                             return false;
                           }
-                        }  
+                        } 
                     '
             ]) ?>
         </div>

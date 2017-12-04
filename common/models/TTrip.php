@@ -49,6 +49,7 @@ class TTrip extends \yii\db\ActiveRecord
     public $minDate;
     public $maxDate;
     public $company_name;
+    public $islandRoute;
     /**
      * @inheritdoc
      */
@@ -72,7 +73,7 @@ class TTrip extends \yii\db\ActiveRecord
         return [
             [['id_boat', 'id_route', 'date', 'dept_time', 'id_est_time', 'stock','id_company'], 'required'],
             [['id_boat', 'id_route', 'status', 'id_type_avaibility', 'stock', 'sold', 'process', 'cancel', 'id_season','id_est_time'], 'integer'],
-            [['date', 'dept_time', 'datetime','startDate','endDate'], 'safe'],
+            [['date', 'dept_time', 'datetime','startDate','endDate','islandRoute'], 'safe'],
             [['status','id_type_avaibility'], 'default', 'value' => self::STATUS_ON],
             [['status','id_type_avaibility','id_price_type'], 'in', 'range' => [self::STATUS_ON, self::STATUS_OFF]],
             [['adult_price', 'child_price'], 'string', 'max' => 50],
