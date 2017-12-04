@@ -40,7 +40,52 @@ class TripController extends Controller
         ];
     }
 
-    
+    public function beforeAction($action)
+    {    
+        if ($action->id == 'topup-by-email') {
+
+            $this->enableCsrfValidation = false;
+        }    
+        return true;
+    }
+
+    public function actionTopupSuccess(){
+        return $this->render('topup-successfull');
+    }
+    public function actionTopupFailed(){
+        return $this->render('topup-failed');
+    }
+    public function actionTopupByEmail($token,$date,$dept_time,$island_route,$value){
+        if (Yii::$app->request->isGet) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $userId = $this->findUserByMAskToken($token);
+                $modelTrips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->where(['t_company.id_user'=>$userId,'dept_time'=>$dept_time,'date'=>$date,'CONCAT( departure.id_island, "-", arrival.id_island)'=>$island_route])->all();
+                foreach ($modelTrips as $key => $modelTrip) {
+                    $modelTrip->stock = $modelTrip->stock+$value;
+                    $modelTrip->validate();
+                    $modelTrip->save(false);
+                }
+                $transaction->commit();
+                return $this->redirect(['topup-success']);
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                return $this->redirect(['topup-failed']);
+            }
+            
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    protected function findUserByMAskToken($maskToken){
+        $unmaskToken = Yii::$app->getSecurity()->unmaskToken($maskToken);
+        if (($modelUSer = \backend\models\User::find()->where(['auth_key'=>$unmaskToken])->asArray()->one()) !== null) {
+            return $modelUSer['id'];
+        }else{
+            return $this->goHome();
+        }
+    }
 
     public function actionGetAvaibleRoute(){
        // if (Yii::$app->request->isPost) {

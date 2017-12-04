@@ -176,7 +176,116 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
 
 <br>
 
-<!-- EmailContentPayeeTransaction : end -->
+<!-- Availability Info start -->
+<p style="background-color: #EEEEEE; text-align: left; font-size: 15px; font-weight: bold;">This Trip Available <?= $modelBooking->idTrip->stock ?> Seat</p>
+<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
+
+  <thead>
+    <tr>
+      <th>
+        Topup
+      </th>
+      <th></th>
+    </tr>
+  </thead>
+<tbody>
+  <tr>
+    <td>
+      5 Seat
+    </td>
+    <td style="padding-top: 5px; padding-bottom: 5px;">
+      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=5" style="text-decoration:none;
+        background: #FF3421;
+        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
+        font-weight:300;
+        font-stretch:normal;
+        text-align:center;
+        color:#fff;
+        font-size:15px;
+        /*button styles*/
+        border-radius:7px !important;
+        -webkit-border-radius: 7px !important;
+        -moz-border-radius: 7px !important;
+        -o-border-radius: 7px !important;
+        -ms-border-radius: 7px !important;
+        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
+         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
+    </td>
+  </tr> 
+  <tr>
+    <td style="padding-top: 5px; padding-bottom: 5px;">
+      10 Seat
+    </td>
+    <td style="padding-top: 5px; padding-bottom: 5px;">
+      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=10" style="text-decoration:none;
+        background: #FF3421;
+        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
+        font-weight:300;
+        font-stretch:normal;
+        text-align:center;
+        color:#fff;
+        font-size:15px;
+        /*button styles*/
+        border-radius:7px !important;
+        -webkit-border-radius: 7px !important;
+        -moz-border-radius: 7px !important;
+        -o-border-radius: 7px !important;
+        -ms-border-radius: 7px !important;
+        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
+         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding-top: 5px; padding-bottom: 5px;">
+      15 Seat
+    </td>
+    <td style="padding-top: 5px; padding-bottom: 5px;">
+      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=15" style="text-decoration:none;
+        background: #FF3421;
+        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
+        font-weight:300;
+        font-stretch:normal;
+        text-align:center;
+        color:#fff;
+        font-size:15px;
+        /*button styles*/
+        border-radius:7px !important;
+        -webkit-border-radius: 7px !important;
+        -moz-border-radius: 7px !important;
+        -o-border-radius: 7px !important;
+        -ms-border-radius: 7px !important;
+        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
+         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      20 Seat
+    </td>
+    <td style="padding-top: 5px; padding-bottom: 5px;">
+      <a href="book.gilitransfers-local.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=20" style="text-decoration:none;
+        background: #FF3421;
+        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
+        font-weight:300;
+        font-stretch:normal;
+        text-align:center;
+        color:#fff;
+        font-size:15px;
+        /*button styles*/
+        border-radius:7px !important;
+        -webkit-border-radius: 7px !important;
+        -moz-border-radius: 7px !important;
+        -o-border-radius: 7px !important;
+        -ms-border-radius: 7px !important;
+        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
+         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
+    </td>
+  </tr>   
+</tbody>
+</table>
+<!-- Availability Info end -->
+
+
 Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
  <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
  <li>+62-813-5330-4990</li>

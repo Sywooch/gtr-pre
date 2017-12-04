@@ -44,7 +44,7 @@ class MailerController extends Controller
     public function actionPaypal(){
         
         if (($modelQueue = TMailQueue::getQueueList(TMailQueue::STATUS_QUEUE)) !== null) {
-            //$modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
+            // $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
             $modelPayment = TPayment::findOne($modelQueue->id_payment);
             $modelBooking = $modelPayment->tBookings;
             $findShuttle = $this->findShuttle();
@@ -144,18 +144,18 @@ class MailerController extends Controller
                         ]
                     ]);
                 $Receipt->render();
-               Yii::$app->mailReservation->compose()
-                ->setFrom('reservation@gilitransfers.com')
-                ->setTo($modelPayment->email)
-                ->setBcc('reservation@gilitransfers.com')
-                ->setSubject('E-Ticket GiliTransfers')
-                ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
-                    'modelBooking'=>$modelBooking,
-                    'modelPayment'=>$modelPayment,
-                    ]))
-                ->attach($savePath."E-Ticket.pdf")
-                ->attach($savePath."Receipt.pdf")
-                ->send();
+               // Yii::$app->mailReservation->compose()
+               //  ->setFrom('reservation@gilitransfers.com')
+               //  ->setTo($modelPayment->email)
+               //  ->setBcc('reservation@gilitransfers.com')
+               //  ->setSubject('E-Ticket GiliTransfers')
+               //  ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
+               //      'modelBooking'=>$modelBooking,
+               //      'modelPayment'=>$modelPayment,
+               //      ]))
+               //  ->attach($savePath."E-Ticket.pdf")
+               //  ->attach($savePath."Receipt.pdf")
+               //  ->send();
 
                 foreach ($modelBooking as $key => $value) {
                 //     $PdfSupplier = new Pdf([
@@ -202,7 +202,7 @@ class MailerController extends Controller
 
                 FileHelper::removeDirectory($savePath);
                 
-                $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
+                // $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
             } catch(\Exception $e) {
                 $modelQueue->setQueueStatus(TMailQueue::STATUS_RETRY);
                  FileHelper::removeDirectory($savePath);
@@ -220,8 +220,12 @@ class MailerController extends Controller
                     ->setTo($to)
                     ->setSubject('Booking For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
                     ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
-                        'modelBooking'  =>$modelBooking,
-                        'modelPayment'  =>$modelPayment,
+                        'modelBooking' => $modelBooking,
+                        'modelPayment' => $modelPayment,
+                        'user_token'   => Yii::$app->getSecurity()->maskToken($modelBooking->idTrip->idBoat->idCompany->idUser->auth_key),
+                        'date'         => $modelBooking->idTrip->date,
+                        'dept_time'    => $modelBooking->idTrip->dept_time,
+                        'island_route' => $modelBooking->idTrip->idRoute->departureHarbor->id_island.'-'.$modelBooking->idTrip->idRoute->arrivalHarbor->id_island,
                         ]))
                     ->send();
         return true;
@@ -239,10 +243,10 @@ class MailerController extends Controller
                  ->setTo($modelPayment->email)
                  ->setSubject('Invoice GiliTransfers')
                  ->setHtmlBody($this->renderAjax('/email-ticket/email-invoice',[
-                 'modelBooking'=>$modelBooking,
-                 'modelPayment'=>$modelPayment,
-                 'findPassenger'=>$findPassenger,
-                 'maskToken'=>Yii::$app->getSecurity()->maskToken($modelPayment->token),
+                 'modelBooking'  => $modelBooking,
+                 'modelPayment'  => $modelPayment,
+                 'findPassenger' => $findPassenger,
+                 'maskToken'     => Yii::$app->getSecurity()->maskToken($modelPayment->token),
                  ]))
                  ->send();
                  $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);

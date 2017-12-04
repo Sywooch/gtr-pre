@@ -146,7 +146,7 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 </center><br>
 
 <!-- EmailContentPayeeTransaction : end -->
-<span style="font-size:11px;color:#333;">Please do not reply to this email. This mailbox is not monitored and you will not receive a response.</span><br>
+
  <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
  <li>+62-813-5330-4990</li>
  <li><a id="button_text" style="text-decoration: none; font-size: 110%" class="applefix" href="Gilitransfers.com">https://Gilitransfers.com</a></li>

@@ -95,6 +95,9 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [ 
         'site/*',
+        'trip/topup-by-email',
+        'trip/topup-success',
+        'trip/topup-failed',
         ]
     ]
 ];
