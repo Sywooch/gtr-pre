@@ -147,7 +147,7 @@ class MailerController extends Controller
                Yii::$app->mailReservation->compose()
                 ->setFrom('reservation@gilitransfers.com')
                 ->setTo($modelPayment->email)
-                //->setBcc('reservation@gilitransfers.com')
+                ->setBcc('reservation@gilitransfers.com')
                 ->setSubject('E-Ticket GiliTransfers')
                 ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
                     'modelBooking'=>$modelBooking,
@@ -156,6 +156,7 @@ class MailerController extends Controller
                 ->attach($savePath."E-Ticket.pdf")
                 ->attach($savePath."Receipt.pdf")
                 ->send();
+
                 foreach ($modelBooking as $key => $value) {
                 //     $PdfSupplier = new Pdf([
                 // 'filename'=>$savePath.$value->id.'.pdf',

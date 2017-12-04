@@ -40,6 +40,8 @@ class TripController extends Controller
         ];
     }
 
+    
+
     public function actionGetAvaibleRoute(){
        // if (Yii::$app->request->isPost) {
             $Trip = TTrip::find()->joinWith(['idBoat.idCompany','idRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->all();
@@ -293,7 +295,7 @@ class TripController extends Controller
             }else{
                 foreach ($date as $value) {
 
-                    $modelTrip         = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->where(['t_company.id_user'=>Yii::$app->user->identity->id,'dept_time'=>$deptTime,'date'=>$value,'CONCAT( departure.id_island, "-", arrival.id_island)'=>$islandRoute])->all();
+                    $modelTrip         = $this->findTripByIsland($value,$deptTime,$islandRoute);
                     $transaction = Yii::$app->db->beginTransaction();
                     try {
                         foreach ($modelTrip as $key => $value) {
@@ -370,59 +372,59 @@ class TripController extends Controller
     }
 
 
-    public function actionChangeStatus(){
-        if (Yii::$app->request->isAjax) {
-            $data = Yii::$app->request->post();
-            $idTrip = $data['id'];
-            $status = $data['sts'];
-            if(Helper::checkRoute('/booking/validation')){
-                foreach ($idTrip as $key => $value) {
-                $Trip         = $this->findModel($value);
-                $Trip->status = $status;
-                $Trip->validate();
-                $Trip->save(false);
-                }
-            }else{
-                foreach ($idTrip as $key => $value) {
-                    $Trip         = $this->findModel($value);
-                    if ($Trip->status == '3') {
+    // public function actionChangeStatus(){
+    //     if (Yii::$app->request->isAjax) {
+    //         $data = Yii::$app->request->post();
+    //         $idTrip = $data['id'];
+    //         $status = $data['sts'];
+    //         if(Helper::checkRoute('/booking/validation')){
+    //             foreach ($idTrip as $key => $value) {
+    //             $Trip         = $this->findModel($value);
+    //             $Trip->status = $status;
+    //             $Trip->validate();
+    //             $Trip->save(false);
+    //             }
+    //         }else{
+    //             foreach ($idTrip as $key => $value) {
+    //                 $Trip         = $this->findModel($value);
+    //                 if ($Trip->status == '3') {
                         
-                    }else{
-                    $Trip->status = $status;
-                    $Trip->validate();
-                    $Trip->save(false);
-                    }
-                }
-            }
-        }
-    }
+    //                 }else{
+    //                 $Trip->status = $status;
+    //                 $Trip->validate();
+    //                 $Trip->save(false);
+    //                 }
+    //             }
+    //         }
+    //     }
+    // }
 
-    public function actionTopup(){
-        if (Yii::$app->request->isAjax) {
-            $data = Yii::$app->request->post();
-            $idTrip = $data['id'];
-            $topvalue = $data['topup'];
-            $type = $data['type'];
-            if ($type == '1') {
-               foreach ($idTrip as $key => $value) {
-                $modelTrip         = $this->findModel($value);
-                $modelTrip->stock = $modelTrip->stock+$topvalue;
-                $modelTrip->validate();
-                $modelTrip->save(false);
-                } 
-            }elseif ($type == '2') {
-                foreach ($idTrip as $key => $value) {
-                $modelTrip         = $this->findModel($value);
-                $modelTrip->stock = $modelTrip->stock-$topvalue;
-                $modelTrip->validate();
-                $modelTrip->save(false);
-                } 
-            }else{
-                return true;
-            }
+    // public function actionTopup(){
+    //     if (Yii::$app->request->isAjax) {
+    //         $data = Yii::$app->request->post();
+    //         $idTrip = $data['id'];
+    //         $topvalue = $data['topup'];
+    //         $type = $data['type'];
+    //         if ($type == '1') {
+    //            foreach ($idTrip as $key => $value) {
+    //             $modelTrip         = $this->findModel($value);
+    //             $modelTrip->stock = $modelTrip->stock+$topvalue;
+    //             $modelTrip->validate();
+    //             $modelTrip->save(false);
+    //             } 
+    //         }elseif ($type == '2') {
+    //             foreach ($idTrip as $key => $value) {
+    //             $modelTrip         = $this->findModel($value);
+    //             $modelTrip->stock = $modelTrip->stock-$topvalue;
+    //             $modelTrip->validate();
+    //             $modelTrip->save(false);
+    //             } 
+    //         }else{
+    //             return true;
+    //         }
             
-        }
-    }
+    //     }
+    // }
 
     public function actionChangePrice(){
         if (Yii::$app->request->isAjax) {
@@ -515,9 +517,9 @@ protected function findTrip(){
             }else{
                 if ($request->post('company') != null) {
                     $session['filter']=[
-                    'company'=>$request->post('company'),
-                    'islandRoute'=>$request->post('islandRoute'),
-                    'time'=>$request->post('time'),
+                    'company'     => $request->post('company'),
+                    'islandRoute' => $request->post('islandRoute'),
+                    'time'        => $request->post('time'),
                     ];
                 }
                 return $this->renderAjax('supplier/trip-schedule',[
