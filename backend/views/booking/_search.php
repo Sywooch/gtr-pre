@@ -27,7 +27,11 @@ $this->registerJs(
             $("#loading-pjax").html(\'<img src="/spinner.svg">\');
         }); 
         $("#pjax-form-search").on("pjax:end", function() {
-            $.pjax.reload({container:"#pjax-table-booking"});  //Reload GridView
+            
+            $.pjax.reload({
+                container:"#pjax-table-booking",
+                timeout: 5000,
+            });  //Reload GridView
             $("#loading-pjax").empty();
 
         });
