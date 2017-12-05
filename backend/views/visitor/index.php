@@ -17,6 +17,16 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php Pjax::begin(); ?>    <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'panel'           => ['type'=>'primary', 'heading'=>'Booking Data'],
+        'striped'         => true,
+        'bordered'        => true,
+        'hover'           => true,
+        'responsive'      => true,
+        'responsiveWrap'  => true,
+        'pjax'            => true,
+        'pjaxSettings'    =>[
+            'neverTimeout' =>true,
+        ],
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
