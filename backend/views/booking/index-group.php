@@ -23,8 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'listCompany' => $listCompany,
 
                 ]); ?>
-    
-
+                
 </div>
 <center><b id="loading-pjax"></b></center>
 <span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>

@@ -153,6 +153,20 @@ $model->rangeType = $rangeType;
   
 
       </div>
+    <div class="col-md-12">
+    <b>Switch to Group Table</b>
+    <div class="main-container__column materail-switch materail-switch_warning">
+        <?= Html::activeCheckbox($model, 'table_layout', [
+            'label'   => false,
+            'class'   => 'materail-switch__element',
+            'id'      => 'switch-table',
+            'value'   => 'group',
+            'checked' => 'group',
+            
+            ]); ?>
+        <label class="materail-switch__label" for="switch-table"></label>
+    </div>
+    </div>
 <?php ActiveForm::end(); ?>
 <?php yii\widgets\Pjax::end() ?>
 

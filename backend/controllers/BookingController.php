@@ -169,22 +169,35 @@ protected function findAllBooking(){
         $searchModel = new TBookingSearch();
         $dataProvider = $searchModel->summarySearch(Yii::$app->request->queryParams);
         $findPassengers = TPassenger::find();
-        
         $listCompany = ArrayHelper::map(TCompany::find()->asArray()->all(), 'id', 'name');
-
         foreach ($this->findAllBooking() as $key => $value) {
             $res[] = $value->id;
         }
         if(Helper::checkRoute('/booking/*')){
             $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
-            return $this->render('index', [
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                'findPassengers' => $findPassengers,
-                'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
-                'listDept' => $listDept,
-                'listCompany' => $listCompany,
-            ]);
+            $request = Yii::$app->request;
+            $table_layout = isset(Yii::$app->request->queryParams['TBookingSearch']['table_layout']) ? Yii::$app->request->queryParams['TBookingSearch']['table_layout'] : null;
+            var_dump($table_layout);
+            if ($table_layout == $searchModel::LAYOUT_GROUP) {
+                return $this->render('index-group', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'findPassengers' => $findPassengers,
+                    'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
+                    'listDept' => $listDept,
+                    'listCompany' => $listCompany,
+                ]);
+            }else{
+
+                return $this->render('index-flat', [
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
+                    'findPassengers' => $findPassengers,
+                    'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
+                    'listDept' => $listDept,
+                    'listCompany' => $listCompany,
+                ]);
+            }
         }else{
             $listDept = ArrayHelper::map(TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->asArray()->all(), 'idRoute.departure', 'idRoute.departureHarbor.name');
             return $this->render('supplier/index', [
