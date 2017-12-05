@@ -177,7 +177,6 @@ protected function findAllBooking(){
             $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
             $request = Yii::$app->request;
             $table_layout = isset(Yii::$app->request->queryParams['TBookingSearch']['table_layout']) ? Yii::$app->request->queryParams['TBookingSearch']['table_layout'] : null;
-            var_dump($table_layout);
             if ($table_layout == $searchModel::LAYOUT_GROUP) {
                 return $this->render('index-group', [
                     'searchModel' => $searchModel,
