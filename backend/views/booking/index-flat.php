@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
-
+use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
 /* @var $this yii\web\View */
@@ -21,6 +21,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'bookingList' => $bookingList,
                 'listDept' => $listDept,
                 'listCompany' => $listCompany,
+                'listBuyer'      => $listBuyer,
 
                 ]); ?>
     
@@ -131,6 +132,18 @@ $this->params['breadcrumbs'][] = $this->title;
                     
                 }
             ],
+            [
+            'header'=>'Detail',
+            'format'=>'raw',
+            'value'=>function($model){
+                return  Html::a('', ['detail-modal','id_booking'=>$model->id], [
+            'class' => 'btn btn-xs btn-warning glyphicon glyphicon-modal-window',
+            'data-toggle'=>"modal",
+            'data-target'=>"#booking-modal",
+            'data-title'=>"Detail Data",
+            ]);
+            }
+            ],
         ],
     ]); ?>
 <?php Pjax::end(); ?>
@@ -144,6 +157,33 @@ $customCss = <<< SCRIPT
     }
 SCRIPT;
 $this->registerCss($customCss);
+?>
+<?php
+
+Modal::begin([
+    'id'=>'booking-modal',
+    'header' => '<h2>Booking Detail</h2>',
+    'size'=>'modal-lg',
+]);
+
+echo '...';
+
+Modal::end();
+
+$this->registerJs("
+    $('#booking-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget)
+        var modal = $(this)
+        var title = button.data('title') 
+        var href = button.attr('href') 
+        modal.find('.modal-title').html(title)
+        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        $.post(href)
+            .done(function( data ) {
+                modal.find('.modal-body').html(data)
+            });
+        })
+    ");
 ?>
 <?php
 $this->registerJs("

@@ -67,7 +67,21 @@ $this->registerJs(
         ]
     ]
 ]); ?>
-
+    <?= $form->field($model, 'buyer_name',$template2)->widget(Select2::classname(), [
+            'data' => $listBuyer,
+            'options' => ['placeholder' => 'Find Buyer Name'],
+            'pluginOptions' => [
+                'allowClear' => true,
+            ],
+        ]); ?>
+<?= $form->field($model, 'id_company',$template2)->widget(Select2::classname(), [
+                                'data' => $listCompany,
+                                'options' => ['placeholder' => 'Select Company...'],
+                                'pluginOptions' => [
+                                'allowClear' => true
+                                ],
+                                ])->label('Company');
+     ?>
     <?= $form->field($model, 'departure',$template2)->dropDownList($listDept, ['id' => 'dept-port','prompt'=>'Select Departure Port']); ?>
     <?= $form->field($model, 'date',$template2)->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Select Date'],
@@ -127,20 +141,11 @@ $model->rangeType = $rangeType;
 
     ?>
     </div>
-    <div class="col-md-4 col-md-offset-9">
+    <div class="col-md-12">
         <?= Html::activeRadioList($model, 'rangeType', ['1'=>'Trip Date','2'=>'Book Date'], ['id' => 'radio-range-type']); ?>
     </div>
 
-    <div class="col-md-2">
-<?= $form->field($model, 'id_company')->widget(Select2::classname(), [
-                                'data' => $listCompany,
-                                'options' => ['placeholder' => 'Select Company...'],
-                                'pluginOptions' => [
-                                'allowClear' => true
-                                ],
-                                ])->label('Company');
-     ?>
-</div>
+    
 
 
 

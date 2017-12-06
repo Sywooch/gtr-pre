@@ -175,27 +175,30 @@ protected function findAllBooking(){
         }
         if(Helper::checkRoute('/booking/*')){
             $listDept = ArrayHelper::map(THarbor::find()->all(), 'id', 'name', 'idIsland.island');
+            $listBuyer = ArrayHelper::map(TPayment::find()->asArray()->groupBy(['name'])->all(), 'name', 'name');
             $request = Yii::$app->request;
             $table_layout = isset(Yii::$app->request->queryParams['TBookingSearch']['table_layout']) ? Yii::$app->request->queryParams['TBookingSearch']['table_layout'] : null;
             if ($table_layout == $searchModel::LAYOUT_GROUP) {
                 $dataProvider->pagination->pageSize=100;
                 return $this->render('index-group', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+                    'searchModel'    => $searchModel,
+                    'dataProvider'   => $dataProvider,
                     'findPassengers' => $findPassengers,
-                    'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
-                    'listDept' => $listDept,
-                    'listCompany' => $listCompany,
+                    'bookingList'    => isset($res) ? $res : $res = ['empty'=>'empty'],
+                    'listDept'       => $listDept,
+                    'listCompany'    => $listCompany,
+                    'listBuyer'      => $listBuyer,
                 ]);
             }else{
 
                 return $this->render('index-flat', [
-                    'searchModel' => $searchModel,
-                    'dataProvider' => $dataProvider,
+                    'searchModel'    => $searchModel,
+                    'dataProvider'   => $dataProvider,
                     'findPassengers' => $findPassengers,
-                    'bookingList' => isset($res) ? $res : $res = ['empty'=>'empty'],
-                    'listDept' => $listDept,
-                    'listCompany' => $listCompany,
+                    'bookingList'    => isset($res) ? $res : $res = ['empty'=>'empty'],
+                    'listDept'       => $listDept,
+                    'listCompany'    => $listCompany,
+                    'listBuyer'      => $listBuyer,
                 ]);
             }
         }else{

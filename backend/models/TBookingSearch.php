@@ -26,13 +26,14 @@ class TBookingSearch extends TBooking
     public $id_company;
     public $rangeType;
     public $table_layout;
+    public $buyer_name;
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['id', 'currency', 'expired_time', 'datetime','startDate','endDate','bookdate','date','table_layout'], 'safe'],
+            [['id', 'currency', 'expired_time', 'datetime','startDate','endDate','bookdate','date','table_layout','buyer_name'], 'safe'],
             [['table_layout'],'default','value'=>self::LAYOUT_FLAT],
             [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'process_by','departure','id_route','id_company','rangeType'], 'integer'],
             [['trip_price', 'total_price'], 'number'],
@@ -64,9 +65,9 @@ class TBookingSearch extends TBooking
         if(Helper::checkRoute('/booking/*')){
 
             if ($this->table_layout == 'group') {
-                $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
+                $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute','idPayment'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
             }else{
-                 $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->orderBy(['t_booking.datetime'=>SORT_DESC]);
+                 $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute','idPayment'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->orderBy(['t_booking.datetime'=>SORT_DESC]);
             }
         
        }else{
@@ -130,7 +131,8 @@ class TBookingSearch extends TBooking
 
     
         $query->andFilterWhere(['like', 't_booking.id', $this->id])
-            ->andFilterWhere(['like', 't_booking.datetime', $this->bookdate]);
+            ->andFilterWhere(['like', 't_booking.datetime', $this->bookdate])
+            ->andFilterWhere(['like', 't_payment.name', $this->buyer_name]);
 
         return $dataProvider;
     }
