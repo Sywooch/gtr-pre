@@ -61,9 +61,7 @@ class TBookingSearch extends TBooking
     public function summarySearch($params){
         if(Helper::checkRoute('/booking/*')){
             $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL]);
-            if ($this->table_layout == self::LAYOUT_FLAT ) {
-                $query->orderBy(['t_company.update_at'=>SORT_DESC]);
-            }elseif ($this->table_layout == self::LAYOUT_GROUP) {
+            if ($this->table_layout == 'group') {
                 $query->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
             }
         
@@ -72,10 +70,22 @@ class TBookingSearch extends TBooking
        }
 
         // add conditions that should always apply here
-
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
+       if ($this->table_layout == 'group' ) {
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+            ]);
+        }else{
+            
+            $dataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'sort'=>[
+                     'defaultOrder'=>[
+                    'datetime'=>SORT_DESC,
+                    //'dept_time'=>SORT_ASC
+                    ]
+                ]
+            ]);
+        }
 
         $this->load($params);
 
