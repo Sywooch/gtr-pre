@@ -178,6 +178,7 @@ protected function findAllBooking(){
             $request = Yii::$app->request;
             $table_layout = isset(Yii::$app->request->queryParams['TBookingSearch']['table_layout']) ? Yii::$app->request->queryParams['TBookingSearch']['table_layout'] : null;
             if ($table_layout == $searchModel::LAYOUT_GROUP) {
+                $dataProvider->pagination->pageSize=100;
                 return $this->render('index-group', [
                     'searchModel' => $searchModel,
                     'dataProvider' => $dataProvider,
