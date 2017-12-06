@@ -56,27 +56,27 @@ $('.trip-text').mouseenter(function(){
  ?>
   <?php 
 
-$this->registerJs('
-  var vcom   = '.$session['filter']['company'].';
-  var vroute = '.$session['filter']['islandRoute'].';
-  var vtime  = "'.$session['filter']['time'].'";
-  $("#header-trip-schedule").html("<center>Please Wait...<br><img height=\'50px\' src=\'/spinner.svg\'></center>");
-$.ajax({
-      url:"'.Url::to(["header-trip-schedule"]).'",
-      type: "POST",
-      data:{
-          company: vcom,
-          route: vroute,
-          time: vtime,
-        },
-      success:function(data){
-        $("#header-trip-schedule").html(data);
-      },
-      error:function(data){
-        $("#header-trip-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
-      },
-    });
-  ', \yii\web\View::POS_READY);
+// $this->registerJs('
+//   var vcom   = '.$session['filter']['company'].';
+//   var vroute = '.$session['filter']['islandRoute'].';
+//   var vtime  = "'.$session['filter']['time'].'";
+//   $("#header-trip-schedule").html("<center>Please Wait...<br><img height=\'50px\' src=\'/spinner.svg\'></center>");
+// $.ajax({
+//       url:"'.Url::to(["header-trip-schedule"]).'",
+//       type: "POST",
+//       data:{
+//           company: vcom,
+//           route: vroute,
+//           time: vtime,
+//         },
+//       success:function(data){
+//         $("#header-trip-schedule").html(data);
+//       },
+//       error:function(data){
+//         $("#header-trip-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
+//       },
+//     });
+//   ', \yii\web\View::POS_READY);
  ?>
  <div class="row">
    <div id="header-trip-schedule" class="col-md-12">
@@ -149,7 +149,7 @@ for ($d=1;$d<=$endDate;$d++) {
     if (!empty($trips)) {
         foreach ($trips as $key => $value) {
           if ($value->id_season == null) {
-            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", '#detail', ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", null, ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
 
           }else{
             if ($value->status == 1) {
@@ -160,7 +160,7 @@ for ($d=1;$d<=$endDate;$d++) {
               $warna_text = "trip-text pull-left bg-danger text-danger append tip";
             }
            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")",
-           '#detail', ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+           null, ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
 
           }
         //checkbox per trip
@@ -169,14 +169,14 @@ for ($d=1;$d<=$endDate;$d++) {
         // Popover Start
         echo "<div id='".$value->id."' class='hidden panel panel-primary'>
           <div class='col-lg-12 popover-heading panel bg-primary'><center><strong>".$value->idBoat->idCompany->name."</strong><div class='pull-right'>".
-          Html::a('', ['update','id'=>$value->id], ['class'=>'btn btn-xs btn-primary glyphicon glyphicon-pencil'])." ".
-          Html::a('', ['delete', 'id' => $value->id], [
-            'class' => 'btn btn-xs btn-danger glyphicon glyphicon-trash',
-            'data' => [
-                'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
-                'method' => 'post',
-            ],
-          ]).
+          // Html::a('', ['update','id'=>$value->id], ['class'=>'btn btn-xs btn-primary glyphicon glyphicon-pencil'])." ".
+          // Html::a('', ['delete', 'id' => $value->id], [
+          //   'class' => 'btn btn-xs btn-danger glyphicon glyphicon-trash',
+          //   'data' => [
+          //       'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+          //       'method' => 'post',
+          //   ],
+          // ]).
           "</div></center></div>
           <div class='popover-body list-group col-lg-12' >
           <div class='col-sm-3' style='font-weight:bold;'>Date</div><div class='col-sm-9'>".date('d-m-Y',strtotime($value->date))."</div>

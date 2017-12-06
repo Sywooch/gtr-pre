@@ -55,17 +55,16 @@ $this->params['breadcrumbs'][] = $this->title;
             
             [
             'header'=>'Route',
-            'attribute'=>'id_route',
             'format'=>'raw',
             'value'=>function($model){
               return $model->idRoute->departureHarbor->idIsland->island." <span class='fa fa-arrow-right'>to</span> ".$model->idRoute->arrivalHarbor->idIsland->island;
             },
-            'filterType'=>GridView::FILTER_SELECT2,
-            'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route','island'), 
-            'filterWidgetOptions'=>[
-                'pluginOptions'=>['allowClear'=>true],
-                  ],
-            'filterInputOptions'=>['placeholder'=>'Any Route...'],
+            // 'filterType'=>GridView::FILTER_SELECT2,
+            // 'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route','island'), 
+            // 'filterWidgetOptions'=>[
+            //     'pluginOptions'=>['allowClear'=>true],
+            //       ],
+            // 'filterInputOptions'=>['placeholder'=>'Any Route...'],
             ],
             [
             'header'=>'Time',
@@ -87,13 +86,7 @@ $this->params['breadcrumbs'][] = $this->title;
               return date('d-m-Y',strtotime($model->minDate))." - ".date('d-m-Y',strtotime($model->maxDate));
             }
             ],
-            [
-            'header'=>'Island',
-            'format'=>'raw',
-            'value'=>function($model){
-              return $model->islandRoute;
-            },
-            ],
+
             [
             'header'=>'View',
             'format'=>'raw',

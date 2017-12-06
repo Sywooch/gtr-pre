@@ -6,6 +6,8 @@ use Yii;
 use common\models\TBooking;
 use app\models\TBookingSearch;
 use app\models\BookingValidate;
+use backend\models\TBookingLog;
+use backend\models\TPaymentLog;
 use common\models\TPassenger;
 use common\models\TRoute;
 use common\models\THarbor;
@@ -40,8 +42,25 @@ class BookingController extends Controller
         ];
     }
 
-    public function actionCekNotif(){
-        
+    public function actionReadCheckPayment(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelLogPayment = TPaymentLog::addPaymmentLog($data['idp'],3);
+        }
+    }
+
+    public function actionCheckLog($id_payment){
+        if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser'])->where(['id_payment'=>$id_payment,'id_event'=>TBookingLog::EVENT_READ_CHECK])->asArray()->one()) != null){
+           return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#log-".$modelLogPayment['id_payment']."' data-placement='right' class='btn btn-xs btn-success fa fa-check-square-o'></a><div id='log-".$modelLogPayment['id_payment']."' class='hidden panel panel-primary'>
+                <div class='popover-body list-group col-lg-12' >
+                <span class='fa fa-check-square-o'></span> ".$modelLogPayment['idUser']['username']."<br>
+                <span class='fa fa-clock-o'></span> ".date('d-m-Y H:i:s',strtotime($modelLogPayment['datetime']))."
+                </div>
+                </div>";
+        }else{
+            return "<a data-toggle='tooltip' title='Mark As Read & Check' class='read-btn btn btn-xs btn-danger fa fa-remove'
+                    value='".$id_payment."'></a>";
+        }
     }
 
     public function actionPaymentSlip($id){
@@ -229,12 +248,13 @@ protected function findAllBooking(){
             $modelPayment = $this->findPayment($data['id']);
             $transaction = Yii::$app->db->beginTransaction();
             try {
-                $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_CONFIRM_NOT_RECEIVED,$modelPayment::STATUS_CONFIRM_RECEIVED);
+                $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_CONFIRM_NOT_RECEIVED,$modelPayment::STATUS_CONFIRM_RECEIVED,true,1);
                 $modelPayment->validate();
                 $modelPayment->save(false);
+                
                 //payment status 3 booking status 4;
                 $modelQueue = TMailQueue::addTicketQueue($modelPayment->id);
-                $transaction->commit();
+               $transaction->commit();
                 return true;
             } catch(\Exception $e) {
                 $transaction->rollBack();
@@ -260,10 +280,10 @@ protected function findAllBooking(){
             $modelPayment = $this->findPayment($data['id']);
             $transaction = Yii::$app->db->beginTransaction();
            try {
-                $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_INVALID,$modelPayment::STATUS_INVALID);
+                $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_INVALID,$modelPayment::STATUS_INVALID,true,2);
                 $modelPayment->save(false);
                 //payment status 100 booking status 100;
-                $transaction->commit();
+               $transaction->commit();
             } catch(\Exception $e) {
                 $transaction->rollBack();
                 throw $e;

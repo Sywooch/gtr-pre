@@ -3,7 +3,8 @@
 namespace common\models;
 
 use Yii;
-
+use backend\models\TBookingLog;
+use backend\models\TPaymentLog;
 /**
  * This is the model class for table "t_payment".
  *
@@ -155,6 +156,8 @@ class TPayment extends \yii\db\ActiveRecord
     //     }
     // }
 
+
+
     public function setPaymentStatus($status){
         $this->status = $status;
         $this->save();
@@ -166,18 +169,23 @@ class TPayment extends \yii\db\ActiveRecord
         return true;
     }
 
-    public function setPaymentBookingStatus($payment_status, $booking_status){
-        $this->status = $payment_status;
-        // if ($payment_status == self::STATUS_INVALID) {
-        //     foreach ($this->tBookings as $key => $valBooking) {
-        //         $valBooking->delete();
-        //     }
-        // }else{
-            foreach ($this->tBookings as $key => $valBooking) {
-                $valBooking->id_status = $booking_status;
-                $valBooking->save();
+    public function setPaymentBookingStatus($payment_status, $booking_status, $log = false,$event = null){
+            $this->status = $payment_status;
+             if ($log == true) {
+                $modelPaymentLog = TPaymentLog::addPaymmentLog($this->id,$event);
+                foreach ($this->tBookings as $key => $valBooking) {
+                    $valBooking->id_status = $booking_status;
+                    $valBooking->save();
+                    $modelBookingLog = TBookingLog::addLog($valBooking->id,$event);
+                }
+                    
+            }else{
+                foreach ($this->tBookings as $key => $valBooking) {
+                    $valBooking->id_status = $booking_status;
+                    $valBooking->save();
+                }
             }
-        //}
+            
     }
 
 

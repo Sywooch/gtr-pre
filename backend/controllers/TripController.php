@@ -50,13 +50,16 @@ class TripController extends Controller
     }
 
     public function actionTopupSuccess(){
+        $this->layout = 'main-login';
         return $this->render('topup-successfull');
     }
     public function actionTopupFailed(){
+        $this->layout = 'main-login';
         return $this->render('topup-failed');
     }
     public function actionTopupByEmail($token,$date,$dept_time,$island_route,$value){
         if (Yii::$app->request->isGet) {
+            $this->layout = 'main-login';
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $userId = $this->findUserByMAskToken($token);
@@ -91,7 +94,7 @@ class TripController extends Controller
        // if (Yii::$app->request->isPost) {
             $Trip = TTrip::find()->joinWith(['idBoat.idCompany','idRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->all();
             foreach ($Trip as $key => $value) {
-                $list[$key] = ['id'=>$value->idRoute->id,'route'=>$value->idRoute->departureHarbor->name."->".$value->idRoute->arrivalHarbor->name,'island'=>$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island];
+                $list[$key] = ['id'=>$value->idRoute->id,'route'=>$value->idRoute->departureHarbor->name." to ".$value->idRoute->arrivalHarbor->name,'island'=>$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island];
             }
         return $list; 
         //}

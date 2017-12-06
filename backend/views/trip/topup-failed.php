@@ -13,7 +13,7 @@ $this->title = 'Topup Failed';
         <p><b></b>
         <br>Please Try Again...
         </p>
-       
+       <?= Html::a('Go Home', ['/'], ['class' => 'btn btn-block material-btn material-btn_warning main-container__column material-btn_lg']); ?>
       </div>
 <?php
 

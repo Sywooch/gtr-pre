@@ -48,8 +48,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw',
                 'contentOptions'=>['style'=>'font-size:15px;'],
                 'value'=>function ($model, $key, $index, $widget) {
-                
-                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime));
+                    $logStatus = Yii::$app->runAction('/booking/check-log',['id_payment'=>$model->id_payment]);
+                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <b>".$logStatus."</b>";
                 },
                 
                 'group'             =>true,  // enable grouping,
@@ -105,7 +105,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if (!empty($model->shuttleTmp->id_booking)) {
                         return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."' data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b> ( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br> Required ".$model->shuttleTmp->type." in ".$model->shuttleTmp->idArea->area."-".$model->shuttleTmp->location_name."-".$model->shuttleTmp->address."-".$model->shuttleTmp->phone.$popover;
                     }else{
-                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br>".$popover;
+                        return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br>".$popover;
                 }
                 }
             ],
@@ -169,9 +169,10 @@ Modal::begin([
 echo '...';
 
 Modal::end();
-
+?>
+<?php
 $this->registerJs("
-    $('#booking-modal').on('show.bs.modal', function (event) {
+ $('#booking-modal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
         var modal = $(this)
         var title = button.data('title') 
@@ -182,12 +183,7 @@ $this->registerJs("
             .done(function( data ) {
                 modal.find('.modal-body').html(data)
             });
-        })
-    ");
-?>
-<?php
-$this->registerJs("
-
+        });
 $(function(){
     $('[data-toggle=popover]').popover({
         html : true,
@@ -202,5 +198,17 @@ $(function(){
         }
     });
   });
+$('.read-btn').on('click',function(){
+    var vidp = $(this).attr('value');
+    $.ajax({
+        url: '".Url::to(["read-check-payment"])."',
+        type:'POST',
+        data:{idp :vidp},
+        success: function (data) {
+             location.reload();
+        }
+    });
+})
+    
     ");
  ?>

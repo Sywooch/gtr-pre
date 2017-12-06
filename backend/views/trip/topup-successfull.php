@@ -11,6 +11,9 @@ $this->title = 'Topup Successfull';
         <h1>Thank You</h1>
         <span class="alerticon"><img src="/thanks.png" alt="checkmark" /></span>
         <p><b>Topup Successful...!</b>
+
+        </p>
+        <?= Html::a('Go Home', ['/'], ['class' => 'btn btn-block material-btn material-btn_warning main-container__column material-btn_lg']); ?>
       </div>
 <?php
 
