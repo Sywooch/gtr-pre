@@ -34,7 +34,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel'  => $searchModel,
-        'panel'=>['type'=>'primary', 'heading'=>'Validation Data'],
+        'panel'=>['type'=>'primary', 'heading'=>'Booking Data'],
         'striped'      =>true,
         'bordered'  => true,
         'hover'        =>true,
