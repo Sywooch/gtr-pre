@@ -33,7 +33,7 @@ class TBookingSearch extends TBooking
     {
         return [
             [['id', 'currency', 'expired_time', 'datetime','startDate','endDate','bookdate','date','table_layout'], 'safe'],
-            ['table_layout','default','value'=>self::LAYOUT_FLAT],
+            [['table_layout'],'default','value'=>self::LAYOUT_FLAT],
             [['id_trip', 'id_payment', 'total_idr', 'exchange', 'id_status', 'process_by','departure','id_route','id_company','rangeType'], 'integer'],
             [['trip_price', 'total_price'], 'number'],
         ];
@@ -59,10 +59,14 @@ class TBookingSearch extends TBooking
      */
 
     public function summarySearch($params){
+        $this->load($params);
+
         if(Helper::checkRoute('/booking/*')){
-            $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL]);
+
             if ($this->table_layout == 'group') {
-                $query->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
+                $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
+            }else{
+                 $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->orderBy(['t_booking.datetime'=>SORT_DESC]);
             }
         
        }else{
@@ -70,12 +74,13 @@ class TBookingSearch extends TBooking
        }
 
         // add conditions that should always apply here
-       if ($this->table_layout == 'group' ) {
+      
+        
+         if ($this->table_layout == 'group' ) {
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,
             ]);
         }else{
-            
             $dataProvider = new ActiveDataProvider([
                 'query' => $query,
                 'sort'=>[
@@ -86,8 +91,6 @@ class TBookingSearch extends TBooking
                 ]
             ]);
         }
-
-        $this->load($params);
 
         if (!$this->validate()) {
             // uncomment the following line if you do not want to return any records when validation fails
