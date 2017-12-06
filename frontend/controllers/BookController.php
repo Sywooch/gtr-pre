@@ -249,7 +249,7 @@ class BookController extends Controller
                   $modelPayment->save();
                   $modelQueue         = TMailQueue::addInvoiceQueue($modelPayment->id);
                   $transaction->commit();
-                  // $session         = session_unset();
+                  $session         = session_unset();
                   $session            = Yii::$app->session;
                   $session->open();
                   $session['payment'] = 'sukses';
