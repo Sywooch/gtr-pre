@@ -7,6 +7,7 @@ use kartik\widgets\DatePicker;
 use kartik\widgets\Typeahead;
 use kartik\widgets\Select2;
 use yii\helpers\Url;
+use kartik\widgets\SwitchInput;
 
 /* @var $this yii\web\View */
 /* @var $model app\models\TBookingSearch */
@@ -150,7 +151,7 @@ $model->rangeType = $rangeType;
 
 
     <div class="form-group col-md-12">
-        <?= Html::submitButton(' ', ['class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
+        <?= Html::submitButton(' ', ['id'=>'btn-submit','class' => 'btn material-btn material-btn_primary main-container__column material-btn_lg glyphicon glyphicon-search',
                 // 'data-toggle'=>'tooltip',
                 // 'title'=>'Apply Filter',
                 ]); ?>
@@ -163,18 +164,23 @@ $model->rangeType = $rangeType;
 
       </div>
     <div class="col-md-12">
-    <b>Switch to Group Table</b>
-    <div class="main-container__column materail-switch materail-switch_warning">
-        <?= Html::activeCheckbox($model, 'table_layout', [
-            'label'   => false,
-            'class'   => 'materail-switch__element',
-            'id'      => 'switch-table',
-            'value'   => 'group',
-            'checked' => 'group',
-            
-            ]); ?>
-        <label class="materail-switch__label" for="switch-table"></label>
-    </div>
+    <b>Table layout</b>
+    <?= SwitchInput::widget([
+            'model'         => $model,                        
+            'attribute'     => 'table_layout',
+            'options'       =>[                                                            
+                'value'   => 'group',
+                'checked' => 'group',
+                'onChange'=> '$("#btn-submit").trigger("click")', //'this.form.submit()',
+            ],
+            'pluginOptions' =>[                                             
+                'handleWidth' => 30,
+                'onText'      => 'Group',
+                'offText'     => 'Flat',
+                'onColor'     => 'warning',
+            ]
+        ]); ?>
+   
     </div>
 <?php ActiveForm::end(); ?>
 <?php yii\widgets\Pjax::end() ?>

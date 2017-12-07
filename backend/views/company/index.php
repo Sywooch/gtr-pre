@@ -28,13 +28,16 @@ $this->params['breadcrumbs'][] = $this->title;
            // 'address',
             [
             'format'=>'email',
-            'attribute'=>'email_bali'],
+            'attribute'=>'email_bali'
+            ],
             [
             'format'=>'email',
-            'attribute'=>'email_gili'],
+            'attribute'=>'email_gili'
+            ],
             [
             'format'=>'email',
-            'attribute'=>'email_cc'],
+            'attribute'=>'email_cc'
+            ],
             'phone',
             ['header'=>'POD',
             'format'=>'raw',
