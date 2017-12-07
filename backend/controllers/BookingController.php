@@ -44,20 +44,196 @@ class BookingController extends Controller
         ];
     }
 
-    public function actionTicket($id_booking, $type = "D"){
-        $modelBooking = $this->findModel($id_booking);
-        $tempdir = Yii::$app->basePath."/E-Ticket/".$modelBooking->id."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
-        FileHelper::createDirectory ( $tempdir, $mode = 0777, $recursive = true );
-        $PdfSupplier = new Pdf([
-             'filename'=>'Ticket-'.$modelBooking['id'].'.pdf',
+    public function actionResendReservation(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelPayment = TPayment::findOne($data['id_payment']);
+            $modelBooking = $modelPayment->tBookings;
+            try {
+                foreach ($modelBooking as $key => $value) {
+
+                    if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
+                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment);
+                    }else{
+                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment);
+                    }
+                    
+                }
+                Yii::$app->getSession()->setFlash('success','Resend Reservation Successsfull');
+                return true;
+            } catch (Exception $e) {
+                Yii::$app->getSession()->setFlash('danger','Resend Reservation Failed. Please Try Again');
+                return false;
+            }
+            
+        }else{
+            return $this->goHome();
+        }
+    }
+    protected function sendMailSupplier($to,$modelBooking,$modelPayment){
+
+        $mail = Yii::$app->mailReservation->compose()
+                    ->setFrom('reservation@gilitransfers.com')
+                    ->setTo($to);
+
+        if (($mailCC = $modelBooking->idTrip->idBoat->idCompany->email_cc) !==  null) {
+            $mail->setCc($mailCC);
+        }
+        $mail->setSubject('Booking For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
+                    ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
+                        'modelBooking' => $modelBooking,
+                        'modelPayment' => $modelPayment,
+                        'user_token'   => Yii::$app->getSecurity()->maskToken($modelBooking->idTrip->idBoat->idCompany->idUser->auth_key),
+                        'date'         => $modelBooking->idTrip->date,
+                        'dept_time'    => $modelBooking->idTrip->dept_time,
+                        'island_route' => $modelBooking->idTrip->idRoute->departureHarbor->id_island.'-'.$modelBooking->idTrip->idRoute->arrivalHarbor->id_island,
+                        ]))->send();
+        return true;
+    }
+
+    public function actionResendTicket(){
+    if (Yii::$app->request->isAjax) {
+        $data = Yii::$app->request->post();
+            $modelPayment = TPayment::findOne($data['id_payment']);
+            $modelBooking = $modelPayment->tBookings;
+        try {
+                $savePath =  Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/";
+            FileHelper::createDirectory ( $savePath, $mode = 0777, $recursive = true );
+            $Ticket = new Pdf([
+            'filename'=>$savePath.'E-Ticket.pdf',
+            // A4 paper format
+            'format' => Pdf::FORMAT_A4, 
+            // portrait orientation
+            'orientation' => Pdf::ORIENT_PORTRAIT,
+            'tempPath'    => Yii::getAlias('@console/runtime/mpdf'),
+            // simpan file
+            'destination' => Pdf::DEST_FILE,
+            'content' => "
+                ".$this->renderAjax('/email-ticket/pdf-ticket',[
+                    'modelBooking' =>$modelBooking,
+                    'modelPayment' =>$modelPayment,
+                    'tempdir'      =>$savePath,
+                    ])." ",
+                            // any css to be embedded if required
+                            'cssInline' => '.kv-heading-1{
+                                                font-size:18px
+                                            }
+                                            .judul{
+                                                font-size:25px;
+                                            }
+                                            @media print{
+                                                .page-break{display: block;page-break-before: always;}
+                                            }
+                                            .secondary-text{
+                                                color: #212121;
+                                            }
+                                            .primary-text{
+                                                color: #212121;
+                                            }
+                                            .island{
+                                                color: #424242;
+                                                font-size:17px;
+                                                
+                                            }
+                                            .ports{
+                                                color: #616161;
+                                                font-size:12px;
+                                            }
+                                            '
+                                            , 
+                            //set mPDF properties on the fly
+                            'options'   => ['title' => 'E-Ticket Gilitransfers'],
+                            // call mPDF methods on the fly
+                            'methods'   => [ 
+                            'SetHeader' =>['E-Ticket Gilitransfers'], 
+                            'SetFooter' =>[
+                                'Please take this Ticket on your trip as a justification<br>
+                                <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>'],
+                    ]
+                ]);
+            $Ticket->render();
+            $Receipt = new Pdf([
+                'filename'=>$savePath.'Receipt.pdf',
                 // A4 paper format
                 'format' => Pdf::FORMAT_A4, 
                 // portrait orientation
                 'orientation' => Pdf::ORIENT_PORTRAIT, 
                 // simpan file
-                'destination' => $type,
+                'destination' => Pdf::DEST_FILE,
                 'content' => "
-                    ".$this->renderAjax('/ticket/pdf-supplier',[
+                    ".$this->renderAjax('/email-ticket/pdf-receipt',[
+                        'modelBooking'=>$modelBooking,
+                        'modelPayment'=>$modelPayment,
+                        'tempdir'      =>$savePath,
+                        ])." ",
+                                // any css to be embedded if required
+                                'cssInline' => '.kv-heading-1{
+                                                    font-size:18px
+                                                }
+                                                .judul{
+                                                    font-size:25px;
+                                                }
+                                                .primary-text{
+                                                    text-color: #212121;
+                                                    font-size:25px;
+                                                }
+                                                .ports{
+                                                color: #616161;
+                                                font-size:10px;
+                                                }
+                                                ', 
+                                //set mPDF properties on the fly
+                                'options'   => ['title' => 'Receipt Gilitransfers'],
+                                // call mPDF methods on the fly
+                                'methods'   => [ 
+                                'SetHeader' =>['Receipt Gilitransfers'], 
+                                'SetFooter' =>['This receipt automatically printed by system and doesnt require a signature'],
+                        ]
+                    ]);
+                $Receipt->render();
+               Yii::$app->mailReservation->compose()
+                ->setFrom('reservation@gilitransfers.com')
+                ->setTo($modelPayment->email)
+                ->setSubject('E-Ticket GiliTransfers')
+                ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
+                    'modelBooking'=>$modelBooking,
+                    'modelPayment'=>$modelPayment,
+                    ]))
+                ->attach($savePath."E-Ticket.pdf")
+                ->attach($savePath."Receipt.pdf")
+                ->send();
+                FileHelper::removeDirectory($savePath);
+                 Yii::$app->getSession()->setFlash(
+                    'success','Resend Ticket Successsfull'
+                );
+                return true;
+            } catch(\Exception $e) {
+                 FileHelper::removeDirectory($savePath);
+                 Yii::$app->getSession()->setFlash(
+                    'success','Resend Ticket Failed. Please Try Again'
+                );
+                return false;
+            }
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    public function actionTicket($id_booking, $type = "D"){
+        $modelBooking = $this->findModel($id_booking);
+        $tempdir = Yii::$app->basePath."/E-Ticket/".$modelBooking->id."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
+        FileHelper::createDirectory ( $tempdir, $mode = 0777, $recursive = true );
+        $PdfSupplier = new Pdf([
+                'filename'    =>'Ticket-'.$modelBooking['id'].'.pdf',
+                // A4 paper format
+                'format'      => Pdf::FORMAT_A4, 
+                // portrait orientation
+                'orientation' => Pdf::ORIENT_PORTRAIT,
+                'tempPath'    => Yii::getAlias('@console/runtime/mpdf'),
+                // simpan file
+                'destination' => $type,
+                'content'     => "
+                    ".$this->renderAjax('/email-ticket/pdf-supplier',[
                         'modelBooking' =>$modelBooking,
                         'tempdir'      =>$tempdir,
                         ])." ",
@@ -101,7 +277,7 @@ class BookingController extends Controller
 
     public function actionCheckLog($id_payment){
         if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser'])->where(['id_payment'=>$id_payment,'id_event'=>TBookingLog::EVENT_READ_CHECK])->asArray()->one()) != null){
-           return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#log-".$modelLogPayment['id_payment']."' data-placement='right' class='btn btn-xs btn-success fa fa-check-square-o'></a><div id='log-".$modelLogPayment['id_payment']."' class='hidden panel panel-primary'>
+           return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#log-".$modelLogPayment['id_payment']."' data-placement='left' class='btn btn-xs btn-success fa fa-check-square-o'></a><div id='log-".$modelLogPayment['id_payment']."' class='hidden panel panel-primary'>
                 <div class='popover-body list-group col-lg-12' >
                 <span class='fa fa-check-square-o'></span> ".$modelLogPayment['idUser']['username']."<br>
                 <span class='fa fa-clock-o'></span> ".date('d-m-Y H:i:s',strtotime($modelLogPayment['datetime']))."

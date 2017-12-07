@@ -27,6 +27,7 @@ $this->params['breadcrumbs'][] = $this->title;
     
 
 </div>
+
 <center><b id="loading-pjax"></b></center>
 <span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
 <div class="col-md-12">
@@ -49,7 +50,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'contentOptions'=>['style'=>'font-size:15px;'],
                 'value'=>function ($model, $key, $index, $widget) {
                     $logStatus = Yii::$app->runAction('/booking/check-log',['id_payment'=>$model->id_payment]);
-                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <b>".$logStatus."</b>";
+                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <b>".$logStatus."</b>
+                    <span class='dropdown material-dropdown btn btn-xs'>".
+                    Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-info dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
+                    "<ul class='dropdown-menu material-dropdown-menu_primary'>
+                        <li class='dropdown-header material-dropdown__header'>Resend...</li>
+                        <li class='divider material-dropdown__divider'></li>
+                        <li>".Html::a('Fastboat Reservation','#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>
+                        <li class='divider material-dropdown__divider'></li>
+                        <li>".Html::a('Customer Ticket', '#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-customer-payment material-dropdown-menu__link'])."</li>
+                    </ul>
+                    </span>"; 
                 },
                 
                 'group'             =>true,  // enable grouping,
@@ -208,7 +219,64 @@ $('.read-btn').on('click',function(){
              location.reload();
         }
     });
-})
+});
+$('.btn-resend-customer-payment').on('click',function(){
+    var idp = $(this).attr('id-payment');
+    $('#modal-loading').modal({
+              backdrop: 'static',
+              keyboard: false
+          });
+    $.ajax({
+        url: '".Url::to(["resend-ticket"])."',
+        type:'POST',
+        data:{id_payment :idp},
+        success: function (data) {
+            location.reload();
+        },
+        error:function(data){
+            location.reload();
+        }
+    });
+});
+
+$('.btn-resend-reservation-payment').on('click',function(){
+    var payid = $(this).attr('id-payment');
+    $('#modal-loading').modal({
+              backdrop: 'static',
+              keyboard: false
+          });
+    $.ajax({
+        url: '".Url::to(["resend-reservation"])."',
+        type:'POST',
+        data:{id_payment :payid},
+        success: function (data) {
+            location.reload();
+        },
+        error:function(data){
+            location.reload();
+        }
+    });
+});
     
     ");
  ?>
+
+<div class="modal material-modal material-modal_primary fade" id="modal-loading">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content material-modal__content">
+      <div class="modal-header material-modal__header">
+        <h4 class="modal-title material-modal__title">Process Your Request...</h4>
+      </div>
+      <div class="modal-body material-modal__body">
+        <div id="detail" class="row col-md-12">
+        <p>Please Wait....!!!<br>Please Don't Reload Page before Complete
+        <center><i class="fa fa-spinner fa-spin"></i></center>
+        </p>
+      </div>
+      <div class="modal-footer material-modal__footer">
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
