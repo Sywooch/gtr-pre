@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'format'=>'email',
             'value'=>'email_bali'],
             [
-            'header'=>'Email Bali',
+            'header'=>'Email Gili',
             'format'=>'email',
             'value'=>'email_gili'],
            // 'email_gili:email',

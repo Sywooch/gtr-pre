@@ -22,6 +22,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use mdm\admin\components\Helper;
 use yii\helpers\ArrayHelper;
+use kartik\mpdf\Pdf;
+use yii\helpers\FileHelper;
 /**
  * BookingController implements the CRUD actions for TBooking model.
  */
@@ -40,6 +42,54 @@ class BookingController extends Controller
                 ],
             ],
         ];
+    }
+
+    public function actionTicket($id_booking, $type = "D"){
+        $modelBooking = $this->findModel($id_booking);
+        $tempdir = Yii::$app->basePath."/E-Ticket/".$modelBooking->id."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
+        FileHelper::createDirectory ( $tempdir, $mode = 0777, $recursive = true );
+        $PdfSupplier = new Pdf([
+             'filename'=>'Ticket-'.$modelBooking['id'].'.pdf',
+                // A4 paper format
+                'format' => Pdf::FORMAT_A4, 
+                // portrait orientation
+                'orientation' => Pdf::ORIENT_PORTRAIT, 
+                // simpan file
+                'destination' => $type,
+                'content' => "
+                    ".$this->renderAjax('/ticket/pdf-supplier',[
+                        'modelBooking' =>$modelBooking,
+                        'tempdir'      =>$tempdir,
+                        ])." ",
+                                // any css to be embedded if required
+                                'cssInline' => '.kv-heading-1{
+                                                    font-size:18px
+                                                }
+                                                .judul{
+                                                    font-size:25px;
+                                                }', 
+                                //set mPDF properties on the fly
+                                'options'   => ['title' => 'Supplier Reservation Gilitransfers'],
+                                // call mPDF methods on the fly
+                                'methods'   => [ 
+                                'SetHeader' =>['Supplier Reservation Gilitransfers'], 
+                                'SetFooter' =>['This Document automatically printed by system'],
+                        ]
+                    ]);
+                    $PdfSupplier->render();
+                    if ($type == "D") {
+                        FileHelper::removeDirectory($tempdir);
+                    }
+                    
+    }
+
+    protected function findOneBookingAsArray($id_booking){
+        if(Helper::checkRoute('/booking/*')){
+            return TBooking::find()->where(['id'=>$id_booking])->asArray()->one();           
+        }else{
+
+            return TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['t_company.id_user'=>Yii::$app->user->identity->id])->andWhere(['t_booking.id'=>$id])->asArray()->one();
+        }
     }
 
     public function actionReadCheckPayment(){

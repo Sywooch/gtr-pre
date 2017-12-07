@@ -25,13 +25,14 @@ $this->params['breadcrumbs'][] = $this->title;
 </div>
 <center><b id="loading-pjax"></b></center>
 <span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
-<div class="row col-md-12">
+<div class="col-md-12">
 
 <?php Pjax::begin(['id'=>'pjax-table-booking']); ?>
 <?= GridView::widget([
         'dataProvider'    => $dataProvider,
         'filterModel'     => $searchModel,
         'panel'           => ['type'=>'primary', 'heading'=>'Booking Data'],
+        'export'    =>false,
         'striped'         => true,
         'bordered'        => true,
         'hover'           => true,
@@ -159,6 +160,22 @@ $this->params['breadcrumbs'][] = $this->title;
             'data-toggle'=>"modal",
             'data-target'=>"#detail-modal",
             'data-title'=>"Detail Data",
+            ]);
+        },
+        ],
+        [
+        'header'=>'Download <br> Ticket',
+        'hAlign'=>'center',
+        'format'=>'raw',
+        'width'=>'25px',
+        'value'=>function($model){
+            return Html::a('', '/booking/ticket?id_booking='.$model->id, [
+            'class' => 'btn btn-xs btn-primary glyphicon glyphicon-download',
+            'data-toggle' =>'tooltip',
+            'title'       =>'Download Ticket',
+            'data' => [
+                'method' => 'post',
+            ],
             ]);
         },
         ],

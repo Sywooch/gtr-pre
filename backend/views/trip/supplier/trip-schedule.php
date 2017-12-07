@@ -133,17 +133,17 @@ for ($d=1;$d<=$endDate;$d++) {
 
      
     //trip list
-    echo Html::checkbox('checkbox-multi-'.$today, $checked = false, [
-          'class' => 'pull-right',
-          'onchange'=>'
-            if ($(this).is(":checked")) {
-                $(".checkbox-'.$today.'").prop("checked", true);
-            }else{
-                $(".checkbox-'.$today.'").prop("checked", false);
-            }
-              ',
+    // echo Html::checkbox('checkbox-multi-'.$today, $checked = false, [
+    //       'class' => 'pull-right',
+    //       'onchange'=>'
+    //         if ($(this).is(":checked")) {
+    //             $(".checkbox-'.$today.'").prop("checked", true);
+    //         }else{
+    //             $(".checkbox-'.$today.'").prop("checked", false);
+    //         }
+    //           ',
             
-          ])." ";
+    //       ])." ";
     echo Html::a('', ['add-dayli','date'=>$today], ['class' => ' text-danger btn btn-xs glyphicon glyphicon-plus pull-left'])."</li><br><br>"; 
     
     if (!empty($trips)) {

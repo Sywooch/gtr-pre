@@ -67,19 +67,7 @@ $this->registerJs(
 
     <?= $form->field($model, 'departure',$template2)->dropDownList($listDept, ['id' => 'dept-port','prompt'=>'Select Departure Port']); ?>
     <?= $form->field($model, 'id_route',$template2)->dropDownList(ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route', 'island'), ['id' => 'drop-route','prompt'=>'Select Route...'])->label('Route'); ?>
-    <?php
-$this->registerJs('
-var vcompany = $("#drop-company").val();
-$.ajax({
-    url: "'.Url::to(["list-route"]).'",
-    type:"POST",
-    data:{company :vcompany},
-    success: function (data) {
-        $("#drop-route").html(data);
-    }
-});
-    ', \yii\web\View::POS_READY);
-     ?>
+
     <?= $form->field($model, 'date',$template2)->widget(DatePicker::classname(), [
     'options' => ['placeholder' => 'Select Date'],
     'pickerButton' => false,

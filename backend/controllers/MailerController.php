@@ -158,38 +158,6 @@ class MailerController extends Controller
                 ->send();
 
                 foreach ($modelBooking as $key => $value) {
-                //     $PdfSupplier = new Pdf([
-                // 'filename'=>$savePath.$value->id.'.pdf',
-                // // A4 paper format
-                // 'format' => Pdf::FORMAT_A4, 
-                // // portrait orientation
-                // 'orientation' => Pdf::ORIENT_PORTRAIT, 
-                // // simpan file
-                // 'destination' => Pdf::DEST_FILE,
-                // 'content' => "
-                //     ".$this->renderAjax('/email-ticket/pdf-supplier',[
-                //         'modelPayment'  =>$modelPayment,
-                //         'modelBooking'  =>$value,
-                //         'findShuttle'   =>$findShuttle,
-                //         'findPassenger' =>$findPassenger,
-                //         ])." ",
-                //                 // any css to be embedded if required
-                //                 'cssInline' => '.kv-heading-1{
-                //                                     font-size:18px
-                //                                 }
-                //                                 .judul{
-                //                                     font-size:25px;
-                //                                 }', 
-                //                 //set mPDF properties on the fly
-                //                 'options'   => ['title' => 'Supplier Reservation Gilitransfers'],
-                //                 // call mPDF methods on the fly
-                //                 'methods'   => [ 
-                //                 'SetHeader' =>['Supplier Reservation Gilitransfers'], 
-                //                 'SetFooter' =>['This Document automatically printed by system'],
-                //         ]
-                //     ]);
-                //     $PdfSupplier->render();
-                //     $attach = $savePath.$value->id.".pdf";
 
                     if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
                         $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment);
