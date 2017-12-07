@@ -171,7 +171,7 @@ $model->rangeType = $rangeType;
             'options'       =>[                                                            
                 'value'   => 'group',
                 'checked' => 'group',
-                'onChange'=> '$("#btn-submit").trigger("click")', //'this.form.submit()',
+                'onChange'=> 'this.form.submit()',
             ],
             'pluginOptions' =>[                                             
                 'handleWidth' => 30,
