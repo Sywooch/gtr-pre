@@ -59,11 +59,9 @@ class BookingController extends Controller
                     }
                     
                 }
-                Yii::$app->getSession()->setFlash('success','Resend Reservation Successsfull');
-                return true;
+                return 'Resend Reservation Successsfull';
             } catch (Exception $e) {
-                Yii::$app->getSession()->setFlash('danger','Resend Reservation Failed. Please Try Again');
-                return false;
+                return 'Resend Reservation Failed. Please Try Again';
             }
             
         }else{
@@ -203,16 +201,11 @@ class BookingController extends Controller
                 ->attach($savePath."Receipt.pdf")
                 ->send();
                 FileHelper::removeDirectory($savePath);
-                 Yii::$app->getSession()->setFlash(
-                    'success','Resend Ticket Successsfull'
-                );
-                return true;
+                
+                return 'Resend Ticket Successsfull';
             } catch(\Exception $e) {
                  FileHelper::removeDirectory($savePath);
-                 Yii::$app->getSession()->setFlash(
-                    'success','Resend Ticket Failed. Please Try Again'
-                );
-                return false;
+                return 'Resend Ticket Failed, Please Try Again';
             }
         }else{
             return $this->goHome();

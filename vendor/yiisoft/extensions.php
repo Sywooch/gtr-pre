@@ -327,15 +327,6 @@ return array (
       '@yii/bootstrap' => $vendorDir . '/yiisoft/yii2-bootstrap',
     ),
   ),
-  'dmstr/yii2-adminlte-asset' => 
-  array (
-    'name' => 'dmstr/yii2-adminlte-asset',
-    'version' => '2.5.0.0',
-    'alias' => 
-    array (
-      '@dmstr' => $vendorDir . '/dmstr/yii2-adminlte-asset',
-    ),
-  ),
   'yiisoft/yii2-debug' => 
   array (
     'name' => 'yiisoft/yii2-debug',
@@ -343,6 +334,24 @@ return array (
     'alias' => 
     array (
       '@yii/debug' => $vendorDir . '/yiisoft/yii2-debug',
+    ),
+  ),
+  '2amigos/yii2-gallery-widget' => 
+  array (
+    'name' => '2amigos/yii2-gallery-widget',
+    'version' => '0.1.0.0',
+    'alias' => 
+    array (
+      '@dosamigos/gallery' => $vendorDir . '/2amigos/yii2-gallery-widget',
+    ),
+  ),
+  'kartik-v/yii2-dialog' => 
+  array (
+    'name' => 'kartik-v/yii2-dialog',
+    'version' => '9999999-dev',
+    'alias' => 
+    array (
+      '@kartik/dialog' => $vendorDir . '/kartik-v/yii2-dialog',
     ),
   ),
   'kowap/yii2-lightgallery' => 
@@ -354,13 +363,13 @@ return array (
       '@kowap/lightGallery' => $vendorDir . '/kowap/yii2-lightgallery',
     ),
   ),
-  '2amigos/yii2-gallery-widget' => 
+  'dmstr/yii2-adminlte-asset' => 
   array (
-    'name' => '2amigos/yii2-gallery-widget',
-    'version' => '0.1.0.0',
+    'name' => 'dmstr/yii2-adminlte-asset',
+    'version' => '2.6.0.0',
     'alias' => 
     array (
-      '@dosamigos/gallery' => $vendorDir . '/2amigos/yii2-gallery-widget',
+      '@dmstr' => $vendorDir . '/dmstr/yii2-adminlte-asset',
     ),
   ),
 );

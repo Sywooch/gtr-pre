@@ -66,6 +66,7 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
             'kartik\\form\\' => 12,
             'kartik\\file\\' => 12,
             'kartik\\field\\' => 13,
+            'kartik\\dialog\\' => 14,
             'kartik\\depdrop\\' => 15,
             'kartik\\datetime\\' => 16,
             'kartik\\date\\' => 12,
@@ -264,6 +265,10 @@ class ComposerStaticInit7e2bca6a7ad2fb4481bca401a2f2aefe
         'kartik\\field\\' => 
         array (
             0 => __DIR__ . '/..' . '/kartik-v/yii2-field-range',
+        ),
+        'kartik\\dialog\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kartik-v/yii2-dialog',
         ),
         'kartik\\depdrop\\' => 
         array (

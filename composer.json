@@ -27,10 +27,11 @@
         "perminder-klair/yii2-pickadate": "@dev",
         "kartik-v/yii2-label-inplace": "@dev",
         "kartik-v/yii2-mpdf": "*",
-        "dmstr/yii2-adminlte-asset": "2.*",
+        "dmstr/yii2-adminlte-asset": "^2.1",
         "2amigos/yii2-highcharts-widget": "*",
         "yiidoc/yii2-redactor": "*",
-        "2amigos/yii2-gallery-widget": "*"
+        "2amigos/yii2-gallery-widget": "*",
+        "kartik-v/yii2-dialog": "@dev"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

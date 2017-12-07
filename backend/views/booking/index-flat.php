@@ -6,6 +6,8 @@ use yii\widgets\Pjax;
 use yii\bootstrap\Modal;
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
+use kartik\dialog\Dialog;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\TBookingSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -13,6 +15,22 @@ use mdm\admin\components\Helper;
 
 $this->title = 'Booking Data';
 $this->params['breadcrumbs'][] = $this->title;
+echo Dialog::widget([
+'dialogDefaults'=>[
+    Dialog::DIALOG_ALERT => [
+        'type'        => Dialog::TYPE_PRIMARY,
+        'title'       => 'Info',
+        'buttonClass' => 'btn-primary',
+        'buttonLabel' => 'Ok'
+    ],
+    Dialog::DIALOG_CONFIRM => [
+        'type'           => Dialog::TYPE_PRIMARY,
+        'title'          => 'Confirm',
+        'btnOKClass'     => 'btn-primary',
+        'btnOKLabel'     =>' Ok',
+        'btnCancelLabel' =>' Cancel'
+        ]
+    ]]);
 ?>
 <div class="tbooking-index">
 <div class="col-md-12">
@@ -222,38 +240,61 @@ $('.read-btn').on('click',function(){
 });
 $('.btn-resend-customer-payment').on('click',function(){
     var idp = $(this).attr('id-payment');
-    $('#modal-loading').modal({
+    krajeeDialog.confirm(\"Are you sure you want to Resend Ticket To Customer?\", function (result) {
+        if (result) {
+             $('#modal-loading').modal({
               backdrop: 'static',
               keyboard: false
           });
-    $.ajax({
-        url: '".Url::to(["resend-ticket"])."',
-        type:'POST',
-        data:{id_payment :idp},
-        success: function (data) {
-            location.reload();
-        },
-        error:function(data){
-            location.reload();
+            $.ajax({
+                url: '".Url::to(["resend-ticket"])."',
+                type:'POST',
+                data:{id_payment :idp},
+                success: function (data) {
+                    $('#modal-loading').modal('hide');
+                    Dialog(data);
+                },
+                error:function(data){
+                    $('#modal-loading').modal('hide');
+                    Dialog(data);
+                }
+            });
+        } else {
+           
         }
     });
+    
+   
 });
+
+function Dialog(data){
+    krajeeDialog.alert(data);
+}
 
 $('.btn-resend-reservation-payment').on('click',function(){
     var payid = $(this).attr('id-payment');
-    $('#modal-loading').modal({
-              backdrop: 'static',
-              keyboard: false
-          });
-    $.ajax({
-        url: '".Url::to(["resend-reservation"])."',
-        type:'POST',
-        data:{id_payment :payid},
-        success: function (data) {
-            location.reload();
-        },
-        error:function(data){
-            location.reload();
+    krajeeDialog.confirm(\"Are you sure you want to Resend Reservation To Fastboat?\", function (result) {
+        if (result) {
+            
+            $('#modal-loading').modal({
+                      backdrop: 'static',
+                      keyboard: false
+                  });
+            $.ajax({
+                url: '".Url::to(["resend-reservation"])."',
+                type:'POST',
+                data:{id_payment :payid},
+                success: function (data) {
+                     $('#modal-loading').modal('hide');
+                    Dialog(data);
+                },
+                error:function(data){
+                    $('#modal-loading').modal('hide');
+                    Dialog(data);
+                }
+            });
+        }else{
+            
         }
     });
 });

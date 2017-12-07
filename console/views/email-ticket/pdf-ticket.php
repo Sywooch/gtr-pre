@@ -4,7 +4,12 @@ use common\models\TShuttleTime;
 
 
 require_once Yii::$app->basePath."/phpqrcode/qrlib.php"; //<-- LOKASI FILE UTAMA PLUGINNYA
-$tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama Folder file QR Code kita nantinya akan ?>
+$tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama Folder file QR Code kita nantinya akan 
+
+$jumlahBooking = count($modelBooking)-1;
+
+?>
+
 
 
 
@@ -171,14 +176,7 @@ endif;
 </table>
 <!-- Passenger Table End -->
 
-<!-- Contact Fastboat Start -->
-<table align="right" class="pull-right">
-  <thead>
-    <tr>
-      <td></td>
-    </tr>
-  </thead>
-</table>
-<!-- Conatact Fastbpat End-->
+<?php if($key < $jumlahBooking): ?>
 <div class="page-break"> </div>
+<?php endif; ?>
 <?php endforeach; ?>
