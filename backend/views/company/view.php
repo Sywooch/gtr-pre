@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'address',
             'email_bali:email',
             'email_gili:email',
+            'email_cc:email',
             'phone',
             ['attribute'=>'logo_path',
             'format'=>'raw',

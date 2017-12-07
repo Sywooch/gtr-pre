@@ -183,10 +183,15 @@ class MailerController extends Controller
     }
 
     protected function sendMailSupplier($to,$modelBooking,$modelPayment){
-        Yii::$app->mailReservation->compose()
+
+        $mail = Yii::$app->mailReservation->compose()
                     ->setFrom('reservation@gilitransfers.com')
-                    ->setTo($to)
-                    ->setSubject('Booking For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
+                    ->setTo($to);
+
+        if (($mailCC = $modelBooking->idTrip->idBoat->idCompany->email_cc) !==  null) {
+            $mail->setCc($mailCC);
+        }
+        $mail->setSubject('Booking For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
                     ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
                         'modelBooking' => $modelBooking,
                         'modelPayment' => $modelPayment,
@@ -194,8 +199,7 @@ class MailerController extends Controller
                         'date'         => $modelBooking->idTrip->date,
                         'dept_time'    => $modelBooking->idTrip->dept_time,
                         'island_route' => $modelBooking->idTrip->idRoute->departureHarbor->id_island.'-'.$modelBooking->idTrip->idRoute->arrivalHarbor->id_island,
-                        ]))
-                    ->send();
+                        ]))->send();
         return true;
     }
 

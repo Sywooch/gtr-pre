@@ -114,6 +114,7 @@ class TMailQueue extends \yii\db\ActiveRecord
 
     public function setQueueStatus($status){
         $this->status = $status;
+        $this->datetime = date('Y-m-d H:i:s');
         $this->save(false);
     }
 

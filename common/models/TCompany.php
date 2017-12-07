@@ -47,7 +47,8 @@ class TCompany extends \yii\db\ActiveRecord
             [['id_pod', 'id_user'], 'integer'],
             [['logo_path'], 'string'],
             [['create_at', 'update_at'], 'safe'],
-            [['name', 'email_bali', 'email_gili'], 'string', 'max' => 50],
+            [['name', 'email_bali', 'email_gili','email_cc'], 'string', 'max' => 50],
+            [['email_bali', 'email_gili','email_cc'],'email'],
             [['address'], 'string', 'max' => 75],
             [['phone'], 'string', 'max' => 50],
             [['id_pod'], 'exist', 'skipOnError' => true, 'targetClass' => TPod::className(), 'targetAttribute' => ['id_pod' => 'id']],
@@ -61,17 +62,18 @@ class TCompany extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'address' => Yii::t('app', 'Address'),
+            'id'         => Yii::t('app', 'ID'),
+            'name'       => Yii::t('app', 'Name'),
+            'address'    => Yii::t('app', 'Address'),
             'email_bali' => Yii::t('app', 'Email Bali'),
             'email_gili' => Yii::t('app', 'Email Gili'),
-            'phone' => Yii::t('app', 'Phone'),
-            'id_pod' => Yii::t('app', 'Accept Pod ?'),
-            'logo_path' => Yii::t('app', 'Logo Path'),
-            'id_user' => Yii::t('app', 'User ID'),
-            'create_at' => Yii::t('app', 'Create At'),
-            'update_at' => Yii::t('app', 'Update At'),
+            'email_cc'   => Yii::t('app', 'Email CC'),
+            'phone'      => Yii::t('app', 'Phone'),
+            'id_pod'     => Yii::t('app', 'Accept Pod ?'),
+            'logo_path'  => Yii::t('app', 'Logo Path'),
+            'id_user'    => Yii::t('app', 'User ID'),
+            'create_at'  => Yii::t('app', 'Create At'),
+            'update_at'  => Yii::t('app', 'Update At'),
         ];
     }
 

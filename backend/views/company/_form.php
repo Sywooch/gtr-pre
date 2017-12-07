@@ -59,6 +59,16 @@ $layout = ['template'=>"{input}\n{error}\n{hint}"];
                 ]
                 );
         ?>
+    <?= $form->field($model, 'email_cc',$layout)->widget(LabelInPlace::classname(),
+                [
+               
+                'class'=>'form-control cc-mail',
+                'defaultIndicators'=>false,
+                'encodeLabel'=> false,
+                'label'=>'<i class="glyphicon glyphicon-envelope"></i> Company CC Email (Optional)',
+                ]
+                );
+        ?>
 
     <?php 
     if ($model->isNewRecord) {
