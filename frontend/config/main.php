@@ -42,7 +42,15 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-            'view/<slug>'=>'content/view',
+                'fast-boats'          => 'content/fast-boats',
+                'destinations'        => 'content/destinations',
+                'ports'               => 'content/ports',
+                'hotels'              => 'content/hotels',
+                'articles'            => 'content/articles',
+                'fast-boats/<slug>'   => 'content/view',
+                'articles/<slug>'     => 'content/view',
+                'destinations/<slug>' => 'content/view',
+                'ports/<slug>'        => 'content/view',
             ],
         ],
          'urlAgoda' => [

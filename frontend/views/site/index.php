@@ -12,7 +12,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
  <div class="row"> 
 <div class="col-md-9">
       <div class="panel-group material-tabs-group">
-      <h4 class="panel-heading"><center>Booking Form</center></h4>
+      <h4 class="panel-heading">Booking Form</h4>
         <ul class="nav nav-tabs material-tabs material-tabs_primary">
           <li class="active"><a href="#fastboats" class="material-tabs__tab-link" data-toggle="tab">Fastboats</a></li>
           <li><a href="#hotels" class="material-tabs__tab-link" data-toggle="tab">Hotels</a></li>
@@ -49,7 +49,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
       <div class="row">
           <p><span class="fa fa-phone"> </span> +62-813-5330-4990<br></p>
           <p><span class="fa fa-envelope"> </span> reservation@gilitransfers.com</p>
-          <img alt="payment-logo" style="height: 90px; width: 250px;"  src="/img/paypal.png">
+          <img id="payment-logo" alt="payment-logo" src="/img/paypal.png">
       </div>
     </div>
   </div>
@@ -78,14 +78,14 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valBoat['slug'],
                                     'id'=>$valBoat['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valBoat['slug']]); ?>
+                                    ]), '/fast-boats/'.$valBoat['slug'].''); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valBoat['title'] ?></h4>
                           <p><?= substr($valBoat['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valBoat['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?>
+                               <?= Html::a(' Read  More ', '/fast-boats/'.$valBoat["slug"].'', ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?>
                               
                           </div>                 
                          </div>
@@ -116,14 +116,14 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valDestination['slug'],
                                     'id'=>$valDestination['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valDestination['slug']]); ?>
+                                    ]), '/destinations/'.$valDestination['slug']); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valDestination['title'] ?></h4>
                           <p><?= substr($valDestination['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valDestination['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
+                               <?= Html::a(' Read  More ', '/destinations/'.$valDestination['slug'].'', ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
                               
                           </div>                 
                          </div>
@@ -154,14 +154,14 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valArticle['slug'],
                                     'id'=>$valArticle['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valArticle['slug']]); ?>
+                                    ]), '/articles/'.$valArticle['slug']); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valArticle['title'] ?></h4>
                           <p><?= substr($valArticle['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valArticle['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
+                               <?= Html::a(' Read  More ', '/articles/'.$valArticle['slug'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
                               
                           </div>                 
                          </div>
@@ -193,7 +193,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valPorts['slug'],
                                     'id'=>$valPorts['slug'],
                                     'onerror'=>'this.src="/thanks.png"'
-                                    ]), ['/content/view','slug'=>$valPorts['slug']]); ?>
+                                    ]), '/ports/'.$valPorts['slug']); ?>
                               
                           </div>
                           <div class="media-body">
@@ -201,7 +201,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                           <p><?= substr($valPorts['description'],0,100) ?></p>
                           <div class="clearfix"></div>
                           <div class="btn-group" role="group" id="BegeniButonlari">
-                               <?= Html::a(' Read  More ', ['/content/view','slug'=>$valPorts['slug']], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
+                               <?= Html::a(' Read  More ', '/ports/'.$valPorts['slug'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_md glyphicon glyphicon-arrow-right']); ?> 
                               
                           </div>                 
                          </div>
@@ -264,6 +264,13 @@ for(var i = 0; i < classes.length; i++) {
   ', \yii\web\View::POS_READY);
 
 $customCss = <<< SCRIPT
+#payment-logo{
+  height: 90px;
+  width: 250px;
+}
+h4, .panel-heading{
+  text-align: center;
+}
 p{
   text-align: justify;
 }

@@ -10,6 +10,8 @@ use kartik\widgets\TouchSpin;
 <link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <?php
 $modelBookForm->arrivalPort = 4;
+$modelBookForm->type        = 0;
+$modelBookForm->returnDate  = null;
 $modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
 //$modelBookForm->returnDate = $modelBookForm->departureDate;
 $items =['1'=>'One Way','2'=>'Return'];
@@ -168,10 +170,10 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 					<div class="col-md-4 col-sm-4 col-xs-6">
             <div class="main-container__column material-checkbox-group material-checkbox-group_primary">
         <?= Html::activeCheckbox($modelBookForm,'type', [ 
-                  'label'=>false,
-                  'class' => 'material-checkbox',
-                  'id'=>'checkbox-type',
-                  'onchange'=>'
+                  'label'    => false,
+                  'class'    => 'material-checkbox',
+                  'id'       => 'checkbox-type',
+                  'onchange' => '
                   if ($(this).is(":checked")) {
                     $("#div-return").css("visibility", "visible");
                   }else{

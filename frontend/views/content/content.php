@@ -18,7 +18,7 @@ $this->registerMetaTag([
 
     <div class="div-card thumbnail material-card">
         <div class="material-card__header header-card">
-        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img','alt'=>'thumbnail'.$valContent->slug]),['/content/view','slug'=>$valContent->slug,]); ?>
+        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img','alt'=>'thumbnail'.$valContent->slug]),'/'.strtolower(str_replace([" ","/","&"], "-", $valContent->idTypeContent->type)).'/'.$valContent->slug); ?>
         </div>
     <div class="material-card__content">
         <h2 class="material-card__title"><?= Html::a($valContent->title, ['view','slug'=>$valContent->slug]); ?></h2>
@@ -26,7 +26,7 @@ $this->registerMetaTag([
     </div>
 
      <div class="material-card__footer">
-        <?= Html::a('Read more', ['/content/view','slug'=>$valContent->slug,],['class'=>'btn material-btn material-btn_warning main-container__column material-btn_md btn-block']); ?>
+        <?= Html::a('Read more', '/'.strtolower(str_replace([" ","/","&"], "-", $valContent->idTypeContent->type)).'/'.$valContent->slug,['class'=>'btn material-btn material-btn_warning main-container__column material-btn_md btn-block']); ?>
      </div>
     </div>
 </div>

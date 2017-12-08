@@ -96,7 +96,7 @@ class ContentController extends Controller
         ]);
     }
 
-    public function actionFastboats(){
+    public function actionFastBoats(){
     	$listContent = $this->findByType('1');
 
     	return $this->render('content', [
@@ -115,7 +115,7 @@ class ContentController extends Controller
         }
     }
 
-    public function actionDestination(){
+    public function actionDestinations(){
     	$listContent = $this->findByType('3');
     	if (empty($listContent)) {
     		return $this->goHome();

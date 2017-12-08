@@ -172,7 +172,7 @@ class SiteController extends Controller
              $session['currency'] = $modelBookForm->currency;
 
              $kurs = $this->findKurs()->where(['currency'=>$session['currency']])->one();
-            if ($modelBookForm->type == '1') {
+            if ($modelBookForm->type == true) {
                  $formData = [
                     'departurePort' =>$modelBookForm->departurePort,
                     'arrivalPort'   =>$modelBookForm->arrivalPort,
@@ -182,7 +182,6 @@ class SiteController extends Controller
                     'childs'        =>$modelBookForm->childs,
                     'infants'       =>$modelBookForm->infants,
                     'type'          =>'2',
-                   // 'currency'      =>$kurs->currency,
                     'exchange'      =>$kurs->kurs,
                 ];
                 
@@ -191,12 +190,10 @@ class SiteController extends Controller
                     'departurePort' =>$modelBookForm->departurePort,
                     'arrivalPort'   =>$modelBookForm->arrivalPort,
                     'departureDate' =>$modelBookForm->departureDate,
-                   // 'returnDate' =>$modelBookForm->returnDate,
                     'adults'        =>$modelBookForm->adults,
                     'childs'        =>$modelBookForm->childs,
                     'infants'       =>$modelBookForm->infants,
                     'type'          =>'1',
-                   // 'currency'      =>$kurs->currency,
                     'exchange'      =>$kurs->kurs,
                     
                 ];
@@ -210,7 +207,8 @@ class SiteController extends Controller
             $session['timeout'] = date('d-m-Y H:i:s');
             $session->close();
             
-            return $this->redirect(['result','formData'=>$formData]);
+            return $this->redirect(['result','BookForm'=>$modelBookForm]);
+            //,'formData'=>$formData
       }else{
       if ($session['route'] == 'none') {
            // $session      = session_unset();
@@ -345,70 +343,48 @@ class SiteController extends Controller
     public function actionResult(){
          $session =Yii::$app->session;
          $session->open();
-         $formData = Yii::$app->request->get('formData');
+         $modelBookForm = new BookForm();
+         $modelBookForm->load(Yii::$app->request->get());
+      if ($modelBookForm->validate()){
+         $formData = Yii::$app->request->get('BookForm');
          $currency = $this->findKurs()->where(['currency'=>$session['currency']])->one();
          $totalPax = $formData['adults']+$formData['childs'];
-         if($formData['departurePort'] == '1000') {
-                 $routeDeparture = $this->findRouteFromBali($formData['arrivalPort']);
-                 $departureList  = $this->findTripAllBali($formData['departureDate'],$formData,$routeDeparture);
-                 if ($formData['type'] == '2') {
-                      $routeReturn    = $this->findRoute($formData['arrivalPort'],$formData['departurePort']);
-                      $returnList     = $this->findTrip($formData['returnDate'],$formData,$routeReturn);
-                  return $this->render('result',[
-                  'formData'      => $formData,
-                  'departureList' => $departureList,
-                  'returnList'    => $returnList,
-                  'currency'      => $currency,
-                  'totalPax'      => $totalPax,
-                  'session'       => $session,
-              
-                  ]);
-              }elseif ($formData['type'] == '1') {
-                      
-                  return $this->render('result-one',[
-                  'formData'      => $formData,
-                  'departureList' => $departureList,
-                  'currency'      => $currency,
-                  'totalPax'      => $totalPax,
-                  'session'       => $session,
-              
-                  ]);
-              }else{
-                  return $this->goHome();
-              }
-
-         }elseif (($routeDeparture = $this->findRoute($formData['departurePort'],$formData['arrivalPort'])) !== null) {
+         if (($routeDeparture = $this->findRoute($formData['departurePort'],$formData['arrivalPort'])) !== null) {
             $departureList  = $this->findTrip($formData['departureDate'],$formData,$routeDeparture);
+            // false One Way true Return
+            if ($formData['type'] == true) {
+                $routeReturn    = $this->findRoute($formData['arrivalPort'],$formData['departurePort']);
+                $returnList     = $this->findTrip($formData['returnDate'],$formData,$routeReturn);
+                return $this->render('result',[
+                'formData'      => $formData,
+                'departureList' => $departureList,
+                'returnList'    => $returnList,
+                'currency'      => $currency,
+                'totalPax'      => $totalPax,
+                'session'       => $session,
+            
+                ]);
+            }elseif ($formData['type'] == false) {
+                    
+                return $this->render('result-one',[
+                'formData'      => $formData,
+                'departureList' => $departureList,
+                'currency'      => $currency,
+                'totalPax'      => $totalPax,
+                'session'       => $session,
+            
+                ]);
+            }else{
+                return $this->goHome();
+            }
          }else{
             $session['route'] = 'none';
             return $this->goHome();
          }
-        // 1 One Way 2 Return
-        if ($formData['type'] == '2') {
-                $routeReturn    = $this->findRoute($formData['arrivalPort'],$formData['departurePort']);
-                $returnList     = $this->findTrip($formData['returnDate'],$formData,$routeReturn);
-            return $this->render('result',[
-            'formData'      => $formData,
-            'departureList' => $departureList,
-            'returnList'    => $returnList,
-            'currency'      => $currency,
-            'totalPax'      => $totalPax,
-            'session'       => $session,
-        
-            ]);
-        }elseif ($formData['type'] == '1') {
-                
-            return $this->render('result-one',[
-            'formData'      => $formData,
-            'departureList' => $departureList,
-            'currency'      => $currency,
-            'totalPax'      => $totalPax,
-            'session'       => $session,
-        
-            ]);
-        }else{
+      }else{
             return $this->goHome();
-        }
+         }
+        
         
     }
 

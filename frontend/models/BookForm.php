@@ -29,23 +29,26 @@ class BookForm extends Model
     {
         return [
             // departure, email, arrival and body are required
-            [['departurePort', 'arrivalPort', 'adults','departureDate'], 'required'],
-            [['childs','infants','type'],'integer'],
+            [['departurePort','type', 'arrivalPort', 'adults','departureDate'], 'required'],
+            [['departureDate','returnDate'],'date', 'format'=>'php:Y-m-d'],
+            [['childs','infants','adults'],'integer'],
+            [['type'],'boolean'],
             [['currency'],'string','max'=>3],
-            ['returnDate','returnvalidate'],
+            ['returnDate','returnValidate'],
             ];
     }
 
-public function returnvalidate($attribute, $params, $validator){
-    if ($this->type == "2" && $this->$attribute < $this->departureDate) {
-        
-        $this->addError($attribute,'Please Select Valid Return');
-       return false;
-    }else{
-        return true;
-    }
-       
-}
+
+
+ public function returnValidate($attribute, $params, $validator){
+    if ($this->type == true) {
+        if(strtotime($this->returnDate) < strtotime($this->departureDate)){
+        $this->addError('returnDate','This Item Is Invalid');
+        $this->addError('departureDate','This Item Is Invalid');
+
+        }
+    }    
+ }
     /**
      * @inheritdoc
      */
