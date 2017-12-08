@@ -21,15 +21,15 @@ $this->registerMetaTag([
 ?>
 <div class="tcontent-view">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+<h1><?= Html::encode($this->title) ?></h1>
+
 <?= Html::img(['thumbnail','slug'=>$model['slug']], ['class' => 'img-responsive']); ?>
 <?= 
 $model['content'];
 ?>
+<blockquote><p>Posted By: <?= $model['author0']['username'] ?></p><small>At : <?= date('d-m-Y H:i:s',date($model['updated_at'])) ?></small></blockquote>
 <?php if(!empty($model['galeris'])): ?>
-<?php
-
-foreach ($model['galeris'] as $key => $value) {
+<?php foreach ($model['galeris'] as $key => $value) {
 	$image[]=[
 		       // 'url' => Url::to(['galery','id'=>$value['id']]),
 		        'src' => Url::to(['galery','id'=>$value['id']]),
@@ -48,6 +48,9 @@ foreach ($model['galeris'] as $key => $value) {
 </div></div></div>
 <?php 
 $customCss = <<< SCRIPT
+blockquote{
+	font-size: 12px;;
+}
 .gal {
 	-webkit-column-count: 3; /* Chrome, Safari, Opera */
     -moz-column-count: 3; /* Firefox */
@@ -68,3 +71,12 @@ $this->registerCss($customCss);
 ?>
 <?php endif; ?>
 </div>
+<?php 
+
+$this->registerJs('
+$("table").addClass("table table-striped table-bordered table-hover");
+$("iframe").removeAttr("style frameborder");
+$("iframe").wrapAll("<div class=\'embed-responsive embed-responsive-16by9\'/>");
+$("iframe").addClass("embed-responsive-item");
+	', \yii\web\View::POS_READY);
+?>

@@ -155,7 +155,7 @@ class ContentController extends Controller
 
 
     protected function findOneBySlug($slug){
-        if (($model = TContent::find()->joinWith(['idTypeContent','galeris'])->where(['slug'=>$slug])->asArray()->one()) !== null) {
+        if (($model = TContent::find()->joinWith(['idTypeContent','galeris','author0'])->where(['slug'=>$slug])->asArray()->one()) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('This Page is broken or under Development');
