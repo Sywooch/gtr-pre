@@ -31,7 +31,8 @@
         "2amigos/yii2-highcharts-widget": "*",
         "yiidoc/yii2-redactor": "*",
         "2amigos/yii2-gallery-widget": "*",
-        "kartik-v/yii2-dialog": "@dev"
+        "kartik-v/yii2-dialog": "@dev",
+        "yiisoft/yii2-imagine": "^2.1"
     },
     "require-dev": {
         "yiisoft/yii2-debug": "~2.0.0",

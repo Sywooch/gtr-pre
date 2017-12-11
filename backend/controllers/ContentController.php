@@ -286,7 +286,7 @@ class ContentController extends Controller
                 $model->keywords = join(', ',$model->keywords);
                 $model->thumb = UploadedFile::getInstance($model, 'thumb');
                 if ($model->thumb != null) {
-                    if (file_exists($model->thumbnail)) {
+                    if (file_exists($model->thumbnail)){
                        unlink($model->thumbnail);
                     }
                      $basepath = Yii::getAlias('@frontend').'/contentImage/'.$model->idTypeContent->type.'/'.$model->slug;

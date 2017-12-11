@@ -78,7 +78,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valBoat['slug'],
                                     'id'=>$valBoat['slug'],
                                     
-                                    ]), '/fast-boats/'.$valBoat['slug'].''); ?> -->
+                                    ]), '/fast-boats/'.$valBoat['slug'].''); ?>
                               <?php 
                               $this->registerJs('
                                 $.ajax({
@@ -128,7 +128,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valDestination['slug'],
                                     'id'=>$valDestination['slug'],
                                     
-                                    ]), '/fast-boats/'.$valDestination['slug'].''); ?> -->
+                                    ]), '/fast-boats/'.$valDestination['slug'].''); ?>
                               <?php 
                               $this->registerJs('
                                 $.ajax({
@@ -178,7 +178,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'alt'=>'thumbnail'.$valArticle['slug'],
                                     'id'=>$valArticle['slug'],
                                     
-                                    ]), '/fast-boats/'.$valArticle['slug'].''); ?> -->
+                                    ]), '/fast-boats/'.$valArticle['slug'].''); ?>
                               <?php 
                               $this->registerJs('
                                 $.ajax({
@@ -227,7 +227,7 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valPorts['slug'],
                                     'id'=>$valPorts['slug'],
-                                    ]), '/fast-boats/'.$valPorts['slug'].''); ?> -->
+                                    ]), '/fast-boats/'.$valPorts['slug'].''); ?>
                               <?php 
                               $this->registerJs('
                                 $.ajax({

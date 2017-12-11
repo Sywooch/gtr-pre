@@ -47,28 +47,29 @@ class BookingController extends Controller
     public function actionResendReservation(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
+            $type = $data['type'];
             $modelPayment = TPayment::findOne($data['id_payment']);
             $modelBooking = $modelPayment->tBookings;
             try {
                 foreach ($modelBooking as $key => $value) {
 
                     if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
-                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment);
+                       $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment,$type);
                     }else{
-                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment);
+                       $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment,$type);
                     }
                     
                 }
-                return 'Resend Reservation Successsfull';
+                return 'Successsfull';
             } catch (Exception $e) {
-                return 'Resend Reservation Failed. Please Try Again';
+                return 'Failed. Please Try Again';
             }
             
         }else{
             return $this->goHome();
         }
     }
-    protected function sendMailSupplier($to,$modelBooking,$modelPayment){
+    protected function sendMailSupplier($to,$modelBooking,$modelPayment,$type){
 
         $mail = Yii::$app->mailReservation->compose()
                     ->setFrom('reservation@gilitransfers.com')
@@ -77,7 +78,13 @@ class BookingController extends Controller
         if (($mailCC = $modelBooking->idTrip->idBoat->idCompany->email_cc) !==  null) {
             $mail->setCc($mailCC);
         }
-        $mail->setSubject('Booking For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
+        if ($type == '1') {
+            $messange = 'Booking';
+        }elseif ($type == '2') {
+            $messange = 'Cancellation Booking';
+        }
+        
+        $mail->setSubject($messange.' For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
                     ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
                         'modelBooking' => $modelBooking,
                         'modelPayment' => $modelPayment,
@@ -85,6 +92,7 @@ class BookingController extends Controller
                         'date'         => $modelBooking->idTrip->date,
                         'dept_time'    => $modelBooking->idTrip->dept_time,
                         'island_route' => $modelBooking->idTrip->idRoute->departureHarbor->id_island.'-'.$modelBooking->idTrip->idRoute->arrivalHarbor->id_island,
+                        'type'         => $type
                         ]))->send();
         return true;
     }

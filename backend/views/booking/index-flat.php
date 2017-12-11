@@ -72,17 +72,26 @@ echo Dialog::widget([
                     <span class='dropdown material-dropdown btn btn-xs'>".
                     Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-info dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
                     "<ul class='dropdown-menu material-dropdown-menu_primary'>
-                        <li class='dropdown-header material-dropdown__header'>Resend...</li>
+                        <li class='dropdown-header material-dropdown__header'>Resend</li>
                         <li class='divider material-dropdown__divider'></li>
-                        <li>".Html::a('Fastboat Reservation','#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>
-                        <li>".Html::a('Customer Ticket', '#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-customer-payment material-dropdown-menu__link'])."</li>
+                        <li>".Html::a('Fastboat Reservation','#loading-pjax', [
+                                'id-payment' => $model->id_payment,
+                                'type'       => 1,
+                                'class'      => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>
+                        <li>".Html::a('Customer Ticket', '#loading-pjax', [
+                                'id-payment' =>$model->id_payment,
+                                'class'      => 'btn-resend-customer-payment material-dropdown-menu__link'])."</li>
                         <li class='divider material-dropdown__divider'></li>
+                        <li class='dropdown-header material-dropdown__header'>Cancellation</li>
+                        <li class='divider material-dropdown__divider'></li>
+                        <li>".Html::a('Fastboat Cancellation','#loading-pjax', [
+                                'id-payment' => $model->id_payment,
+                                'type'       => 2,
+                                'class'      => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>   
                                               
                     </ul>
                     </span>"; 
-                    // <li class='dropdown-header material-dropdown__header'>Cancellation</li>
-                    //     <li class='divider material-dropdown__divider'></li>
-                    //     <li>".Html::a('Fastboat Cancellation','#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>   
+                    
                 },
                 
                 'group'             =>true,  // enable grouping,
@@ -283,7 +292,13 @@ function Dialog(data){
 
 $('.btn-resend-reservation-payment').on('click',function(){
     var payid = $(this).attr('id-payment');
-    krajeeDialog.confirm(\"Are you sure you want to Resend Reservation To Fastboat?\", function (result) {
+    var vtype = $(this).attr('type');
+        if (vtype == '1' ) {
+            var msg = 'Resend Reservation';
+        } else if (vtype == '2') {
+            var msg = 'Send Cancellation';
+        }
+    krajeeDialog.confirm(\"Are you sure you want to \"+msg+\" To Fastboat?\", function (result) {
         if (result) {
             
             $('#modal-loading').modal({
@@ -293,7 +308,7 @@ $('.btn-resend-reservation-payment').on('click',function(){
             $.ajax({
                 url: '".Url::to(["resend-reservation"])."',
                 type:'POST',
-                data:{id_payment :payid},
+                data:{id_payment :payid, type: vtype},
                 success: function (data) {
                      $('#modal-loading').modal('hide');
                     Dialog(data);

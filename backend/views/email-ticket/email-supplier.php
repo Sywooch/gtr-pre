@@ -1,9 +1,23 @@
+<?php 
+if ($type == '1') {
+  $head   = 'Reservation';
+  $body   = 'Our reservation system has received an order for your Fast Boat transfer. Please confirm our booking below:';
+  $footer = "Best Regards : ".Yii::$app->user->identity->username;
+}else{
+  $head   = 'Cancellation';
+  $body   = 'Please cancel this booking below as our guest request';
+  $footer = "Thank you for your kind understanding.<br><br> Best Regards : ".Yii::$app->user->identity->username;
+} 
+?>
+
 <html><head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=no">
-        <title>Fastboat Reservation GiliTransfers</title>
+        <title>
+          Fastboat <?= $head ?> GiliTransfers
+          </title>
 </head>
-   <body style="padding:0; margin:0; background:#f2f2f2;">  
+<body style="padding:0; margin:0; background:#f2f2f2;">  
       
 
 <table class="marginFix" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -37,9 +51,7 @@
                                     <span style="padding-top:15px; padding-bottom:10px; font:italic 12px; Calibri, Trebuchet, Arial, sans serif; color: #757575;line-height:15px;"> 
                                         <!-- EmailContentHeader : start -->
 
-<span style="display:inline;">
-Fastboat Reservation GiliTransfers
-</span>
+
 <span style="display:inline;">
 <br>
 Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
@@ -60,12 +72,12 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
                                     <p><!-- EmailGreeting : start -->
 <!-- EmailGreeting : end --></p>
 <div style="margin-top: 10px;color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px;">
-<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">Fastboat Reservation GiliTransfers</span>
+<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">Fastboat <?= $head ?> GiliTransfers</span>
 </center>
 <table contenteditable="false">
 <tbody>
 <tr>
-<td valign="bottom" align="justify">Dear Reservation Team <?= $modelBooking->idTrip->idBoat->idCompany->name ?> <p>Our reservation system has received an order for your Fast Boat transfer. Please confirm our booking below:</p><span style="display:inline;">
+<td valign="bottom" align="justify">Dear Reservation Team <?= $modelBooking->idTrip->idBoat->idCompany->name ?> <p><?= $body ?></p><span style="display:inline;">
   </span></td>
 
   </tr>
@@ -175,117 +187,11 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
 
 
 <br>
-
-<!-- Availability Info start -->
-<p style="background-color: #EEEEEE; text-align: left; font-size: 15px; font-weight: bold;">This Trip Available <?= $modelBooking->idTrip->stock ?> Seat</p>
-<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
-
-  <thead>
-    <tr>
-      <th>
-        Topup
-      </th>
-      <th></th>
-    </tr>
-  </thead>
-<tbody>
-  <tr>
-    <td>
-      5 Seat
-    </td>
-    <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=5" style="text-decoration:none;
-        background: #FF3421;
-        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
-        font-weight:300;
-        font-stretch:normal;
-        text-align:center;
-        color:#fff;
-        font-size:15px;
-        /*button styles*/
-        border-radius:7px !important;
-        -webkit-border-radius: 7px !important;
-        -moz-border-radius: 7px !important;
-        -o-border-radius: 7px !important;
-        -ms-border-radius: 7px !important;
-        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
-         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
-    </td>
-  </tr> 
-  <tr>
-    <td style="padding-top: 5px; padding-bottom: 5px;">
-      10 Seat
-    </td>
-    <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=10" style="text-decoration:none;
-        background: #FF3421;
-        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
-        font-weight:300;
-        font-stretch:normal;
-        text-align:center;
-        color:#fff;
-        font-size:15px;
-        /*button styles*/
-        border-radius:7px !important;
-        -webkit-border-radius: 7px !important;
-        -moz-border-radius: 7px !important;
-        -o-border-radius: 7px !important;
-        -ms-border-radius: 7px !important;
-        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
-         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
-    </td>
-  </tr>
-  <tr>
-    <td style="padding-top: 5px; padding-bottom: 5px;">
-      15 Seat
-    </td>
-    <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=15" style="text-decoration:none;
-        background: #FF3421;
-        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
-        font-weight:300;
-        font-stretch:normal;
-        text-align:center;
-        color:#fff;
-        font-size:15px;
-        /*button styles*/
-        border-radius:7px !important;
-        -webkit-border-radius: 7px !important;
-        -moz-border-radius: 7px !important;
-        -o-border-radius: 7px !important;
-        -ms-border-radius: 7px !important;
-        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
-         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      20 Seat
-    </td>
-    <td style="padding-top: 5px; padding-bottom: 5px;">
-      <a href="https://office.gilitransfers.com/trip/topup-by-email?token=<?= $user_token ?>&date=<?= $date ?>&dept_time=<?= $dept_time ?>&island_route=<?= $island_route ?>&value=20" style="text-decoration:none;
-        background: #FF3421;
-        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
-        font-weight:300;
-        font-stretch:normal;
-        text-align:center;
-        color:#fff;
-        font-size:15px;
-        /*button styles*/
-        border-radius:7px !important;
-        -webkit-border-radius: 7px !important;
-        -moz-border-radius: 7px !important;
-        -o-border-radius: 7px !important;
-        -ms-border-radius: 7px !important;
-        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
-         padding-bottom: 7px; margin: 0 auto 16px;"> Topup</a>
-    </td>
-  </tr>   
-</tbody>
-</table>
-<!-- Availability Info end -->
-
-
+Payment : Acc Gilitransfers<br>
+<p>
+<?= $footer ?>
+</p>
+<br>
 Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
  <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
  <li>+62-813-5330-4990</li>
@@ -364,7 +270,7 @@ Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
 </tbody></table>
 <!-- END CONTAINER -->
 
-         <style type="text/css"> 
+<style type="text/css"> 
 /* PP Sans Font Import */
 
 /* PP Sans Class */

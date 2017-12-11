@@ -150,7 +150,7 @@ $this->registerMetaTag([
 
     <div class="div-card thumbnail material-card">
         <div class="material-card__header header-card">
-        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug], ['class'=>'img','alt'=>'thumbnail'.$valContent->slug]),'/'.strtolower(str_replace([" ","/","&"], "-", $valContent->idTypeContent->type)).'/'.$valContent->slug); ?>
+        <?= Html::a(Html::img(['thumbnail','slug'=>$valContent->slug,'mode'=>'2'], ['class'=>'img','alt'=>'thumbnail'.$valContent->slug]),'/'.strtolower(str_replace([" ","/","&"], "-", $valContent->idTypeContent->type)).'/'.$valContent->slug); ?>
         </div>
     <div class="material-card__content">
         <h2 class="material-card__title"><?= Html::a($valContent->title, ['view','slug'=>$valContent->slug]); ?></h2>

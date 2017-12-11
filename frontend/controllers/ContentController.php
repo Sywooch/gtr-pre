@@ -11,7 +11,8 @@ use common\models\TContent;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use common\models\TGalery;
-
+use yii\imagine\Image;
+use yii\helpers\FileHelper;
 
 /**
  * Content controller
@@ -44,22 +45,71 @@ class ContentController extends Controller
 	}
 
     public function actionAjaxThumbnail($slug){
-        if (Yii::$app->request->isAjax) {
+       // if (Yii::$app->request->isAjax) {
             // $data = Yii::$app->request->post();
             return $this->renderAjax('/img-manager/ajax-image',['slug'=>$slug]);
-        }
+       // }
     }
 
-     public function actionThumbnail($slug)
-    {
+    //  public function actionThumbnail($slug)
+    // {
+    //     $model = $this->findModelArray($slug);
+    //     $response = Yii::$app->getResponse();
+    //     return $response->sendFile($model['thumbnail'],'thumbnail.jpg', [
+    //             //'mimeType' => 'image/jpg',
+    //            //'fileSize' => '386',
+    //             'inline' => true
+    //     ]);
+    // }
 
-        $model = $this->findModel($slug);
+    public function actionThumbnail($slug,$mode = 3)
+    {
+        //mode 1 = tumbnail 300x 300
+        //mode 2 = thumbnail 1024 X 640
+        // mode 3 = no resize
+        $model = $this->findModelArray($slug);
+        $path = Yii::$app->basePath."/web/content-img/".$model['slug']."/";
+        if ($mode == 1) {
+
+            $filename = "thumbnail-300.png";
+            $filePath = $this->resizeImage($model['thumbnail'],$filename,300,300,50,$path);
+
+        }elseif ($mode == 2) {
+            
+            $filename = "thumbnail-1024.png";
+            $filePath = $this->resizeImage($model['thumbnail'],$filename,1024,640,50,$path);
+
+        }else{
+            
+            $filename = "header.png";
+            $filePath = $this->resizeImage($model['thumbnail'],$filename,1024,640,75,$path);
+
+        }
         $response = Yii::$app->getResponse();
-        return $response->sendFile($model->thumbnail,'thumbnail.jpg', [
+        return $response->sendFile($filePath,'thumbnail.png', [
                 //'mimeType' => 'image/jpg',
                //'fileSize' => '386',
                 'inline' => true
         ]);
+    }
+
+    protected function resizeImage($model,$filename,$width,$height,$quality,$path){
+        if (!file_exists($path.$filename)){
+            FileHelper::createDirectory($path, $mode = 0775, $recursive = true);
+            Image::thumbnail($model, $width, $height)
+                ->save($path.$filename, ['quality' => $quality]);
+            }
+        return $path.$filename;
+    }
+
+
+     protected function findModelArray($slug)
+    {
+        if (($model = TContent::find()->where(['slug'=>$slug])->asArray()->one()) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
 
     public function actionGalery($id){
