@@ -72,13 +72,25 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
               <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
-                          <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valBoat['slug']], [
+                          <div id="div-<?= $valBoat['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
+                              <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valBoat['slug'],
                                     'id'=>$valBoat['slug'],
-                                    'onerror'=>'this.src="/thanks.png"'
-                                    ]), '/fast-boats/'.$valBoat['slug'].''); ?>
+                                    
+                                    ]), '/fast-boats/'.$valBoat['slug'].''); ?> -->
+                              <?php 
+                              $this->registerJs('
+                                $.ajax({
+                                  url: "'.Url::to(["/content/ajax-thumbnail"]).'",
+                                  type: "GET",
+                                  data : {slug: "'.$valBoat["slug"].'"},
+                                  success: function(data){
+                                    $("#div-'.$valBoat['slug'].'").html(data);
+                                  }
+                                });
+
+                              ', \yii\web\View::POS_READY); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valBoat['title'] ?></h4>
@@ -110,13 +122,25 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
               <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
-                          <div class="media-left material-media__column material-media__column_vertical-middle">
-                              <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valDestination['slug']], [
+                          <div id="div-<?= $valDestination['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
+                              <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valDestination['slug'],
                                     'id'=>$valDestination['slug'],
-                                    'onerror'=>'this.src="/thanks.png"'
-                                    ]), '/destinations/'.$valDestination['slug']); ?>
+                                    
+                                    ]), '/fast-boats/'.$valDestination['slug'].''); ?> -->
+                              <?php 
+                              $this->registerJs('
+                                $.ajax({
+                                  url: "'.Url::to(["/content/ajax-thumbnail"]).'",
+                                  type: "GET",
+                                  data : {slug: "'.$valDestination["slug"].'"},
+                                  success: function(data){
+                                    $("#div-'.$valDestination['slug'].'").html(data);
+                                  }
+                                });
+
+                              ', \yii\web\View::POS_READY); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valDestination['title'] ?></h4>
@@ -148,13 +172,25 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
               <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
-                          <div class="media-left material-media__column material-media__column_vertical-middle">
-                                  <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valArticle['slug']], [
+                          <div id="div-<?= $valArticle['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
+                              <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valArticle['slug'],
                                     'id'=>$valArticle['slug'],
-                                    'onerror'=>'this.src="/thanks.png"'
-                                    ]), '/articles/'.$valArticle['slug']); ?>
+                                    
+                                    ]), '/fast-boats/'.$valArticle['slug'].''); ?> -->
+                              <?php 
+                              $this->registerJs('
+                                $.ajax({
+                                  url: "'.Url::to(["/content/ajax-thumbnail"]).'",
+                                  type: "GET",
+                                  data : {slug: "'.$valArticle["slug"].'"},
+                                  success: function(data){
+                                    $("#div-'.$valArticle['slug'].'").html(data);
+                                  }
+                                });
+
+                              ', \yii\web\View::POS_READY); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valArticle['title'] ?></h4>
@@ -186,15 +222,24 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
               <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body">
                   <div class="media material-media">
-                          <div class="media-left material-media__column material-media__column_vertical-middle">
-                              
-                                  <?=  Html::a(Html::img(["/content/thumbnail",'slug'=>$valPorts['slug']], [
+                         <div id="div-<?= $valPorts['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
+                              <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
                                     'alt'=>'thumbnail'.$valPorts['slug'],
                                     'id'=>$valPorts['slug'],
-                                    'onerror'=>'this.src="/thanks.png"'
-                                    ]), '/ports/'.$valPorts['slug']); ?>
-                              
+                                    ]), '/fast-boats/'.$valPorts['slug'].''); ?> -->
+                              <?php 
+                              $this->registerJs('
+                                $.ajax({
+                                  url: "'.Url::to(["/content/ajax-thumbnail"]).'",
+                                  type: "GET",
+                                  data : {slug: "'.$valPorts["slug"].'"},
+                                  success: function(data){
+                                    $("#div-'.$valPorts['slug'].'").html(data);
+                                  }
+                                });
+
+                              ', \yii\web\View::POS_READY); ?>
                           </div>
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valPorts['title'] ?></h4>
@@ -250,19 +295,6 @@ $this->title = 'Fast Boat and Flight Transfers Bali to Gili Island / Lombok / Nu
 
         
 <?php 
-
-$this->registerJs('
-
-
-var classes = $(".media-object"),
-    values = [];
-for(var i = 0; i < classes.length; i++) {
-    var slug = classes[i].getAttribute("id");
-    $("#"+slug).attr("src","'.Url::to(["/content/thumbnail"]).'?slug="+slug);
-}
-
-  ', \yii\web\View::POS_READY);
-
 $customCss = <<< SCRIPT
 #payment-logo{
   height: 90px;

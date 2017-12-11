@@ -47,7 +47,7 @@ use yii\helpers\Html;
        <div class="col-md-3 col-sm-6 footer-col">
         <h6 class="heading7">Payment Channel</h6>
         <ul class="footer-social">
-          <li><img style="height: 100px; width: auto;"  src="/img/paypal.png"></div></li>
+          <li><img alt="payment-footer" id="img-footer" src="/img/paypal.png"></div></li>
          
         </ul>
       </div>
@@ -78,7 +78,10 @@ use yii\helpers\Html;
 
 <?php 
 $customCss = <<< SCRIPT
-  @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,300);
+#img-footer{
+  height: 100px; width: auto;
+}
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,300);
 ul,li{
     padding:0;
     margin:0;

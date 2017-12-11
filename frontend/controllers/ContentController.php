@@ -43,9 +43,16 @@ class ContentController extends Controller
         ];
 	}
 
+    public function actionAjaxThumbnail($slug){
+        if (Yii::$app->request->isAjax) {
+            // $data = Yii::$app->request->post();
+            return $this->renderAjax('/img-manager/ajax-image',['slug'=>$slug]);
+        }
+    }
+
      public function actionThumbnail($slug)
     {
-         $this->layout = 'empty-layout';
+
         $model = $this->findModel($slug);
         $response = Yii::$app->getResponse();
         return $response->sendFile($model->thumbnail,'thumbnail.jpg', [
