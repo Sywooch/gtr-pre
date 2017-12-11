@@ -68,17 +68,21 @@ echo Dialog::widget([
                 'contentOptions'=>['style'=>'font-size:15px;'],
                 'value'=>function ($model, $key, $index, $widget) {
                     $logStatus = Yii::$app->runAction('/booking/check-log',['id_payment'=>$model->id_payment]);
-                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <b>".$logStatus."</b>
+                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <span>".$logStatus."</span>
                     <span class='dropdown material-dropdown btn btn-xs'>".
                     Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-info dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
                     "<ul class='dropdown-menu material-dropdown-menu_primary'>
                         <li class='dropdown-header material-dropdown__header'>Resend...</li>
                         <li class='divider material-dropdown__divider'></li>
                         <li>".Html::a('Fastboat Reservation','#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>
-                        <li class='divider material-dropdown__divider'></li>
                         <li>".Html::a('Customer Ticket', '#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-customer-payment material-dropdown-menu__link'])."</li>
+                        <li class='divider material-dropdown__divider'></li>
+                                              
                     </ul>
                     </span>"; 
+                    // <li class='dropdown-header material-dropdown__header'>Cancellation</li>
+                    //     <li class='divider material-dropdown__divider'></li>
+                    //     <li>".Html::a('Fastboat Cancellation','#loading-pjax', ['id-payment'=>$model->id_payment,'class' => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>   
                 },
                 
                 'group'             =>true,  // enable grouping,
@@ -229,12 +233,18 @@ $(function(){
   });
 $('.read-btn').on('click',function(){
     var vidp = $(this).attr('value');
-    $.ajax({
-        url: '".Url::to(["read-check-payment"])."',
-        type:'POST',
-        data:{idp :vidp},
-        success: function (data) {
-             location.reload();
+    krajeeDialog.confirm(\"Confirm This Booking Is Read And Check By Yourself?\", function (result) {
+        if (result) {
+            $.ajax({
+                url: '".Url::to(["read-check-payment"])."',
+                type:'POST',
+                data:{idp :vidp},
+                success: function (data) {
+                     location.reload();
+                }
+            });
+        } else {
+           
         }
     });
 });

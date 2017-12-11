@@ -51,7 +51,14 @@ return [
                 'articles/<slug>'     => 'content/view',
                 'destinations/<slug>' => 'content/view',
                 'ports/<slug>'        => 'content/view',
+                'hotels/<slug>'       => 'content/view',
             ],
+            'normalizer'=>[
+            'class' => 'yii\web\UrlNormalizer',
+            'collapseSlashes' => true,
+            'normalizeTrailingSlash' => true,
+            ]
+
         ],
          'urlAgoda' => [
             'class' => 'yii\web\urlManager',

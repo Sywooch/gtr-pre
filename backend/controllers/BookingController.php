@@ -270,15 +270,14 @@ class BookingController extends Controller
 
     public function actionCheckLog($id_payment){
         if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser'])->where(['id_payment'=>$id_payment,'id_event'=>TBookingLog::EVENT_READ_CHECK])->asArray()->one()) != null){
-           return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#log-".$modelLogPayment['id_payment']."' data-placement='left' class='btn btn-xs btn-success fa fa-check-square-o'></a><div id='log-".$modelLogPayment['id_payment']."' class='hidden panel panel-primary'>
+           return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#log-".$modelLogPayment['id_payment']."' data-placement='top' class='btn btn-xs btn-success fa fa-check-square-o'></a><div id='log-".$modelLogPayment['id_payment']."' class='hidden panel panel-primary'>
                 <div class='popover-body list-group col-lg-12' >
                 <span class='fa fa-check-square-o'></span> ".$modelLogPayment['idUser']['username']."<br>
                 <span class='fa fa-clock-o'></span> ".date('d-m-Y H:i:s',strtotime($modelLogPayment['datetime']))."
                 </div>
                 </div>";
         }else{
-            return "<a data-toggle='tooltip' title='Mark As Read & Check' class='read-btn btn btn-xs btn-danger fa fa-remove'
-                    value='".$id_payment."'></a>";
+            return "<a data-toggle='tooltip' title='Mark As Read & Check' class='read-btn btn material-btn material-btn_xs fa fa-check-square-o' value='".$id_payment."'></a>";
         }
     }
 

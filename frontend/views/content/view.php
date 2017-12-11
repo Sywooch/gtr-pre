@@ -6,7 +6,7 @@ use yii\helpers\Url;
 /* @var $model common\models\TContent */
 
 $this->title = $model['title'];
-$this->params['breadcrumbs'][] = ['label' => $model['idTypeContent']['type'], 'url' => [strtolower(str_replace([" ","/","&"], "-", $model['idTypeContent']['type']))]];
+$this->params['breadcrumbs'][] = ['class'=>'material-breadcrumb__link','label' => $model['idTypeContent']['type'], 'url' => [strtolower(str_replace([" ","/","&"], "-", $model['idTypeContent']['type']))]];
 $this->params['breadcrumbs'][] = $this->title;
 
 $this->registerMetaTag([
