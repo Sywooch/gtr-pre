@@ -66,7 +66,7 @@ AppAsset::register($this);
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
-        'label' => 'Contact', 'url' => ['/site/contact'],
+        'label' => 'Contact', 'url' => ['/contact-us'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         

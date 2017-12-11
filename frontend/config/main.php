@@ -42,6 +42,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'contact-us'          => 'site/contact',
                 'fast-boats'          => 'content/fast-boats',
                 'destinations'        => 'content/destinations',
                 'ports'               => 'content/ports',
