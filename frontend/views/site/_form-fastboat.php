@@ -9,8 +9,8 @@ use kartik\widgets\TouchSpin;
 ?>
 <link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <?php
-$modelBookForm->arrivalPort = 19;
-$modelBookForm->arrivalPort = 13;
+$modelBookForm->arrivalPort   = 19;
+$modelBookForm->departurePort = 13;
 $modelBookForm->type        = 0; 
 $modelBookForm->returnDate  = null;
 $modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
