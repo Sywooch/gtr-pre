@@ -323,25 +323,7 @@ h4, .panel-heading{
 p{
   text-align: justify;
 }
-.bar{
-  width : 175px;
-}
 
-@media (max-width: 768px) {
-  .bar{
-  width : 400px;
-  }
-}
-@media (max-width: 992px){
-  .bar{
-  width : 200px;
-  }
-}
-@media (min-width: 992px){
-  .bar{
-  width : 175px;
-  }
-}
 #list-fastboat{
   min-height: 175px;
   max-height: 175px;
@@ -382,6 +364,14 @@ p{
     opacity:1;filter:"alpha(opacity=100)";
     -ms-filter:"alpha(opacity=100)";
 }
+
+@media (max-width: 500px) {
+  .bar{
+  width : 380px !important;
+  }
+}
+
+
 SCRIPT;
 $this->registerCss($customCss);
 
