@@ -326,6 +326,22 @@ p{
 .bar{
   width : 175px;
 }
+
+@media (max-width: 768px) {
+  .bar{
+  width : 400px;
+  }
+}
+@media (max-width: 992px){
+  .bar{
+  width : 200px;
+  }
+}
+@media (min-width: 992px){
+  .bar{
+  width : 175px;
+  }
+}
 #list-fastboat{
   min-height: 175px;
   max-height: 175px;
