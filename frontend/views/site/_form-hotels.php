@@ -18,12 +18,32 @@ use kartik\widgets\TouchSpin;
 <?= Html::hiddenInput('hl', $value = 'en', ['option' => 'value']); ?>
 <div class="col-md-2">
 <label class="control-label" for="city">Location</label>
-<?= Html::dropDownList('city', '', ['17193'=>'Bali','16842'=>'Lombok'], ['class' => 'form-control']); ?>
+<?= Html::dropDownList('city', '', [
+    '17193'=>'Bali',// city
+    '16842'=>'Lombok',// city
+    '34402'=>'Gili Trawangan', //area
+    '94506'=>'Gili Meno',//area
+    '94529'=>'Gili Air',//area
+    '31063'=>'Nusa Lembongan' //area
+
+
+    ],
+    [
+    'class' => 'form-control',
+    'onchange'=>'
+      var loc = $(this).val();
+      if (loc == 34402 || loc == 94506 || loc == 94529 || loc ==  31063) {
+        $(this).attr("name","area");
+      }else{
+        $(this).attr("name","city");
+      }
+    '
+    ]); ?>
 
 </div>
 <div class="col-md-5">
 <?php 
-    echo '<label class="control-label">Checkin And Checkout Date</label>';
+    echo '<label class="control-label">Check In And Check Out Date</label>';
     echo DatePicker::widget([
         'name' => 'checkin',
         'value' => date('Y-m-d'),
@@ -44,7 +64,7 @@ use kartik\widgets\TouchSpin;
     <?= Html::dropDownList('rooms', '1', ['1'=>'1','2'=>'2','3'=>'3','4'=>'4','5'=>'5','6'=>'6','7'=>'7','8'=>'8','9'=>'9','10'=>'10'], ['class' => 'form-control']); ?>
             </div>
 <div class="col-md-3">
-    <label class="control-label">No Of Pax</label>
+    <label class="control-label">No of Pax</label>
       <div id="pax-list" class="dropdown material-dropdown main-container__column">
           <li style="padding: 5px 15px 5px 15px; text-align: center;" class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
            <span class="fa fa-group"></span> Adult <span id="span-hotel-adult">1 </span>, Childs <span id="span-hotels-child"> 0</span>
@@ -84,7 +104,7 @@ use kartik\widgets\TouchSpin;
               </div>
               <div class="col-md-12">
                 <?php
-                echo '<label class="control-label">Childs</label>';
+                echo '<label class="control-label">Child</label>';
                 echo TouchSpin::widget([
                   'name'          => 'children',
                   'id'            => 'form-hotels-infats',

@@ -45,7 +45,12 @@ AppAsset::register($this);
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [
-        'label' => 'Fast Boat',
+        'label' => 'About',
+        'url' => ['/about-us'],
+        'linkOptions'=>['class'=>'material-navbar__link'],
+        ],
+        [
+        'label' => 'Fast Boats',
         'url' => ['/fast-boats'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
@@ -59,10 +64,6 @@ AppAsset::register($this);
         ],
         [
         'label' => 'Hotels', 'url' => ['/hotels'],
-        'linkOptions'=>['class'=>'material-navbar__link'],
-        ],
-        [
-        'label' => 'Article', 'url' => ['/articles'],
         'linkOptions'=>['class'=>'material-navbar__link'],
         ],
         [

@@ -44,66 +44,22 @@ class BookingController extends Controller
         ];
     }
 
-    public function actionResendReservation(){
+    public function actionResendTicketBooking(){
         if (Yii::$app->request->isAjax) {
-            $data = Yii::$app->request->post();
-            $type = $data['type'];
-            $modelPayment = TPayment::findOne($data['id_payment']);
-            $modelBooking = $modelPayment->tBookings;
-            try {
-                foreach ($modelBooking as $key => $value) {
-
-                    if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
-                       $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment,$type);
-                    }else{
-                       $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment,$type);
-                    }
-                    
-                }
-                return 'Successsfull';
-            } catch (Exception $e) {
-                return 'Failed. Please Try Again';
+            $data = Yii::$app->request;
+            if (($modelBooking = $this->findModel($data->post('id_booking'))) !== null) {
+                $ticket = $this->generateTicket([$modelBooking],$modelBooking->idPayment,$data->post('receipt'));
+                return $ticket;
+            }else{
+                return "Data Booking Not Found";
             }
-            
-        }else{
-            return $this->goHome();
+
         }
     }
-    protected function sendMailSupplier($to,$modelBooking,$modelPayment,$type){
 
-        $mail = Yii::$app->mailReservation->compose()
-                    ->setFrom('reservation@gilitransfers.com')
-                    ->setTo($to);
-
-        if (($mailCC = $modelBooking->idTrip->idBoat->idCompany->email_cc) !==  null) {
-            $mail->setCc($mailCC);
-        }
-        if ($type == '1') {
-            $messange = 'Booking';
-        }elseif ($type == '2') {
-            $messange = 'Cancellation Booking';
-        }
-        
-        $mail->setSubject($messange.' For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
-                    ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
-                        'modelBooking' => $modelBooking,
-                        'modelPayment' => $modelPayment,
-                        'user_token'   => Yii::$app->getSecurity()->maskToken($modelBooking->idTrip->idBoat->idCompany->idUser->auth_key),
-                        'date'         => $modelBooking->idTrip->date,
-                        'dept_time'    => $modelBooking->idTrip->dept_time,
-                        'island_route' => $modelBooking->idTrip->idRoute->departureHarbor->id_island.'-'.$modelBooking->idTrip->idRoute->arrivalHarbor->id_island,
-                        'type'         => $type
-                        ]))->send();
-        return true;
-    }
-
-    public function actionResendTicket(){
-    if (Yii::$app->request->isAjax) {
-        $data = Yii::$app->request->post();
-            $modelPayment = TPayment::findOne($data['id_payment']);
-            $modelBooking = $modelPayment->tBookings;
+    protected function generateTicket(array $modelBooking, $modelPayment, $receipt){
         try {
-                $savePath =  Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/";
+            $savePath =  Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/";
             FileHelper::createDirectory ( $savePath, $mode = 0777, $recursive = true );
             $Ticket = new Pdf([
             'filename'=>$savePath.'E-Ticket.pdf',
@@ -158,7 +114,8 @@ class BookingController extends Controller
                     ]
                 ]);
             $Ticket->render();
-            $Receipt = new Pdf([
+            if ($receipt == "1") {
+                $Receipt = new Pdf([
                 'filename'=>$savePath.'Receipt.pdf',
                 // A4 paper format
                 'format' => Pdf::FORMAT_A4, 
@@ -197,7 +154,8 @@ class BookingController extends Controller
                         ]
                     ]);
                 $Receipt->render();
-               Yii::$app->mailReservation->compose()
+            }
+              $sendTicket = Yii::$app->mailReservation->compose()
                 ->setFrom('reservation@gilitransfers.com')
                 ->setTo($modelPayment->email)
                 ->setSubject('E-Ticket GiliTransfers')
@@ -205,59 +163,119 @@ class BookingController extends Controller
                     'modelBooking'=>$modelBooking,
                     'modelPayment'=>$modelPayment,
                     ]))
-                ->attach($savePath."E-Ticket.pdf")
-                ->attach($savePath."Receipt.pdf")
-                ->send();
+                ->attach($savePath."E-Ticket.pdf");
+            if ($receipt == "1") {
+                $sendTicket->attach($savePath."Receipt.pdf");
+            }
+             $sendTicket->send();
                 FileHelper::removeDirectory($savePath);
-                
-                return 'Resend Ticket Successsfull';
+                return 'Sending Ticket Successsfull';
             } catch(\Exception $e) {
                  FileHelper::removeDirectory($savePath);
-                return 'Resend Ticket Failed, Please Try Again';
+                return '<center><h1>Sending Ticket Failed</h1></center><br>'.$e;
             }
+
+    }
+
+
+    public function actionResendReservationPayment(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $type = $data['type'];
+            $modelPayment = TPayment::findOne($data['id_payment']);
+            $modelBooking = $modelPayment->tBookings;
+            try {
+                foreach ($modelBooking as $key => $value) {
+
+                    if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
+                       $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment,$type);
+                    }else{
+                       $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment,$type);
+                    }
+                    
+                }
+                return 'Successsfull';
+            } catch (Exception $e) {
+                return 'Failed. Please Try Again';
+            }
+            
         }else{
             return $this->goHome();
         }
     }
 
-    public function actionTicket($id_booking, $type = "D"){
-        $modelBooking = $this->findModel($id_booking);
-        $tempdir = Yii::$app->basePath."/E-Ticket/".$modelBooking->id."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
-        FileHelper::createDirectory ( $tempdir, $mode = 0777, $recursive = true );
-        $PdfSupplier = new Pdf([
-                'filename'    =>'Ticket-'.$modelBooking['id'].'.pdf',
-                // A4 paper format
-                'format'      => Pdf::FORMAT_A4, 
-                // portrait orientation
-                'orientation' => Pdf::ORIENT_PORTRAIT,
-                'tempPath'    => Yii::getAlias('@console/runtime/mpdf'),
-                // simpan file
-                'destination' => $type,
-                'content'     => "
-                    ".$this->renderAjax('/email-ticket/pdf-supplier',[
-                        'modelBooking' =>$modelBooking,
-                        'tempdir'      =>$tempdir,
-                        ])." ",
-                                // any css to be embedded if required
-                                'cssInline' => '.kv-heading-1{
-                                                    font-size:18px
-                                                }
-                                                .judul{
-                                                    font-size:25px;
-                                                }', 
-                                //set mPDF properties on the fly
-                                'options'   => ['title' => 'Supplier Reservation Gilitransfers'],
-                                // call mPDF methods on the fly
-                                'methods'   => [ 
-                                'SetHeader' =>['Supplier Reservation Gilitransfers'], 
-                                'SetFooter' =>['This Document automatically printed by system'],
-                        ]
-                    ]);
-                    $PdfSupplier->render();
-                    if ($type == "D") {
-                        FileHelper::removeDirectory($tempdir);
-                    }
-                    
+    public function actionResendReservationBooking(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request;
+            $type = $data->post('type');
+            if (($modelBooking = $this->findModel($data->post('id_booking'))) !== null) {
+                $modelPayment = $modelBooking->idPayment;
+                try {
+                        if ($modelBooking->idTrip->idRoute->departureHarbor->id_island == '2' && $modelBooking->idTrip->idBoat->idCompany->email_gili != null) {          
+                           $mailSupplier =  $this->sendMailSupplier($modelBooking->idTrip->idBoat->idCompany->email_gili, $modelBooking, $modelPayment,$type);
+                        }else{
+                           $mailSupplier =  $this->sendMailSupplier($modelBooking->idTrip->idBoat->idCompany->email_bali,  $modelBooking, $modelPayment,$type);
+                        }
+                    return 'Successsfull';
+                } catch (Exception $e) {
+                    return 'Failed. Please Try Again<br>'.$e;
+                }
+            }else{
+                return "Data Not Found";
+            }
+            
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    protected function sendMailSupplier($to,$modelBooking,$modelPayment,$type){
+
+        $mail = Yii::$app->mailReservation->compose()
+                    ->setFrom('reservation@gilitransfers.com')
+                    ->setTo($to);
+
+        if (($mailCC = $modelBooking->idTrip->idBoat->idCompany->email_cc) !==  null) {
+            $mail->setCc($mailCC);
+        }
+        if ($type == '1') {
+            $messange = 'Booking';
+        }elseif ($type == '2') {
+            $messange = 'Cancellation Booking';
+        }
+        
+        $mail->setSubject($messange.' For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
+                    ->setHtmlBody($this->renderAjax('/email-ticket/email-supplier',[
+                        'modelBooking' => $modelBooking,
+                        'modelPayment' => $modelPayment,
+                        'user_token'   => Yii::$app->getSecurity()->maskToken($modelBooking->idTrip->idBoat->idCompany->idUser->auth_key),
+                        'date'         => $modelBooking->idTrip->date,
+                        'dept_time'    => $modelBooking->idTrip->dept_time,
+                        'island_route' => $modelBooking->idTrip->idRoute->departureHarbor->id_island.'-'.$modelBooking->idTrip->idRoute->arrivalHarbor->id_island,
+                        'type'         => $type
+                        ]))->send();
+        return true;
+    }
+
+
+
+    public function actionResendTicketPayment(){
+        if (Yii::$app->request->isAjax) {
+           $data = Yii::$app->request;
+           if (($modelPayment = $this->findOnePayment($data->post('id_payment'))) !== null) {
+                    $ticket = $this->generateTicket($modelPayment->tBookings,$modelPayment,$data->post('receipt'));
+                    return $ticket;
+            }else{
+                    return "Data Booking Not Found";
+           }
+            
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    protected function findOnePayment($id_payment){
+        return TPayment::findOne($id_payment);
     }
 
     protected function findOneBookingAsArray($id_booking){

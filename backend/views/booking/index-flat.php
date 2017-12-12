@@ -20,7 +20,7 @@ echo Dialog::widget([
     Dialog::DIALOG_ALERT => [
         'type'        => Dialog::TYPE_PRIMARY,
         'title'       => 'Info',
-        'buttonClass' => 'btn-primary',
+        'buttonClass' => 'btn-primary btn-dialog',
         'buttonLabel' => 'Ok'
     ],
     Dialog::DIALOG_CONFIRM => [
@@ -70,8 +70,8 @@ echo Dialog::widget([
                     $logStatus = Yii::$app->runAction('/booking/check-log',['id_payment'=>$model->id_payment]);
                 return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <span>".$logStatus."</span>
                     <span class='dropdown material-dropdown btn btn-xs'>".
-                    Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-info dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
-                    "<ul class='dropdown-menu material-dropdown-menu_primary'>
+                    Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-danger dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
+                    "<ul class='dropdown-menu material-dropdown-menu_danger'>
                         <li class='dropdown-header material-dropdown__header'>Resend</li>
                         <li class='divider material-dropdown__divider'></li>
                         <li>".Html::a('Fastboat Reservation','#loading-pjax', [
@@ -144,11 +144,31 @@ echo Dialog::widget([
                                     </div>
                                 </div>
                                 ";
-                    if (!empty($model->shuttleTmp->id_booking)) {
-                        return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."' data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b> ( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br> Required ".$model->shuttleTmp->type." in ".$model->shuttleTmp->idArea->area."-".$model->shuttleTmp->location_name."-".$model->shuttleTmp->address."-".$model->shuttleTmp->phone.$popover;
-                    }else{
-                        return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b><br>".$popover;
-                }
+                    $shuttle = !empty($model->shuttleTmp->id_booking) ? "<br> Required ".$model->shuttleTmp->type." in ".$model->shuttleTmp->idArea->area."-".$model->shuttleTmp->location_name."-".$model->shuttleTmp->address."-".$model->shuttleTmp->phone : " ";
+                    $dropdown =  "<span class='dropdown material-dropdown btn btn-xs'>".
+                    Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-info dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
+                    "<ul class='dropdown-menu material-dropdown-menu_primary'>
+                        <li class='dropdown-header material-dropdown__header'>Resend</li>
+                        <li class='divider material-dropdown__divider'></li>
+                        <li>".Html::a('Fastboat Reservation','#loading-pjax', [
+                                'id-booking' => $model->id,
+                                'type'       => 1,
+                                'class'      => 'btn-resend-reservation-booking material-dropdown-menu__link'])."</li>
+                        <li>".Html::a('Customer Ticket', '#loading-pjax', [
+                                'id-booking' =>$model->id,
+                                'class'      => 'btn-resend-customer-booking material-dropdown-menu__link'])."</li>
+                        <li class='divider material-dropdown__divider'></li>
+                        <li class='dropdown-header material-dropdown__header'>Cancellation</li>
+                        <li class='divider material-dropdown__divider'></li>
+                        <li>".Html::a('Fastboat Cancellation','#loading-pjax', [
+                                'id-booking' => $model->id,
+                                'type'       => 2,
+                                'class'      => 'btn-resend-reservation-booking material-dropdown-menu__link'])."</li>   
+                                              
+                    </ul>
+                    </span>"; 
+                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b> ".$dropdown.$shuttle.$popover;
+                
                 }
             ],
             [
@@ -259,16 +279,47 @@ $('.read-btn').on('click',function(){
 });
 $('.btn-resend-customer-payment').on('click',function(){
     var idp = $(this).attr('id-payment');
-    krajeeDialog.confirm(\"Are you sure you want to Resend Ticket To Customer?\", function (result) {
+    krajeeDialog.confirm(\"<div class='col-md-12'>Are you sure you want to Resend Ticket To Customer?</div><div class='col-md-12'><div class='main-container__column material-checkbox-group material-checkbox-group_warning'><input value='1' type='checkbox' id='checkbox-receipt-payment' name='checkbox_receipt_payment' class='material-checkbox'><label class='material-checkbox-group__label' for='checkbox-receipt-payment'>Include Receipt ?</label></div></div>\", function (result) {
         if (result) {
-             $('#modal-loading').modal({
+            $('#modal-loading').modal({
               backdrop: 'static',
               keyboard: false
-          });
+            });
+            var vpreceipt = $('#checkbox-receipt-payment:checkbox:checked').val();
             $.ajax({
-                url: '".Url::to(["resend-ticket"])."',
+                url: '".Url::to(["resend-ticket-payment"])."',
                 type:'POST',
-                data:{id_payment :idp},
+                data:{id_payment :idp, receipt: vpreceipt},
+                success: function (data) {
+                    $('#modal-loading').modal('hide');
+                    Dialog(data);
+                },
+                error:function(data){
+                    $('#modal-loading').modal('hide');
+                    Dialog(data);
+                }
+            });
+        } else {
+           
+        }
+    });
+    
+   
+});
+
+$('.btn-resend-customer-booking').on('click',function(){
+    var idb = $(this).attr('id-booking');
+    krajeeDialog.confirm(\"<div class='col-md-12'>Are you sure you want to Resend Ticket To Customer?</div><div class='col-md-12'><div class='main-container__column material-checkbox-group material-checkbox-group_warning'><input value='1' type='checkbox' id='checkbox-receipt' name='checkbox' class='material-checkbox'><label class='material-checkbox-group__label' for='checkbox-receipt'>Include Receipt ?</label></div></div>\", function (result) {
+        if (result) {
+            var vreceipt = $('#checkbox-receipt:checkbox:checked').val();
+            $('#modal-loading').modal({
+              backdrop: 'static',
+              keyboard: false
+            });
+            $.ajax({
+                url: '".Url::to(["resend-ticket-booking"])."',
+                type:'POST',
+                data:{id_booking :idb, receipt: vreceipt},
                 success: function (data) {
                     $('#modal-loading').modal('hide');
                     Dialog(data);
@@ -306,7 +357,7 @@ $('.btn-resend-reservation-payment').on('click',function(){
                       keyboard: false
                   });
             $.ajax({
-                url: '".Url::to(["resend-reservation"])."',
+                url: '".Url::to(["resend-reservation-payment"])."',
                 type:'POST',
                 data:{id_payment :payid, type: vtype},
                 success: function (data) {
@@ -323,8 +374,42 @@ $('.btn-resend-reservation-payment').on('click',function(){
         }
     });
 });
+
+$('.btn-resend-reservation-booking').on('click',function(){
+    var vbookid = $(this).attr('id-booking');
+    var vtypebook = $(this).attr('type');
+        if (vtypebook == '1' ) {
+            var msg = 'Resend Reservation';
+        } else if (vtypebook == '2') {
+            var msg = 'Send Cancellation';
+        }
+    krajeeDialog.confirm(\"Are you sure you want to \"+msg+\" To Fastboat?\", function (result) {
+        if (result) {
+            $('#modal-loading').modal({
+                      backdrop: 'static',
+                      keyboard: false
+                  });
+            $.ajax({
+                url: '".Url::to(["resend-reservation-booking"])."',
+                type:'POST',
+                data:{id_booking :vbookid, type: vtypebook},
+                success: function (data) {
+                     $('#modal-loading').modal('hide');
+                    Dialog(data);
+                },
+                error:function(data){
+                    $('#modal-loading').modal('hide');
+                    Dialog(data);
+                }
+            });
+        }else{
+            
+        }
+    });
+});
+
     
-    ");
+    "); 
  ?>
 
 <div class="modal material-modal material-modal_primary fade" id="modal-loading">

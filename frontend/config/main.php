@@ -43,6 +43,7 @@ return [
             'showScriptName' => false,
             'rules' => [
                 'contact-us'          => 'site/contact',
+                'about-us'            => 'site/about',
                 'fast-boats'          => 'content/fast-boats',
                 'destinations'        => 'content/destinations',
                 'ports'               => 'content/ports',

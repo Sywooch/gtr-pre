@@ -9,8 +9,9 @@ use kartik\widgets\TouchSpin;
 ?>
 <link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <?php
-$modelBookForm->arrivalPort = 4;
-$modelBookForm->type        = 0;
+$modelBookForm->arrivalPort = 19;
+$modelBookForm->arrivalPort = 13;
+$modelBookForm->type        = 0; 
 $modelBookForm->returnDate  = null;
 $modelBookForm->departureDate = date('d-m-Y H:i:s') > date('d-m-Y 16:i:s') ? date('d-m-Y',strtotime('+2 DAYS',strtotime(date('d-m-Y')))) : date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
 //$modelBookForm->returnDate = $modelBookForm->departureDate;
@@ -40,10 +41,10 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
     </div>
 
     <div style="margin-bottom: 20px;" class="col-md-4 col-sm-12 col-xs-12">
-    <label class="control-label">No Of Passengers</label>
+    <label class="control-label">No of Passengers</label>
       <div id="pax-list" class="dropdown material-dropdown main-container__column">
           <li style="padding: 5px 15px 5px 15px; text-align: center;" class="dropdown-toggle list-group-item" data-toggle="dropdown" class="list-group-item">
-           <span class="glyphicon glyphicon-user"></span> Adult <span id="span-adult">1 </span>, Childs <span id="span-child"> 0</span>, Infants <span id="span-infants"> 0</span>
+           <span class="glyphicon glyphicon-user"></span> Adult <span id="span-adult">1 </span>, Child <span id="span-child"> 0</span>, Infant <span id="span-infants"> 0</span>
           </li>
         <div class="dropdown-menu">
         <div class="panel panel-default material-panel material-panel_primary">
@@ -52,7 +53,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
             <div class="col-md-12">
               <?php 
 
-              echo '<label class="control-label">Adults <span class="text-muted">(12+ years)</span></label>';
+              echo '<label class="control-label">Adult <span class="text-muted">(12+ years)</span></label>';
               echo TouchSpin::widget([
                 'model'         => $modelBookForm,
                 'attribute'     => 'adults',
@@ -81,7 +82,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
             </div>
             <div class="col-md-12">
                 <?php
-                echo '<label class="control-label">Childs <span class="text-muted">(2-12 years)</span></label>';
+                echo '<label class="control-label">Child <span class="text-muted">(2-12 years)</span></label>';
                 echo TouchSpin::widget([
                   'model'         => $modelBookForm,
                   'attribute'     => 'childs',
@@ -110,7 +111,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
               </div>
               
               <div class="col-md-12">
-              <label class="control-label">Infants <a data-placement="left" data-popover-content="#a1" data-toggle="popover" data-trigger="focus hover" href="#" tabindex="0"><span class="text-muted"> (0-2) Years Without Seat</span> <span class="fa fa-question-circle"></span></a></label>
+              <label class="control-label">Infant <a data-placement="left" data-popover-content="#a1" data-toggle="popover" data-trigger="focus hover" href="#" tabindex="0"><span class="text-muted"> (0-2) Years Without Seat</span> <span class="fa fa-question-circle"></span></a></label>
                 <?php
                 // echo '';
                 echo TouchSpin::widget([
@@ -264,8 +265,9 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
     'pluginOptions' => [
         'allowClear' => false,
     ],
-]); ?>
+])->label('Currency*'); ?>
 </div>
+<span class="text-muted pull-right" id="currency-note">*Available currencies depend on selected payment method</span>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">
          
           <?= Html::submitButton(Yii::t('app', ' Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block glyphicon glyphicon-search']) ?>
@@ -274,6 +276,10 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 
 <?php
 $customCss = <<< SCRIPT
+#currency-note{
+  text-align: right;
+  font-size: 9px;
+}
 .text-muted{
   font-size: 10px;
 }
