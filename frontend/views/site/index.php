@@ -367,7 +367,7 @@ p{
 
 @media (max-width: 500px) {
   .bar{
-  width : 380px !important;
+  width : 100% !important;
   }
 }
 
