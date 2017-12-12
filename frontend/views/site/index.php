@@ -47,10 +47,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
     <h5 class="panel-heading material-panel__heading">Contact Us</h5>
     <div class="panel-body material-panel__body">
       <div class="row">
-          <p><a class="hyperlink-index" href="tel:+62-813-5330-4990"><span class="glyphicon glyphicon-earphone"> </span> +62-813-5330-4990<br></a></p>
-          <p><a class="hyperlink-index" href="mailto:reservation@gilitransfers.com" target="_top"><span class="glyphicon glyphicon-envelope"></span> reservation@gilitransfers.com</a></p>
           <p>
-          Select Your Language
           <div id="google_translate_element"></div>
           <script type="text/javascript">
           function googleTranslateElementInit() {
@@ -60,8 +57,11 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
           <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
           
           </p>
+          <p><a class="hyperlink-index" href="tel:+62-813-5330-4990"><span class="glyphicon glyphicon-earphone"> </span> +62-813-5330-4990<br></a></p>
+          <p><a class="hyperlink-index" href="mailto:reservation@gilitransfers.com" target="_top"><span class="glyphicon glyphicon-envelope"></span> reservation@gilitransfers.com</a></p>
+          
           <div class="embed-responsive embed-responsive-16by9"> 
-          <iframe src="https://www.youtube.com/watch?v=6ZHNzE1Zirg"></iframe>
+          <iframe class="embed-responsive-item" src="https://www.youtube.com/watch?v=6ZHNzE1Zirg"></iframe>
           </div>
        <!--    <img id="payment-logo" alt="payment-logo" src="/img/paypal.png"> -->
       </div>
