@@ -61,7 +61,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
           <p><a class="hyperlink-index" href="mailto:reservation@gilitransfers.com" target="_top"><span class="glyphicon glyphicon-envelope"></span> reservation@gilitransfers.com</a></p>
           
           <div class="embed-responsive embed-responsive-16by9"> 
-          <iframe class="embed-responsive-item" src="https://www.youtube.com/watch?v=6ZHNzE1Zirg"></iframe>
+          <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/6ZHNzE1Zirg"></iframe>
           </div>
        <!--    <img id="payment-logo" alt="payment-logo" src="/img/paypal.png"> -->
       </div>
@@ -307,7 +307,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
   <?php endif; ?>
       </div>
 
-        
+         
 <?php 
 $customCss = <<< SCRIPT
 .hyperlink-index{

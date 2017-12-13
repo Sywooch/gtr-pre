@@ -2,7 +2,7 @@
 use yii\helpers\Html;
 
 
-$this->title = "";
+$this->title = "Welcome To Gilitransfers";
 ?>
 
 <center><?= Html::img(['/logo.png'], ['class' => 'img-responsive']); ?></center>
