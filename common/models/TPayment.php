@@ -58,6 +58,7 @@ class TPayment extends \yii\db\ActiveRecord
             [['email', 'phone', 'total_payment', 'total_payment_idr', 'currency', 'exchange', 'token'], 'required'],
             [['id_payment_method', 'total_payment_idr', 'exchange', 'status'], 'integer'],
             [['total_payment', 'send_amount'], 'number'],
+            [['update_at'],'default','value'=>date('Y-m-d H:i:s')],
             [['exp', 'update_at'], 'safe'],
             [['name'], 'string', 'max' => 50],
             [['email'],'email'],

@@ -44,6 +44,75 @@ class BookingController extends Controller
         ];
     }
 
+    protected function findRoute($departure,$return){
+     return TRoute::find()->where(['departure'=>$departure])->andWhere(['arrival'=>$return])->asArray()->one();
+    }
+
+
+    public function actionBookingModify(){
+        
+        if (Yii::$app->request->isPjax) {
+            $data = Yii::$app->request->queryParams['TBooking'];
+            if(($route = $this->findRoute($data['departurePort'],$data['arrivalPort'])) !== null){
+             $formData = ['date'=>$data['date'],'id_route'=>$route['id'],'pax'=>Yii::$app->request->queryParams['pax']];
+             $modelTrip = TTrip::getAvailableTrip($formData);
+                return $this->renderAjax('result-one',[
+                            'departureList' =>$modelTrip,
+                            'id_booking'    =>$data['id'],
+                            ]);
+            }else{
+                return "<h1>No Route Available</h1>";
+            }
+        }
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelBooking = $this->findModel($data['id_booking']);
+            $route = THarbor::find()->joinWith('idIsland')->asArray()->orderBy(['id_island'=>SORT_ASC,'name'=>SORT_ASC])->all();
+            foreach ($route as $key => $value) {
+                $arrayRoute[] = ['id'=>$value['id'],'name'=>$value['name'],'island'=>$value['idIsland']['island']];
+            }
+            $listDept =ArrayHelper::map($arrayRoute, 'id', 'name', 'island');
+            return $this->renderAjax('booking-modify',[
+                    'modelBooking' =>$modelBooking,
+                    'listDept'     =>$listDept,
+                    ]);
+        }
+        if (Yii::$app->request->isPost) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $data                  = Yii::$app->request->post();
+                $modelNewTrip          = $this->findOneTrip($data['id_trip']);
+                $modelBooking          = $this->findModel($data['id_booking']);
+                $modelTrip             = $modelBooking->idTrip;
+                $affectedPassengers    = count($modelBooking->affectedPassengers);
+                $modelTrip->stock      = $modelTrip->stock+$affectedPassengers;
+                $modelTrip->cancel     = $modelTrip->cancel+$affectedPassengers;
+                $modelTrip->sold       = $modelTrip->sold-$affectedPassengers;
+                $modelTrip->save(false);
+                $modelBooking->id_trip = $data['id_trip'];
+                $modelBooking->save(false);
+                $modelNewTrip->stock   = $modelNewTrip->stock-$affectedPassengers;
+                $modelNewTrip->sold    = $modelNewTrip->sold+$affectedPassengers;
+                $modelNewTrip->save(false);
+                $transaction->commit();
+                return $this->redirect(['index']);
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+            
+        }
+
+    }
+
+    protected function findOneTrip($id_trip){
+        if(($model = TTrip::findOne($id_trip)) !== null){
+            return $model;
+        }else{
+            throw new NotFoundHttpException('Data Not Found... Please try Again');
+        }
+    }
+
     public function actionResendTicketBooking(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request;

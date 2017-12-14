@@ -41,6 +41,9 @@ class TBooking extends \yii\db\ActiveRecord
     const STATUS_REFUND_FULL    = 7;
     const STATUS_EXPIRED        = 99;
     const STATUS_INVALID        = 100;
+    public $date;
+    public $departurePort;
+    public $arrivalPort;
     /**
      * @inheritdoc
      */
@@ -56,9 +59,9 @@ class TBooking extends \yii\db\ActiveRecord
     {
         return [
             [['id','id_payment', 'id_trip', 'trip_price', 'total_price', 'currency', 'total_idr', 'exchange'], 'required'],
-            [['id_trip', 'total_idr', 'exchange', 'id_status', 'process_by'], 'integer'],
+            [['id_trip', 'total_idr', 'exchange', 'id_status', 'process_by','departurePort','arrivalPort'], 'integer'],
             [['trip_price', 'total_price'], 'number'],
-            [['datetime'], 'safe'],
+            [['datetime','date'], 'safe'],
             [['id'], 'string', 'max' => 6],
             [['currency'], 'string', 'max' => 5],
             [['id_status'],'in','range'=>[self::STATUS_ON_BOOK, self::STATUS_UNPAID, self::STATUS_VALIDATION, self::STATUS_PAID, self::STATUS_SUCCESS, self::STATUS_REFUND_PARTIAL, self::STATUS_REFUND_FULL, self::STATUS_EXPIRED, self::STATUS_INVALID]],
@@ -197,9 +200,20 @@ public function generateBookingNumber($attribute, $length = 4){
             $modelTrip->cancel  = $modelTrip->cancel+$affectedPassengers;
             $modelTrip->save(false);
         }
+        
         return true;
     }
 
+    // public function afterSave( $insert, $changedAttributes ){
+    //     if ($changedAttributes['id_trip']) {
+    //         $modelTrip          = $this->idTrip;
+    //         $affectedPassengers = count($this->affectedPassengers);
+    //         $modelTrip->stock   = $modelTrip->stock-$affectedPassengers;
+    //         $modelTrip->cancel  = $modelTrip->cancel+$affectedPassengers;
+    //         $modelTrip->save(false);
+    //     }
+    //     return true;
+    // }
     public function beforeDelete()
     {
         if (!parent::beforeDelete()) {

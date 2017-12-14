@@ -5,7 +5,7 @@ if ($type == '1') {
   $footer = "Best Regards : ".Yii::$app->user->identity->username;
 }else{
   $head   = 'Cancellation';
-  $body   = 'Please cancel this booking below as our guest request';
+  $body   = 'Please cancel this booking below ';
   $footer = "Thank you for your kind understanding.<br><br> Best Regards : ".Yii::$app->user->identity->username;
 } 
 ?>

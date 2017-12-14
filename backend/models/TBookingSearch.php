@@ -67,7 +67,7 @@ class TBookingSearch extends TBooking
             if ($this->table_layout == 'group') {
                 $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute','idPayment'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->groupBy(['t_boat.id_company','t_trip.id_route','t_trip.date','t_trip.dept_time'])->orderBy(['t_boat.id_company'=>SORT_ASC,'t_trip.id_route'=>SORT_ASC,'t_trip.dept_time'=>SORT_ASC,'t_trip.date'=>SORT_ASC]);
             }else{
-                 $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute','idPayment'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->orderBy(['t_booking.datetime'=>SORT_DESC]);
+                 $query = TBooking::find()->joinWith(['idTrip.idBoat','idTrip.idRoute','idPayment'])->where(['between','id_status',TBooking::STATUS_PAID,TBooking::STATUS_REFUND_FULL])->orderBy(['t_booking.id_payment'=>SORT_DESC,'t_booking.datetime'=>SORT_DESC]);
             }
         
        }else{

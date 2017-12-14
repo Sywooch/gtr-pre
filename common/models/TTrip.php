@@ -262,4 +262,14 @@ class TTrip extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TSeasonPriceSet::className(), ['id' => 'id_season']);
     }
+
+    public static function getAvailableTrip(array $formData){
+        return TTrip::find()
+        ->where(['date'=>$formData['date']])
+        ->andWhere(['id_route'=>$formData['id_route']])
+        ->andWhere('t_trip.id_price_type IS NOT :priceid',['priceid'=>null])
+        ->andWhere('t_trip.stock >= :totalPax',[':totalPax'=>$formData['pax']])
+        ->andWhere(['status'=>self::STATUS_ON])
+        ->all();
+    }
 }

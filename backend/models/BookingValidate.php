@@ -51,11 +51,11 @@ class BookingValidate extends TBooking
     {
 
             // $query = TBooking::find()->joinWith('idTrip.idBoat.idCompany')->where(['id_status'=>2])->orWhere(['id_status'=>3]);
-        if ($this->show_all == false) {
-            $query = TBooking::find()->joinWith('idTrip.idBoat')->where(['id_status'=>2])->orWhere(['id_status'=>3]);
-        }else{
-            $query = TBooking::find()->joinWith('idTrip.idBoat');
-        }
+       // if ($this->show_all == false) {
+            $query = TBooking::find()->where(['id_status'=>2])->orWhere(['id_status'=>3])->orWhere(['id_status'=>99]);
+        // }else{
+        //     $query = TBooking::find()->joinWith('idTrip.idBoat');
+        // }
        
        
 
@@ -65,7 +65,7 @@ class BookingValidate extends TBooking
             'query' => $query,
             'sort'=>[
                 'defaultOrder'=>[
-                'id_payment'=>SORT_DESC,
+                'datetime'=>SORT_DESC,
                 //'dept_time'=>SORT_ASC
                 ]
             ]

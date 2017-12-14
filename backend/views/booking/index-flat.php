@@ -68,7 +68,7 @@ echo Dialog::widget([
                 'contentOptions'=>['style'=>'font-size:15px;'],
                 'value'=>function ($model, $key, $index, $widget) {
                     $logStatus = Yii::$app->runAction('/booking/check-log',['id_payment'=>$model->id_payment]);
-                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->datetime))." <span>".$logStatus."</span>
+                return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->idPayment->exp))." <span>".$logStatus."</span>
                     <span class='dropdown material-dropdown btn btn-xs'>".
                     Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-danger dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
                     "<ul class='dropdown-menu material-dropdown-menu_danger'>
@@ -166,8 +166,14 @@ echo Dialog::widget([
                                 'class'      => 'btn-resend-reservation-booking material-dropdown-menu__link'])."</li>   
                                               
                     </ul>
-                    </span>"; 
-                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b> ".$dropdown.$shuttle.$popover;
+                    </span>";
+                    $modify = Html::button('', [
+                                'id-booking'  => $model->id,
+                                'class'       => 'btn-modify btn btn-xs btn-warning glyphicon glyphicon-calendar',
+                                'data-toggle' => "tooltip",
+                                'data-title'  => "Modify This Booking",
+                                ]);
+                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b> ".$dropdown.$modify.$shuttle.$popover;
                 
                 }
             ],
@@ -226,6 +232,22 @@ Modal::begin([
     'id'=>'booking-modal',
     'header' => '<h2>Booking Detail</h2>',
     'size'=>'modal-lg',
+    
+]);
+
+echo '...';
+
+Modal::end();
+
+Modal::begin([
+    'id'       => 'booking-modify-modal',
+    'header'   => '<h2>Modify This Booking</h2>',
+    'size'     => 'modal-lg',
+    // 'closeButton'=>false,
+    'clientOptions'  =>[
+        'backdrop' => 'static',
+        'keyboard' => false
+        ]
 ]);
 
 echo '...';
@@ -237,15 +259,30 @@ $this->registerJs("
  $('#booking-modal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget)
         var modal = $(this)
-        var title = button.data('title') 
+        var title = button.data('data-title') 
         var href = button.attr('href') 
         modal.find('.modal-title').html(title)
-        modal.find('.modal-body').html('<i class=\"fa fa-spinner fa-spin\"></i>')
+        modal.find('.modal-body').html('<center><i class=\"fa fa-spinner fa-spin\"></i></center>')
         $.post(href)
             .done(function( data ) {
                 modal.find('.modal-body').html(data)
             });
         });
+$('.btn-modify').on('click',function(){
+    $('#booking-modify-modal').modal('show');
+    var vidb = $(this).attr('id-booking');
+    $.ajax({
+        url: '".Url::to(["booking-modify"])."',
+        type:'POST',
+        data:{id_booking :vidb},
+        success: function (data) {
+            $('#booking-modify-modal').find('.modal-body').html(data);
+        }
+    });
+});
+$('#booking-modify-modal').on('hidden.bs.modal', function (event) {
+    window.location.href = '".Url::to(["index"])."';
+});
 $(function(){
     $('[data-toggle=popover]').popover({
         html : true,
