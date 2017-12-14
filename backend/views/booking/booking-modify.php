@@ -64,6 +64,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 <?php
  
 $this->registerJs('
+        $.pjax.defaults.timeout = 50000;
         $("#pjax-form-booking-modify").on("pjax:start", function() {
             $("#loading-pjax-modify").html(\'<img src="/spinner.svg">\');
         }); 
