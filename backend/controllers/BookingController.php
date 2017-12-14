@@ -95,6 +95,7 @@ class BookingController extends Controller
                 $modelNewTrip->stock   = $modelNewTrip->stock-$affectedPassengers;
                 $modelNewTrip->sold    = $modelNewTrip->sold+$affectedPassengers;
                 $modelNewTrip->save(false);
+                
                 $transaction->commit();
                 return $this->redirect(['index']);
             } catch(\Exception $e) {
@@ -264,6 +265,7 @@ class BookingController extends Controller
                     }
                     
                 }
+
                 return 'Successsfull';
             } catch (Exception $e) {
                 return 'Failed. Please Try Again';
@@ -310,8 +312,10 @@ class BookingController extends Controller
         }
         if ($type == '1') {
             $messange = 'Booking';
+            $modelLogPayment = TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_RES_RESV);
         }elseif ($type == '2') {
             $messange = 'Cancellation Booking';
+            $modelLogPayment = TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_FAST_CANCEL);
         }
         
         $mail->setSubject($messange.' For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
@@ -333,7 +337,8 @@ class BookingController extends Controller
         if (Yii::$app->request->isAjax) {
            $data = Yii::$app->request;
            if (($modelPayment = $this->findOnePayment($data->post('id_payment'))) !== null) {
-                    $ticket = $this->generateTicket($modelPayment->tBookings,$modelPayment,$data->post('receipt'));
+                    $ticket          = $this->generateTicket($modelPayment->tBookings,$modelPayment,$data->post('receipt'));
+                    $modelLogPayment = TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_RES_TICK);
                     return $ticket;
             }else{
                     return "Data Booking Not Found";
@@ -360,18 +365,23 @@ class BookingController extends Controller
     public function actionReadCheckPayment(){
         if (Yii::$app->request->isAjax) {
             $data = Yii::$app->request->post();
-            $modelLogPayment = TPaymentLog::addPaymmentLog($data['idp'],3);
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $modelLogPayment = TPaymentLog::addPaymmentLog($data['idp'],TPaymentLog::EVENT_READ_CHECK);
+                $transaction->commit();
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+            
         }
     }
 
     public function actionCheckLog($id_payment){
-        if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser'])->where(['id_payment'=>$id_payment,'id_event'=>TBookingLog::EVENT_READ_CHECK])->asArray()->one()) != null){
-           return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#log-".$modelLogPayment['id_payment']."' data-placement='top' class='btn btn-xs btn-success fa fa-check-square-o'></a><div id='log-".$modelLogPayment['id_payment']."' class='hidden panel panel-primary'>
-                <div class='popover-body list-group col-lg-12' >
-                <span class='fa fa-check-square-o'></span> ".$modelLogPayment['idUser']['username']."<br>
-                <span class='fa fa-clock-o'></span> ".date('d-m-Y H:i:s',strtotime($modelLogPayment['datetime']))."
-                </div>
-                </div>";
+        if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser','idEvent'])->where(['id_payment'=>$id_payment])->asArray()->all()) != null){
+            $btn = '<a data-toggle="popover" data-trigger="hover focus" data-popover-content="#log-'.$id_payment.'" data-placement="right" class="btn btn-xs btn-success fa fa-check-square-o"></a>';
+            return $btn.'<div id="log-'.$id_payment.'" class="hidden panel panel-primary">'.$this->renderPartial('_log',['modelLogPayment'=>$modelLogPayment]).'</div>';
+           
         }else{
             return "<a data-toggle='tooltip' title='Mark As Read & Check' class='read-btn btn material-btn material-btn_xs fa fa-check-square-o' value='".$id_payment."'></a>";
         }

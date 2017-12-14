@@ -20,9 +20,13 @@ use Yii;
  */
 class TPaymentLog extends \yii\db\ActiveRecord
 {
-    const EVENT_CONFIRM    = 1;
-    const EVENT_REJECT     = 2;
-    const EVENT_READ_CHECK = 3;
+    const EVENT_CONFIRM     = 1;
+    const EVENT_REJECT      = 2;
+    const EVENT_READ_CHECK  = 3;
+    const EVENT_RES_RESV    = 4;
+    const EVENT_RES_TICK    = 5;
+    const EVENT_FAST_CANCEL = 6;
+    const EVENT_MODIFY      = 7;
     /**
      * @inheritdoc
      */
@@ -40,7 +44,7 @@ class TPaymentLog extends \yii\db\ActiveRecord
             [['id_payment', 'id_event', 'datetime'], 'required'],
             [['id_payment', 'id_event', 'id_user'], 'integer'],
             [['datetime'], 'safe'],
-            [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK]],
+            [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK,self::EVENT_RES_RESV,self::EVENT_RES_TICK,self::EVENT_FAST_CANCEL,self::EVENT_MODIFY]],
             [['note'], 'string', 'max' => 100],
             [['id_event'], 'exist', 'skipOnError' => true, 'targetClass' => TBookingLogEvent::className(), 'targetAttribute' => ['id_event' => 'id']],
             [['id_payment'], 'exist', 'skipOnError' => true, 'targetClass' => TPayment::className(), 'targetAttribute' => ['id_payment' => 'id']],
@@ -63,21 +67,40 @@ class TPaymentLog extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function addPaymmentLog($id_payment,$id_event){
-        $modelPaymentLog = new TPaymentLog();
+    public static function addPaymmentLog($id_payment,$id_event,$note = null){
+        $modelPaymentLog             = new TPaymentLog();
         $modelPaymentLog->id_payment = $id_payment;
         $modelPaymentLog->id_event   = $id_event;
         $modelPaymentLog->id_user    = Yii::$app->user->identity->id;
         $modelPaymentLog->datetime   = date('Y-m-d H:i:s');
+        $modelPaymentLog->note       = $note;
         if ($modelPaymentLog->id_event == self::EVENT_CONFIRM) {
-            $modelPaymentLog2 = new TPaymentLog();
+            $modelPaymentLog2             = new TPaymentLog();
             $modelPaymentLog2->id_payment = $id_payment;
             $modelPaymentLog2->id_event   = self::EVENT_READ_CHECK;
             $modelPaymentLog2->id_user    = Yii::$app->user->identity->id;
             $modelPaymentLog2->datetime   = date('Y-m-d H:i:s');
+            $modelPaymentLog2->note       = $note;
             $modelPaymentLog2->save(false);
         }
         $modelPaymentLog->save(false);
+    }
+
+    public function beforeSave($insert)
+    {
+        if (!parent::beforeSave($insert)) {
+            return false;
+        }
+        if ($this->isNewRecord) {
+            foreach ($this->idPayment->tBookings as $key => $value) {
+                $newBooking = new TBookingLog();
+                $newBooking->id_booking = $value->id;
+                $newBooking->id_user = Yii::$app->user->identity->id;
+                $newBooking->id_event = $this->id_event;
+                $newBooking->save(false);
+            }
+        }
+        return true;
     }
 
     /**
@@ -93,7 +116,7 @@ class TPaymentLog extends \yii\db\ActiveRecord
      */
     public function getIdPayment()
     {
-        return $this->hasOne(TPayment::className(), ['id' => 'id_payment']);
+        return $this->hasOne(\common\models\TPayment::className(), ['id' => 'id_payment']);
     }
 
     /**

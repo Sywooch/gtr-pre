@@ -36,9 +36,10 @@ class TBookingLog extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_booking', 'id_event','datetime'], 'required'],
+            [['id_booking', 'id_event'], 'required'],
             [['id_user', 'id_event'], 'integer'],
             [['datetime'], 'safe'],
+            [['datetime'], 'default','value'=>date('Y-m-d H:i:s')],
             [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK]],
             [['id_booking'], 'string', 'max' => 6],
             [['id_booking'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\TBooking::className(), 'targetAttribute' => ['id_booking' => 'id']],
