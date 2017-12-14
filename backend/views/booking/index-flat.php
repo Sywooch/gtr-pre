@@ -270,6 +270,7 @@ $this->registerJs("
         });
 $('.btn-modify').on('click',function(){
     $('#booking-modify-modal').modal('show');
+    $('#booking-modify-modal').find('.modal-body').html('<center><i class=\"fa fa-spinner fa-spin\"></i></center>');
     var vidb = $(this).attr('id-booking');
     $.ajax({
         url: '".Url::to(["booking-modify"])."',
