@@ -95,7 +95,8 @@ class BookingController extends Controller
                 $modelNewTrip->stock   = $modelNewTrip->stock-$affectedPassengers;
                 $modelNewTrip->sold    = $modelNewTrip->sold+$affectedPassengers;
                 $modelNewTrip->save(false);
-                
+                $note = $modelTrip->idBoat->idCompany->name."-".$modelTrip->idRoute->departureHarbor->name."=>".$modelTrip->idRoute->arrivalHarbor->name."-".date('d-m-Y H:i',strtotime($modelTrip->date." ".$modelTrip->dept_time))." <br>=TO=<br>".$modelNewTrip->idBoat->idCompany->name."-".$modelNewTrip->idRoute->departureHarbor->name."=>".$modelNewTrip->idRoute->arrivalHarbor->name."-".date('d-m-Y H:i',strtotime($modelNewTrip->date." ".$modelNewTrip->dept_time));
+                TBookingLog::addLog($modelBooking->id,TBookingLog::EVENT_MODIFY,$note);
                 $transaction->commit();
                 return $this->redirect(['index']);
             } catch(\Exception $e) {
@@ -120,6 +121,7 @@ class BookingController extends Controller
             $data = Yii::$app->request;
             if (($modelBooking = $this->findModel($data->post('id_booking'))) !== null) {
                 $ticket = $this->generateTicket([$modelBooking],$modelBooking->idPayment,$data->post('receipt'));
+                TBookingLog::addLog($modelBooking->id,TBookingLog::EVENT_RES_TICK);
                 return $ticket;
             }else{
                 return "Data Booking Not Found";
@@ -263,6 +265,11 @@ class BookingController extends Controller
                     }else{
                        $mailSupplier =  $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment,$type);
                     }
+                    if ($type == '1') {
+                        TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_RES_RESV);
+                    }else {
+                        TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_FAST_CANCEL);
+                    }
                     
                 }
 
@@ -288,6 +295,12 @@ class BookingController extends Controller
                         }else{
                            $mailSupplier =  $this->sendMailSupplier($modelBooking->idTrip->idBoat->idCompany->email_bali,  $modelBooking, $modelPayment,$type);
                         }
+
+                        if ($type == '1') {
+                            TBookingLog::addLog($modelBooking->id,TBookingLog::EVENT_RES_RESV);
+                        }else {
+                            TBookingLog::addLog($modelBooking->id,TBookingLog::EVENT_FAST_CANCEL);
+                        }
                     return 'Successsfull';
                 } catch (Exception $e) {
                     return 'Failed. Please Try Again<br>'.$e;
@@ -312,10 +325,8 @@ class BookingController extends Controller
         }
         if ($type == '1') {
             $messange = 'Booking';
-            $modelLogPayment = TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_RES_RESV);
         }elseif ($type == '2') {
             $messange = 'Cancellation Booking';
-            $modelLogPayment = TPaymentLog::addPaymmentLog($modelPayment->id,TPaymentLog::EVENT_FAST_CANCEL);
         }
         
         $mail->setSubject($messange.' For ('.date('d-m-Y',strtotime($modelBooking->idTrip->date)).") ".$modelPayment->name)
@@ -380,10 +391,20 @@ class BookingController extends Controller
     public function actionCheckLog($id_payment){
         if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser','idEvent'])->where(['id_payment'=>$id_payment])->asArray()->all()) != null){
             $btn = '<a data-toggle="popover" data-trigger="hover focus" data-popover-content="#log-'.$id_payment.'" data-placement="right" class="btn btn-xs btn-success fa fa-check-square-o"></a>';
-            return $btn.'<div id="log-'.$id_payment.'" class="hidden panel panel-primary">'.$this->renderPartial('_log',['modelLogPayment'=>$modelLogPayment]).'</div>';
+            return $btn.'<div id="log-'.$id_payment.'" class="hidden panel panel-primary">'.$this->renderPartial('_log',['modelLog'=>$modelLogPayment]).'</div>';
            
         }else{
             return "<a data-toggle='tooltip' title='Mark As Read & Check' class='read-btn btn material-btn material-btn_xs fa fa-check-square-o' value='".$id_payment."'></a>";
+        }
+    }
+
+    public function actionCheckLogBooking($id_booking){
+        if(($modelLogBooking = TBookingLog::find()->joinWith(['idUser','idEvent'])->where(['id_booking'=>$id_booking])->asArray()->all()) != null){
+            $btn = '<a data-toggle="popover" data-trigger="hover focus" data-popover-content="#log-booking-'.$id_booking.'" data-placement="right" class="btn-default btn-xs glyphicon glyphicon-time"></a>';
+            return $btn.'<div id="log-booking-'.$id_booking.'" class="hidden panel panel-primary">'.$this->renderPartial('_log',['modelLog'=>$modelLogBooking]).'</div>';
+           
+        }else{
+            return null;
         }
     }
 

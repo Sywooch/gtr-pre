@@ -26,7 +26,6 @@ class TPaymentLog extends \yii\db\ActiveRecord
     const EVENT_RES_RESV    = 4;
     const EVENT_RES_TICK    = 5;
     const EVENT_FAST_CANCEL = 6;
-    const EVENT_MODIFY      = 7;
     /**
      * @inheritdoc
      */
@@ -44,7 +43,7 @@ class TPaymentLog extends \yii\db\ActiveRecord
             [['id_payment', 'id_event', 'datetime'], 'required'],
             [['id_payment', 'id_event', 'id_user'], 'integer'],
             [['datetime'], 'safe'],
-            [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK,self::EVENT_RES_RESV,self::EVENT_RES_TICK,self::EVENT_FAST_CANCEL,self::EVENT_MODIFY]],
+            [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK,self::EVENT_RES_RESV,self::EVENT_RES_TICK,self::EVENT_FAST_CANCEL]],
             [['note'], 'string', 'max' => 100],
             [['id_event'], 'exist', 'skipOnError' => true, 'targetClass' => TBookingLogEvent::className(), 'targetAttribute' => ['id_event' => 'id']],
             [['id_payment'], 'exist', 'skipOnError' => true, 'targetClass' => TPayment::className(), 'targetAttribute' => ['id_payment' => 'id']],
@@ -93,11 +92,7 @@ class TPaymentLog extends \yii\db\ActiveRecord
         }
         if ($this->isNewRecord) {
             foreach ($this->idPayment->tBookings as $key => $value) {
-                $newBooking = new TBookingLog();
-                $newBooking->id_booking = $value->id;
-                $newBooking->id_user = Yii::$app->user->identity->id;
-                $newBooking->id_event = $this->id_event;
-                $newBooking->save(false);
+                TBookingLog::addLog($value->id,$this->id_event);
             }
         }
         return true;

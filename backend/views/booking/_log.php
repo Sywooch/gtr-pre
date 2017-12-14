@@ -7,7 +7,7 @@ use yii\helpers\Html;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 <div class="popover-body list-group col-lg-12">
-<?php foreach($modelLogPayment as $value): ?>
+<?php foreach($modelLog as $value): ?>
         <li style="padding: 5px 5px 5px 5px; text-align: left; font-size: 12px;" class="list-group-item">
             <span class="fa fa-user"></span> <?= $value['idUser']['username'] ?><br>
             <span class="fa fa-exchange"> <?= $value['idEvent']['event'] ?></span><br>

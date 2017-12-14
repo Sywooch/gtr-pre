@@ -19,9 +19,13 @@ use Yii;
  */
 class TBookingLog extends \yii\db\ActiveRecord
 {
-    const EVENT_CONFIRM    = 1;
-    const EVENT_REJECT     = 2;
-    const EVENT_READ_CHECK = 3;
+    const EVENT_CONFIRM     = 1;
+    const EVENT_REJECT      = 2;
+    const EVENT_READ_CHECK  = 3;
+    const EVENT_RES_RESV    = 4;
+    const EVENT_RES_TICK    = 5;
+    const EVENT_FAST_CANCEL = 6;
+    const EVENT_MODIFY      = 7;
     /**
      * @inheritdoc
      */
@@ -40,8 +44,9 @@ class TBookingLog extends \yii\db\ActiveRecord
             [['id_user', 'id_event'], 'integer'],
             [['datetime'], 'safe'],
             [['datetime'], 'default','value'=>date('Y-m-d H:i:s')],
-            [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK]],
+            [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK,self::EVENT_RES_RESV,self::EVENT_RES_TICK,self::EVENT_FAST_CANCEL,self::EVENT_MODIFY]],
             [['id_booking'], 'string', 'max' => 6],
+            [['note'],'text'],
             [['id_booking'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\TBooking::className(), 'targetAttribute' => ['id_booking' => 'id']],
             [['id_event'], 'exist', 'skipOnError' => true, 'targetClass' => TBookingLogEvent::className(), 'targetAttribute' => ['id_event' => 'id']],
             [['id_user'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['id_user' => 'id']],
@@ -62,21 +67,24 @@ class TBookingLog extends \yii\db\ActiveRecord
         ];
     }
 
-    public static function addLog($id_booking,$id_event){
+    public static function addLog($id_booking,$id_event,$note = null){
         $modelLog             = new TBookingLog();
         $modelLog->id_booking = $id_booking;
         $modelLog->id_event   = $id_event;
         $modelLog->id_user    = Yii::$app->user->identity->id;
         $modelLog->datetime   = date('Y-m-d H:i:s');
+        $modelLog->note       = $note;
+        $modelLog->save(false);
         if ($modelLog->id_event == self::EVENT_CONFIRM) {
-            $modelLog2 = new TBookingLog();
+            $modelLog2             = new TBookingLog();
             $modelLog2->id_booking = $id_booking;
             $modelLog2->id_event   = self::EVENT_READ_CHECK;
             $modelLog2->id_user    = Yii::$app->user->identity->id;
             $modelLog2->datetime   = date('Y-m-d H:i:s');
+            $modelLog2->note       = $note;
             $modelLog2->save(false);
         }
-        $modelLog->save(false);
+        return true;
     }
 
     /**

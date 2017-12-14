@@ -67,7 +67,9 @@ echo Dialog::widget([
                 'format'=>'raw',
                 'contentOptions'=>['style'=>'font-size:15px;'],
                 'value'=>function ($model, $key, $index, $widget) {
+
                     $logStatus = Yii::$app->runAction('/booking/check-log',['id_payment'=>$model->id_payment]);
+
                 return "<span class=\"fa fa-user\"></span> ".$model->idPayment->name." <span class=\"fa fa-phone\"></span> ".$model->idPayment->phone." <span class=\"fa fa-envelope\"></span> ".$model->idPayment->email." <span class=\"fa fa-money\"></span> ".$model->idPayment->idPaymentMethod->method." <span class=\"fa fa-clock-o\"> </span> ".date('d-m-Y H:i',strtotime($model->idPayment->exp))." <span>".$logStatus."</span>
                     <span class='dropdown material-dropdown btn btn-xs'>".
                     Html::button('<span class=\'fa fa-envelope\'></span> <span class=\'caret\'></span>', ['type' => 'button','class'=>'btn btn-xs btn-danger dropdown-toggle','data-toggle'=>'dropdown','aria-expanded'=>false,'aria-haspopup'=>true]).
@@ -173,7 +175,8 @@ echo Dialog::widget([
                                 'data-toggle' => "tooltip",
                                 'data-title'  => "Modify This Booking",
                                 ]);
-                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b> ".$dropdown.$modify.$shuttle.$popover;
+                    $logger = Yii::$app->runAction('/booking/check-log-booking',['id_booking'=>$model->id]);
+                    return "<a data-toggle='popover' data-trigger='hover focus' data-popover-content='#".$model->id."',data-placement='bottom' class='fa fa-question-circle'></a> <b>".$model->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$model->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$model->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($model->idTrip->date))."</b> At <b>". date('H:i',strtotime($model->idTrip->dept_time))."</b> ".$dropdown.$modify." <span>".$logger."</span> ".$shuttle.$popover;
                 
                 }
             ],
