@@ -18,7 +18,8 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 <div class="col-md-12">
 <small>if something goes wrong please repeat the process / contact the developer</small>
 <blockquote>
-    Current trip : <?=  "<b>".$modelBooking->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$modelBooking->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$modelBooking->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($modelBooking->idTrip->date))."</b> At <b>". date('H:i',strtotime($modelBooking->idTrip->dept_time))."</b>" ?>
+    Current trip : <?=  "<b>".$modelBooking->idTrip->idBoat->idCompany->name."</b>( <span class='text-primary'>".$modelBooking->idTrip->idRoute->departureHarbor->name."</span> -> <span class='text-warning'>".$modelBooking->idTrip->idRoute->arrivalHarbor->name."</span> ) On <b>".date('d-m-Y',strtotime($modelBooking->idTrip->date))."</b> At <b>". date('H:i',strtotime($modelBooking->idTrip->dept_time))."</b>" ?><br>
+    <small>Current Price : Adult = Rp <?= number_format($modelBooking->idTrip->adult_price,0); ?> - Child = <?= number_format($modelBooking->idTrip->child_price,0); ?></small>
 </blockquote>
 </div>
 <?php yii\widgets\Pjax::begin(['id' => 'pjax-form-booking-modify']) ?>

@@ -1,16 +1,6 @@
 <?php
 use yii\helpers\Html;
 
-$customCss = <<< SCRIPT
-  .harga{
-    font-weight: bold;
-  }
-  .harga-total{
-    font-weight: bold;
-    font-size: 25px;
-  }
-SCRIPT;
-$this->registerCss($customCss);
 
 ?>
 
@@ -23,7 +13,7 @@ $this->registerCss($customCss);
 <?php if(!empty($departureList)): ?>
 <?php foreach ($departureList as $key => $value): ?>
 <?php
-// $prices = round($value->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP);
+ $prices = "A : ".number_format($value->adult_price,0)."<br>C : ".number_format($value->child_price,0);
 $deptTime = date('H:i',strtotime($value->dept_time));
 $durations = $value->id_est_time;
  ?>
@@ -58,7 +48,7 @@ $durations = $value->id_est_time;
         echo "Note: ".$value->description;
         } ?>
     </span> 
-    <span class="bg-danger pull-right harga">Harga
+    <span class="bg-danger pull-right harga"><?= $prices ?>
     </span>
     <?= Html::beginForm(['/booking/booking-modify', 'id' =>$value->id], 'post') ?>
     <div class="funkyradio">
@@ -118,6 +108,10 @@ $durations = $value->id_est_time;
 
 //   ", \yii\web\View::POS_READY);
 $customCss = <<< SCRIPT
+.harga{
+    font-weight: bold;
+    font-size: 12px;
+  }
 .note{
   font-size: 12px;
 }
@@ -125,13 +119,10 @@ $customCss = <<< SCRIPT
   font-weight: bold;
     font-size: 15px;
 }
-  .harga{
-    font-weight: bold;
-  }
-  .harga-total{
+.harga-total{
     font-weight: bold;
     font-size: 25px;
-  }
+}
   
 
 .div-ret{

@@ -59,6 +59,7 @@ class BookingController extends Controller
                 return $this->renderAjax('result-one',[
                             'departureList' =>$modelTrip,
                             'id_booking'    =>$data['id'],
+                            'pax' => Yii::$app->request->queryParams['pax'],
                             ]);
             }else{
                 return "<h1>No Route Available</h1>";
