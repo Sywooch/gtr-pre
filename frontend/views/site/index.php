@@ -49,12 +49,13 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
       <div class="row">
           <p>
           <div id="google_translate_element"></div>
-          <script type="text/javascript">
+          <!-- <script type="text/javascript">
           function googleTranslateElementInit() {
           new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
           }
-          </script>
-          <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+          </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
+          
+          </script> -->
           
           </p>
           <p><a class="hyperlink-index" href="tel:+62-813-5330-4990"><span class="glyphicon glyphicon-earphone"> </span> +62-813-5330-4990<br></a></p>

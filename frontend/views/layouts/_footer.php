@@ -17,7 +17,7 @@ use yii\helpers\Html;
         
       </div>
       <div class="col-md-3 col-sm-6 footer-col">
-        <h6 class="heading7">Realted Links</h6>
+        <h6 class="heading7">Related Links</h6>
         <ul class="footer-ul">
           <li><?= Html::a('About Us', ['/about-us']); ?></li>
           <li><?= Html::a('How To Book', ['/site/how-to-book']); ?></li>

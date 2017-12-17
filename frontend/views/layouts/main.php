@@ -105,6 +105,17 @@ AppAsset::register($this);
  
 <div class="container-fluid">&nbsp</div>
     <div class="container">
+<!-- Translate Start -->
+<!-- <ul id="social_side_links"> -->
+<!--     <li><div id="google_translate_element"></div> -->
+          <script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
+}
+</script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+   <!--  </li>
+</ul> -->
+<!--Translate End -->
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
             // 'itemTemplate' => "<li class=\"material-breadcrumb__item\">{link}</li>\n",
@@ -113,8 +124,9 @@ AppAsset::register($this);
 
         ]) ?>
         <?= Alert::widget() ?>
-        
+
         <?= $content ?>
+
 <?= Html::button(' Top <span></span>', [
   'class'=>'btn',
   'id'=>'btn-scroll',
@@ -136,11 +148,19 @@ AppAsset::register($this);
         $("html, body").animate({ scrollTop: 0 }, 600); 
         return false; 
     });
+$(document).ready(function(){
+$(".goog-te-combo").addClass("form-control");
+});
+    
 
 SCRIPT;
 $this->registerJs($customScript, \yii\web\View::POS_READY); 
 
 $customCss = <<< SCRIPT
+// .skiptranslate > iframe {
+//     margin-: none;
+// }
+
 #btn-scroll {
     position:fixed;
     right:10px;
