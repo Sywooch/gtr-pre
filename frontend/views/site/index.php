@@ -83,8 +83,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             <?php if(!empty($listBoats)): ?>
           <?php foreach ($listBoats as $keyAr => $valBoat): ?>
             <div class="col-md-6">
-              <div class="list-fastboat panel panel-default material-panel">
-                <div class="panel-body material-panel__body">
+             <!--  <div class="list-fastboat panel panel-default material-panel">
+                <div class="panel-body material-panel__body"> -->
                   <div class="media material-media">
                           <div id="div-<?= $valBoat['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
@@ -115,8 +115,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
                               
                           </div>                 
                          </div>
-                      </div>
-                  </div>
+                     <!--  </div>
+                  </div> -->
               </div>
            </div>
           <?php endforeach; ?>

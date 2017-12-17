@@ -195,20 +195,51 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
           </div>
 					</div>
 <?php 
-$this->registerJs("
-  $('#dept-date').on('change',function(){
-    $('#return-date').val(null);
-    /*$.pjax.reload({
-                container:'#pjax-return-date',
-                complete:typetrip(),
-                
-              });*/
-});
-function typetrip(){
-                $(\"#div-return\").css(\"visibility\", \"visible\");
-};
 
-$('#dept-date').pickadate({
+if (date('d-m-Y H:i:s') > date('d-m-Y 16:i:s')) {
+
+  $this->registerJs("
+    $('#dept-date').pickadate({
+  min: +2,
+  format: 'dd-mm-yyyy',
+  formatSubmit: 'yyyy-mm-dd',
+  clear:'',
+  today:'',
+});
+
+$('#return-date').pickadate({
+  format: 'dd-mm-yyyy',
+  formatSubmit: 'yyyy-mm-dd',
+  clear:'',
+  today:'',
+});
+
+var from_input = $('#dept-date').pickadate(),
+    from_picker = from_input.pickadate('picker')
+
+var to_input = $('#return-date').pickadate(),
+    to_picker = to_input.pickadate('picker')
+
+
+// Check if there’s a “from” or “to” date to start with.
+if ( from_picker.get('value') ) {
+  to_picker.set('min', from_picker.get('select'))
+}
+
+
+// When something is selected, update the “from” and “to” limits.
+from_picker.on('set', function(event) {
+  if ( event.select ) {
+    to_picker.set('min', from_picker.get('select'))    
+  }
+  else if ( 'clear' in event ) {
+    to_picker.set('min', false)
+  }
+});
+    ", \yii\web\View::POS_READY);
+}else{
+  $this->registerJs("
+    $('#dept-date').pickadate({
   min: +1,
   format: 'dd-mm-yyyy',
   formatSubmit: 'yyyy-mm-dd',
@@ -245,6 +276,21 @@ from_picker.on('set', function(event) {
     to_picker.set('min', false)
   }
 });
+    ", \yii\web\View::POS_READY);
+}
+$this->registerJs("
+  $('#dept-date').on('change',function(){
+    $('#return-date').val(null);
+    /*$.pjax.reload({
+                container:'#pjax-return-date',
+                complete:typetrip(),
+                
+              });*/
+});
+function typetrip(){
+                $(\"#div-return\").css(\"visibility\", \"visible\");
+};
+
 $('#pax-list .dropdown-menu').on({
     \"click\":function(e){
       e.stopPropagation();

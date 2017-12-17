@@ -43,7 +43,7 @@ class TBookingLog extends \yii\db\ActiveRecord
             [['id_booking', 'id_event'], 'required'],
             [['id_user', 'id_event'], 'integer'],
             [['datetime'], 'safe'],
-            [['datetime'], 'default','value'=>date('Y-m-d H:i:s')],
+            //[['datetime'], 'default','value'=>date('Y-m-d H:i:s')],
             [['id_event'],'in','range'=>[self::EVENT_CONFIRM,self::EVENT_REJECT,self::EVENT_READ_CHECK,self::EVENT_RES_RESV,self::EVENT_RES_TICK,self::EVENT_FAST_CANCEL,self::EVENT_MODIFY]],
             [['id_booking'], 'string', 'max' => 6],
             [['note'],'text'],
