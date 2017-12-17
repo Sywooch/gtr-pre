@@ -196,7 +196,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 					</div>
 <?php 
 
-if (date('d-m-Y H:i:s') > date('d-m-Y 16:i:s')) {
+if (date('d-m-Y H:i:s') > date('d-m-Y 17:i:s')) {
 
   $this->registerJs("
     $('#dept-date').pickadate({
