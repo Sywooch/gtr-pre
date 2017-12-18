@@ -49,14 +49,6 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
       <div class="row">
           <p>
           <div id="google_translate_element"></div>
-          <!-- <script type="text/javascript">
-          function googleTranslateElementInit() {
-          new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-          }
-          </script><script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit">
-          
-          </script> -->
-          
           </p>
           <p><a class="hyperlink-index" href="tel:+62-813-5330-4990"><span class="glyphicon glyphicon-earphone"> </span> +62-813-5330-4990<br></a></p>
           <p><a class="hyperlink-index" href="mailto:reservation@gilitransfers.com" target="_top"><span class="glyphicon glyphicon-envelope"></span> reservation@gilitransfers.com</a></p>
@@ -87,6 +79,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
              <!--  <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body"> -->
                   <div class="media material-media">
+                    <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                           <div id="div-<?= $valBoat['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
@@ -107,6 +100,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
 
                               ', \yii\web\View::POS_READY); ?>
                           </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-12 media-description">
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valBoat['title'] ?></h4>
                           <p><?= substr($valBoat['description'],0,160) ?></p>
@@ -116,6 +111,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
                               
                           </div>                 
                          </div>
+                    </div>
                      <!--  </div>
                   </div> -->
               </div>
@@ -311,6 +307,9 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
          
 <?php 
 $customCss = <<< SCRIPT
+.media-description{
+  margin-left:10px;
+}
 .hyperlink-index{
   color: #424242;
 }
