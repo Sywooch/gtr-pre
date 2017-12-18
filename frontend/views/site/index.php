@@ -130,9 +130,10 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             if(!empty($listDestinations)):
             foreach ($listDestinations as $keyAr => $valDestination): ?>
             <div class="col-md-6">
-              <div class="list-fastboat panel panel-default material-panel">
-                <div class="panel-body material-panel__body">
+              <!-- <div class="list-fastboat panel panel-default material-panel">
+                <div class="panel-body material-panel__body"> -->
                   <div class="media material-media">
+                    <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                           <div id="div-<?= $valDestination['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
@@ -153,6 +154,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
 
                               ', \yii\web\View::POS_READY); ?>
                           </div>
+                    </div>
+                    <div class="col-md-8 col-sm-8 col-xs-12 media-description">
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valDestination['title'] ?></h4>
                           <p><?= substr($valDestination['description'],0,160) ?></p>
@@ -162,8 +165,9 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
                               
                           </div>                 
                          </div>
-                      </div>
-                  </div>
+                    </div>
+                     <!--  </div>
+                  </div> -->
               </div>
      </div>
           <?php endforeach; ?>
@@ -180,9 +184,10 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             if(!empty($listArticle)):
             foreach ($listArticle as $keyAr => $valArticle): ?>
             <div class="col-md-6">
-              <div class="list-fastboat panel panel-default material-panel">
-                <div class="panel-body material-panel__body">
+              <!-- <div class="list-fastboat panel panel-default material-panel">
+                <div class="panel-body material-panel__body"> -->
                   <div class="media material-media">
+                  <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                           <div id="div-<?= $valArticle['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
@@ -203,6 +208,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
 
                               ', \yii\web\View::POS_READY); ?>
                           </div>
+                  </div>
+                  <div class="col-md-8 col-sm-8 col-xs-12 media-description">
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valArticle['title'] ?></h4>
                           <p><?= substr($valArticle['description'],0,160) ?></p>
@@ -212,8 +219,9 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
                               
                           </div>                 
                          </div>
-                      </div>
                   </div>
+                      <!-- </div>
+                  </div> -->
               </div>
      </div>
           <?php endforeach; ?>
@@ -230,9 +238,10 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             if(!empty($listPorts)):
             foreach ($listPorts as $keyAr => $valPorts): ?>
             <div class="col-md-6">
-              <div class="list-fastboat panel panel-default material-panel">
-                <div class="panel-body material-panel__body">
+              <!-- <div class="list-fastboat panel panel-default material-panel">
+                <div class="panel-body material-panel__body"> -->
                   <div class="media material-media">
+                  <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                          <div id="div-<?= $valPorts['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
                                     'class' => 'media-object material-media__object material-media__object_lg',
@@ -252,6 +261,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
 
                               ', \yii\web\View::POS_READY); ?>
                           </div>
+                </div>
+                <div class="col-md-8 col-sm-8 col-xs-12 media-description">
                           <div class="media-body">
                           <h4 class="media-heading"><?= $valPorts['title'] ?></h4>
                           <p><?= substr($valPorts['description'],0,160) ?></p>
@@ -261,13 +272,14 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
                               
                           </div>                 
                          </div>
-                      </div>
-                  </div>
+                </div>
+                      <!-- </div>
+                  </div> -->
               </div>
      </div>
           <?php endforeach; ?>
           <?php else: ?>
-            <h3>Article is Unavaible</h3>
+            <h3>Ports Article is Unavaible</h3>
   
           <?php endif; ?>
           </div>
