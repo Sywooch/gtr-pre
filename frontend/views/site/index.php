@@ -47,9 +47,8 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
     <h5 class="panel-heading material-panel__heading">Contact Us</h5>
     <div class="panel-body material-panel__body">
       <div class="row">
-          <p>
           <div id="google_translate_element"></div>
-          </p>
+          
           <p><a class="hyperlink-index" href="tel:+62-813-5330-4990"><span class="glyphicon glyphicon-earphone"> </span> +62-813-5330-4990<br></a></p>
           <p><a class="hyperlink-index" href="mailto:reservation@gilitransfers.com" target="_top"><span class="glyphicon glyphicon-envelope"></span> reservation@gilitransfers.com</a></p>
           
@@ -386,5 +385,7 @@ p{
 
 SCRIPT;
 $this->registerCss($customCss);
-
+$this->registerJs('$(document).ready(function(){
+$(".goog-te-combo").addClass("form-control");
+});', \yii\web\View::POS_READY);
 ?>

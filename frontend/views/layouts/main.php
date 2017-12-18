@@ -152,9 +152,7 @@ function googleTranslateElementInit() {
         $("html, body").animate({ scrollTop: 0 }, 600); 
         return false; 
     });
-$(document).ready(function(){
-$(".goog-te-combo").addClass("form-control");
-});
+
     
 
 SCRIPT;
