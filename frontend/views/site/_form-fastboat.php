@@ -277,7 +277,11 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
     ],
 ])->label('Currency*'); ?>
 </div>
-<span class="text-muted pull-right" id="currency-note">*Available currencies depend on selected payment method</span>
+<span class="text-muted pull-right" id="currency-note">
+*Available currencies depend on selected payment method
+<br>
+**Pick Up will Not Available if you book after 6.00 p.m applied for next day trip. We suggest you to arrange your own accomodation to the port.
+</span>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">
          
           <?= Html::submitButton(Yii::t('app', ' Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block glyphicon glyphicon-search']) ?>
