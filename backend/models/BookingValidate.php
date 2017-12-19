@@ -57,8 +57,6 @@ class BookingValidate extends TBooking
         //     $query = TBooking::find()->joinWith('idTrip.idBoat');
         // }
        
-       
-
         // add conditions that should always apply here
 
         $dataProvider = new ActiveDataProvider([
