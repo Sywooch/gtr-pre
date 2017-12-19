@@ -275,18 +275,20 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
     'pluginOptions' => [
         'allowClear' => false,
     ],
-])->label('Currency*'); ?>
+])->label('Currency *'); ?>
 </div>
-<span class="text-muted pull-right currency-note">
+
+          <div class="form-group col-md-12 col-sm-12 col-xs-12">
+         
+          <?= Html::submitButton(Yii::t('app', ' Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block glyphicon glyphicon-search']) ?>
+<br>
+<span class="text-muted pull-left currency-note">
 * Available currencies depend on selected payment method
 </span>
   <br>
 <span class="text-muted pull-left currency-note">
 ** Pick Up will Not Available if you book after 6.00 p.m applied for next day trip. We suggest you to arrange your own accomodation to the port.
 </span>
-          <div class="form-group col-md-12 col-sm-12 col-xs-12">
-         
-          <?= Html::submitButton(Yii::t('app', ' Search'), ['class' =>'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block glyphicon glyphicon-search']) ?>
           </div>     
 <?php ActiveForm::end(); ?>
 

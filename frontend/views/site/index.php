@@ -18,7 +18,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
           <li><a href="#hotels" class="material-tabs__tab-link" data-toggle="tab">Hotels</a></li>
         </ul>
         <div class="tab-content materail-tabs-content">
-          <div class="tab-pane book-form fade active in" id="fastboats">
+          <div class="tab-pane book-form book-form fade active in" id="fastboats">
             <div class="row"> 
 
             <?= $this->render('_form-fastboat.php',[
@@ -31,7 +31,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             ])?>
             </div>
           </div>
-          <div class="tab-pane book-form fade" id="hotels">
+          <div class="tab-pane book-form book-form fade" id="hotels">
            <div class="row"> 
             <?= $this->render('_form-hotels.php',[
             'modelHotel'=>$modelHotel,
@@ -343,7 +343,7 @@ p{
   min-height: 390px;
 }
 .book-form{
-  min-height: 205px;
+  min-height: 255px;
 }
 #btn-scroll {
     position:fixed;
