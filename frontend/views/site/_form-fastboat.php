@@ -281,6 +281,7 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 *Available currencies depend on selected payment method
 <br>
 **Pick Up will Not Available if you book after 6.00 p.m applied for next day trip. We suggest you to arrange your own accomodation to the port.
+
 </span>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">
          
