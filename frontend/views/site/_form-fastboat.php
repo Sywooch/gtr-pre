@@ -172,7 +172,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 							'class'=>'input-sm form-control',
               ],
             
-					]); ?>
+					])->label('Departure date **'); ?>
 					</div>
 <?php Pjax::begin(['id'=>'pjax-return-date']); ?>					
 					<div class="col-md-4 col-sm-4 col-xs-6">
@@ -277,11 +277,12 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
     ],
 ])->label('Currency*'); ?>
 </div>
-<span class="text-muted pull-right" id="currency-note">
-*Available currencies depend on selected payment method
-<br>
-**Pick Up will Not Available if you book after 6.00 p.m applied for next day trip. We suggest you to arrange your own accomodation to the port.
-
+<span class="text-muted pull-right currency-note">
+* Available currencies depend on selected payment method
+</span>
+  <br>
+<span class="text-muted pull-left currency-note">
+** Pick Up will Not Available if you book after 6.00 p.m applied for next day trip. We suggest you to arrange your own accomodation to the port.
 </span>
           <div class="form-group col-md-12 col-sm-12 col-xs-12">
          
@@ -291,7 +292,7 @@ $modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] 
 
 <?php
 $customCss = <<< SCRIPT
-#currency-note{
+.currency-note{
   text-align: right;
   font-size: 9px;
 }
