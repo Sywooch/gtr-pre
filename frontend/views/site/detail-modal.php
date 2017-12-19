@@ -3,11 +3,12 @@ use yii\helpers\Html;
 ?>
 <?php 
 $totalPax = $paxAdult+$paxChild;
-$aD       = $tripDeparture->adult_price/$currency->kurs*$paxAdult;
-$cD       = $tripDeparture->child_price/$currency->kurs*$paxChild;
+$kurs     = $currency['kurs'];
+$aD       = $tripDeparture['adult_price']/$kurs*$paxAdult;
+$cD       = $tripDeparture['child_price']/$kurs*$paxChild;
 $totalD   = $aD+$cD;
-$aR       = $tripReturn->adult_price/$currency->kurs*$paxAdult;
-$cR       = $tripReturn->child_price/$currency->kurs*$paxChild;
+$aR       = $tripReturn['adult_price']/$kurs*$paxAdult;
+$cR       = $tripReturn['child_price']/$kurs*$paxChild;
 $totalR   = $aR+$cR;
 //echo $totalD."<br>".$totalR."<br>";
  ?>
@@ -17,27 +18,27 @@ $totalR   = $aR+$cR;
             <div class="col-md-2">
             <b>Departure</b>
               <br>
-              <?= date('D, d-M-Y',strtotime($tripDeparture->date)) ?>
+              <?= date('D, d-M-Y',strtotime($tripDeparture['date'])) ?>
             </div>
             <div class="col-md-2">
             <b>Boat</b><br>
-              <?= $tripDeparture->idBoat->idCompany->name ?>       
+              <?= $tripDeparture['idBoat']['idCompany']['name'] ?>       
             </div>
             <div class="col-md-2">
             <b>Dept Time</b><br>
-            <?= date('H:i',strtotime($tripDeparture->dept_time)) ?>
+            <?= date('H:i',strtotime($tripDeparture['dept_time'])) ?>
               
             </div>
             <div class="col-md-4">
             <b>Route</b><br>
-            <?= $tripDeparture->idRoute->departureHarbor->name." -> ".$tripDeparture->idRoute->arrivalHarbor->name ?><br>
-            (<?= $tripDeparture->idEstTime->est_time ?>)
+            <?= $tripDeparture['idRoute']['departureHarbor']['name']." -> ".$tripDeparture['idRoute']['arrivalHarbor']['name'] ?><br>
+            (<?= $tripDeparture['idEstTime']['est_time'] ?>)
               </div>
             
            <div class="col-md-2">
             
-           <b class="text-strong"><?php $currency->currency." ".round($totalD,0,PHP_ROUND_HALF_UP) ?></b>
-           <?= Html::img(['/site/logo','id'=>$tripDeparture->idBoat->id_company], ['class'=>'boat-logo-modal']) ?>
+           <b class="text-strong"><?php $currency['currency']." ".round($totalD,0,PHP_ROUND_HALF_UP) ?></b>
+           <?= Html::img(['/site/logo','id'=>$tripDeparture['idBoat']['id_company']], ['class'=>'boat-logo-modal']) ?>
            </div>
         </div>
            <br><br>
@@ -46,27 +47,27 @@ $totalR   = $aR+$cR;
            <div class="col-md-2">
             <b>Return</b>
               <br>
-              <?= date('D, d-M-Y',strtotime($tripReturn->date)) ?>
+              <?= date('D, d-M-Y',strtotime($tripReturn['date'])) ?>
             </div>
             <div class="col-md-2">
             <b>Boat</b><br>
-              <?= $tripReturn->idBoat->idCompany->name ?>       
+              <?= $tripReturn['idBoat']['idCompany']['name'] ?>       
             </div>
             <div class="col-md-2">
             <b>Dept Time</b><br>
-            <?= date('H:i',strtotime($tripReturn->dept_time)) ?>
+            <?= date('H:i',strtotime($tripReturn['dept_time'])) ?>
               
             </div>
             <div class="col-md-4">
             <b>Route</b><br>
-            <?= $tripReturn->idRoute->departureHarbor->name." -> ".$tripReturn->idRoute->arrivalHarbor->name ?><br>
-            (<?= $tripReturn->idEstTime->est_time ?>)
+            <?= $tripReturn['idRoute']['departureHarbor']['name']." -> ".$tripReturn['idRoute']['arrivalHarbor']['name'] ?><br>
+            (<?= $tripReturn['idEstTime']['est_time'] ?>)
               </div>
             
            <div class="col-md-2">
             
-           <b class="text-strong"><?php $currency->currency." ".round($totalR,0,PHP_ROUND_HALF_UP) ?></b>
-           <?= Html::img(['/site/logo','id'=>$tripReturn->idBoat->id_company], ['class'=>'boat-logo-modal']) ?>
+           <b class="text-strong"><?php $currency['currency']." ".round($totalR,0,PHP_ROUND_HALF_UP) ?></b>
+           <?= Html::img(['/site/logo','id'=>$tripReturn['idBoat']['id_company']], ['class'=>'boat-logo-modal']) ?>
            </div>
         </div>
 </div>
@@ -77,9 +78,9 @@ $totalR   = $aR+$cR;
 
 <span class="pull-right">
 <button id="btn-close-modal" type="button" class="btn material-btn material-btn_danger main-container__column material-btn_lg" data-dismiss="modal">Cancel</button>
-<b class="harga-total"><?= $currency->currency." ".round($totalD+$totalR,0,PHP_ROUND_HALF_UP); ?></b>&nbsp
+<b class="harga-total"><?= $currency['currency']." ".round($totalD+$totalR,0,PHP_ROUND_HALF_UP); ?></b>&nbsp
 
-<?= Html::a('Book', ['/book/add-to-cart', 'tripDeparture' => $tripDeparture->id,'tripReturn' => $tripReturn->id], [
+<?= Html::a('Book', ['/book/add-to-cart', 'tripDeparture' => $tripDeparture['id'],'tripReturn' => $tripReturn['id']], [
             'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
             'data' => [
                 'method' => 'post',

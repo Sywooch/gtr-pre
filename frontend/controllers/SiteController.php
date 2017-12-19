@@ -89,20 +89,20 @@ class SiteController extends Controller
         ];
     }
 
-    protected function findOneTrip($id){
-        return TTrip::findOne($id);
+    protected function findOneTripAsArray($id){
+        return TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor as departure','idRoute.arrivalHarbor','idEstTime'])->where(['t_trip.id'=>$id])->asArray()->one();
     }
 
     public function actionDetailModal(){
         if(Yii::$app->request->isAjax){
             $data = Yii::$app->request->post();
-            $tripDeparture = $this->findOneTrip($data['deptv']);
+            $tripDeparture = $this->findOneTripAsArray($data['deptv']);
             $session =  $session = Yii::$app->session;
             $paxAdult = $session['formData']['adults'];
             $paxChild = $session['formData']['childs'];
-            $currency = $this->findKurs()->where(['currency'=>$session['currency']])->one();
+            $currency = $this->findOneKursAsArray($session['currency']);
             if ($data['retv'] != 'false') {
-               $tripReturn    = $this->findOneTrip($data['retv']);
+               $tripReturn    = $this->findOneTripAsArray($data['retv']);
                return $this->renderAjax('detail-modal',[
                         'tripDeparture'=>$tripDeparture,
                         'tripReturn'=>$tripReturn,
@@ -141,6 +141,10 @@ class SiteController extends Controller
 
     protected function findKurs(){
         return TKurs::find();
+    }
+
+    protected function findOneKursAsArray($currency){
+        return TKurs::find()->where(['currency'=>$currency])->asArray()->one();
     }
     public function actionToPort(){
         if(Yii::$app->request->isAjax){

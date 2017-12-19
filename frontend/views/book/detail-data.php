@@ -357,7 +357,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                   $arrivalIsland = $cartValue->idTrip->idRoute->arrivalHarbor->id_island;
                   if ($departureIsland == $arrivalIsland) {
                     
-                  }elseif ($departureIsland == 1 ) {
+                  }elseif ($departureIsland == 1  && strtotime(date('Y-m-d H:i:s')) < strtotime(date('Y-m-d 18:00:00'))) {
                     $type = 'pickup';
                     foreach ($modelShuttle as $k => $valShuttle) {
 
@@ -384,27 +384,27 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                       }elseif ($departureIsland == 2) {
                         $type = 'drop-off';
                         foreach ($modelShuttle as $k => $valShuttle) {
-                        echo "<div class='col-md-12'>".Html::checkbox('check-drop', $checked = false, ['class' => 'checkbox','value'=>1,'unchecked'=>0,'class'=>'checkbox-drop-'.$cartValue->id_trip,
-                        'onchange'=>'
-                        if($(this).is(":checked"))
-                        {
-                        $("#form-drop-'.$cartValue->id_trip.'").show(200);
-                      
-                        }else{
-                          $("#form-drop-'.$cartValue->id_trip.'").hide(200);
-                        }
+                          echo "<div class='col-md-12'>".Html::checkbox('check-drop', $checked = false, ['class' => 'checkbox','value'=>1,'unchecked'=>0,'class'=>'checkbox-drop-'.$cartValue->id_trip,
+                          'onchange'=>'
+                          if($(this).is(":checked"))
+                          {
+                          $("#form-drop-'.$cartValue->id_trip.'").show(200);
                         
-                        '])." <b>Required Drop Off</b></div>";
-                        echo "<div class='col-md-12' style='display:none;' id='form-drop-".$cartValue->id_trip."'>".
-                        $this->render('_shuttle-form',[
-                          'form'=>$form,
-                          'type'=>$type,
-                          'id'=>$cartValue->id_trip,
-                          'valShuttle'=>$valShuttle,
-                          'listPickup'=>$listPickup,
-                          ])."</div>";
-                  
-                      } 
+                          }else{
+                            $("#form-drop-'.$cartValue->id_trip.'").hide(200);
+                          }
+                          
+                          '])." <b>Required Drop Off</b></div>";
+                          echo "<div class='col-md-12' style='display:none;' id='form-drop-".$cartValue->id_trip."'>".
+                          $this->render('_shuttle-form',[
+                            'form'=>$form,
+                            'type'=>$type,
+                            'id'=>$cartValue->id_trip,
+                            'valShuttle'=>$valShuttle,
+                            'listPickup'=>$listPickup,
+                            ])."</div>";
+                    
+                        } 
                       }                  
                     
               }

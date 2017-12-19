@@ -35,16 +35,27 @@ class BookForm extends Model
             [['type'],'boolean'],
             [['currency'],'string','max'=>3],
             ['returnDate','returnValidate'],
+            ['departureDate','departureValidate'],
+            //[]
             ];
     }
+//strtotime(date('Y-m-d H:i:s')) > strtotime(date('Y-m-d 18:00:00')) && 
+ public function departureValidate($attribute, $params, $validator){
+    if (strtotime($this->departureDate) < strtotime('+1 DAYS',strtotime(date('Y-m-d')))) {
+        $this->addError('departureDate','This Item Is Invalid');
+        return false;
+    }else{
+        return true;
+    }
 
-
+ }
 
  public function returnValidate($attribute, $params, $validator){
     if ($this->type == true) {
         if(strtotime($this->returnDate) < strtotime($this->departureDate)){
         $this->addError('returnDate','This Item Is Invalid');
         $this->addError('departureDate','This Item Is Invalid');
+        return false;
 
         }
     }    
