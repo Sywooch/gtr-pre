@@ -17,8 +17,8 @@ use yii\helpers\Html;
                 var mylist = $("#'.$parent.'");
                 var listitems = mylist.children("div").get();
                 listitems.sort(function(a, b) {
-                var compA = $(a).attr("id").toUpperCase();
-                var compB = $(b).attr("id").toUpperCase();
+                var compA = $(a).attr("price").toUpperCase();
+                var compB = $(b).attr("price").toUpperCase();
                 return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
                 })
                 $.each(listitems, function(idx, itm) {
@@ -33,8 +33,8 @@ use yii\helpers\Html;
                 var mylist = $("#'.$parent.'");
                 var listitems = mylist.children("div").get();
                 listitems.sort(function(a, b) {
-                var compA = $(a).attr("id").toUpperCase();
-                var compB = $(b).attr("id").toUpperCase();
+                var compA = $(a).attr("price").toUpperCase();
+                var compB = $(b).attr("price").toUpperCase();
                 return (compA > compB) ? +1 : (compA < compB) ? 1 : 0;
                 })
                 $.each(listitems, function(idx, itm) {

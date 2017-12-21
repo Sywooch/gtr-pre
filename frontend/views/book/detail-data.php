@@ -365,7 +365,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                   $tomorrow = date('Y-m-d',strtotime('+1 DAYS',strtotime(date('Y-m-d'))));
                   if ($departureIsland == $arrivalIsland) {
                     //No Pickup For Inter ISland
-                  }elseif($departureIsland == 1 && $cartValue->idTrip->date == $tomorrow  && strtotime(date('Y-m-d H:i:s')) > strtotime(date('Y-m-d 10:00:00'))){
+                  }elseif($departureIsland == 1 && $cartValue->idTrip->date == $tomorrow  && strtotime(date('Y-m-d H:i:s')) > strtotime(date('Y-m-d 18:00:00'))){
                     //No Pickup For Tomorrow and LAst Minute
                   }elseif ($departureIsland == 1) {
                     $type = 'pickup';

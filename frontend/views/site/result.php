@@ -89,7 +89,7 @@ $priceDept = round($valDept['adult_price']/$currency['kurs']*$totalPax,0,PHP_ROU
 $timeDept = date('H:i',strtotime($valDept['dept_time']));
 $durDept = $valDept['id_est_time'];
  ?>
-<div class="departure" id="<?= $priceDept ?>" times="<?= $timeDept ?>" duration="<?= $durDept ?>">
+<div class="departure" price="<?= $priceDept ?>" times="<?= $timeDept ?>" duration="<?= $durDept ?>">
   <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
@@ -166,7 +166,7 @@ $priceRetr = round($valRetr['adult_price']/$currency['kurs']*$totalPax,0,PHP_ROU
 $timeRetr = date('H:i',strtotime($valRetr['dept_time']));
 $durRetr = $valRetr['id_est_time'];
  ?>
-<div class="return" id="<?= $priceRetr ?>" times="<?= $timeRetr ?>" duration="<?= $durRetr ?>">
+<div class="return" price="<?= $priceRetr ?>" times="<?= $timeRetr ?>" duration="<?= $durRetr ?>">
     <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
