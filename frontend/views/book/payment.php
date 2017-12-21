@@ -68,19 +68,15 @@ $(document).ready(function(){
 
 
 <div id="form-payment" style="display: none;" class="tpembayaran-form">
-    <?php $form = ActiveForm::begin(); ?>
-<?php echo AlertBlock::widget([
-            'useSessionFlash' => true,
-            'type' => AlertBlock::TYPE_GROWL 
-            ]);
-
+    <?php $form = ActiveForm::begin(); 
       ?>
 <div class="col-md-12">
   <div class="col-md-8 col-md-offset-2">
     <div style="min-height: 250px; height: 250px;" class="panel panel-default material-panel material-panel_primary">
-      <h5 class="panel-heading material-panel__heading">Choose Your Payment</h5>
+      <h5 class="panel-heading material-panel__heading"></h5>
       <div id="body-form">  
         <div class="panel-body material-panel__body">
+        <div style="display: none;">
          <?=  
            $form->field($modelPayment, 'id_payment_method')->radioList(['1'=>'Paypal <span class="fa fa-paypal"></span> <span class="fa fa-credit-card "></span> <span class="fa fa-cc-discover"></span> <span class="fa fa-cc-mastercard"></span>','2'=>'local Bank Transfers <span class="fa fa-bank"></span>',],[
             'id'=>'rad-method',
@@ -116,6 +112,7 @@ $(document).ready(function(){
                    });
           }'
             ])->label(false) ?>
+            </div>
     <center>
     <b style="display: none;" class="payment-harga" id="harga-ext" ><?= $modelPayment->currency." ".$modelPayment->total_payment ?></b>
     <b class="payment-harga" id="harga-idr"><?= "IDR ".number_format($modelPayment->total_payment_idr) ?></b>

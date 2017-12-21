@@ -3,12 +3,14 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use yii\widgets\Pjax;
 use yii\helpers\Url;
+use common\components\BookingForm;
 //use rmrevin\yii\fontawesome\AssetBundle;
 
 /* @var $this yii\web\View */
 $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan';
 
 ?>
+
  <div class="row"> 
 <div class="col-md-9">
       <div class="panel-group material-tabs-group">
@@ -20,23 +22,12 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
         <div class="tab-content materail-tabs-content">
           <div class="tab-pane book-form book-form fade active in" id="fastboats">
             <div class="row"> 
-
-            <?= $this->render('_form-fastboat.php',[
-            'modelBookForm'=>$modelBookForm,
-            'listDept'=>$listDept,
-            'session'=>$session,
-            'adultList'=>$adultList,
-            'childList'=>$childList,
-            'listCurrency'=>$listCurrency,
-            ])?>
+              <?= BookingForm::widget(); ?>
             </div>
           </div>
           <div class="tab-pane book-form book-form fade" id="hotels">
            <div class="row"> 
-            <?= $this->render('_form-hotels.php',[
-            'modelHotel'=>$modelHotel,
-            
-            ])?>
+            <?= BookingForm::widget(['formType' => BookingForm::HOTELS]); ?>
             </div>
           </div>
         </div>

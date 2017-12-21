@@ -73,4 +73,8 @@ class THarbor extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TRoute::className(), ['arrival' => 'id']);
     }
+    
+    public static function getHarBorAsArray(){
+       return THarbor::find()->joinWith('idIsland')->asArray()->orderBy(['id_island'=>SORT_ASC,'name'=>SORT_ASC])->all();
+    }
 }

@@ -1,14 +1,12 @@
 <?php
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use kato\pickadate\Pickadate;
-use yii\helpers\Url;
+use yii\widgets\ActiveForm; 
 use kartik\widgets\DatePicker;
 use kartik\widgets\TouchSpin;
 
 ?>
 <?php $form = ActiveForm::begin([
-		'id'=>'form-hotels',
+		    'id'=>'form-hotels',
         'action' => 'https://www.agoda.com/partners/partnersearch.aspx',
         'method' => 'get',
         'options'=>['target'=>'_blank'],

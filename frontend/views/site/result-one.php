@@ -77,47 +77,47 @@ $this->registerCss($customCss);
 <div id="result-one">
 <?php foreach ($departureList as $key => $value): ?>
 <?php
-$prices = round($value->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP);
-$deptTime = date('H:i',strtotime($value->dept_time));
-$durations = $value->id_est_time;
+$prices = round($value['adult_price']/$currency['kurs']*$totalPax,0,PHP_ROUND_HALF_UP);
+$deptTime = date('H:i',strtotime($value['dept_time']));
+$durations = $value['id_est_time'];
  ?>
 <div id="<?= $prices ?>" times="<?= $deptTime ?>" duration="<?= $durations ?>">
 <div class="panel panel-primary material-panel material-panel_primary">
   <div class="panel-body" itemprop="reviewBody">
     <span>
-        <?= Html::img(['/site/logo','id'=>$value->idBoat->id_company], ['class'=>'boat-logo']); ?>
-        <span class="nama-company"><?= $value->idBoat->idCompany->name ?></span>
+        <?= Html::img(['/site/logo','id'=>$value['idBoat']['id_company']], ['class'=>'boat-logo']); ?>
+        <span class="nama-company"><?= $value['idBoat']['idCompany']['name'] ?></span>
         
     </span><br>
     <span class="text-muted row rute">
         <span class="col-md-12 col-sm-12">
-          <?= $value->idRoute->departureHarbor->name ?>
+          <?= $value['idRoute']['departureHarbor']['name'] ?>
           &nbsp
           <span class="glyphicon glyphicon-arrow-right"></span> 
           &nbsp
-          <?=$value->idRoute->arrivalHarbor->name ?> 
+          <?= $value['idRoute']['arrivalHarbor']['name'] ?> 
           <span class="glyphicon glyphicon-align-justify"></span>
           <span class="glyphicon glyphicon-time"></span> 
           Dept Time: <?= $deptTime ?> WITA
           <span class="glyphicon glyphicon-menu-right"></span> 
-          <?= $value->idEstTime->est_time ?> Duration
+          <?= $value['idEstTime']['est_time'] ?> Duration
         </span>
       
     </span>
     <br>
      <span class="text-warning note">
-       <?php if($value->description == null || $value->description == " "){
+       <?php if($value['description'] == null || $value['description'] == " "){
 
       }else{
-        echo "Note: ".$value->description;
+        echo "Note: ".$value['description'];
         } ?>
     </span> 
-    <span class="bg-danger pull-right harga"><?= $currency->currency." ".$prices ?>
+    <span class="bg-danger pull-right harga"><?= $currency['currency']." ".$prices ?>
     </span>
     <div class="funkyradio">
     <div class="funkyradio-warning">
-    <?= Html::radio('id_dept', $checked = false,['id'=>$value->id,'value'=>$value->id,'class'=>'radio-dept  ']); ?>
-               <?= Html::label('Select', $value->id); ?>
+    <?= Html::radio('id_dept', $checked = false,['id'=>$value['id'],'value'=>$value['id'],'class'=>'radio-dept  ']); ?>
+               <?= Html::label('Select', $value['id']); ?>
     </div>
     </div>               
   </div>

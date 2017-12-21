@@ -7,7 +7,6 @@ use yii\helpers\Url;
 use kartik\widgets\TouchSpin;
 //use rmrevin\yii\fontawesome\AssetBundle;
 ?>
-<link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <?php
 $modelBookForm->arrivalPort   = 19;
 $modelBookForm->departurePort = 13;
@@ -33,7 +32,10 @@ SCRIPT;
 $this->registerJs($customScript, \yii\web\View::POS_READY);
 $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphicon-map-marker"></i>']]];
 ?>
-<?php $form = ActiveForm::begin(); ?>
+<?php $form = ActiveForm::begin(['id'=>'form-fastboats',
+        'action' => '/site/index',
+        'method' => 'post',
+        ]); ?>
 <!--<div class="row col-md-12 col-sm-12 col-xs-12">-->
     <div class="col-md-4 col-sm-6 col-xs-12">
     <?= $form->field($modelBookForm, 'departurePort',$layoutMarker)->dropDownList($listDept,
@@ -163,19 +165,19 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
     </div>
 <!--</div>-->
 
-					<div class="col-md-4 col-sm-4 col-xs-6">
-					<?= $form->field($modelBookForm, 'departureDate')->widget(kato\pickadate\Pickadate::classname(), [
-						'isTime' => false,
-						//'id'=>'dept-date',
-						'options'=>[
-							'id'=>'dept-date',
-							'class'=>'input-sm form-control',
+          <div class="col-md-4 col-sm-4 col-xs-6">
+          <?= $form->field($modelBookForm, 'departureDate')->widget(kato\pickadate\Pickadate::classname(), [
+            'isTime' => false,
+            //'id'=>'dept-date',
+            'options'=>[
+              'id'=>'dept-date',
+              'class'=>'input-sm form-control',
               ],
             
-					])->label('Departure date **'); ?>
-					</div>
-<?php Pjax::begin(['id'=>'pjax-return-date']); ?>					
-					<div class="col-md-4 col-sm-4 col-xs-6">
+          ])->label('Departure date **'); ?>
+          </div>
+<?php Pjax::begin(['id'=>'pjax-return-date']); ?>         
+          <div class="col-md-4 col-sm-4 col-xs-6">
             <div class="main-container__column material-checkbox-group material-checkbox-group_primary">
         <?= Html::activeCheckbox($modelBookForm,'type', [ 
                   'label'    => false,
@@ -193,14 +195,14 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
         <label class="material-checkbox-group__label" for="checkbox-type"> Return</label>
         </div>
           <div id="div-return">
-					<?= $form->field($modelBookForm, 'returnDate')->widget(kato\pickadate\Pickadate::classname(), [
-						'isTime' => false,
-						'id'=>'return-date',
-						'options'=>['id'=>'return-date','class'=>'input-sm form-control'],
+          <?= $form->field($modelBookForm, 'returnDate')->widget(kato\pickadate\Pickadate::classname(), [
+            'isTime' => false,
+            'id'=>'return-date',
+            'options'=>['id'=>'return-date','class'=>'input-sm form-control'],
 
-					])->label(false); ?>
+          ])->label(false); ?>
           </div>
-					</div>
+          </div>
 <?php 
 
 $this->registerJs("
@@ -263,7 +265,7 @@ $('#pax-list .dropdown-menu').on({
   ", \yii\web\View::POS_READY); 
 ?>
 <?php
-$modelBookForm->currency = (isset($session['currency'])) ? $session['currency'] : 'USD'; 
+$modelBookForm->currency = (isset($session['formData']['currency'])) ? $session['formData']['currency'] : 'USD'; 
  ?>
 <?php Pjax::end(); ?> 
 

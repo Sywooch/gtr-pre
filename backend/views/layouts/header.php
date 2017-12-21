@@ -6,64 +6,64 @@ use yii\helpers\Url;
 /* @var $content string */
 $Valbook = Yii::$app->gilitransfers->Valbook();
 
-$this->registerJs("
+// $this->registerJs("
 
-if (Notification.permission !== \"granted\")
-    Notification.requestPermission();
-    hitungMundur(); 
+// if (Notification.permission !== \"granted\")
+//     Notification.requestPermission();
+//     hitungMundur(); 
 
-function hitungMundur(){
-    setTimeout(function(){
-        //cekNotif();
-        }, 5000);
-}
+// function hitungMundur(){
+//     setTimeout(function(){
+//         //cekNotif();
+//         }, 5000);
+// }
 
-function cekNotif(){
-    $.ajax({
-        url:'".Url::to(['/site/index'])."',
-        type: 'POST',
-        async: true,
-        success:function(data){
-            if (data == 'kosong') {
-                alert('kosong');
-                hitungMundur();
-            }else{
-                notifikasi(data);
-            }
+// function cekNotif(){
+//     $.ajax({
+//         url:'".Url::to(['/site/index'])."',
+//         type: 'POST',
+//         async: true,
+//         success:function(data){
+//             if (data == 'kosong') {
+//                 alert('kosong');
+//                 hitungMundur();
+//             }else{
+//                 notifikasi(data);
+//             }
             
-        },
-        error: function(){
-            console.log('Notification Error');
-            hitungMundur();
-        },
-    });
-};
+//         },
+//         error: function(){
+//             console.log('Notification Error');
+//             hitungMundur();
+//         },
+//     });
+// };
                 
-function notifikasi(data) {
-    if (!Notification) {
-        alert('Browsermu tidak mendukung Web Notification. Silahkan Upgrade Browser yg mendukung seperti Mozila Versi Terbaru'); 
-        return;
-    }
-    if (Notification.permission !== \"granted\")
-        Notification.requestPermission();
-    else {
-        var audio = new Audio('/audio/notif-sound.ogg');
-        audio.play();
-        var notifikasi = new Notification('Pesanan Baru', {
-            icon: '/logo.png',
-            body: \"Silahkan Periksa Dengan Klik Notifikasi Ini\",
-       });
-        notifikasi.onclick = function () {
-            window.location.href = '".Url::to(['/booking/index'])."';   
-        };
-        setTimeout(function(){
-            notifikasi.close();
-            hitungMundur();
-        }, 5000);
-    }
-};
+// function notifikasi(data) {
+//     if (!Notification) {
+//         alert('Browsermu tidak mendukung Web Notification. Silahkan Upgrade Browser yg mendukung seperti Mozila Versi Terbaru'); 
+//         return;
+//     }
+//     if (Notification.permission !== \"granted\")
+//         Notification.requestPermission();
+//     else {
+//         var audio = new Audio('/audio/notif-sound.ogg');
+//         audio.play();
+//         var notifikasi = new Notification('Pesanan Baru', {
+//             icon: '/logo.png',
+//             body: \"Silahkan Periksa Dengan Klik Notifikasi Ini\",
+//        });
+//         notifikasi.onclick = function () {
+//             window.location.href = '".Url::to(['/booking/index'])."';   
+//         };
+//         setTimeout(function(){
+//             notifikasi.close();
+//             hitungMundur();
+//         }, 5000);
+//     }
+// };
 
-    ", \yii\web\View::POS_READY);
+//     ", \yii\web\View::POS_READY);
 ?>
 <header class="main-header">
 

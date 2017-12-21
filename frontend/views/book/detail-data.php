@@ -1,11 +1,9 @@
 <?php
 use yii\helpers\Html;
 use kartik\widgets\ActiveForm;
-use kartik\widgets\DatePicker;
 use kartik\label\LabelInPlace;
-use yii\helpers\ArrayHelper;
-use kartik\widgets\Select2;
 use kato\pickadate\Pickadate;
+use kartik\dialog\Dialog;
 /* @var $this yii\web\View */
 /* @var $model common\models\TKurs */
 /* @var $form yii\widgets\ActiveForm */
@@ -26,9 +24,18 @@ $customCss = <<< SCRIPT
 
 SCRIPT;
 $this->registerCss($customCss);
-
-
+echo Dialog::widget([
+'dialogDefaults'=>[
+    Dialog::DIALOG_CONFIRM => [
+        'type'           => Dialog::TYPE_INFO,
+        'title'          => 'Confirm',
+        'btnOKClass'     => 'btn-danger',
+        'btnOKLabel'     =>' Yes',
+        'btnCancelLabel' =>' No'
+        ]
+    ]]);
 ?>
+
 
 	 <!-- Cart Start -->
 	
@@ -355,9 +362,12 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
 
                   $departureIsland = $cartValue->idTrip->idRoute->departureHarbor->id_island;
                   $arrivalIsland = $cartValue->idTrip->idRoute->arrivalHarbor->id_island;
+                  $tomorrow = date('Y-m-d',strtotime('+1 DAYS',strtotime(date('Y-m-d'))));
                   if ($departureIsland == $arrivalIsland) {
-                    
-                  }elseif ($departureIsland == 1  && strtotime(date('Y-m-d H:i:s')) < strtotime(date('Y-m-d 18:00:00'))) {
+                    //No Pickup For Inter ISland
+                  }elseif($departureIsland == 1 && $cartValue->idTrip->date == $tomorrow  && strtotime(date('Y-m-d H:i:s')) > strtotime(date('Y-m-d 10:00:00'))){
+                    //No Pickup For Tomorrow and LAst Minute
+                  }elseif ($departureIsland == 1) {
                     $type = 'pickup';
                     foreach ($modelShuttle as $k => $valShuttle) {
 
@@ -381,7 +391,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                           'listPickup'=>$listPickup,
                           ])."</div>";
                   }
-                      }elseif ($departureIsland == 2) {
+                }elseif ($departureIsland == 2) {
                         $type = 'drop-off';
                         foreach ($modelShuttle as $k => $valShuttle) {
                           echo "<div class='col-md-12'>".Html::checkbox('check-drop', $checked = false, ['class' => 'checkbox','value'=>1,'unchecked'=>0,'class'=>'checkbox-drop-'.$cartValue->id_trip,
@@ -405,7 +415,9 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                             ])."</div>";
                     
                         } 
-                      }                  
+                }else{
+                  // Everithing Not MAtch About Shuttle
+                }                  
                     
               }
 

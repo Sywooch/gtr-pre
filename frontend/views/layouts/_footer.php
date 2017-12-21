@@ -2,7 +2,6 @@
 use yii\helpers\Html;
 
 ?>
-<link href="https://fortawesome.github.io/Font-Awesome/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 <!--footer start from here-->
 <footer>
   <div class="container">

@@ -37,22 +37,22 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-            'access' => [
-                'class' => AccessControl::className(),
-                'only' => ['logout', 'signup'],
-                'rules' => [
-                    [
-                        'actions' => ['signup','to-port'],
-                        'allow' => true,
-                        'roles' => ['?'],
-                    ],
-                    [
-                        'actions' => ['logout'],
-                        'allow' => true,
-                        'roles' => ['@'],
-                    ],
-                ],
-            ],
+            // 'access' => [
+            //     'class' => AccessControl::className(),
+            //     'only' => ['logout', 'signup'],
+            //     'rules' => [
+            //         [
+            //             'actions' => ['signup','to-port'],
+            //             'allow' => true,
+            //             'roles' => ['?'],
+            //         ],
+            //         [
+            //             'actions' => ['logout'],
+            //             'allow' => true,
+            //             'roles' => ['@'],
+            //         ],
+            //     ],
+            // ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -60,6 +60,17 @@ class SiteController extends Controller
                 ],
             ],
         ];
+    }
+
+     public function beforeAction($action)
+    {    
+       if ($action->id == 'result') {
+
+            $this->enableCsrfValidation = false;
+            return true;
+        }else{
+          return true;
+        }    
     }
 
     public function actionTracking(){
@@ -100,7 +111,7 @@ class SiteController extends Controller
             $session =  $session = Yii::$app->session;
             $paxAdult = $session['formData']['adults'];
             $paxChild = $session['formData']['childs'];
-            $currency = $this->findOneKursAsArray($session['currency']);
+            $currency = $this->findOneKursAsArray($session['formData']['currency']);
             if ($data['retv'] != 'false') {
                $tripReturn    = $this->findOneTripAsArray($data['retv']);
                return $this->renderAjax('detail-modal',[
@@ -169,13 +180,8 @@ class SiteController extends Controller
     {
         $session =Yii::$app->session;
         $modelBookForm = new BookForm();
-        $modelHotel = new Hotel();
         
          if ($modelBookForm->load(Yii::$app->request->post()) && $modelBookForm->validate()){
-             $session->open();
-             $session['currency'] = $modelBookForm->currency;
-
-             $kurs = $this->findKurs()->where(['currency'=>$session['currency']])->one();
             if ($modelBookForm->type == true) {
                  $formData = [
                     'departurePort' =>$modelBookForm->departurePort,
@@ -186,7 +192,7 @@ class SiteController extends Controller
                     'childs'        =>$modelBookForm->childs,
                     'infants'       =>$modelBookForm->infants,
                     'type'          =>'2',
-                    'exchange'      =>$kurs->kurs,
+                    'currency'      =>$modelBookForm->currency
                 ];
                 
             }else{
@@ -198,7 +204,7 @@ class SiteController extends Controller
                     'childs'        =>$modelBookForm->childs,
                     'infants'       =>$modelBookForm->infants,
                     'type'          =>'1',
-                    'exchange'      =>$kurs->kurs,
+                    'currency'      =>$modelBookForm->currency
                     
                 ];
                
@@ -207,14 +213,14 @@ class SiteController extends Controller
                 return $this->goHome();
             }*/
 
-            $session['formData'] = $formData;
+            $session->open();
             $session['timeout'] = date('d-m-Y H:i:s');
             $session->close();
             
             return $this->redirect(['result','BookForm'=>$modelBookForm]);
             //,'formData'=>$formData
       }else{
-      if ($session['route'] == 'none') {
+        if ($session['route'] == 'none') {
            // $session      = session_unset();
             echo Growl::widget([
               'type' => Growl::TYPE_DANGER,
@@ -272,54 +278,35 @@ class SiteController extends Controller
             $session->remove('payment');
             $session->remove('timeout');
         }
-      $session =Yii::$app->session;
-      $session->open();
-        $listCurrency = ArrayHelper::map($this->findKurs()->select(['currency','name','CONCAT(currency, " - ",name) AS Alias'])->asArray()->orderBy(['currency'=>SORT_ASC])->all(), 'currency', 'Alias','name');
-        $route = $this->findHarbor()->joinWith('idIsland')->asArray()->orderBy(['id_island'=>SORT_ASC,'name'=>SORT_ASC])->all();
-        foreach ($route as $key => $value) {
-            $arrayRoute[] = ['id'=>$value['id'],'name'=>$value['name'],'island'=>$value['idIsland']['island']];
-        }
-         $listDept =ArrayHelper::map($arrayRoute, 'id', 'name', 'island');
-        $adultList = ['1'=>'1','2','3','4','5','6','7','8','9'];
-        $childList = ['0','1','2','3','4','5'];
-        $now = date('d-m-Y');
-        $limitdate = date('d-m-Y',strtotime('+1 days',strtotime($now)));
         $listBoats = TContent::find()->where(['id_type_content'=>1])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         $listPorts = TContent::find()->where(['id_type_content'=>2])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         $listDestinations = TContent::find()->where(['id_type_content'=>3])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         $keywordPuller = TContent::find(['id_type_content'=>5])->asArray()->one();
         $listArticle = TContent::find()->where(['id_type_content'=>4])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         return $this->render('index',[
-            'modelBookForm'=>$modelBookForm,
-            'modelHotel'=>$modelHotel,
-            'listDept'=>$listDept,
-            'adultList'=>$adultList,
-            'childList'=>$childList,
-            'limitdate'=>$limitdate,
-            'listCurrency'=>$listCurrency,
             'listBoats'=>$listBoats,
             'listDestinations'=>$listDestinations,
             'listPorts'=>$listPorts,
             'listArticle'=>$listArticle,
             'keywordPuller'=>$keywordPuller,
-            'session'=>$session,
-
             ]);
-        }
+      }
     }
 
     protected function findRoute($departure,$return){
-     return TRoute::find()->where(['departure'=>$departure])->andWhere(['arrival'=>$return])->one();
+     return TRoute::find()->where(['departure'=>$departure])->andWhere(['arrival'=>$return])->asArray()->one();
     }
 
     protected function findTrip($date,$formData,$route){
         $totalPax = $formData['adults']+$formData['childs'];
         return TTrip::find()
+        ->joinWith(['idBoat.idCompany','idRoute.departureHarbor AS Departure','idRoute.arrivalHarbor','idEstTime'])
         ->where(['date'=>$date])
-        ->andWhere(['id_route'=>$route->id])
+        ->andWhere(['id_route'=>$route['id']])
         ->andWhere('t_trip.id_price_type IS NOT :priceid',['priceid'=>null])
         ->andWhere('t_trip.stock >= :totalPax',[':totalPax'=>$totalPax])
         ->andWhere(['status'=>1])
+        ->asArray()
         ->all();
     }
 
@@ -351,7 +338,8 @@ class SiteController extends Controller
          $modelBookForm->load(Yii::$app->request->get());
       if ($modelBookForm->validate()){
          $formData = Yii::$app->request->get('BookForm');
-         $currency = $this->findKurs()->where(['currency'=>$session['currency']])->one();
+         $session['formData'] = $formData;
+         $currency = $this->findOneKursAsArray($formData['currency']);
          $totalPax = $formData['adults']+$formData['childs'];
          if (($routeDeparture = $this->findRoute($formData['departurePort'],$formData['arrivalPort'])) !== null) {
             $departureList  = $this->findTrip($formData['departureDate'],$formData,$routeDeparture);
@@ -392,56 +380,7 @@ class SiteController extends Controller
         
     }
 
-    public function actionHotel(){
-        if (Yii::$app->request->isPost) {
-            $modelHotel = Yii::$app->request->post('Hotel');
-            Yii::setAlias('@agoda', 'https://www.agoda.com/pages/agoda/default/destinationsearchresult.aspx?cid=1605135&pcs=4&hl=en&sort=priceLowToHigh');
-       return Url::to([Yii::$app->urlAgoda->baseUrl,'city'=>$modelHotel['city'],'checkin'=>$modelHotel['check_in'],'checkout'=>$modelHotel['check_out']]);
-        }else{
-            return $this->goHome();
-        }
-        
-    }
 
-
-    /**
-     * Logs in a user.
-     *
-     * @return mixed
-     */
-   /* public function actionLogin()
-    {
-        if (!Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-
-        $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
-            return $this->goBack();
-        } else {
-            return $this->render('login', [
-                'model' => $model,
-            ]);
-        }
-    }
-
-    /**
-     * Logs out the current user.
-     *
-     * @return mixed
-     */
-   /* public function actionLogout()
-    {
-        Yii::$app->user->logout();
-
-        return $this->goHome();
-    }
-
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
     public function actionContact()
     {
         $model = new ContactForm();

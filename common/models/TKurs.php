@@ -57,4 +57,8 @@ class TKurs extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TBooking::className(), ['currency' => 'currency']);
     }
+
+    public static function getCurrencyAsArray(){
+        return TKurs::find()->select(['currency','name','CONCAT(currency, " - ",name) AS currency_name'])->asArray()->orderBy(['currency'=>SORT_ASC])->all();
+    }
 }

@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use common\components\BookingForm;
 /* @var $this yii\web\View */
 /* @var $model common\models\TContent */
 
@@ -19,7 +20,30 @@ $this->registerMetaTag([
 ]);
 
 ?>
-<div class="tcontent-view">
+<div class="row">
+  <div class="col-md-12">
+      <div class="panel-group material-tabs-group">
+      <h4 class="panel-heading">Booking Form</h4>
+        <ul class="nav nav-tabs material-tabs material-tabs_primary">
+          <li class="active"><a href="#fastboats" class="material-tabs__tab-link" data-toggle="tab">Fastboats</a></li>
+          <li><a href="#hotels" class="material-tabs__tab-link" data-toggle="tab">Hotels</a></li>
+        </ul>
+        <div class="tab-content materail-tabs-content">
+          <div class="tab-pane book-form book-form fade active in" id="fastboats">
+            <div class="row"> 
+              <?= BookingForm::widget(); ?>
+            </div>
+          </div>
+          <div class="tab-pane book-form book-form fade" id="hotels">
+           <div class="row"> 
+            <?= BookingForm::widget(['formType' => BookingForm::HOTELS]); ?>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
+</div>
+<div class="tcontent-view" id="scroller">
 
 <h1><?= Html::encode($this->title) ?></h1>
 
@@ -79,4 +103,8 @@ $("iframe").removeAttr("style frameborder");
 $("iframe").wrapAll("<div class=\'embed-responsive embed-responsive-16by9\'/>");
 $("iframe").addClass("embed-responsive-item");
 	', \yii\web\View::POS_READY);
+$this->registerJs("
+  $('html, body').animate({
+    scrollTop: $('#scroller').offset().top-100
+  }, 1000); ", \yii\web\View::POS_READY);
 ?>

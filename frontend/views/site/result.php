@@ -85,25 +85,25 @@ $('#myModal').on('hide.bs.modal',function(){
     <div id="result-dept">
 <?php foreach ($departureList as $key => $valDept): ?>
 <?php
-$priceDept = round($valDept->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP);
-$timeDept = date('H:i',strtotime($valDept->dept_time));
-$durDept = $valDept->id_est_time;
+$priceDept = round($valDept['adult_price']/$currency['kurs']*$totalPax,0,PHP_ROUND_HALF_UP);
+$timeDept = date('H:i',strtotime($valDept['dept_time']));
+$durDept = $valDept['id_est_time'];
  ?>
 <div class="departure" id="<?= $priceDept ?>" times="<?= $timeDept ?>" duration="<?= $durDept ?>">
   <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
-    <?= Html::img(['/site/logo','id'=>$valDept->idBoat->id_company], ['class'=>'boat-logo']); ?>
-    <span class="nama-company"><?= $valDept->idBoat->idCompany->name ?></span>
+    <?= Html::img(['/site/logo','id'=>$valDept['idBoat']['id_company']], ['class'=>'boat-logo']); ?>
+    <span class="nama-company"><?= $valDept['idBoat']['idCompany']['name'] ?></span>
     
 </span><br>
 <span class="text-muted row rute">
     <span class="col-md-12s col-sm-12">
-    <?= $valDept->idRoute->departureHarbor->name ?>
+    <?= $valDept['idRoute']['departureHarbor']['name'] ?>
     &nbsp
     <span class="glyphicon glyphicon-arrow-right"></span> 
     &nbsp
-    <?=$valDept->idRoute->arrivalHarbor->name ?></span>
+    <?=$valDept['idRoute']['arrivalHarbor']['name'] ?></span>
     
 </span><br>
 <span class="text-muted timer">
@@ -111,23 +111,23 @@ $durDept = $valDept->id_est_time;
       <span class="glyphicon glyphicon-time"></span> 
       Dept Time: <?= $timeDept ?>
       <span class="glyphicon glyphicon-menu-right"></span> 
-      <?= $valDept->idEstTime->est_time ?> Duration
+      <?= $valDept['idEstTime']['est_time'] ?> Duration
     </span>
   
 </span>
 <br><br>
  <span class="text-warning note">
-   <?php if($valDept->description == null || $valDept->description == " "){
+   <?php if($valDept['description'] == null || $valDept['description'] == " "){
 
   }else{
-    echo "Note: ".$valDept->description;
+    echo "Note: ".$valDept['description'];
     } ?>
  </span> 
-<span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceDept ?></span>
+<span  class="bg-danger pull-right harga"><?= $currency['currency']." ".$priceDept ?></span>
           <div class="funkyradio">
               <div class="funkyradio-warning">
-               <?= Html::radio('id_dept', $checked = false,['id'=>'radio-dept'.$valDept->id,'value'=>$valDept->id,'class'=>'radio-dept']); ?>
-               <?= Html::label('Select', 'radio-dept'.$valDept->id); ?>
+               <?= Html::radio('id_dept', $checked = false,['id'=>'radio-dept'.$valDept['id'],'value'=>$valDept['id'],'class'=>'radio-dept']); ?>
+               <?= Html::label('Select', 'radio-dept'.$valDept['id']); ?>
               </div>
           </div>
               
@@ -162,25 +162,25 @@ $durDept = $valDept->id_est_time;
 <div id="result-arv">
 <?php foreach ($returnList as $key => $valRetr): ?>
   <?php
-$priceRetr = round($valRetr->adult_price/$currency->kurs*$totalPax,0,PHP_ROUND_HALF_UP);
-$timeRetr = date('H:i',strtotime($valRetr->dept_time));
-$durRetr = $valRetr->id_est_time;
+$priceRetr = round($valRetr['adult_price']/$currency['kurs']*$totalPax,0,PHP_ROUND_HALF_UP);
+$timeRetr = date('H:i',strtotime($valRetr['dept_time']));
+$durRetr = $valRetr['id_est_time'];
  ?>
 <div class="return" id="<?= $priceRetr ?>" times="<?= $timeRetr ?>" duration="<?= $durRetr ?>">
     <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
 <span>
-    <?= Html::img(['/site/logo','id'=>$valRetr->idBoat->id_company], ['class'=>'boat-logo']); ?>
-    <span class="nama-company"><?= $valRetr->idBoat->idCompany->name ?></span>
+    <?= Html::img(['/site/logo','id'=>$valRetr['idBoat']['id_company']], ['class'=>'boat-logo']); ?>
+    <span class="nama-company"><?= $valRetr['idBoat']['idCompany']['name'] ?></span>
     
 </span><br>
 <span class="text-muted row rute">
     <span class="col-md-12s col-sm-12">
-    <?= $valRetr->idRoute->departureHarbor->name ?>
+    <?= $valRetr['idRoute']['departureHarbor']['name'] ?>
     &nbsp
     <span class="glyphicon glyphicon-arrow-right"></span> 
     &nbsp
-    <?=$valRetr->idRoute->arrivalHarbor->name ?></span>
+    <?=$valRetr['idRoute']['arrivalHarbor']['name'] ?></span>
     
 </span><br>
 <span class="text-muted timer">
@@ -188,23 +188,23 @@ $durRetr = $valRetr->id_est_time;
       <span class="glyphicon glyphicon-time"></span> 
       Dept Time: <?= $timeRetr ?> 
       <span class="glyphicon glyphicon-menu-right"></span>
-      <?= $valRetr->idEstTime->est_time ?> Duration 
+      <?= $valRetr['idEstTime']['est_time'] ?> Duration 
     </span>
   
 </span>
 <br><br>
  <span class="text-warning note">
-   <?php if($valRetr->description == null || $valRetr->description == " "){
+   <?php if($valRetr['description'] == null || $valRetr['description'] == " "){
 
   }else{
-    echo "Note: ".$valRetr->description;
+    echo "Note: ".$valRetr['description'];
     } ?>
  </span> 
-<span  class="bg-danger pull-right harga"><?= $currency->currency." ".$priceRetr ?></span>
+<span  class="bg-danger pull-right harga"><?= $currency['currency']." ".$priceRetr ?></span>
               <div class="funkyradio">
               <div class="funkyradio-warning">
-              <?= Html::radio('id_return', $checked = false,['id'=>'radio-return'.$valRetr->id,'value'=>$valRetr->id,'class'=>'radio-return']); ?>
-             <?= Html::label('Select', 'radio-return'.$valRetr->id); ?>
+              <?= Html::radio('id_return', $checked = false,['id'=>'radio-return'.$valRetr['id'],'value'=>$valRetr['id'],'class'=>'radio-return']); ?>
+             <?= Html::label('Select', 'radio-return'.$valRetr['id']); ?>
               </div>
               </div>
               

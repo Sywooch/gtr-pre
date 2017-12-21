@@ -5,7 +5,6 @@ use yii\base\Component;
 use common\models\TBooking;
 use common\models\TCart;
 use common\models\TContent;
-use yii\helpers\Html;
 use Yii;
 use yii\helpers\Json;
 use common\models\TVisitor;
@@ -63,6 +62,8 @@ class Gilitransfers extends Component{
 		}
 		
 	}
+
+
 
 	
 }

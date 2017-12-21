@@ -45,6 +45,7 @@ class BookController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'add-to-cart' => ['post'],
+                    'remove-cart' => ['post'],
                 ],
             ],
         ];
@@ -333,19 +334,20 @@ class BookController extends Controller
     }
 
 
-    protected function addCart($session,$id){
+    protected function addTripToCart($session,$id){
         $transaction = Yii::$app->db->beginTransaction();
+        $currency = TKurs::find()->where(['currency'=>$session['formData']['currency']])->asArray()->one();
         try {
             if (($modelCart = TCart::find()->where(['session_key'=>$session['session_key']])->andWhere(['id_trip'=>$id])->one()) === null) {
                 $modelCart               = new TCart();
                 $modelCart->session_key  = $session['session_key'];
                 $modelCart->id_trip      = $id;
-                $modelCart->type = $session['formData']['type'];
+                $modelCart->type         = $session['formData']['type'];
                 $modelCart->adult        = $session['formData']['adults'];
                 $modelCart->child        = $session['formData']['childs'];
                 $modelCart->infant       = $session['formData']['infants'];
-                $modelCart->currency     = $session['currency'];
-                $modelCart->exchange     = $session['formData']['exchange'];
+                $modelCart->currency     = $currency['currency'];
+                $modelCart->exchange     = $currency['kurs'];
                 $modelCart->start_time   = date('Y-m-d H:i:s');
                 $modelCart->expired_time = date('Y-m-d H:i:s', strtotime('+30 minutes'));
                 $modelCart->validate();
@@ -356,8 +358,8 @@ class BookController extends Controller
                 $modelCart->adult        = $modelCart->adult+$session['formData']['adults'];
                 $modelCart->child        = $modelCart->child+$session['formData']['childs'];
                 $modelCart->infant       = $modelCart->infant+$session['formData']['infants'];
-                $modelCart->currency     = $session['currency'];
-                $modelCart->exchange     = $session['formData']['exchange'];
+                $modelCart->currency     = $currency['currency'];
+                $modelCart->exchange     = $currency['kurs'];
                 $modelCart->start_time   = date('Y-m-d H:i:s');
                 $modelCart->expired_time = date('Y-m-d H:i:s', strtotime('+30 minutes'));
                 $modelCart->validate();
@@ -366,8 +368,8 @@ class BookController extends Controller
              
             $CartCurrency = TCart::find()->where(['session_key'=>$session['session_key']])->all();
                 foreach ($CartCurrency as $n => $valCartCurrency) {
-                    $valCartCurrency->currency = $session['currency'];
-                    $valCartCurrency->exchange = $session['formData']['exchange'];
+                    $valCartCurrency->currency = $currency['currency'];
+                    $valCartCurrency->exchange = $currency['kurs'];
                     $valCartCurrency->save(false);
                 }
              $totalPax                 = $modelCart->adult+$modelCart->child;
@@ -403,10 +405,10 @@ class BookController extends Controller
         }
 
         if ($tripDeparture!= null && $tripReturn == null) {
-            $this->addCart($session,$tripDeparture);
-        }elseif ($tripDeparture!= null && $tripReturn != null) {
-            $this->addCart($session,$tripDeparture);
-            $this->addCart($session,$tripReturn);
+            $this->addTripToCart($session,$tripDeparture);
+        }elseif ($tripDeparture != null && $tripReturn != null) {
+            $this->addTripToCart($session,$tripDeparture);
+            $this->addTripToCart($session,$tripReturn);
         }else{
             $session = session_unset();
             return $this->goHome();
@@ -427,7 +429,6 @@ class BookController extends Controller
     public function actionRemoveCart($id){
 
         $modelCart       = $this->findCart($id);
-       // $modelAvaibility = $this->findAvaibility()->where(['id_trip'=>$modelCart->id_trip])->one();
         $transaction = Yii::$app->db->beginTransaction();
         try {
             $totalPax        = $modelCart->adult+$modelCart->child;
