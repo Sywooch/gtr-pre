@@ -427,6 +427,4 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
 
   
 		<?php ActiveForm::end(); ?>
-
-
 <?php endif; ?>
