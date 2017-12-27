@@ -34,8 +34,6 @@ echo Dialog::widget([
         'btnCancelLabel' =>' No'
         ]
     ]]);
-$session = Yii::$app->session;
-var_dump($session['session_key']);
 ?>
 
 

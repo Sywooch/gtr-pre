@@ -69,7 +69,7 @@ class TPrivateCart extends \yii\db\ActiveRecord
         ];
     }
 
-    public function generateSessionKey($attribute, $length = 5){
+    protected static function generateSessionKey($attribute, $length = 5){
         // $pool = array_merge(range(0,9),range('A', 'Z')); 
         // for($i=0; $i < $length; $i++) {
         //     $key[] = $pool[mt_rand(0, count($pool) - 1)];
