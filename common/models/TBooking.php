@@ -73,7 +73,7 @@ class TBooking extends \yii\db\ActiveRecord
     }
 
 
-public function generateBookingNumber($attribute, $length = 4){
+public function generateBookingNumber($attribute, $length = 5){
     $pool = array_merge(range(0,9),range('A', 'Z')); 
     for($i=0; $i < $length; $i++) {
         $key[] = $pool[mt_rand(0, count($pool) - 1)];
@@ -81,7 +81,7 @@ public function generateBookingNumber($attribute, $length = 4){
     // if ($type == '2') {
          //   $kodeBooking = "G".join($key)."Y";
        // }else{
-            $kodeBooking = "G".join($key);
+            $kodeBooking = "F".join($key);
        // }          
      
     if(!$this->findOne([$attribute => $kodeBooking])) {
@@ -91,6 +91,22 @@ public function generateBookingNumber($attribute, $length = 4){
     }
             
 }
+
+    public static function addFastboatBooking(array $data){
+        $modelFastboatBooking               = new TBooking();
+        $modelFastboatBooking->id           = $modelFastboatBooking->generateBookingNumber("id");
+        $modelFastboatBooking->id_trip      = $data['id_trip'];
+        $modelFastboatBooking->id_payment   = $data['id_payment'];
+        $modelFastboatBooking->trip_price   = $data['trip_price'];
+        $modelFastboatBooking->total_price  = $data['total_price'];
+        $modelFastboatBooking->currency     = $data['currency'];
+        $modelFastboatBooking->total_idr    = $data['total_idr'];
+        $modelFastboatBooking->exchange     = $data['exchange'];
+        $modelFastboatBooking->expired_time = date('Y-m-d H:i:s', strtotime('+2 HOURS'));
+        $modelFastboatBooking->validate();
+        $modelFastboatBooking->save(false);
+        return $modelFastboatBooking->id;
+    }
     /**
      * @inheritdoc
      */
@@ -151,11 +167,11 @@ public function generateBookingNumber($attribute, $length = 4){
     }
     public function getAffectedPassengers()
     {
-        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['!=','id_type',self::STATUS_VALIDATION]);
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['!=','id_type',self::STATUS_VALIDATION]); // Bukan Bayi
     }
     public function getAdultPassengers()
     {
-        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::STATUS_ON_BOOK]);
+        return $this->hasMany(TPassenger::className(), ['id_booking' => 'id'])->where(['id_type'=>self::STATUS_ON_BOOK]); 
     }
     public function getChildPassengers()
     {

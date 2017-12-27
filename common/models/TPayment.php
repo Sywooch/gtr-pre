@@ -40,6 +40,8 @@ class TPayment extends \yii\db\ActiveRecord
     const STATUS_FULl_REFUND          = 6;
     const STATUS_EXPIRED              = 99;
     const STATUS_INVALID              = 100;
+    const PAYMENT_FASTBOAT            = 1;
+    const PAYMENT_PRIV_TRANSFERS      = 2;
 
     /**
      * @inheritdoc
@@ -55,8 +57,8 @@ class TPayment extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['email', 'phone', 'total_payment', 'total_payment_idr', 'currency', 'exchange', 'token'], 'required'],
-            [['id_payment_method', 'total_payment_idr', 'exchange', 'status'], 'integer'],
+            [['email', 'phone', 'total_payment', 'total_payment_idr', 'currency', 'exchange', 'token','id_payment_type'], 'required'],
+            [['id_payment_method', 'total_payment_idr', 'exchange', 'status','id_payment_type'], 'integer'],
             [['total_payment', 'send_amount'], 'number'],
             [['update_at'],'default','value'=>date('Y-m-d H:i:s')],
             [['exp', 'update_at'], 'safe'],
@@ -72,6 +74,7 @@ class TPayment extends \yii\db\ActiveRecord
             [['currency'], 'exist', 'skipOnError' => true, 'targetClass' => TKurs::className(), 'targetAttribute' => ['currency' => 'currency']],
             [['id_payment_method'], 'exist', 'skipOnError' => true, 'targetClass' => TPaymentMethod::className(), 'targetAttribute' => ['id_payment_method' => 'id']],
             [['status'], 'exist', 'skipOnError' => true, 'targetClass' => TPaymentStatus::className(), 'targetAttribute' => ['status' => 'id']],
+            [['id_payment_type'], 'exist', 'skipOnError' => true, 'targetClass' => TPaymentType::className(), 'targetAttribute' => ['id_payment_type' => 'id']],
         ];
     }
 
@@ -85,7 +88,8 @@ class TPayment extends \yii\db\ActiveRecord
             'name' => Yii::t('app', 'Name'),
             'email' => Yii::t('app', 'Email'),
             'phone' => Yii::t('app', 'Phone'),
-            'id_payment_method' => Yii::t('app', 'Id Payment Method'),
+            'id_payment_method' => Yii::t('app', 'Payment Method'),
+            'id_payment_type' => Yii::t('app', 'Payment Type'),
             'total_payment' => Yii::t('app', 'Total Payment'),
             'total_payment_idr' => Yii::t('app', 'Total Payment Idr'),
             'currency' => Yii::t('app', 'Currency'),
@@ -98,12 +102,38 @@ class TPayment extends \yii\db\ActiveRecord
         ];
     }
 
+    public function generatePaymentToken($attribute, $length = 25){
+       //$token = Yii::$app->getSecurity()->generateRandomString($length);
+        $pool = array_merge(range(0,9),range('A', 'Z')); 
+    for($i=0; $i < $length; $i++) {
+        $key[] = $pool[mt_rand(0, count($pool) - 1)];
+    }
+        $token = join($key);
+
+        if(!$this->findOne([$attribute => $token])) {
+            return $token;
+        }else{
+            return $this->generatePaymentToken($attribute,$length);
+        }
+            
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getTBookings()
     {
         return $this->hasMany(TBooking::className(), ['id_payment' => 'id']);
+    }
+
+    public function getTPrivateBookings()
+    {
+        return $this->hasMany(TPrivateBooking::className(), ['id_payment' => 'id']);
+    }
+
+    public function getPrivateBookings()
+    {
+        return $this->hasMany(TPrivateBooking::className(), ['id_payment' => 'id']);
     }
 
     /**
@@ -128,6 +158,11 @@ class TPayment extends \yii\db\ActiveRecord
     public function getIdPaymentMethod()
     {
         return $this->hasOne(TPaymentMethod::className(), ['id' => 'id_payment_method']);
+    }
+
+    public function getIdPaymentType()
+    {
+        return $this->hasOne(TPaymentType::className(), ['id' => 'id_payment_type']);
     }
 
     /**

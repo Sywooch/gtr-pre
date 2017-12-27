@@ -12,7 +12,7 @@ Class CheckController extends Controller
 {
     public function actionMailer(){
         Yii::$app->controllerNamespace = "backend\controllers";
-        Yii::$app->runAction('mailer/paypal');
+        Yii::$app->runAction('mailer/ticketing');
     }
 
     public function actionInvoice(){

@@ -73,4 +73,8 @@ class TPrivateRoute extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TPrivateTrip::className(), ['id_route' => 'id']);
     }
+
+    public static function getArrayPrivateRoute($from_route,$to_route){
+        return TPrivateRoute::find()->joinWith(['fromRoute as fromRoute','toRoute'])->where(['from_route'=>$from_route,'to_route'=>$to_route])->asArray()->one();
+    }
 }

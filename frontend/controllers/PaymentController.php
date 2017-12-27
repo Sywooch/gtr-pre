@@ -35,6 +35,59 @@ class PaymentController extends Controller
 		    return parent::beforeAction($action);  
     }
 
+    protected function findPayment($token){
+        if (($payment = TPayment::findOne(['token'=>$token])) !== null) {
+            return $payment;
+        }else{
+            throw new NotFoundHttpException('Data Not Found, Please Contact Us');
+        }
+    }
+
+    public function actionIndex(){
+        $session      = Yii::$app->session;
+        $modelPayment  = $this->findPayment($session['token']);
+        $modelBooking = $modelPayment->tBookings;
+
+        if ($modelPayment->load(Yii::$app->request->post()) && $modelPayment->validate()) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                  $modelPayment->setPaymentBookingStatus($modelPayment::STATUS_UNCONFIRMED,$modelPayment::STATUS_PENDING);
+                  //PAYMENT STATUS 1 BOOKING UNPAID (2)
+                  $modelPayment->save(false);
+                  $modelPayment->save();
+                  $modelQueue         = TMailQueue::addInvoiceQueue($modelPayment->id);
+                  $transaction->commit();
+                  $session         = session_unset();
+                  $session            = Yii::$app->session;
+                  $session->open();
+                  $session['payment'] = 'sukses';
+                 return $this->redirect(['thank-you']); 
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+           
+
+        }else{
+            $this->layout = 'payment';
+            return $this->render('payment',[
+                'modelPayment'=>$modelPayment,
+                ]);
+        }
+
+    }
+
+    public function actionPaypal(){
+         $session       = Yii::$app->session;
+         $modelpembayaranPaypal = TPayment::find()->where(['token'=>$session['token']])->asArray()->one();
+
+         $message = $session['payment-message'];
+         return $this->renderAjax('paypal',[
+         'modelpembayaranPaypal'=>$modelpembayaranPaypal,
+         'message' => $message,
+         ]);    
+    }
+
 	public function actionConfirm($token = null){
 		$this->layout = 'no-cart';
 		if ($token != null && ($modelPayment = $this->findPaymentMaskToken($token)) !== null) {
@@ -91,7 +144,7 @@ class PaymentController extends Controller
 				$session                = Yii::$app->session;
 				$session->open();
 				$session['payment']     = 'sukses';
-				return $this->redirect(['/book/thank-you']);
+				return $this->redirect(['thank-you']);
 			} catch(\Exception $e) {
 			    $transaction->rollBack();
 			    throw $e;
@@ -107,16 +160,12 @@ class PaymentController extends Controller
 			$session = Yii::$app->session;
 			if (Yii::$app->request->isAjax) {
 				$session = Yii::$app->session;
-				$modelPayment = $this->findPaymentByToken($session['token']);
-				$modelBooking = $modelPayment->tBookings;
+				$modelPayment = $this->findPayment($session['token']);
+				// $modelBooking = $modelPayment->tBookings;
 				$transaction = Yii::$app->db->beginTransaction();
 				try {
-				    $modelPayment->status = $modelPayment::STATUS_PENDING;
-				    $modelPayment->id_payment_method = $modelPayment::STATUS_UNCONFIRMED; //PAYPAL
-				    foreach ($modelBooking as $key => $valBooking) {
-						$valBooking->id_status = $valBooking::STATUS_VALIDATION;
-						$valBooking->save();
-				    }
+					$modelPayment->setPaymentBookingStatus($modelPayment::STATUS_PENDING,$modelPayment::STATUS_UNCONFIRMED);
+				    $modelPayment->id_payment_method = $modelPayment::STATUS_UNCONFIRMED; //Payament Method PAYPAL
 				    $modelPayment->save();
 				    $transaction->commit();
 				    return $this->redirect(['error']);
@@ -133,15 +182,36 @@ class PaymentController extends Controller
 
     }
 
+    public function actionThankYou(){
+        $session = Yii::$app->session;
+        if ($session['payment'] == 'sukses') {
+            return $this->render('thank-you');
+        }else{
+            return $this->goHome();
+        }
+        
+    }
+
     public function actionError(){
     	$session = Yii::$app->session;
-    	if (isset($session['token'])) {
-    		$session = session_unset();
-    		return $this->render('error');
-    	}else{
-    		$session = session_unset();
-    		 return $this->goHome();
-    	}
+		if (Yii::$app->request->isAjax) {
+				$session['payment'] = 'error';
+	    		$this->redirect(['payment-error']);
+	    	}else{
+		   		$session = session_unset();
+	    		return $this->goHome();
+	   	}
+    }
+
+    public function actionPaymentError(){
+    	$session = Yii::$app->session;
+    	if ($session['payment'] == 'error') {
+	    	return $this->render('error');
+	    }else{
+	    	$session = session_unset();
+	    	return $this->goHome();
+	    }
+	   	
     }
 
 	public function actionWebHook(){
@@ -163,6 +233,8 @@ class PaymentController extends Controller
 		}
 
 	}
+
+
 
 	public function actionHasilWebHook(){
 		return $this->render('web-hook',['hasil'=>"ok"]);

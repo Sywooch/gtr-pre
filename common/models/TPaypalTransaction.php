@@ -128,22 +128,20 @@ class TPaypalTransaction extends \yii\db\ActiveRecord
     public function afterSave($insert, $changedAttributes)
     {
             $modelpembayaranPaypal = $this->paymentToken;
-            $modelBooking          = $this->paymentToken->tBookings;
-            //$modelWebHook          = $this->tWebhook;
+            if ($this->paymentToken->id_payment_type == 1) {
+              $modelBooking          = $this->paymentToken->tBookings;
+              $typeticket = 1; //ticket fastboat;
+            }elseif ($this->paymentToken->id_payment_type == 2) {
+              $modelBooking          = $this->paymentToken->tPrivateBookings;
+              $typeticket = 3; //ticket private transfers
+            }
+            
             if ($this->id_status == self::EVENT_SALE_COMPLETED) {
 
                $statusPayment = $modelpembayaranPaypal::STATUS_CONFIRM_RECEIVED;
                $statusBooking = $modelpembayaranPaypal::STATUS_PARTIAL_REFUND; //SUKSES
 
-            }elseif($this->id_status == self::EVENT_SALE_PENDING){
-
-               $statusPayment = $modelpembayaranPaypal::STATUS_CONFIRM_NOT_RECEIVED;
-               $statusBooking = $modelpembayaranPaypal::STATUS_CONFIRM_RECEIVED; //PAID
-
-            }else{
-              return true;
-            }
-            foreach ($modelBooking as $key => $valBooking) {
+               foreach ($modelBooking as $key => $valBooking) {
                   $valBooking->id_status = $statusBooking;
                   $valBooking->validate();
                   $valBooking->save(false);
@@ -152,8 +150,28 @@ class TPaypalTransaction extends \yii\db\ActiveRecord
                  $modelpembayaranPaypal->status            = $statusPayment;
                  $modelpembayaranPaypal->validate();
                  $modelpembayaranPaypal->save(false);
-                 $modelQueue                               = TMailQueue::addTicketQueue($modelpembayaranPaypal->id);
-                 return true;
+                 $modelQueue                               = TMailQueue::addTicketQueue($modelpembayaranPaypal->id,$typeticket);
+
+            }elseif($this->id_status == self::EVENT_SALE_PENDING){
+
+               $statusPayment = $modelpembayaranPaypal::STATUS_CONFIRM_NOT_RECEIVED;
+               $statusBooking = $modelpembayaranPaypal::STATUS_CONFIRM_RECEIVED; //PAID
+               foreach ($modelBooking as $key => $valBooking) {
+                  $valBooking->id_status = $statusBooking;
+                  $valBooking->validate();
+                  $valBooking->save(false);
+                 }
+                 $modelpembayaranPaypal->id_payment_method = $modelpembayaranPaypal::STATUS_UNCONFIRMED; //PAYPAL
+                 $modelpembayaranPaypal->status            = $statusPayment;
+                 $modelpembayaranPaypal->validate();
+                 $modelpembayaranPaypal->save(false);
+                 $modelQueue                               = TMailQueue::addTicketQueue($modelpembayaranPaypal->id,$typeticket);
+
+            }else{
+              return true;
+            }
+            
+              return true;
     }
 
     public static function addTransactionData(array $data){

@@ -6,13 +6,16 @@ use yii\helpers\Html;
 use common\models\THarbor;
 use common\models\TKurs;
 use frontend\models\BookForm;
+use frontend\models\PrivateForm;
+use common\models\TPrivateLocation;
 use Yii;
 use yii\helpers\ArrayHelper;
 
 class BookingForm extends Widget
 {
-	const FASTBOAT = 1;
-	const HOTELS   = 2; 
+	const FASTBOAT          = 1;
+	const HOTELS            = 2; 
+	const PRIVATE_TRANSFERS = 3; 
 	public $formType = self::FASTBOAT;
 
     public function run()
@@ -44,6 +47,23 @@ class BookingForm extends Widget
 	        	]);
     	}elseif ($this->formType === self::HOTELS) {
     		echo $this->render('booking-form/_hotels');
+    	}elseif($this->formType === self::PRIVATE_TRANSFERS){
+    		
+    		$session =Yii::$app->session;
+			$modelPrivateTransfers = new PrivateForm();
+			$session->open();
+	        $listCurrency = ArrayHelper::map(TKurs::getCurrencyAsArray(), 'currency', 'currency_name','name');
+	        $listLocation =ArrayHelper::map(TPrivateLocation::getAllLocation(), 'id', 'location');
+	        $adultList = ['1'=>'1','2','3','4','5','6','7','8','9'];
+	        $childList = ['0','1','2','3','4','5'];
+    		echo $this->render('booking-form/_private-transfers',[
+					'modelPrivateTransfers' =>$modelPrivateTransfers,
+					'listLocation'      =>$listLocation,
+					'adultList'     =>$adultList,
+					'childList'     =>$childList,
+					'listCurrency'  =>$listCurrency,
+					'session'       =>$session,
+	        	]);
     	}else{
     		echo "<h1 class='text-danger'>Form Type Not Found</h1>";
     	}

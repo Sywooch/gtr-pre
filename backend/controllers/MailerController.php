@@ -41,15 +41,40 @@ class MailerController extends Controller
         return TShuttleLocationTmp::find();
     }
 
-    public function actionPaypal(){
-        
-        if (($modelQueue = TMailQueue::getQueueList(TMailQueue::STATUS_QUEUE)) !== null) {
-            $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
-            $modelPayment = TPayment::findOne($modelQueue->id_payment);
-            $modelBooking = $modelPayment->tBookings;
-            $findShuttle = $this->findShuttle();
-            $findPassenger = $this->findPassenger();
-            try {
+    public function actionTicketing(){
+        if (($modelQueue = TMailQueue::getTicketQueue()) !== null) {
+          $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
+            if ($modelQueue->id_type == TMailQueue::TYPE_TICKET_FASTBOAT) {
+                $view = 'pdf-ticket-fastboat';
+                if (($fastboatTicekt = $this->Ticketgenerator($modelQueue->id_payment,$view,$modelQueue->id_type)) === true){
+
+                   $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
+
+                }else{
+                    $modelQueue->setQueueStatus(TMailQueue::STATUS_RETRY);
+
+                }
+
+            }elseif ($modelQueue->id_type == TMailQueue::TYPE_TICKET_PRIV_TRANSFERS) {
+                $view = 'pdf-ticket-private';
+                if (($PrivateTransfersTicket = $this->Ticketgenerator($modelQueue->id_payment,$view,$modelQueue->id_type)) === true) {
+                   $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
+
+                }else{
+                    $modelQueue->setQueueStatus(TMailQueue::STATUS_RETRY);
+
+                }
+            }
+
+            return true;
+         }else{
+            return true;
+        }
+    }
+
+    protected function Ticketgenerator($id_payment,$view,$type){
+        $modelPayment = TPayment::findOne($id_payment);
+        try {
                 $savePath =  Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/";
             FileHelper::createDirectory ( $savePath, $mode = 0777, $recursive = true );
             $Ticket = new Pdf([
@@ -61,11 +86,8 @@ class MailerController extends Controller
             // simpan file
             'destination' => Pdf::DEST_FILE,
             'content' => "
-                ".$this->renderAjax('/email-ticket/pdf-ticket',[
-                    'modelBooking'=>$modelBooking,
+                ".$this->renderPartial('/email-ticket/'.$view,[
                     'modelPayment'=>$modelPayment,
-                    'findShuttle'=>$findShuttle,
-                    'findPassenger'=>$findPassenger,
                     ])." ",
                             // any css to be embedded if required
                             'cssInline' => '.kv-heading-1{
@@ -115,9 +137,7 @@ class MailerController extends Controller
                 'destination' => Pdf::DEST_FILE,
                 'content' => "
                     ".$this->renderAjax('/email-ticket/pdf-receipt',[
-                        'modelBooking'=>$modelBooking,
                         'modelPayment'=>$modelPayment,
-                        'findPassenger'=>$findPassenger,
                         ])." ",
                                 // any css to be embedded if required
                                 'cssInline' => '.kv-heading-1{
@@ -150,37 +170,34 @@ class MailerController extends Controller
                 ->setBcc('reservation@gilitransfers.com')
                 ->setSubject('E-Ticket GiliTransfers')
                 ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
-                    'modelBooking'=>$modelBooking,
                     'modelPayment'=>$modelPayment,
                     ]))
                 ->attach($savePath."E-Ticket.pdf")
                 ->attach($savePath."Receipt.pdf")
                 ->send();
 
-                foreach ($modelBooking as $key => $value) {
+                // 1 = fastboat 2 private transfers
+                // 1 kirim reservasi ke supplier
+                if ($type == 1 ) {
+                   foreach ($modelPayment->tBookings as $key => $valFastboatBooking) {
 
-                    if ($value->idTrip->idRoute->departureHarbor->id_island == '2' && $value->idTrip->idBoat->idCompany->email_gili != null) {          
-                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_gili, $value, $modelPayment);
-                    }else{
-                        $this->sendMailSupplier($value->idTrip->idBoat->idCompany->email_bali,  $value, $modelPayment);
+                        if ($valFastboatBooking->idTrip->idRoute->departureHarbor->id_island == '2' && $valFastboatBooking->idTrip->idBoat->idCompany->email_gili != null) {          
+                            $this->sendMailSupplier($valFastboatBooking->idTrip->idBoat->idCompany->email_gili, $valFastboatBooking, $modelPayment);
+                        }else{
+                            $this->sendMailSupplier($valFastboatBooking->idTrip->idBoat->idCompany->email_bali,  $valFastboatBooking, $modelPayment);
+                        }
                     }
-                    
                 }
-                
 
                 FileHelper::removeDirectory($savePath);
-                
-                $modelQueue->setQueueStatus(TMailQueue::STATUS_SUCCESS);
+                return true;
             } catch(\Exception $e) {
-                $modelQueue->setQueueStatus(TMailQueue::STATUS_RETRY);
-                 FileHelper::removeDirectory($savePath);
+                FileHelper::removeDirectory($savePath);
                 throw $e;
+                return false;
             }
-            
-        }else{
-            return true;
-        }
     }
+
 
     protected function sendMailSupplier($to,$modelBooking,$modelPayment){
 
@@ -204,7 +221,7 @@ class MailerController extends Controller
     }
 
     public function actionInvoice(){
-        if (($modelQueue = TMailQueue::getQueueList(TMailQueue::STATUS_PROCESS)) !== null) {
+        if (($modelQueue = TMailQueue::getQueueList(TMailQueue::TYPE_INVOICE)) !== null) {
             $modelPayment = TPayment::findOne($modelQueue->id_payment);
             $modelBooking = $modelPayment->tBookings;
             $findShuttle = $this->findShuttle();

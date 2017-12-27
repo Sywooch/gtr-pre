@@ -11,7 +11,7 @@ $config = ['template'=>"{input}\n{error}\n{hint}"];
 //var_dump($cartList[1]['id_trip']);
 $this->title = 'Fill Your Data';
 $customCss = <<< SCRIPT
-  #cart {
+#cart {
     font-size:12px;
 }
 .list-group-item{
@@ -34,26 +34,21 @@ echo Dialog::widget([
         'btnCancelLabel' =>' No'
         ]
     ]]);
+$session = Yii::$app->session;
+var_dump($session['session_key']);
 ?>
 
 
 	 <!-- Cart Start -->
-	
-	  <div class="panel panel-default material-panel material-panel_primary">
-
-                    <div class="panel-heading material-panel__heading">
-                        <b><?= count($cartList) ?> Item On Cart</b>
-
-                    </div>
-         <div id="cart" class="panel-body material-panel__body">
-            <?php foreach ($cartList as $index => $value): ?>
+<div class="panel panel-default material-panel material-panel_primary">
+  <div class="panel-heading material-panel__heading"><b><?= count($cartList) ?> Item On Cart</b></div>
+    <div id="cart" class="panel-body material-panel__body">
+      <?php foreach ($cartList as $index => $value): ?>
                     
 					<ul class="list-group">
-					<li class="list-group-item"><span class="fa fa-ship"></span>
-          <b><?= $value->idTrip->idBoat->idCompany->name ?></b>
-          | </span> <?= $value->idTrip->idRoute->departureHarbor->name." <span class='fa fa-arrow-right'></span> ".$value->idTrip->idRoute->arrivalHarbor->name ?>
-          <br><span class="fa fa-calendar"></span> <?= date('d-m-Y',strtotime($value->idTrip->date)) ?>
-          | <span class="fa fa-clock-o"></span> <?= date('H:i',strtotime($value->idTrip->dept_time)) ?>
+					<li class="list-group-item"><?= $value->idTrip->idRoute->fromRoute->location." <span class='glyphicon glyphicon-arrow-right'></span> ".$value->idTrip->idRoute->toRoute->location ?>
+          <br><span class="glyphicon glyphicon-calendar"></span> <?= date('d-m-Y',strtotime($value->trip_date)) ?>
+          | <span class="glyphicon glyphicon-time"></span> <?= date('H:i',strtotime($value->trip_date)) ?>
           <span class="pull-right">
 					<?= Html::a('', ['remove-cart','id'=>$value->id], [
 						'class' => 'btn material-btn material-btn_danger main-container__column material-btn_xs pull-right glyphicon glyphicon-trash',
@@ -67,17 +62,32 @@ echo Dialog::widget([
           </span>
 					</li>
 					<li class="list-group-item"><span class="fa fa-money"></span>
-						<?=  $value->adult != '0' ? $value->adult." Adult = <b>".$value->currency." ".round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)."</b>" : " " ?>
+            <?php 
+              $totalPax = $value->adult+$value->child;
+              $maxPax = $value->idTrip->max_person;
+            ?>
 
-						<?=  $value->child != '0' ? " + ".$value->child ." Child = <b>".$value->currency." ".round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP)."</b>" : "" ?>
+            <?php if($totalPax <= $maxPax): ?>
+              <?php $totalPrice = round($value->idTrip->min_price/$value->exchange,0,PHP_ROUND_HALF_UP); ?> 
+						<?= $value->adult+$value->child." Pax = ".$value->currency." ".$totalPrice ?>
+            <span class="pull-right"><b><?= $value->currency." ".$totalPrice ?></b></span>
+            <?php else: ?>
+              <?php
+               $minPrice = round($value->idTrip->min_price/$value->exchange,0,PHP_ROUND_HALF_UP);
+               $extraPax = $totalPax-$maxPax;
+               $extraPrice = round($value->idTrip->person_price/$value->exchange*$extraPax,0,PHP_ROUND_HALF_UP);
+               $totalPrice = round($minPrice+$extraPrice,0,PHP_ROUND_HALF_UP)
+              ?>
+            <?= $value->adult+$value->child." Pax = @ ".$value->currency." ".round($value->idTrip->person_price/$value->exchange,0,PHP_ROUND_HALF_UP) ?>
+            <span class="pull-right"><b><?= $value->currency." ".$totalPrice ?></b></span>
+            <?php endif; ?>
 
-						<?=   $value->infant != '0' ? " + ".$value->infant." Infant = <b>".$value->currency." 0 </b>" : " " ?>
-
-          <span class="pull-right"><b><?= $value->currency ?> <?= round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP) ?></b></span>      
-            </li>
+          </li>
 					</ul>
-          <?php $grandTotal[] = round($value->idTrip->adult_price/$value->exchange*$value->adult,0,PHP_ROUND_HALF_UP)+round($value->idTrip->child_price/$value->exchange*$value->child,0,PHP_ROUND_HALF_UP);  ?> 
-            <?php endforeach; ?>
+          <?php 
+          $grandTotal[] = $totalPrice;  
+          ?> 
+      <?php endforeach; ?>
             
 <?= Html::a('Add Another Trip', Yii::$app->homeUrl, [
             'class'       => 'pull-left btn material-btn material-btn_warning main-container__column material-btn_lg pull-right',
@@ -137,7 +147,7 @@ echo Dialog::widget([
                   echo date('Y,m,d',strtotime($now));*/
              
 foreach ($cartList as $key => $cartValue) {
-                  echo "<h4 class='col-md-12'>Passenger Detail With <b>".$cartValue->idTrip->idBoat->idCompany->name."</b>. On  <b>".$cartValue->idTrip->date."</b></h4>";
+                  echo "<h4 class='col-md-12'>Passenger Detail <b>".$cartValue->idTrip->idRoute->fromRoute->location." <span class='glyphicon glyphicon-arrow-right'></span> ".$cartValue->idTrip->idRoute->toRoute->location."</b>. On  <b>".date('d-m-Y H:i',strtotime($cartValue->trip_date))."</b></h4>";
                   
                   foreach ($modelAdults as $index => $modelAdult) {
                     echo "<h4 class='col-md-12'>Adult</h4>";
@@ -245,7 +255,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
 });
 
   ', \yii\web\View::POS_READY);
-                    foreach ($modelChilds as $indexchild => $modelChild) {
+                    foreach ($modelChildsInfants as $indexchild => $modelChild) {
                         echo "<h4 class='col-md-12'>Child</h4>";
 
                         for ($i=$cartList[$key]['adult']; $i < $cartList[$key]['child']+$cartList[$key]['adult']; $i++) { 
@@ -320,7 +330,7 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
 });
 
   ', \yii\web\View::POS_READY);                    
-                    foreach ($modelInfants as $indexinfants => $modelInfant) {
+                    foreach ($modelChildsInfants as $indexinfants => $modelInfant) {
                       echo "<h4 class='col-md-12'>Infants</h4>";
                       for ($i=$cartList[$key]['child']+$cartList[$key]['adult']; $i < $cartList[$key]['infant']+$cartList[$key]['child']+$cartList[$key]['adult']; $i++) {
                         $copyVarI = $i-($cartList[$key]['child']+$cartList[$key]['adult']); 
@@ -360,69 +370,24 @@ $("#checkbox-'.$cartValue->id_trip.'-'.$key.'").on("change",function(){
                     }
                   }
 
-                  $departureIsland = $cartValue->idTrip->idRoute->departureHarbor->id_island;
-                  $arrivalIsland = $cartValue->idTrip->idRoute->arrivalHarbor->id_island;
-                  $tomorrow = date('Y-m-d',strtotime('+1 DAYS',strtotime(date('Y-m-d'))));
-                  if ($departureIsland == $arrivalIsland) {
 
-                    //No Shuttle For Inter ISland
-
-                  }elseif($departureIsland == 1 && $cartValue->idTrip->date == $tomorrow  && strtotime(date('Y-m-d H:i:s')) > strtotime(date('Y-m-d 18:00:00'))){
-
-                    //No Pickup For Bali TO Gili Tomorrow LAst Minute
-
-                  }elseif ($departureIsland == 1) {
-                    $type = 'pickup';
-                    foreach ($modelShuttle as $k => $valShuttle) {
-
-                    echo "<div class='col-md-12'>".Html::checkbox('check-pickup', $checked = false, ['class' => 'checkbox','value'=>1,'unchecked'=>0,'class'=>'checkbox-pickup-'.$cartValue->id_trip,
-                        'onchange'=>'
-                        if($(this).is(":checked"))
-                        {
-                        $("#form-pickup-'.$cartValue->id_trip.'").show(200);
-                
-                        }else{
-                          $("#form-pickup-'.$cartValue->id_trip.'").hide(200);
-                        }
-                        
-                        '])." <b>Required Pickup</b></div>";
-                    echo "<div class='col-md-12' style='display:none;' id='form-pickup-".$cartValue->id_trip."'>";
-                    echo  $this->render('_shuttle-form',[
-                          'form'=>$form,
-                          'type'=>$type,
-                          'id'=>$cartValue->id_trip,
-                          'valShuttle'=>$valShuttle,
-                          'listPickup'=>$listPickup,
-                          ])."</div>";
-                  }
-                }elseif ($departureIsland == 2) {
-                        $type = 'drop-off';
-                        foreach ($modelShuttle as $k => $valShuttle) {
-                          echo "<div class='col-md-12'>".Html::checkbox('check-drop', $checked = false, ['class' => 'checkbox','value'=>1,'unchecked'=>0,'class'=>'checkbox-drop-'.$cartValue->id_trip,
-                          'onchange'=>'
-                          if($(this).is(":checked"))
-                          {
-                          $("#form-drop-'.$cartValue->id_trip.'").show(200);
-                        
-                          }else{
-                            $("#form-drop-'.$cartValue->id_trip.'").hide(200);
-                          }
-                          
-                          '])." <b>Required Drop Off</b></div>";
-                          echo "<div class='col-md-12' style='display:none;' id='form-drop-".$cartValue->id_trip."'>".
-                          $this->render('_shuttle-form',[
-                            'form'=>$form,
-                            'type'=>$type,
-                            'id'=>$cartValue->id_trip,
-                            'valShuttle'=>$valShuttle,
-                            'listPickup'=>$listPickup,
-                            ])."</div>";
-                    
-                        } 
-                }else{
-                  // Everithing Not MAtch About Shuttle
-                }                  
-                    
+              if ($cartValue->idTrip->idRoute->to_route == 1 || $cartValue->idTrip->idRoute->from_route == 1) {
+                  $label = "Flight Number/Time ";
+              }else{
+                  $label = " Hotel Name/Hotel Address/Shuttle Location";
+              }
+                  echo "<div class='col-md-12'>";
+                  echo "<div class='col-md-12'><span class='glyphicon glyphicon-info-sign'></span> Additional Information </div>";
+                  echo "<div class='col-md-8'>";
+                  echo LabelInPlace::widget([
+                        'name'=>"Note[".$cartValue->id_trip."][".date('Y-m-d',strtotime($cartValue->trip_date))."][".date('H:i',strtotime($cartValue->trip_date))."]",
+                        'label'=>$label,
+                        'defaultIndicators'=>false,
+                        'encodeLabel'=>false,
+                        'type' => LabelInPlace::TYPE_TEXTAREA
+                        ]);
+                  echo "</div>";
+                  echo "</div>";  
               }
 
              ?>

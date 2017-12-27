@@ -1,8 +1,4 @@
-<?php
-use yii\helpers\Html;
 
-
-?>
 <table cellspacing="0" width="100%" align="center">
 
 <tr>
@@ -56,7 +52,7 @@ QRCode::png($tokenPayment,$tempdir.$tokenQrfileName,$quality,$ukuran,$padding);
 <!-- Buyer Detail End -->
 
 
-<table class="table table-striped ">
+<table style="font-size: 12px;" class="table table-striped ">
   <caption><center>PURCHASE DETAILS</center></caption>
   <thead>
   <tr>
@@ -68,24 +64,42 @@ QRCode::png($tokenPayment,$tempdir.$tokenQrfileName,$quality,$ukuran,$padding);
 
   </thead>
   <tbody>
-<?php foreach ($modelBooking as $key => $value): ?>
-  <tr>
-    <th scope="row"><?= $key+1 ?></th>
-    <td ><?= $value->idTrip->idBoat->idCompany->name." | ".$value->idTrip->idRoute->departureHarbor->name." -> ".$value->idTrip->idRoute->arrivalHarbor->name." | ".date('D, d M Y',strtotime($value->idTrip->date)) ?></td>
-    <td >
-      <span><?= count($value->affectedPassengers) ?> Pax</span>
-      <br>
-      
-    </td>
-    <td >
-      <span><?= $value->currency." ".$value->total_price ?></span><br>
-      <span style="color: #616161; font-size: 10px;">IDR <?= number_format($value->total_idr,0) ?></span>
-    </td>
+<?php if($modelPayment->id_payment_type == $modelPayment::PAYMENT_FASTBOAT): ?>
+  <?php foreach ($modelPayment->tBookings as $key => $value): ?>
+    <tr>
+      <th scope="row"><?= $key+1 ?></th>
+      <td ><?= $value->idTrip->idBoat->idCompany->name." | ".$value->idTrip->idRoute->departureHarbor->name." -> ".$value->idTrip->idRoute->arrivalHarbor->name." | ".date('D, d M Y',strtotime($value->idTrip->date)) ?></td>
+      <td >
+        <span><?= count($value->affectedPassengers) ?> Pax</span>
+        <br>
+        
+      </td>
+      <td >
+        <span><?= $value->currency." ".$value->total_price ?></span><br>
+        <span style="color: #616161; font-size: 10px;">IDR <?= number_format($value->total_idr,0) ?></span>
+      </td>
 
-  </tr>
+    </tr>
+  <?php endforeach; ?>
+<?php elseif($modelPayment->id_payment_type == $modelPayment::PAYMENT_PRIV_TRANSFERS): ?>
+  <?php foreach ($modelPayment->tPrivateBookings as $key => $value): ?>
+    <tr>
+      <th scope="row"><?= $key+1 ?></th>
+      <td><?= $value->idTrip->idRoute->fromRoute->location." -> ".$value->idTrip->idRoute->toRoute->location." | ".date('l, d F Y H:i',strtotime($value->date_trip)) ?></td>
+      <td>
+        <span><?= count($value->affectedPassengers) ?> Pax</span>
+        <br>
+        
+      </td>
+      <td >
+        <span><?= $value->currency." ".$value->amount ?></span><br>
+        <span style="color: #616161; font-size: 10px;">IDR <?= number_format($value->amount_idr,0) ?></span>
+      </td>
 
+    </tr>
+  <?php endforeach; ?>
+<?php endif; ?>
 
-<?php endforeach; ?>
 <tr>
   <td style="border-top: 1.5px solid black;">
     

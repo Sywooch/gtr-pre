@@ -44,17 +44,7 @@ class PaypalController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single TPaypalTransaction model.
-     * @param string $id
-     * @return mixed
-     */
-    public function actionView($id)
-    {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
-    }
+
 
   
     /**

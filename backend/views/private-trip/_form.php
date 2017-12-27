@@ -33,27 +33,13 @@ use kato\pickadate\Pickadate;
     'removeMaskOnSubmit' => true, 
     ]
     ]) ?>
-
-    <?= $form->field($model, 'min_time')->widget(Pickadate::classname(), [
-    'isTime' => true,
-    'pickadateOptions' => [
-        'formatSubmit' => 'H:i',
-        'format'=> 'H:i',
-        'interval'=>15,
-    ],
-    ]); ?>
-
-    <?= $form->field($model, 'max_time')->widget(Pickadate::classname(), [
-    'isTime' => true,
-    'pickadateOptions' => [
-        'formatSubmit' => 'H:i',
-        'format'=> 'H:i',
-        'interval'=>15,
-    ],
-    ]); ?>
+    <?= $form->field($model, 'min_time')->dropDownList($listTime, ['id' => 'min-time']); ?>
+    <?= $form->field($model, 'max_time')->dropDownList($listTime, ['id' => 'max-time']); ?>
+    <?= $form->field($model, 'id_est_time')->dropDownList($listEstTime, ['id' => 'est-time']); ?>
+    <?= $form->field($model, 'description')->textarea()->label('Description (optional)'); ?>
 
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton('Save', ['class' =>'btn btn-success']) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -1,24 +1,23 @@
 <?php
-use yii\helpers\Html;
 use common\models\TShuttleTime;
 
 
 require_once Yii::$app->basePath."/phpqrcode/qrlib.php"; //<-- LOKASI FILE UTAMA PLUGINNYA
 $tempdir = Yii::$app->basePath."/E-Ticket/".$modelPayment->token."/"; //<-- Nama Folder file QR Code kita nantinya akan 
 
-$jumlahBooking = count($modelBooking)-1;
+$jumlahBooking = count($modelPayment->tBookings)-1;
 
 ?>
 
 
 
 
-<?php foreach ($modelBooking as $key => $value): ?>
+<?php foreach ($modelPayment->tBookings as $key => $value): ?>
 <table cellspacing="0" width="100%" align="center">
 
 <tr>
   <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;">
-    <span style="font-size: 20px; font-weight: bold;" class="pull-left">E-Ticket</span>
+    <span style="font-size: 20px; font-weight: bold;" class="pull-left">E-Ticket Fastboat</span>
   </td>
   <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;"></td>
   <td style="border-bottom: 2px solid #BDBDBD; padding-bottom: 15px;text-align: right;">

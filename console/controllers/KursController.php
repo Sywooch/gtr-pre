@@ -17,7 +17,8 @@ Class KursController extends Controller
                      $get              = explode("</span>",$get[1]);  
                      $kurs_asli        = preg_replace("/[^0-9\.]/", null, $get[0]);  
                      $kurs_round       = round($kurs_asli,0,PHP_ROUND_HALF_UP); // 0.4 ke bawah ... 0.5 ke atas 
-                     $kurs_plus        = $kurs_round-round($kurs_round*5/100,0,PHP_ROUND_HALF_UP); //ditambah 5%
+                     $percentage       = round($kurs_round*8/100,0,PHP_ROUND_HALF_UP);
+                     $kurs_plus        = $kurs_round-$percentage; //ditambah 5%
                      $value->kurs      = $kurs_plus;
                      $value->update_at = $now;
                      $value->save();

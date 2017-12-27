@@ -1,76 +1,130 @@
 <?php
+
 use yii\helpers\Html;
-use kartik\widgets\ActiveForm;
-use kartik\label\LabelInPlace;
-use kartik\widgets\FileInput;
-$this->title = 'Confirm Payment';
-$config = ['template'=>"{input}\n{error}\n{hint}"];
+use kartik\form\ActiveForm;
+use yii\helpers\Url;
+use kartik\widgets\AlertBlock;
 
+/* @var $this yii\web\View */
+/* @var $modelPayment app\models\TPembayaran */
+/* @var $form yii\widgets\ActiveForm */
+$modelPayment->id_payment_method = 1;
 ?>
-<h1><?= Html::encode($this->title); ?></h1>
-<div class="col-md-12">
-<div class="panel panel-default material-panel material-panel_primary">
-    <h5 class="panel-heading material-panel__heading">Fill The Form To Confirm Your Payment Transfers</h5>
-    <div class="panel-body material-panel__body">
-    <div class="row">
-        <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
-  <div class="col-md-8">
-    
-        <?= $form->field($modelConfirmPayment, "name",$config)->widget(LabelInPlace::classname(),
-                [               
-                'class'=>'form-control name',
-                'defaultIndicators'=>false,
-                'encodeLabel'=> false,
-                'label'=>'<i class="glyphicon glyphicon-user"></i> Sender Name',
-                ]
-                );
-        ?>
-        <?= $form->field($modelConfirmPayment, "amount",$config)->widget(LabelInPlace::classname(),
-                [               
-                'class'=>'form-control amount',
-                'defaultIndicators'=>false,
-                'encodeLabel'=> false,
-                'label'=>'<i class="glyphicon glyphicon-usd"></i> Send Amount In IDR',
-                ]
-                );
-        ?>
-
-        <?= $form->field($modelConfirmPayment, "note",$config)->widget(LabelInPlace::classname(),
-                [         
-                'type'              => LabelInPlace::TYPE_TEXTAREA,      
-                'class'=>'form-control note',
-                'defaultIndicators'=>false,
-                'encodeLabel'=> false,
-                'label'=>'<i class="glyphicon glyphicon-book"></i> Note (Optional)',
-                ]
-                );
-        ?>
-        <a  href="#" title=" " data-toggle="popover" data-trigger="focus hover" data-content="To Help us speeding up the confirmation process"><span class="glyphicon glyphicon-question-sign"></span></a>
-        <?= $form->field($modelConfirmPayment, 'imageFiles')->widget(FileInput::classname(), [
-        'options' => [
-        'id'=>'form-image-proof',
-        'multiple'=>false,
-        'accept' => 'image/*',
-        'resizeImages'=>true,
-        ],
-        'pluginOptions' => [
-            'showRemove' => true,
-            'showUpload'=>false,
-        ]
-        ])->label(false); ?>
-</div>
-    <div class="form-group col-md-12">
-        <?= Html::submitButton('Confirm', ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg btn-block btn-block']); ?>
-    </div>
-<?php ActiveForm::end(); ?>
-    
-</div>
-</div>
-</div>
-
 <?php
+$customCss = <<< SCRIPT
+  .payment-harga{
+    font-size: 20px;
+    font-weight: bold;
+  }
+SCRIPT;
+$this->registerCss($customCss);
+
+$customScript = <<< SCRIPT
+  
+SCRIPT;
 $this->registerJs('
-$(".file-caption-name").attr("placeholder","Upload Payment Slip...(Optional)");
-$("[data-toggle=\'popover\']").popover();
-    ', \yii\web\View::POS_READY);
+$(document).ready(function(){
+    $("#page-loading").hide(300);
+    $("#page-loading").html("");
+    $("#form-payment").show(200);
+
+            var metod = $("#rad-method :radio:checked").val();
+          if (metod == "") {
+            $("#hasil-ajax").fadeOut(200);
+            $("#hasil-ajax").html("");
+            $("#div-submit").hide(300);
+
+
+          }
+          if (metod == 2) {
+            $("#hasil-ajax").fadeOut(200);
+            $("#hasil-ajax").html("");
+            $("#div-submit").show(300);
+            $("#harga-ext").hide(300);
+            $("#harga-idr").show(300);
+          }
+
+          if (metod == 1) {
+            $("#div-submit").hide(300);
+            $("#harga-idr").hide(300);
+            $("#harga-ext").show(300);
+            $("#hasil-ajax").fadeIn(200);
+            $.ajax({
+                     url : "'.Url::to(["paypal"]).'",
+                     type: "POST",
+                     success: function (div) {
+                     $("#hasil-ajax").html(div);
+
+                     },
+                   });
+          }
+});
+  ', \yii\web\View::POS_READY);
 ?>
+
+
+<center id="page-loading"><img src=/loading.svg></center>
+    <script src="https://www.paypalobjects.com/api/checkout.js"></script>
+
+
+<div id="form-payment" style="display: none;" class="tpembayaran-form">
+    <?php $form = ActiveForm::begin(); 
+      ?>
+<div class="col-md-12">
+  <div class="col-md-8 col-md-offset-2">
+    <div style="min-height: 250px; height: 250px;" class="panel panel-default material-panel material-panel_primary">
+      <h5 class="panel-heading material-panel__heading"></h5>
+      <div id="body-form">  
+        <div class="panel-body material-panel__body">
+        <div style="display: none;">
+         <?=  
+           $form->field($modelPayment, 'id_payment_method')->radioList(['1'=>'Paypal <span class="fa fa-paypal"></span> <span class="fa fa-credit-card "></span> <span class="fa fa-cc-discover"></span> <span class="fa fa-cc-mastercard"></span>','2'=>'local Bank Transfers <span class="fa fa-bank"></span>',],[
+            'id'=>'rad-method',
+            'onchange'=>'
+              var metod = $("#rad-method :radio:checked").val();
+              if (metod == "") {
+            $("#hasil-ajax").fadeOut(200);
+            $("#hasil-ajax").html("");
+            $("#div-submit").hide(300);
+
+
+          }
+          if (metod == 2) {
+            $("#hasil-ajax").fadeOut(200);
+            $("#hasil-ajax").html("");
+            $("#div-submit").show(300);
+            $("#harga-ext").hide(300);
+            $("#harga-idr").show(300);
+          }
+
+          if (metod == 1) {
+            $("#div-submit").hide(300);
+            $("#harga-idr").hide(300);
+            $("#harga-ext").show(300);
+            $("#hasil-ajax").fadeIn(200);
+            $.ajax({
+                     url : "'.Url::to(["paypal"]).'",
+                     type: "POST",
+                     success: function (div) {
+                     $("#hasil-ajax").html(div);
+
+                     },
+                   });
+          }'
+            ])->label(false) ?>
+            </div>
+    <center>
+    <b style="display: none;" class="payment-harga" id="harga-ext" ><?= $modelPayment->currency." ".$modelPayment->total_payment ?></b>
+    </center>   
+    
+</div>
+    <center id="hasil-ajax"></center>
+ </div>
+      </div>
+    </div>
+
+    
+
+    <?php ActiveForm::end(); ?>
+
+</div>

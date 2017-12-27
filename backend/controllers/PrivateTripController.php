@@ -5,6 +5,8 @@ namespace backend\controllers;
 use Yii;
 use common\models\TPrivateTrip;
 use backend\models\TPrivateTripSearch;
+use common\models\TTime;
+use common\models\TEstTime;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -67,21 +69,25 @@ class PrivateTripController extends Controller
     {
         $model = new TPrivateTrip();
         foreach ($this->findAllRoute() as $key => $value) {
-            $array[] = ['id'=>$value->id,'from'=>$value->fromRoute->location." to ".$value->toRoute->location];
+            $array[] = ['id'=>$value['id'],'from'=>$value['fromRoute']['location']." to ".$value['toRoute']['location']];
         }
         $listRoute = ArrayHelper::map($array, 'id', 'from');
+        $listTime = ArrayHelper::map(TTime::find()->asArray()->all(), 'id', 'time');
+        $listEstTime = ArrayHelper::map(TEstTime::find()->asArray()->all(), 'id', 'est_time');
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['index']);
         } else {
             return $this->render('create', [
-                'model' => $model,
-                'listRoute' => $listRoute,
+                'model'       => $model,
+                'listRoute'   => $listRoute,
+                'listTime'    => $listTime,
+                'listEstTime' => $listEstTime,
             ]);
         }
     }
 
     protected function findAllRoute(){
-        return TPrivateRoute::find()->joinWith(['fromRoute'])->orderBy(['t_private_location.location'=>SORT_ASC])->all();
+        return TPrivateRoute::find()->joinWith(['fromRoute AS fromRoute','toRoute'])->orderBy(['t_private_location.location'=>SORT_ASC])->asArray()->all();
     }
     protected function findListTime(){
         return TTime::find()->asArray()->all();

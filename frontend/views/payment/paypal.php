@@ -4,8 +4,8 @@ use yii\helpers\Url;
  ?>
 
 <?php
-$total = $modelpembayaranPaypal->total_payment;
-$currency = $modelpembayaranPaypal->currency;
+$total = $modelpembayaranPaypal['total_payment'];
+$currency = $modelpembayaranPaypal['currency'];
 $this->registerJs("
 
     paypal.Button.render({
@@ -45,8 +45,8 @@ $this->registerJs("
                                 item_list: {
                                         items: [
                                         {
-                                        name: 'Payment Gilitranfers From : ".$modelpembayaranPaypal->name." | ".$modelpembayaranPaypal->email." | ".count($modelpembayaranPaypal->tBookings)." Trip',
-                                        description: '".$modelpembayaranPaypal->token."',
+                                        name: '".$message.$modelpembayaranPaypal['name']." | ".$modelpembayaranPaypal['email']."',
+                                        description: '".$modelpembayaranPaypal['token']."',
                                         quantity: '1',
                                         price: '".$total."',
                                         currency: '".$currency."'
@@ -86,7 +86,7 @@ $this->registerJs("
                 $('#rad-method').hide(100);
                      $('#body-form').html('<center><img src=../../loading.svg></center>');
                      $.ajax({
-                     url : '".Url::to(["/payment/pending"])."',
+                     url : '".Url::to(["/payment/error"])."',
                      type: 'POST',
                    });
              }
@@ -95,18 +95,6 @@ $this->registerJs("
 ");
 
 ?>
-<?php /*echo Html::button('Test', ['class' => 'btn -lg btn-block btn btn-primary','onclick'=>"var mtk = '".$maskToken."';
-                     $('#body-form').html('<center><img src=../../loading.svg></center>');
-
-                     $.ajax({
-                     url : '".Url::to(["success"])."',
-                     type: 'POST',
-                     async: 'true',
-                     data: {umk: mtk},
-                     success: function (div) {
-                     alert('Payment Succesfull');
-                     },
-                   });"]);*/ ?>
 <center><li style="display: none;" class="list-group-item" id="hasil-ajax"></li></center>
 <center><div id="load-email"></div></center>
 

@@ -23,15 +23,29 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'id_route',
-            'min_price',
-            'max_person',
-            'person_price',
-            // 'min_time:datetime',
-            // 'max_time:datetime',
-            // 'datetime',
+            [
+            'header'=>'Route',
+            'format'=>'raw',
+            'attribute'=>'id_route',
+            'value'=>function($model){
+                return $model->idRoute->fromRoute->location." <span class='fa fa-arrow-right'> </span>".$model->idRoute->toRoute->location;
+            }
+            ],
+            [
+            'header'=>'Timing',
+            'format'=>'raw',
+            'value'=>function($model){
+                return $model->minTime->time." - ".$model->maxTime->time;
+            }
+            ],
+            [
+            'header'=>'Pricing',
+            'format'=>'raw',
+            'value'=>function($model){
+                return "Rp ".number_format($model->min_price,0)." Max ".$model->max_person." Pax | Extra Pax @ Rp".number_format($model->person_price,0);
+            }
+            ],
+            'description',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

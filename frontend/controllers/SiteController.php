@@ -15,7 +15,11 @@ use common\models\TKurs;
 use common\models\TCompany;
 use common\models\TCart;
 use common\models\TContent;
+use common\models\TPrivateRoute;
+use common\models\TPrivateTrip;
+use common\models\TPrivateCart;
 use frontend\models\BookForm;
+use frontend\models\PrivateForm;
 use frontend\models\Hotel;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
@@ -220,13 +224,13 @@ class SiteController extends Controller
             return $this->redirect(['result','BookForm'=>$modelBookForm]);
             //,'formData'=>$formData
       }else{
-        if ($session['route'] == 'none') {
+        if ($session['route'] == 'none' || $session['error'] == 'error' ) {
            // $session      = session_unset();
             echo Growl::widget([
               'type' => Growl::TYPE_DANGER,
               'title' => 'SORRY!',
               'icon' => 'glyphicon glyphicon-remove',
-              'body' => 'Current Route Is Unavaible, Please Select Other Route Or Contact US',
+              'body' => $session['error-message'],
               'showSeparator' => true,
               'delay' => 500,
               'pluginOptions' => [
@@ -238,9 +242,9 @@ class SiteController extends Controller
               ]
             ]);
             $session->remove('route');
-        }
-
-        if ($session['timeout'] == 'timeout') {
+            $session->remove('error');
+            $session->remove('error-message');
+        }elseif ($session['timeout'] == 'timeout') {
            // $session      = session_unset();
             echo Growl::widget([
               'type' => Growl::TYPE_DANGER,
@@ -259,25 +263,26 @@ class SiteController extends Controller
             ]);
             $session->remove('payment');
             $session->remove('timeout');
-        }elseif($session['timeout'] == 'confirm'){
-            echo Growl::widget([
-              'type' => Growl::TYPE_SUCCESS,
-              'title' => 'Thank You!',
-              'icon' => 'glyphicon glyphicon-check',
-              'body' => 'Your confirmation is being processed, we will contact you soon',
-              'showSeparator' => true,
-              'delay' => 500,
-              'pluginOptions' => [
-              'showProgressbar' => true,
-              'placement' => [
-              'from' => 'top',
-              'align' => 'center',
-              ]
-              ]
-            ]);
-            $session->remove('payment');
-            $session->remove('timeout');
         }
+        // }elseif($session['error'] == 'error'){
+        //     echo Growl::widget([
+        //       'type' => Growl::TYPE_SUCCESS,
+        //       'title' => 'Thank You!',
+        //       'icon' => 'glyphicon glyphicon-check',
+        //       'body' => 'Your confirmation is being processed, we will contact you soon',
+        //       'showSeparator' => true,
+        //       'delay' => 500,
+        //       'pluginOptions' => [
+        //       'showProgressbar' => true,
+        //       'placement' => [
+        //       'from' => 'top',
+        //       'align' => 'center',
+        //       ]
+        //       ]
+        //     ]);
+        //     $session->remove('payment');
+        //     $session->remove('timeout');
+        // }
         $listBoats = TContent::find()->where(['id_type_content'=>1])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         $listPorts = TContent::find()->where(['id_type_content'=>2])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
         $listDestinations = TContent::find()->where(['id_type_content'=>3])->asArray()->orderBy(['updated_at'=>SORT_DESC])->limit(4)->all();
@@ -290,6 +295,98 @@ class SiteController extends Controller
             'listArticle'=>$listArticle,
             'keywordPuller'=>$keywordPuller,
             ]);
+      }
+    }
+
+    public function actionBookPrivate(){
+      if (Yii::$app->request->isPost) {
+          $modelPrivateTransfers = new PrivateForm();
+        
+         if ($modelPrivateTransfers->load(Yii::$app->request->post()) && $modelPrivateTransfers->validate()){
+          
+            if (($routeDeparture = TPrivateRoute::getArrayPrivateRoute($modelPrivateTransfers->departureLocation,$modelPrivateTransfers->arrivalLocation)) !== null) {
+              
+              if (($modelDeparturePrivateTrip = TPrivateTrip::getArrayPrivateTrip($routeDeparture['id'])) !== null) {
+              }else{
+                $session                  =Yii::$app->session;
+                $session->open();
+                $session['error']         = 'error';
+                $session['error-message'] = 'Your Requested Trip Is Unavailable..<br> If this is urgent..<br> Please Contact Us For Advance Support';
+                return $this->goHome();
+              }
+            }else{
+              $session                  =Yii::$app->session;
+              $session->open();
+              $session['error']         = 'error';
+              $session['error-message'] = 'Your Requested Route Is Unavailable..<br> If this is urgent..<br> Please Contact Us For Advance Support';
+              return $this->goHome();
+            }
+
+
+
+            if ($modelPrivateTransfers->type == true) {
+              if (($routeReturn = TPrivateRoute::getArrayPrivateRoute($modelPrivateTransfers->arrivalLocation,$modelPrivateTransfers->departureLocation)) !== null) {
+              
+                if (($modelReturnPrivateTrip = TPrivateTrip::getArrayPrivateTrip($routeReturn['id'])) !== null) {
+                    $session                  =Yii::$app->session;
+                    $session->open();
+                    $session['currency'] = $modelPrivateTransfers->currency;
+                    $detailReturn = [
+                          'id_trip'   => $modelReturnPrivateTrip['id'],
+                          'trip_date' => date('Y-m-d H:i:s',strtotime($modelPrivateTransfers->returnDate.$modelPrivateTransfers->returnTime)),
+                          'type'      => $modelPrivateTransfers->type,
+                          'adults'    => $modelPrivateTransfers->adults,
+                          'childs'    => $modelPrivateTransfers->childs,
+                          'infants'   => $modelPrivateTransfers->infants
+                    ];
+                    TPrivateCart::addPrivateCart($detailReturn);
+                }else{
+                  $session                  =Yii::$app->session;
+                  $session->open();
+                  $session['error']         = 'error';
+                  $session['error-message'] = 'Your Requested Trip Is Unavailable..<br> If this is urgent..<br> Please Contact Us For Advance Support';
+                  return $this->goHome();
+                }
+              }else{
+
+                $session                  =Yii::$app->session;
+                $session->open();
+                $session['error']         = 'error';
+                $session['error-message'] = 'Your Requested Route Is Unavailable..<br> If this is urgent..<br> Please Contact Us For Advance Support';
+                return $this->goHome();
+              } 
+            }
+              $session                  =Yii::$app->session;
+              $session->open();
+              $session['currency'] = $modelPrivateTransfers->currency;
+              $detailDeparture = [
+                    'id_trip'   => $modelDeparturePrivateTrip['id'],
+                    'trip_date' => date('Y-m-d H:i:s',strtotime($modelPrivateTransfers->departureDate.$modelPrivateTransfers->departtureTime)),
+                    'type'      => $modelPrivateTransfers->type,
+                    'adults'    => $modelPrivateTransfers->adults,
+                    'childs'    => $modelPrivateTransfers->childs,
+                    'infants'   => $modelPrivateTransfers->infants
+              ];
+                TPrivateCart::addPrivateCart($detailDeparture);
+              $now = date('Y-m-d H:i:s');
+              //$session['timeout'] = date('Y-m-d H:i:s',strtotime('+ 1 MINUTES',strtotime($now)));
+            return $this->redirect(['/private-booking/fill-detail']);
+            
+
+
+         }else{
+            $session =Yii::$app->session;
+            $session->open();
+            $session['error'] = 'error';
+            $session['error-message'] = 'Something Its Wrong, Please Try Again Your Process or contact us.';
+            return $this->goHome();
+         }
+      }else{
+         $session =Yii::$app->session;
+         $session->open();
+         $session['error'] = 'error';
+         $session['error-message'] = 'Something Its Wrong, Please Try Again Your Process or contact us.';
+        return $this->goHome();
       }
     }
 
@@ -371,6 +468,7 @@ class SiteController extends Controller
             }
          }else{
             $session['route'] = 'none';
+            $session['error-message'] = 'Current Route Is Unavaible, Please Select Other Route Or Contact US';
             return $this->goHome();
          }
       }else{

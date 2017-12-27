@@ -17,6 +17,7 @@ $this->params['breadcrumbs'][] = 'Update';
     <?= $this->render('_form', [
         'model' => $model,
         'listRoute' => $listRoute,
+        'listTime' => $listTime,
     ]) ?>
 
 </div>

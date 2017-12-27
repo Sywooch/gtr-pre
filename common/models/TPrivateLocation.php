@@ -60,4 +60,8 @@ class TPrivateLocation extends \yii\db\ActiveRecord
     {
         return $this->hasMany(TPrivateRoute::className(), ['to_route' => 'id']);
     }
+
+    public static function getAllLocation(){
+        return TPrivateLocation::find()->asArray()->all();
+    }
 }

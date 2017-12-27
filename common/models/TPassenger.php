@@ -94,4 +94,15 @@ class TPassenger extends \yii\db\ActiveRecord
     public function savePassengers($id_booking, $type, $birthday = null){
         
     }
+
+    public static function addFastBoatPassengers(array $data){
+        $saveChild                 = new TPassenger();
+        $saveChild->id_booking     = $data['id_booking'];
+        $saveChild->name           = $data['name'];
+        $saveChild->id_nationality = $data['id_nationality'];
+        $saveChild->birthday       = $data['birthday'];
+        $saveChild->id_type        = $data['type'];
+        $saveChild->validate();
+        $saveChild->save(false); 
+    }
 }

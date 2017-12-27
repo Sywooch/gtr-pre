@@ -20,10 +20,14 @@ use Yii;
  */
 class TMailQueue extends \yii\db\ActiveRecord
 {
-    const STATUS_QUEUE   = "1"; // SAME FOR ETicket
-    const STATUS_PROCESS = "2"; // SAME FOR INVOICe
-    const STATUS_SUCCESS = "3";
-    const STATUS_RETRY   = "4";
+    const STATUS_QUEUE               = 1; 
+    const STATUS_PROCESS             = 2;
+    const STATUS_SUCCESS             = 3;
+    const STATUS_RETRY               = 4;
+
+    const TYPE_TICKET_FASTBOAT       = 1;
+    const TYPE_INVOICE               = 2;
+    const TYPE_TICKET_PRIV_TRANSFERS = 3;
     /**
      * @inheritdoc
      */
@@ -41,7 +45,7 @@ class TMailQueue extends \yii\db\ActiveRecord
             [['id_payment', 'id_type', 'status'], 'required'],
             [['id_payment', 'id_type', 'status', 'processor'], 'integer'],
             [['datetime'], 'safe'],
-            [['id_type'],'in','range'=>[self::STATUS_QUEUE,self::STATUS_PROCESS]],
+            [['id_type'],'in','range'=>[self::TYPE_TICKET_FASTBOAT,self::TYPE_INVOICE,self::TYPE_TICKET_PRIV_TRANSFERS]],
             [['status'],'in','range'=>[self::STATUS_QUEUE,self::STATUS_PROCESS,self::STATUS_SUCCESS,self::STATUS_RETRY]],
             [['id_payment'], 'exist', 'skipOnError' => true, 'targetClass' => TPayment::className(), 'targetAttribute' => ['id_payment' => 'id']],
             [['processor'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['processor' => 'id']],
@@ -88,11 +92,11 @@ class TMailQueue extends \yii\db\ActiveRecord
         return $this->hasOne(TTypeQueue::className(), ['id' => 'id_type']);
     }
 
-    public static function addTicketQueue($id_payment){
+    public static function addTicketQueue($id_payment,$type){
         $modelQueue = new TMailQueue();
         $modelQueue->id_payment = $id_payment;
         $modelQueue->status = self::STATUS_QUEUE;
-        $modelQueue->id_type = self::STATUS_QUEUE; // Type E Ticket
+        $modelQueue->id_type = $type; // Type E Ticket
         $modelQueue->save(false);
     }
 
@@ -105,10 +109,18 @@ class TMailQueue extends \yii\db\ActiveRecord
     }
 
     public static function getQueueList($type){
-        if(($Queue = TMailQueue::find()->where(['status'=>self::STATUS_RETRY])->andWhere(['id_type'=>$type])->orderBy(['datetime'=>SORT_ASC])->one())!== null){
+        if(($Queue = TMailQueue::find()->where(['status'=>self::STATUS_RETRY])->andWhere(['id_type'=>$type])->orderBy(['datetime'=>SORT_ASC])->one()) !== null){
             return $Queue;
         }else{
             return TMailQueue::find()->where(['status'=>self::STATUS_QUEUE])->andWhere(['id_type'=>$type])->orderBy(['datetime'=>SORT_ASC])->one();
+        }
+    }
+
+    public static function getTicketQueue(){
+        if(($Queue = TMailQueue::find()->where(['status'=>self::STATUS_RETRY])->andWhere(['!=','id_type',self::TYPE_INVOICE])->orderBy(['datetime'=>SORT_ASC])->one()) !== null){
+            return $Queue;
+        }else{
+            return TMailQueue::find()->where(['status'=>self::STATUS_QUEUE])->andWhere(['!=','id_type',self::TYPE_INVOICE])->orderBy(['datetime'=>SORT_ASC])->one();
         }
     }
 

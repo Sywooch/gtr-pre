@@ -16,6 +16,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= $this->render('_form', [
         'model' => $model,
         'listRoute' => $listRoute,
+        'listTime' => $listTime,
+        'listEstTime' => $listEstTime,
     ]) ?>
 
 </div>

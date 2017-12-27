@@ -15,13 +15,13 @@ use kato\pickadate\Pickadate;
     <?= $form->field($model, 'time')->widget(Pickadate::classname(), [
     'isTime' => true,
     'pickadateOptions' => [
-        'formatSubmit' => 'H:i',
-        'format'=> 'H:i',
+        'formatSubmit' => 'HH:i',
+        'format'=> 'HH:i',
         'interval'=>15,
     ],
 ]); ?>
     <div class="form-group">
-        <?= Html::submitButton($model->isNewRecord ? 'Create' : 'Update', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
+        <?= Html::submitButton('Save', ['class' => 'btn btn-success' ]) ?>
     </div>
 
     <?php ActiveForm::end(); ?>

@@ -39,8 +39,8 @@ class TPaymentDetail extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['email', 'phone','token','exp','total_payment','total_payment_idr','name'], 'required'],
-            [['exchange', 'status', 'update_at','total_payment_idr'], 'integer'],
+            [['email', 'phone','token','exp','total_payment','total_payment_idr','name','id_payment_type'], 'required'],
+            [['exchange', 'status', 'update_at','total_payment_idr','id_payment_type'], 'integer'],
             [['email'],'email'],
             [['exp', 'update_at'], 'safe'],
             [['total_payment'], 'number'],
@@ -53,7 +53,7 @@ class TPaymentDetail extends \yii\db\ActiveRecord
         ];
     }
 
-     public function generatePaymentToken($attribute, $length = 25){
+    public function generatePaymentToken($attribute, $length = 25){
        //$token = Yii::$app->getSecurity()->generateRandomString($length);
         $pool = array_merge(range(0,9),range('A', 'Z')); 
     for($i=0; $i < $length; $i++) {
