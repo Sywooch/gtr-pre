@@ -1,7 +1,7 @@
 <?php 
 use yii\helpers\Html;
 ?>
-<?= Html::a(' Add Operator', ['/operator/create'], ['class' => 'btn btn-md btn-danger glyphicon glyphicon-plus']); ?>
+<?= Html::a(' Add Operator', ['/private-operator/create'], ['class' => 'btn btn-md btn-danger glyphicon glyphicon-plus']); ?>
 <br><br>
 <ul class="list-group material-list-group">
 <?php foreach($listOperator as $key => $val): ?>

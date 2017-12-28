@@ -298,25 +298,31 @@ $('.btn-operator').on('click',function(){
 
 $('.btn-customer-info').on('click',function(){
     var bookid = $(this).attr('id-booking');
-    krajeeDialog.confirm(\"Are You Sure ?\", function (result) {
-        if (result) {
-             $('#modal-loading').modal({
-                      backdrop: 'static',
-                      keyboard: false
-                  });
-            $.ajax({
-                url: '".Url::to(["send-customer-info"])."',
-                type:'POST',
-                data:{id_booking :bookid},
-                success: function (data) {
-                    $('#modal-loading').modal('hide');
-                    Dialog(data);
-                }
-            });
-        } else {
-           
-        }
-    });
+    var dsb = $(this).attr('status');
+    if ($(this).attr('status') == 'off'){
+        Dialog('Please Assignment Operator First');
+        return false;
+    }else{
+        krajeeDialog.confirm(\"Are You Sure ?\", function (result) {
+            if (result) {
+                 $('#modal-loading').modal({
+                          backdrop: 'static',
+                          keyboard: false
+                      });
+                $.ajax({
+                    url: '".Url::to(["send-customer-info"])."',
+                    type:'POST',
+                    data:{id_booking :bookid},
+                    success: function (data) {
+                        $('#modal-loading').modal('hide');
+                        Dialog(data);
+                    }
+                });
+            } else {
+               
+            }
+        });
+    }
 });
 
 

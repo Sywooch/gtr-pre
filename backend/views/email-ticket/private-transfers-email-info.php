@@ -126,6 +126,7 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 
 <center>
 <p>Thank you for your order and we are pleased to assist you anytime. If there is any criticism and suggestion please contact us directly through our contact form or using the following link</p>
+
 <a class="button_blue" href="https://gilitransfers.com/contact-us" target="_BLANK" style="text-decoration:none;
         background: #FF3421;
         /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
@@ -142,7 +143,10 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
         -ms-border-radius: 7px !important;
         /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
          padding-bottom: 7px; margin: 0 auto 16px;">Contact Us</a>
-</center><br>
+</center>
+<br>
+<br><b>Best Regards : <?= Yii::$app->user->identity->username ?></b><br><br>
+<br>
 
 <!-- EmailContentPayeeTransaction : end -->
 

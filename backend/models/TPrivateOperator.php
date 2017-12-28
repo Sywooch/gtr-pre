@@ -56,6 +56,7 @@ class TPrivateOperator extends \yii\db\ActiveRecord
             'name'     => 'Name',
             'phone'    => 'Phone',
             'email'    => 'Email',
+            'id_status' =>'Status',
             'datetime' => 'Datetime',
         ];
     }
