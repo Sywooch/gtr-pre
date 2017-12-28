@@ -42,7 +42,7 @@ class TPassenger extends \yii\db\ActiveRecord
             [['id_booking', 'name', 'id_nationality', 'id_type'], 'required', 'message' => 'This field Required'],
             [['id', 'id_nationality', 'id_type'], 'integer'],
             [['birthday', 'datetime'], 'safe'],
-            [['id_booking'], 'string', 'max' => 5],
+            [['id_booking'], 'string', 'max' => 6],
             [['name'], 'string', 'max' => 50],
             [['id_type'],'in','range'=>[self::TYPE_ADULT,self::TYPE_CHILD,self::TYPE_INFANT]],
             [['id_booking'], 'exist', 'skipOnError' => true, 'targetClass' => TBooking::className(), 'targetAttribute' => ['id_booking' => 'id']],
