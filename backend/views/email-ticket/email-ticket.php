@@ -147,7 +147,7 @@ Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 
 <!-- EmailContentPayeeTransaction : end -->
 
- <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
+ <li>Perum Bukit Pratama, Jl. Gong Suling 2 No.10 Jimbaran, Kab. Badung, Kuta Selatan, Bali. Indonesia</li>
  <li>+62-813-5330-4990</li>
  <li><a id="button_text" style="text-decoration: none; font-size: 110%" class="applefix" href="Gilitransfers.com">https://Gilitransfers.com</a></li>
  <br></div><p></p>

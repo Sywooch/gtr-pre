@@ -5,6 +5,9 @@ namespace backend\controllers;
 use Yii;
 use common\models\TPrivateBooking;
 use backend\models\TPrivateBookingSearch;
+use backend\models\TPaymentLog;
+use backend\models\TPrivateOperator;
+use backend\models\TPrivateBookingLog;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -42,6 +45,11 @@ class PrivateBookingController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionDetailModal($id_booking){
+        $modelBooking = $this->findModel($id_booking);
+        return $this->renderAjax('_modal-detail-booking',['modelBooking'=>$modelBooking]);
     }
 
     /**
@@ -121,4 +129,147 @@ class PrivateBookingController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
+    public function actionConfirmPayment(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $modelLogPayment = TPaymentLog::addPaymmentLog($data['idp'],TPaymentLog::EVENT_READ_CHECK);
+                $transaction->commit();
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+            }
+            
+        }
+    }
+
+    public function actionCheckLogPayment($id_payment){
+        if(($modelLogPayment = TPaymentLog::find()->joinWith(['idUser','idEvent','idPayment'])->where(['id_payment'=>$id_payment,'t_payment.id_payment_type'=>2])->asArray()->all()) != null){
+            $btn = '<a data-toggle="popover" data-trigger="hover focus" data-popover-content="#log-'.$id_payment.'" data-placement="right" class="btn btn-xs btn-success fa fa-check-square-o"></a>';
+            return $btn.'<div id="log-'.$id_payment.'" class="hidden panel panel-primary">'.$this->renderPartial('/booking/_log',['modelLog'=>$modelLogPayment]).'</div>';
+           
+        }else{
+            return "<a data-toggle='tooltip' title='Mark As Confirm' class='confirm-btn btn material-btn material-btn_xs fa fa-check-square-o' value='".$id_payment."'></a>";
+        }
+    }
+
+    public function actionCheckLogBooking($id_booking){
+        if(($modelLogBooking = TPrivateBookingLog::find()->joinWith(['idUser','idEvent','idBooking'])->where(['id_booking'=>$id_booking])->asArray()->all()) != null){
+            $btn = '<a data-toggle="popover" data-trigger="hover focus" data-popover-content="#log-booking-'.$id_booking.'" data-placement="right" class="btn-default btn-xs glyphicon glyphicon-time"></a>';
+            return $btn.'<div id="log-booking-'.$id_booking.'" class="hidden panel panel-primary">'.$this->renderPartial('/booking/_log',['modelLog'=>$modelLogBooking]).'</div>';
+           
+        }else{
+            return null;
+        }
+    }
+
+    public function actionChangeOperator(){
+
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $listOperator = TPrivateOperator::geAvailableOperator(true);
+            return $this->renderPartial('_list-operator.php',[
+                    'listOperator'=>$listOperator,
+                    'id_booking' => $data['id_booking'],
+                    ]);
+        }elseif (Yii::$app->request->isPost) {
+            $transaction = Yii::$app->db->beginTransaction();
+            try {
+                $dataPost = Yii::$app->request->post();
+                $modelPrivateBooking = $this->findModel($dataPost['id_booking']);
+                $Operator = $this->getOneOperator($dataPost['id_operator']);
+                    if (!isset($modelPrivateBooking->idOperator)) {
+                        $note = '<b class="text-info">New Operator </b><br> '.$Operator['name'].' | '.$Operator['phone'].' | '.$Operator['email']; 
+                    }else{
+                        $note = '<b class="text-danger">Change operator</b> <br>'.$modelPrivateBooking->idOperator->name.' | '.$modelPrivateBooking->idOperator->phone.' | '.$modelPrivateBooking->idOperator->email.'<br> = TO = <br>'.$Operator['name'].' | '.$Operator['phone'].' | '.$Operator['email']; 
+                    
+                    }
+                $modelPrivateBooking->id_operator = $dataPost['id_operator'];
+                if($modelPrivateBooking->validate()){
+                    $modelPrivateBooking->save(false);
+
+                    TPrivateBookingLog::addLog($modelPrivateBooking->id,TPrivateBookingLog::EVENT_MODIFY,$note);
+                    $transaction->commit();
+                    return $this->redirect(['index']);
+                }else{
+                    $transaction->rollBack();
+                    return "Something Its Wrong";
+                }
+                
+            } catch(\Exception $e) {
+                $transaction->rollBack();
+                throw $e;
+            }
+
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    public function actionSendCustomerInfo(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelPrivateBooking = $this->findModel($data['id_booking']);
+            if (isset($modelPrivateBooking->idOperator)) {
+                try {
+                    $sendTicket = Yii::$app->mailReservation->compose()
+                    ->setFrom(Yii::$app->params['reservationEmail'])
+                    ->setTo($modelPrivateBooking->idPayment->email)
+                    ->setSubject('Private Transfers Information')
+                    ->setHtmlBody($this->renderAjax('/email-ticket/private-transfers-email-info',[
+                        'modelPrivateBooking'=>$modelPrivateBooking,
+                        ]))->send();
+                    $note = '<b>Send Operator Contact</b>';
+                    TPrivateBookingLog::addLog($modelPrivateBooking->id,TPrivateBookingLog::EVENT_RES_TICK,$note);
+                    return "Sending Email Successsfull";
+                } catch (\Exception $e) {
+                    return "Sending Email Failed";
+                }
+            }else{
+                return "Process Request Failed <br> Please Assignment Operator First";
+            }
+            
+        }
+    }
+
+    public function actionSendEmailOperator(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelPrivateBooking = $this->findModel($data['id_booking']);
+            if (isset($modelPrivateBooking->idOperator)) {
+                if ($data['type'] == 1) {
+                    $type = 'Operator Reservation';
+                }elseif($data['type'] == 2){
+                    $type = 'Operator Cancellation';
+                }else{
+                    return "Something Its Wrong <br>  Please Try Again";
+                }
+                try {
+                    $sendTicket = Yii::$app->mailReservation->compose()
+                    ->setFrom(Yii::$app->params['reservationEmail'])
+                    ->setTo($modelPrivateBooking->idOperator->email)
+                    ->setSubject($type.' Private Transfers Gilitransfers')
+                    ->setHtmlBody($this->renderAjax('/email-ticket/private-transfers-email-operator',[
+                        'modelPrivateBooking'=>$modelPrivateBooking,
+                        'type' =>$type,
+                        ]))->send();
+                    $note = '<b>Send '.$type.'</b>';
+                    TPrivateBookingLog::addLog($modelPrivateBooking->id,TPrivateBookingLog::EVENT_RES_RESV,$note);
+                    return "Sending Email Successsfull";
+                } catch (\Exception $e) {
+                    return "Sending Email Failed <br> Please Try Again";
+                }
+            }else{
+                return "Process Request Failed <br> Please Assignment Operator First";
+            }
+        }else{
+            return $this->goHome();
+        }
+    }
+
+    protected function getOneOperator($id){
+        return TPrivateOperator::find()->where(['id'=>$id])->asArray()->one();
+    }
+
 }

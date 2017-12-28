@@ -22,7 +22,7 @@ class RedactorModule extends \yii\base\Module
     public $controllerNamespace = 'yii\redactor\controllers';
     public $defaultRoute = 'upload';
     public $uploadDir = '@frontend/web/content-img';
-    public $uploadUrl = 'http://gilitransfers-local.com/content-img/';
+    public $uploadUrl = 'https://gilitransfers.com/content-img/';
     public $imageUploadRoute = ['/redactor/upload/image'];
     public $fileUploadRoute = ['/redactor/upload/file'];
     public $imageManagerJsonRoute = ['/redactor/upload/image-json'];

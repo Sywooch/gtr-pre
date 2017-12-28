@@ -51,7 +51,7 @@ class ContactForm extends Model
     public function sendEmail($email)
     {
         return Yii::$app->mailReservation->compose()
-            ->setTo(Yii::$app->params['contactEmail'])
+            ->setTo(Yii::$app->params['reservationEmail'])
             ->setFrom([$this->email => $this->name])
             ->setSubject($this->subject)
             ->setTextBody($this->body)

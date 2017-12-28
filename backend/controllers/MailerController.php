@@ -165,9 +165,9 @@ class MailerController extends Controller
                     ]);
                 $Receipt->render();
                Yii::$app->mailReservation->compose()
-                ->setFrom('reservation@gilitransfers.com')
+                ->setFrom(Yii::$app->params['reservationEmail'])
                 ->setTo($modelPayment->email)
-                ->setBcc('reservation@gilitransfers.com')
+                ->setBcc(Yii::$app->params['reservationEmail'])
                 ->setSubject('E-Ticket GiliTransfers')
                 ->setHtmlBody($this->renderAjax('/email-ticket/email-ticket',[
                     'modelPayment'=>$modelPayment,
@@ -202,7 +202,7 @@ class MailerController extends Controller
     protected function sendMailSupplier($to,$modelBooking,$modelPayment){
 
         $mail = Yii::$app->mailReservation->compose()
-                    ->setFrom('reservation@gilitransfers.com')
+                    ->setFrom(Yii::$app->params['reservationEmail'])
                     ->setTo($to);
 
         if (($mailCC = $modelBooking->idTrip->idBoat->idCompany->email_cc) !==  null) {
@@ -228,7 +228,8 @@ class MailerController extends Controller
             $findPassenger = $this->findPassenger();
             $modelQueue->setQueueStatus(TMailQueue::STATUS_PROCESS);
             try {
-                 Yii::$app->mailReservation->compose()->setFrom('reservation@gilitransfers.com')
+                 Yii::$app->mailReservation->compose()
+                 ->setFrom(Yii::$app->params['reservationEmail'])
                  ->setTo($modelPayment->email)
                  ->setSubject('Invoice GiliTransfers')
                  ->setHtmlBody($this->renderAjax('/email-ticket/email-invoice',[

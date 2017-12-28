@@ -16,6 +16,11 @@ use Yii;
  */
 class TPrivateOperator extends \yii\db\ActiveRecord
 {
+
+    const STATUS_ON    = 1;
+    const STATUS_OFF   = 2;
+    const STATUS_BLOCK = 3;
+
     /**
      * @inheritdoc
      */
@@ -30,10 +35,14 @@ class TPrivateOperator extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['name', 'phone', 'datetime'], 'required'],
+            [['name', 'phone','email'], 'required'],
+            [['email'],'email'],
             [['datetime'], 'safe'],
-            [['name'], 'string', 'max' => 50],
+            [['datetime'],'default','value'=>date('Y-m-d H:i:00')],
+            [['id_status'],'default','value'=>self::STATUS_ON],
+            [['name','email'], 'string', 'max' => 50],
             [['phone'], 'string', 'max' => 25],
+            [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => \common\models\TStatusTrip::className(), 'targetAttribute' => ['id_status' => 'id']],
         ];
     }
 
@@ -43,11 +52,29 @@ class TPrivateOperator extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'name' => Yii::t('app', 'Name'),
-            'phone' => Yii::t('app', 'Phone'),
-            'datetime' => Yii::t('app', 'Datetime'),
+            'id'       => 'ID',
+            'name'     => 'Name',
+            'phone'    => 'Phone',
+            'email'    => 'Email',
+            'datetime' => 'Datetime',
         ];
+    }
+
+    public static function addPrivateOperator(array $data){
+        $modelOperator = new TPrivateOperator();
+        $modelOperator->name = $data['name'];
+        $modelOperator->phone = $data ['phone'];
+        $modelOperator->email = $data['email'];
+        $modelOperator->validate();
+        $modelOperator->save(false);
+    }
+    
+    public static function geAvailableOperator($asArray = false){
+        if ($asArray == true) {
+            return $modelOperator = TPrivateOperator::find()->where(['id_status'=>self::STATUS_ON])->asArray()->all();
+        }else{
+            return $modelOperator = TPrivateOperator::find()->where(['id_status'=>self::STATUS_ON])->all();
+        }
     }
 
     /**
@@ -56,5 +83,9 @@ class TPrivateOperator extends \yii\db\ActiveRecord
     public function getTPrivateBookings()
     {
         return $this->hasMany(TPrivateBooking::className(), ['id_operator' => 'id']);
+    }
+     public function getIdStatus()
+    {
+        return $this->hasOne(\common\models\TStatusTrip::className(), ['id' => 'id_status']);
     }
 }

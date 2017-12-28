@@ -1,4 +1,6 @@
-
+body {
+  font-family: 'georgia', sans-serif;
+}
 .wrap {
     min-height: 100%;
     height: auto;

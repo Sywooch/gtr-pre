@@ -162,7 +162,7 @@ class TPrivateBooking extends \yii\db\ActiveRecord
      */
     public function getTPassengers()
     {
-        return $this->hasMany(TPrivatePassenger::className(), ['id_booking' => 'id']);
+        return $this->hasMany(TPrivatePassenger::className(), ['id_booking' => 'id'])->orderBy(['id_type'=>SORT_ASC]);
     }
 
     public function getAffectedPassengers()

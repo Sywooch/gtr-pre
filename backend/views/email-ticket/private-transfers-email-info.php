@@ -1,23 +1,9 @@
-<?php 
-if ($type == '1') {
-  $head   = 'Reservation';
-  $body   = 'Our reservation system has received an order for your Fast Boat transfer. Please confirm our booking below:';
-  $footer = "Best Regards : ".Yii::$app->user->identity->username;
-}else{
-  $head   = 'Cancellation';
-  $body   = 'Please cancel this booking below ';
-  $footer = "Thank you for your kind understanding.<br><br> Best Regards : ".Yii::$app->user->identity->username;
-} 
-?>
-
 <html><head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,width=device-width,height=device-height,target-densitydpi=device-dpi,user-scalable=no">
-        <title>
-          Fastboat <?= $head ?> GiliTransfers
-          </title>
+        <title>Private Transfers Information</title>
 </head>
-<body style="padding:0; margin:0; background:#f2f2f2;">  
+   <body style="padding:0; margin:0; background:#f2f2f2;">  
       
 
 <table class="marginFix" width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -51,10 +37,12 @@ if ($type == '1') {
                                     <span style="padding-top:15px; padding-bottom:10px; font:italic 12px; Calibri, Trebuchet, Arial, sans serif; color: #757575;line-height:15px;"> 
                                         <!-- EmailContentHeader : start -->
 
-
+<span style="display:inline;">
+</span>
+Private Transfers Information
 <span style="display:inline;">
 <br>
-Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
+Date : <strong> <?= date('d-m-Y') ?></strong><br><br>
 </span>
 
 <!-- EmailContentHeader : end -->
@@ -72,23 +60,22 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
                                     <p><!-- EmailGreeting : start -->
 <!-- EmailGreeting : end --></p>
 <div style="margin-top: 10px;color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px;">
-<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">Fastboat <?= $head ?> GiliTransfers</span>
+<center><span style="font-size:15 ; font-weight:bold;text-decoration:none;">Private Transfers Information</span>
 </center>
 <table contenteditable="false">
 <tbody>
 <tr>
-<td valign="bottom" align="justify">Dear Reservation Team <?= $modelBooking->idTrip->idBoat->idCompany->name ?> <p><?= $body ?></p><span style="display:inline;">
+<td valign="bottom" align="justify">Dear <?= $modelPrivateBooking->idPayment->name ?>. <p>Thank you for choosing Gilitransfers.com to reserve your transfers. we have found and confirmed the best operators to serve your trip. Here we include operator contact Below:</p><span style="display:inline;">
   </span></td>
 
   </tr>
   </tbody>
-  </table>
-
-<!-- Buyer Info Start -->
-<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
+  </table><br>
+  <!-- EmailContentPayeeTransaction : start -->
+  <table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
 <tbody><tr style="border-bottom:2px solid #ccc;">
 <td style="padding-top:5px;" width="50%" valign="top">
-<span style="color:#333333;font-weight:bold; font-size:15px;">Customer/Buyer Information</span><br>
+<!-- EmailContentSellerBuyerDetails : start --><span style="color:#333333;font-weight:bold; font-size:20px;">Operator Information</span><br>
 
 <span style="display:inline;">Name 
 <br>
@@ -101,100 +88,65 @@ Date : <strong> <?= date('d-m-Y H:i') ?></strong><br><br>
 <span style="display:inline;">Phone Number
 <br>
 </span>
+
+
+
+<!-- EmailContentSellerBuyerDetails : end -->
 </td>
 <td style="padding-top:5px;padding-left:10px;" width="50%" valign="top">
+<!-- EmailContentBuyerNote : start -->
+
+
+
 <span style="color:#333333;"></span>
   <br>
 <span style="display: inline;">
-: <?= $modelPayment->name ?>
+: <?= $modelPrivateBooking->idOperator->name ?>
 </span><br>
   <span style="display: inline;">
-: <?= $modelPayment->email ?>
+: <?= $modelPrivateBooking->idOperator->email ?>
 </span><br>
   <span style="display: inline;">
-: <?= $modelPayment->phone ?>
+: <?= $modelPrivateBooking->idOperator->phone ?>
 </span>
+
+<!-- EmailContentBuyerNote : end -->
 </td>
 </tr>
 
 
 </tbody>
 </table>
-<!-- Buyer Info End -->
-<!-- Trip Info Start -->
-<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
-<caption style="text-align: left; font-size: 15px; font-weight: bold;">Trip Detail</caption>
-<tbody>
-  <tr>
-    <td>
-      <?= $modelBooking->idTrip->idRoute->departureHarbor->name." -> ".$modelBooking->idTrip->idRoute->arrivalHarbor->name." (".date('H:i',strtotime($modelBooking->idTrip->dept_time)).")" ?> 
-      <?= date('d, F Y',strtotime($modelBooking->idTrip->date)) ?>
-    </td>
-  </tr>
-</tbody>
-</table>
-<!-- Trip Info End -->
-<!-- Shuttle Start -->
-<?php if(isset($modelBooking->tShuttles)): ?>
-
-<table  style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0">
-  <caption style="text-align: left; font-size: 15px; font-weight: bold;"><?php if($modelBooking->idTrip->idRoute->departureHarbor->id_island == '1'){ echo 'Pickup';}else{ echo 'Drop Off';} ?>  Detail</caption>
-  <thead>
-  <tr>
-    <th style="text-align: left;">Area</th>
-    <th style="text-align: left;">Location</th>
-    <th style="text-align: left;">Address</th>
-    <th style="text-align: left;">Phone</th>
-  </tr>
-
-  </thead>
-  <tbody>
- <tr>
-    <td><?= $modelBooking->tShuttles->idArea->area ?></td>
-    <td><?= $modelBooking->tShuttles->location_name ?></td>
-    <td><?= $modelBooking->tShuttles->address ?></td>
-    <td><?= $modelBooking->tShuttles->phone ?></td>
-  </tr>
-</tbody>
-</table>
-<?php endif; ?>
-<!-- Shuttle End -->
-
-<!-- Passenger Table Start -->
-<table style="color:#333 !important;font-family: arial,helvetica,sans-serif;font-size:12px; margin-bottom:20px;" width="100%" contenteditable="false" cellspacing="0" cellpadding="0" border="0" class="table table-striped ">
-  <caption style="text-align: left; font-size: 15px; font-weight: bold;">Passengers Detail</caption>
-  <thead>
-  <tr>
-    <th width="40">No.</th>
-    <th style="text-align: left;">Name</th>
-    <th style="text-align: left;" width="175">Nationality</th>
-    <th style="text-align: left;" width="100">Type</th>
-  </tr>
-
-  </thead>
-  <tbody>
-<?php foreach($modelBooking->tPassengers as $indexAdult => $valAdult): ?>
-  <tr>
-    <th scope="row"><?= $indexAdult+1 ?></th>
-    <td><?= $valAdult->name?></td>
-    <td><?= $valAdult->idNationality->nationality ?></td>
-    <td><?= $valAdult->idType->type ?></td>
-
-  </tr>
-<?php endforeach;?>
-</tbody>
-</table>
-<!-- Passenger Table End -->
 
 
-<br>
-Payment : Acc Gilitransfers<br>
-<p>
-<?= $footer ?>
-</p>
-<br>
-Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
- <li>Perum Permata Ariza Blok O/2 Mekarsari, Jimbaran. Bali - Indonesia.</li>
+<div>
+</div>
+
+
+
+<center>
+<p>Thank you for your order and we are pleased to assist you anytime. If there is any criticism and suggestion please contact us directly through our contact form or using the following link</p>
+<a class="button_blue" href="https://gilitransfers.com/contact-us" target="_BLANK" style="text-decoration:none;
+        background: #FF3421;
+        /*font styles*/font-family:HelveticaNeueLight,HelveticaNeue-Light,Helvetica Neue Light,HelveticaNeue,Helvetica,Arial,sans-serif;
+        font-weight:300;
+        font-stretch:normal;
+        text-align:center;
+        color:#fff;
+        font-size:15px;
+        /*button styles*/
+        border-radius:7px !important;
+        -webkit-border-radius: 7px !important;
+        -moz-border-radius: 7px !important;
+        -o-border-radius: 7px !important;
+        -ms-border-radius: 7px !important;
+        /*styles from button.jsp */ line-height: 1.45em; padding: 7px 15px 8px; font-size: 1em;
+         padding-bottom: 7px; margin: 0 auto 16px;">Contact Us</a>
+</center><br>
+
+<!-- EmailContentPayeeTransaction : end -->
+
+ <li>Perum Bukit Pratama, Jl. Gong Suling 2 No.10 Jimbaran, Kab. Badung, Kuta Selatan, Bali. Indonesia</li>
  <li>+62-813-5330-4990</li>
  <li><a id="button_text" style="text-decoration: none; font-size: 110%" class="applefix" href="Gilitransfers.com">https://Gilitransfers.com</a></li>
  <br></div><p></p>
@@ -271,7 +223,7 @@ Questions? Contact Us at <strong>reservation@Gilitransfers.com</strong><br><br>
 </tbody></table>
 <!-- END CONTAINER -->
 
-<style type="text/css"> 
+         <style type="text/css"> 
 /* PP Sans Font Import */
 
 /* PP Sans Class */
