@@ -48,6 +48,12 @@ class TPrivateBookingSearch extends TPrivateBooking
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'sort'=>[
+                     'defaultOrder'=>[
+                    'id_payment'=>SORT_DESC,
+                    //'dept_time'=>SORT_ASC
+                    ]
+                ]
         ]);
 
         $this->load($params);
