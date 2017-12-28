@@ -79,23 +79,30 @@ echo Dialog::widget([
                     "<ul class='dropdown-menu material-dropdown-menu_danger'>
                         <li class='dropdown-header material-dropdown__header'>Resend</li>
                         <li class='divider material-dropdown__divider'></li>
-                        <li>".Html::a('Operator Reservation','#loading-pjax', [
+                       
+                        <li>".Html::a('Cust. Operator Info', '#loading-pjax', [
                                 'id-payment' => $model->id_payment,
-                                'type'       => 1,
-                                'class'      => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>
-                        <li>".Html::a('Customer Ticket', '#loading-pjax', [
-                                'id-payment' =>$model->id_payment,
-                                'class'      => 'btn-resend-customer-payment material-dropdown-menu__link'])."</li>
+                                'class'      => 'btn-customer-info-payment material-dropdown-menu__link'])."</li>
                         <li class='divider material-dropdown__divider'></li>
                         <li class='dropdown-header material-dropdown__header'>Cancellation</li>
                         <li class='divider material-dropdown__divider'></li>
-                        <li>".Html::a('Operator Cancellation','#loading-pjax', [
-                                'id-payment' => $model->id_payment,
-                                'type'       => 2,
-                                'class'      => 'btn-resend-reservation-payment material-dropdown-menu__link'])."</li>   
+                           
                                               
                     </ul>
                     </span>"; 
+                    /*
+                     <li>".Html::a('Operator Reservation','#loading-pjax', [
+                                'id-payment' => $model->id_payment,
+                                'type'       => 1,
+                                'class'      => 'btn-resend-operator-payment material-dropdown-menu__link'])."</li>
+                        <li>".Html::a('Customer Ticket', '#loading-pjax', [
+                                'id-payment' =>$model->id_payment,
+                                'class'      => 'btn-resend-ticket-payment material-dropdown-menu__link'])."</li>
+<li>".Html::a('Operator Cancellation','#loading-pjax', [
+                                'id-payment' => $model->id_payment,
+                                'type'       => 2,
+                                'class'      => 'btn-resend-operator-payment material-dropdown-menu__link'])."</li>
+                    */
                     
                 },
                 
@@ -157,9 +164,7 @@ echo Dialog::widget([
                                 'status'     => $dropdownStatus,
                                 'type'       => 1,
                                 'class'      => 'btn-send-operator material-dropdown-menu__link'])."</li>
-                        <li>".Html::a('Customer Ticket', '#loading-pjax', [
-                                'id-booking' => $model->id,
-                                'class'      => 'btn-resend-customer-booking material-dropdown-menu__link'])."</li>
+                        
                         <li>".Html::a('Cust. Operator Info', '#loading-pjax', [
                                 'id-booking' => $model->id,
                                 'status'     => $dropdownStatus,
@@ -175,6 +180,11 @@ echo Dialog::widget([
                                               
                     </ul>
                     </span>";
+                    /*
+    <li>".Html::a('Customer Ticket', '#loading-pjax', [
+                                'id-booking' => $model->id,
+                                'class'      => 'btn-resend-customer-booking material-dropdown-menu__link'])."</li>
+                    */
                     
                     $logger = Yii::$app->runAction('/private-booking/check-log-booking',['id_booking'=>$model->id]);
                     
@@ -325,6 +335,29 @@ $('.btn-customer-info').on('click',function(){
     }
 });
 
+$('.btn-customer-info-payment').on('click',function(){
+    var bookid = $(this).attr('id-payment');
+    krajeeDialog.confirm(\"Are You Sure ?\", function (result) {
+            if (result) {
+                 $('#modal-loading').modal({
+                          backdrop: 'static',
+                          keyboard: false
+                      });
+                $.ajax({
+                    url: '".Url::to(["send-customer-info-payment"])."',
+                    type:'POST',
+                    data:{id_payment :bookid},
+                    success: function (data) {
+                        $('#modal-loading').modal('hide');
+                        Dialog(data);
+                    }
+                });
+            } else {
+               
+            }
+        });
+});
+
 
 $('#booking-modify-modal').on('hidden.bs.modal', function (event) {
     window.location.href = '".Url::to(["index"])."';
@@ -360,7 +393,7 @@ $('.confirm-btn').on('click',function(){
         }
     });
 });
-$('.btn-resend-customer-payment').on('click',function(){
+$('.btn-resend-ticket-payment').on('click',function(){
     var idp = $(this).attr('id-payment');
     krajeeDialog.confirm(\"<div class='col-md-12'>Are you sure you want to Resend Ticket To Customer?</div><div class='col-md-12'><div class='main-container__column material-checkbox-group material-checkbox-group_warning'><input value='1' type='checkbox' id='checkbox-receipt-payment' name='checkbox_receipt_payment' class='material-checkbox'><label class='material-checkbox-group__label' for='checkbox-receipt-payment'>Include Receipt ?</label></div></div>\", function (result) {
         if (result) {
@@ -424,7 +457,7 @@ function Dialog(data){
     krajeeDialog.alert(data);
 }
 
-$('.btn-resend-reservation-payment').on('click',function(){
+$('.btn-resend-operator-payment').on('click',function(){
     var payid = $(this).attr('id-payment');
     var vtype = $(this).attr('type');
         if (vtype == '1' ) {

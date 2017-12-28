@@ -220,7 +220,7 @@ class PrivateBookingController extends Controller
                     ->setHtmlBody($this->renderAjax('/email-ticket/private-transfers-email-info',[
                         'modelPrivateBooking'=>$modelPrivateBooking,
                         ]))->send();
-                    $note = '<b>Send Operator Contact</b>';
+                    $note = '<b class="text-success">Send Operator Contact To Customer</b>';
                     TPrivateBookingLog::addLog($modelPrivateBooking->id,TPrivateBookingLog::EVENT_RES_TICK,$note);
                     return "Sending Email Successsfull";
                 } catch (\Exception $e) {
@@ -229,6 +229,32 @@ class PrivateBookingController extends Controller
             }else{
                 return "Process Request Failed <br> Please Assignment Operator First";
             }
+            
+        }
+    }
+
+    public function actionSendCustomerInfoPayment(){
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $modelPrivateBooking = TPrivateBooking::find()->where(['id_payment'=>$data['id_payment']])->all();
+                try {
+                    $sendTicket = Yii::$app->mailReservation->compose()
+                    ->setFrom(Yii::$app->params['reservationEmail'])
+                    ->setTo($modelPrivateBooking[0]->idPayment->email)
+                    ->setSubject('Private Transfers Information')
+                    ->setHtmlBody($this->renderAjax('/email-ticket/private-transfers-email-info-payment',[
+                        'modelPrivateBooking'=>$modelPrivateBooking,
+                        ]))->send();
+                    $note = '<b class="text-success">Send Operator Contact To Customer</b>';
+                    foreach ($modelPrivateBooking as $value) {
+                        TPrivateBookingLog::addLog($value->id,TPrivateBookingLog::EVENT_RES_TICK,$note);
+                    }
+                    
+                    return "Sending Email Successsfull";
+                } catch (\Exception $e) {
+                    throw $e;
+                    return "Sending Email Failed";
+                }
             
         }
     }
