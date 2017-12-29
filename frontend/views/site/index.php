@@ -74,7 +74,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             <div class="col-md-6">
              <!--  <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body"> -->
-                  <div class="media material-media">
+                  <div class="media material-media list-fastboat">
                     <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                           <div id="div-<?= $valBoat['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
@@ -128,7 +128,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             <div class="col-md-6">
               <!-- <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body"> -->
-                  <div class="media material-media">
+                  <div class="media material-media list-fastboat">
                     <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                           <div id="div-<?= $valDestination['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
@@ -182,7 +182,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             <div class="col-md-6">
               <!-- <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body"> -->
-                  <div class="media material-media">
+                  <div class="media material-media list-fastboat">
                   <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                           <div id="div-<?= $valArticle['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
@@ -236,7 +236,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             <div class="col-md-6">
               <!-- <div class="list-fastboat panel panel-default material-panel">
                 <div class="panel-body material-panel__body"> -->
-                  <div class="media material-media">
+                  <div class="media material-media list-fastboat">
                   <div class="col-md-3 col-md-offset-0 col-sm-3 col-sm-offset-0 col-xs-12 col-xs-offset-3">
                          <div id="div-<?= $valPorts['slug'] ?>" class="media-left material-media__column material-media__column_vertical-middle">
                               <?=  Html::a(Html::img('/loading.svg', [
@@ -332,7 +332,7 @@ p{
   text-align: justify;
 }
 
-#list-fastboat{
+.list-fastboat{
   min-height: 175px;
   max-height: 175px;
 }
