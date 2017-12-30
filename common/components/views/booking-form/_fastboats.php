@@ -296,6 +296,14 @@ $modelBookForm->currency = (isset($session['formData']['currency'])) ? $session[
 
 <?php
 $customCss = <<< SCRIPT
+.material-tabs_primary > li.active > .material-tabs__tab-link, .material-tabs_primary > li.active > .material-tabs__tab-link:focus, .material-tabs_primary > li.active > .material-tabs__tab-link:hover {
+    background-color: #fff;
+    color: #616161;
+    border-top: 2px #3488d1 solid;
+    border-right: 2px #3488d1 solid;
+    border-left: 2px #3488d1 solid;
+}
+
 .currency-note{
   text-align: right;
   font-size: 9px;
