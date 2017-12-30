@@ -12,13 +12,13 @@ $modelBookForm->arrivalPort   = 19;
 $modelBookForm->departurePort = 13;
 $modelBookForm->type        = 0; 
 $modelBookForm->returnDate  = null;
-//if (date('d-m-Y H:i:s') >= date('d-m-Y 18:i:s')) {
-  $modelBookForm->departureDate = date('d-m-Y',strtotime('+1 DAYS', strtotime(date('d-m-Y'))));
-//   $addDay = 1;
-// }else{
-//   $modelBookForm->departureDate = date('d-m-Y',strtotime('+1 DAYS',strtotime(date('d-m-Y'))));
-//   $addDay = 2;
-// }
+if (date('d-m-Y H:i:s') >= date('d-m-Y 17:i:s')) {
+  $modelBookForm->departureDate = date('d-m-Y',strtotime('+2 DAYS', strtotime(date('d-m-Y'))));
+  $addDay = 2;
+}else{
+  $modelBookForm->departureDate = date('d-m-Y',strtotime('+1 DAYS',strtotime(date('d-m-Y'))));
+  $addDay = 1;
+}
 
 //$modelBookForm->returnDate = $modelBookForm->departureDate;
 $items =['1'=>'One Way','2'=>'Return'];
@@ -207,7 +207,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
 
 $this->registerJs("
     $('#dept-date').pickadate({
-  min: +1,
+  min: +".$addDay.",
   format: 'dd-mm-yyyy',
   formatSubmit: 'yyyy-mm-dd',
   clear:'',
