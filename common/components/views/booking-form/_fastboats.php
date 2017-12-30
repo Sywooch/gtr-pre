@@ -174,7 +174,7 @@ $layoutMarker =['addon' => ['prepend' => ['content'=>'<i class="glyphicon glyphi
               'class'=>'input-sm form-control',
               ],
             
-          ])->label('Departure date **'); ?>
+          ])->label('Departure date'); ?>
           </div>
 <?php Pjax::begin(['id'=>'pjax-return-date']); ?>         
           <div class="col-md-4 col-sm-4 col-xs-6">
@@ -288,9 +288,9 @@ $modelBookForm->currency = (isset($session['formData']['currency'])) ? $session[
 * Available currencies depend on selected payment method
 </span>
   <br>
-<span class="text-muted pull-left currency-note">
+<!-- <span class="text-muted pull-left currency-note">
 ** Pick Up will Not Available if you book after 6.00 p.m applied for next day trip. We suggest you to arrange your own accomodation to the port.
-</span>
+</span> -->
           </div>     
 <?php ActiveForm::end(); ?>
 
