@@ -122,8 +122,31 @@ class MailerController extends Controller
                             'methods'   => [ 
                             'SetHeader' =>['E-Ticket Gilitransfers'], 
                             'SetFooter' =>[
-                                'Please take this Ticket on your trip as a justification<br>
-                                <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>'],
+                                '<table cellspacing="0" width="100%" align="center" style="font-size: 10px;">
+                                <thead>
+                                <tr><th colspan="2" style="background-color: orange;">Cancellation</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                <th scope="row">1. </th>
+                                <td>cancellation 2 week prior to the departure is not subject to a cancellation fee.</td>
+                                </tr>
+                                <tr>
+                                <th scope="row">2. </th>
+                                <td>cancellation between 1 to 2 weeks prior departure is subject to a cancellation fee of 50%.</td>
+                                </tr>
+                                <tr>
+                                <th scope="row">3.</th>
+                                <td>cancellation between 1 week to 48 hours prior to departure is subject of a cancellation fee 75%.</td>
+                                </tr>
+                                <tr>
+                                <th scope="row">4.</th>
+                                <td>cancellation inside 48 hours prior to departure or no show is subject of a cancellation fee 100% of the nett price.</td>
+                                </tr>
+                                </tbody>
+                                </table>
+                                Please take this Ticket on your trip as a justification<br>'],
+                                //banner footer <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>
                     ]
                 ]);
                 $Ticket->render();
@@ -187,13 +210,12 @@ class MailerController extends Controller
                             $this->sendMailSupplier($valFastboatBooking->idTrip->idBoat->idCompany->email_bali,  $valFastboatBooking, $modelPayment);
                         }
                     }
-                }
+               }
 
-                FileHelper::removeDirectory($savePath);
+               FileHelper::removeDirectory($savePath);
                 return true;
             } catch(\Exception $e) {
                 FileHelper::removeDirectory($savePath);
-                throw $e;
                 return false;
             }
     }
