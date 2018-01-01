@@ -375,7 +375,11 @@ p{
 
 @media (max-width: 500px) {
   .bar{
-  width : 100% !important;
+    width : 100% !important;
+  }
+  .list-fastboat{
+    min-height: 300px !important;
+    max-height: 300px !important;
   }
 }
 

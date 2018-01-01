@@ -1,158 +1,199 @@
 <?php
 
 use yii\helpers\Html;
-use kartik\grid\GridView;
 use yii\widgets\Pjax;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
-
-
+use kartik\switchinput\SwitchInput;
+use kartik\widgets\TouchSpin;
+use common\models\TTrip;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\TTripSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
-$this->title = Yii::t('app', 'Trip List');
+$this->title =  'Trip List';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<?= Html::a('', ['create'], ['class' => 'btn btn-lg btn-danger glyphicon glyphicon-plus']) ?>
-<?= Html::a('', ['index'], ['class' => 'btn btn-lg btn-success glyphicon glyphicon-refresh']) ?>
+<?php Pjax::begin(['id'=>'pjax-trip']); ?> 
+<?php  
+$varmonth = $monthYear;
+$month= date('m',strtotime($monthYear));
+$year=date('Y',strtotime($monthYear));
+$day=date("d");
+$endDate=date("t",mktime(0,0,0,$month,$day,$year));
 
-
- <b style="font-size: 25px;"><center>Trip Summary</center></b>
- <div class="panel-group material-accordion material-accordion_primary" id="grid-summary">
-  <div class="panel panel-default material-accordion__panel material-accordion__panel">
-        <div class="panel-heading material-accordion__heading" id="acc2_headingOne">
-         <h4 class="panel-title">
-            <a id="hidden-panel" data-toggle="collapse" data-parent="#grid-summary" href="#summary-grid" class="material-accordion__title">Trip Schedule Summary ( - klik To Display/Hidden - )</a>
-         </h4>
-        </div>
-        <div id="summary-grid" class="panel-collapse collapse in material-accordion__collapse">
-          <div class="panel-body">
- <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'panel'=>['type'=>'info', 'heading'=>''],
-        'striped'      =>true,
-        'bordered'  => true,
-        'hover'        =>true,
-        'pjax'         =>true,
-       
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-             [
-                
-                'attribute'=>'idBoat.idCompany.name',
-                'width'=>'auto',
-                'value'=>function ($model, $key, $index, $widget) { 
-                      return $model->idBoat->idCompany->name;
-                },
-                'format'=>'raw',
-                'group'             =>true,  // enable grouping,
-                'groupedRow'        =>true,                    // move grouped column to a single grouped row
-                'groupOddCssClass'  =>'kv-grouped-row',  // configure odd group cell css class
-                'groupEvenCssClass' =>'kv-grouped-row', // configure even group cell css class
-
-            ],
-            
-            [
-            'header'=>'Route',
-            'format'=>'raw',
-            'value'=>function($model){
-              return $model->idRoute->departureHarbor->idIsland->island." <span class='fa fa-arrow-right'>to</span> ".$model->idRoute->arrivalHarbor->idIsland->island;
-            },
-            // 'filterType'=>GridView::FILTER_SELECT2,
-            // 'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-route'), 'id', 'route','island'), 
-            // 'filterWidgetOptions'=>[
-            //     'pluginOptions'=>['allowClear'=>true],
-            //       ],
-            // 'filterInputOptions'=>['placeholder'=>'Any Route...'],
-            ],
-            [
-            'header'=>'Time',
-            'value'=>function($model){
-              return $model->dept_time;
-            },
-            'attribute'=>'dept_time',
-            'filterType'=>GridView::FILTER_SELECT2,
-            'filter'=>ArrayHelper::map(Yii::$app->runAction('/trip/get-avaible-time'), 'dept_time', 'dept_time'), 
-            'filterWidgetOptions'=>[
-                'pluginOptions'=>['allowClear'=>true],
-                  ],
-            'filterInputOptions'=>['placeholder'=>'Anytime...'],
-
-            ],
-            [
-            'header'=>'Available',
-            'value'=>function($model){
-              return date('d-m-Y',strtotime($model->minDate))." - ".date('d-m-Y',strtotime($model->maxDate));
-            }
-            ],
-
-            [
-            'header'=>'View',
-            'format'=>'raw',
-            'value'=>function($model){
-              return Html::a('', $url = null, [
-                      'cid'=>$model->idBoat->id_company,
-                      'islandRoute'=>$model->islandRoute,
-                      'time' => $model->dept_time,
-                      'class' =>'btn-view-schedule btn btn-xs btn-warning glyphicon glyphicon-calendar',
-                      'data-toggle'=>'tooltip',
-                      'title'=>'View Schedule',
-                      'data-placement'=>'left',
-                      'onclick'=>'var idc  = $(this).attr("cid");
-                      var isR  = $(this).attr("islandRoute");
-                      var time = $(this).attr("time");
-                      var cb   = "btn btn-xs btn-warning glyphicon glyphicon-calendar";
-                      var cl   = "fa fa-spinner fa-spin";
-                      $(this).removeClass(cb);
-                      $(this).addClass(cl);
-                      
-                      $("#div-schedule").html("<center>Please Wait...<br><img src=\'/spinner.svg\'></center>");
-                      $.ajax({
-                        url:"'.Url::to(["index"]).'",
-                        type: "POST",
-                        data:{
-                        company:idc,
-                        islandRoute: isR,
-                        time: time,
-                        },
-                      success:function(data){
-                        $("#div-schedule").html(data);
-                        $("#hidden-panel").trigger("click");
-                        $(".btn-view-schedule").removeClass(cl);
-                        $(".btn-view-schedule").addClass(cb);
-                      },
-                      error:function(data){
-                        $("#div-schedule").html("<center>Something Its Wrong...<br>Please Try Again</center>");
-                        $(".btn-view-schedule").removeClass(cl);
-                        $(".btn-view-schedule").addClass(cb);
-                      },
-    });'
-                      ]);
-            }
-            ]
-
-        ],
-    ]); ?>
-
-</div>
-</div>
-</div>
-</div>
-<div class="row">
-<?php Pjax::begin(['id'=>'pjax-trip','class'=>'col-lg-12']); ?>
-<div id="div-schedule" class="col-md-12">
-  <b><center>Select Summary To View Schedule</center></b>
-</div>
-<?php Pjax::end(); ?>
-</div>
-
+?>
+<?= $this->render('_search',[
+    'listBulan'=>$listBulan,
+    'listTahun'=>$listTahun,
+    'varmonth'=>$varmonth,
+]) ?>   
 <?php
-$this->registerJs('
-$(".btn-view-schedule").on("click",function(){
+$this->registerJs("
+$(function(){
+    $('[data-toggle=popover]').popover({
+        html : true,
+        content: function() {
+          var content = $(this).attr('data-popover-content');
+          return $(content).children('.popover-body').html();
+        },
+        container:'.table',
+        title: function() {
+          var title = $(this).attr('data-popover-content');
+          return $(title).children('.popover-heading').html();
+        }
+    });
+  });
 
+$('.trip-text').mouseenter(function(){
+  var bg = $(this).css(\"background-color\");
+  $(this).css(\"background-color\", \"yellow\");
+  $('.trip-text').mouseleave(function(){
+  $(this).css(\"background-color\", bg);
   
-
 });
-  ');
+});
+    ");
  ?>
+
+ <div class="row">
+   <div id="header-trip-schedule" class="col-md-12">
+     
+   </div>
+ </div>   
+<?php 
+echo "<div class='col-md-12' id='judul-table'><h2 align='center'>".Html::encode(date('F',strtotime($monthYear)))." ".Html::encode(date('Y',strtotime($monthYear)))."</h2>";
+echo '<span class="pull-left"><div class="main-container__column material-checkbox-group material-checkbox-group_primary">
+                          '.Html::checkbox('checkbox-all-trip', $checked = false, [
+                            'id' => 'checkbox-table',
+                            'class'=>'material-checkbox',
+                            'onchange'=>'
+                            if ($(this).is(":checked")) {
+                                $(".checkbox-trip").prop("checked", true);
+                            }else{
+                                $(".checkbox-trip").prop("checked", false);
+                            }
+                              ',
+                            ]).'<label class="material-checkbox-group__label" for="checkbox-table">Select All</label>
+                          </div></span></div>';
+
+echo '<table id="table-trip" align="center" class="table table-striped table-responsive">
+<thead>
+  <tr class="info">
+  <td align=center><font color=red>Sunday</font></td>
+  <td align=center>Monday</td>
+  <td align=center>Tuesday</td>
+  <td align=center>Wednesday</td>
+  <td align=center>Thursday</td>
+  <td align=center>Friday</td>
+  <td align=center>Saturday</td>
+  </tr>
+</thead>
+  <tbody>';
+//cek tanggal 1 hari sekarang
+$s=date ("w", mktime (0,0,0,$month,1,$year));
+for ($ds=1;$ds<=$s;$ds++) {
+echo "<td style=\"font-family:arial;color:#B3D9FF\" align=center valign=middle >
+</td>";
+}
+for ($d=1;$d<=$endDate;$d++) {
+    if (date("w",mktime (0,0,0,$month,$d,$year)) == 0) {
+        echo "<tr class='baris'>"; 
+    }
+    if (date("d",mktime (0,0,0,$month,$d,$year)) == "Sun") {  }
+      $today = date("Y-m-d",mktime (0,0,0,$month,$d,$year));
+
+            $trips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival','idEstTime','status0'])->select(['t_trip.*','CONCAT( departure.id_island, "-", arrival.id_island) as islandRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id,'date'=>$today])->groupBy(['islandRoute','dept_time'])->orderBy(['islandRoute'=>SORT_ASC,'dept_time'=>SORT_ASC])->all();
+
+      
+    //tanggal 
+    echo "<td style=\"font-family:arial;color:#333333\" align=center valign=middle> <span><li style='list-style: none; background-color: #ccc;'>".date("d",mktime (0,0,0,$month,$d,$year));
+
+     
+    //trip list
+    echo Html::checkbox('checkbox-multi-'.$today, $checked = false, [
+          'class' => 'pull-right',
+          'onchange'=>'
+            if ($(this).is(":checked")) {
+                $(".checkbox-'.$today.'").prop("checked", true);
+            }else{
+                $(".checkbox-'.$today.'").prop("checked", false);
+            }
+              ',
+            
+          ])." ";
+    //echo Html::a('', ['add-dayli','date'=>$today], ['class' => ' text-danger btn btn-xs glyphicon glyphicon-plus pull-left'])."
+    echo "</li>"; 
+    
+    if (!empty($trips)) {
+        foreach ($trips as $key => $value) {
+          if ($value->id_season == null) {
+            echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")", '#detail', ['class' =>'trip-text pull-left text-warning append text-info tip','data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+
+          }else{
+            if ($value->status == 1) {
+              $warna_text = "trip-text pull-left text-success append text-info tip";
+            }elseif ($value->status == 2) {
+              $warna_text = "trip-text pull-left text-danger append text-info tip";
+            }else{
+              $warna_text = "trip-text pull-left bg-danger text-danger append tip";
+            }
+           echo Html::a(date('H:i',strtotime($value->dept_time))." ".substr($value->idBoat->idCompany->name, 0,5)."... (".$value->stock.")",
+           '#detail', ['class' => $warna_text,'data-toggle'=>'popover', 'data-trigger'=>'hover focus', 'data-popover-content'=>'#'.$value->id,'data-placement'=>'bottom']);
+
+          }
+        //checkbox per trip
+        echo Html::checkbox('checkbox-'.$value->id, $checked = false, ['class' => 'pull-right checkbox-trip checkbox-'.$today,'dept-time'=>$value->dept_time,'date'=>$value->date,'island-route'=>$value->islandRoute,'id'=>'checkbox-'.$value->id])."<br>";
+
+        // Popover Start
+        echo "<div id='".$value->id."' class='hidden panel panel-primary'>
+          <div class='col-lg-12 popover-heading panel bg-primary'><center><strong>Trip Detail</strong><div class='pull-right'>".
+          // Html::a('', ['update','id'=>$value->id], ['class'=>'btn btn-xs btn-primary glyphicon glyphicon-pencil'])." ".
+          // Html::a('', ['delete', 'id' => $value->id], [
+          //   'class' => 'btn btn-xs btn-danger glyphicon glyphicon-trash',
+          //   'data' => [
+          //       'confirm' => Yii::t('app', 'Are you sure you want to delete this item?'),
+          //       'method' => 'post',
+          //   ],
+          // ]).
+          "</div></center></div>
+          <div class='popover-body list-group col-lg-12' >
+          <div class='col-sm-3' style='font-weight:bold;'>Date</div><div class='col-sm-9'> : ".date('d-m-Y',strtotime($value->date))."</div>
+          <div class='col-sm-3' style='font-weight:bold;'>Boat</div><div class='col-sm-9'> : ".$value->idBoat->name."</div>
+          <div class='col-sm-3' style='font-weight:bold;'>Route</div><div class='col-sm-9'> : ".$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island."</div>
+          <div class='col-sm-3'style='font-weight:bold;'>Available</div><div class='col-sm-9'> : ".$value->stock."</div>";
+          if ($value->status == 1) {
+            echo "<div class='col-sm-3'style='font-weight:bold;'>Status</div><div class='col-sm-9 text-success'> : ".$value->status0->status."</div>";
+          }else{
+            echo "<div class='col-sm-3'style='font-weight:bold;'>Status</div><div class='col-sm-9  text-danger'> : ".$value->status0->status."</div>";
+          }
+          
+
+          
+
+          if ($value->id_season == null) {
+            echo "<div class='col-sm-12 bg-danger text-danger'style='font-weight:bold;'>Unset Profile</div><br>&nbsp
+          ";
+          }else{
+            echo "<div class='col-sm-12 bg-info'style='font-weight:bold;'>Profiling</div>
+                  <div class='col-sm-3'>Start</div><div class='col-sm-9'>  : ".date('d-m-Y',strtotime($value->idSeason->start_date))."</div>
+                  <div class='col-sm-3'>End</div><div class='col-sm-9'> : ".date('d-m-Y',strtotime($value->idSeason->end_date))."</div>
+                  ";
+          }
+          echo "</div> </div>";
+          //popover end
+      }
+    }else{
+      echo "<span class='text-danger'>Not Avaible</span>";
+    }
+    
+    echo "</span></td>";
+
+    //jika variabel w= 6 disini 6 adalah hari sabtu maka akan pindah baris dengan menutup baris </tr>
+    if (date("w",mktime (0,0,0,$month,$d,$year)) == 6) { echo "</tr>"; }
+}
+echo '</table></tbody>';
+?>
+<blockquote>
+  for price and route changes please contact the gilitransfers reservation team
+</blockquote>
+<?php Pjax::end(); ?>

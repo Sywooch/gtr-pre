@@ -538,8 +538,6 @@ protected function findTrip(){
             $monthYear = $month.'-01';
           //  $month = '2017-10-01';
            }
-          
-           if (Helper::checkRoute('/booking/validation')) {
                 $model2 = $this->findTrip();
                 $Route = $this->findRoute();
                 foreach ($Route as $key => $value) {
@@ -562,36 +560,43 @@ protected function findTrip(){
                     'listCompany'=>$listCompany,
                     'listRoute'=>$listRoute,
                     ]);
-            }else{
-                if ($request->post('company') != null) {
+            
+       }else{
+            $searchModel = new TTripSearch();
+            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+                return $this->render('index',[
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+                    ]);
+            
+            }
+    }
+
+    public function actionIndexCompany($month = null,$company = null){
+        $session = Yii::$app->session;
+
+        $listBulan = ['01'=>'January','02'=>'February','03'=>'March','04'=>'April','05'=>'Mei','06'=>'June','07'=>'July','08'=>'August','09'=>'September','10'=>'October','11'=>'November','12'=>'December'];
+        $listTahun = ['2017-'=>'2017','2018-'=>'2018','2019-'=>'2019','2020','2021-'=>'2021'];
+           if ($month == null) {
+               $monthYear = date('Y-m-d');
+           }else{
+            $monthYear = $month.'-01';
+          //  $month = '2017-10-01';
+           }
+        $request = Yii::$app->request;
+        if ($request->post('company') != null) {
                     $session['filter']=[
                     'company'     => $request->post('company'),
                     'islandRoute' => $request->post('islandRoute'),
                     'time'        => $request->post('time'),
                     ];
                 }
-                return $this->renderAjax('supplier/trip-schedule',[
-                    'session'=>$session,
-                    'monthYear'=>$monthYear,
-                    'listBulan'=>$listBulan,
-                    'listTahun'=>$listTahun,
-                    ]);
-            }
-       }else{
-            $searchModel = new TTripSearch();
-            $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-          if (Helper::checkRoute('/booking/validation')) {
-                return $this->render('index',[
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                    ]);
-            }else{
-              return $this->render('supplier/index',[
-                'searchModel' => $searchModel,
-                'dataProvider' => $dataProvider,
-                    ]);
-        }
-            }
+        return $this->render('supplier/index',[
+                'session'      => $session,
+                'monthYear'    => $monthYear,
+                'listBulan'    => $listBulan,
+                'listTahun'    => $listTahun,
+            ]);
     }
 
     /**

@@ -4,7 +4,7 @@ use mdm\admin\components\Helper;
 <aside class="main-sidebar">
 
     <section class="sidebar">
-    <?php if(Helper::checkRoute('/booking/*')): ?>
+    <?php if(Helper::checkRoute('/booking/validation')): ?>
         <?= dmstr\widgets\Menu::widget(
             [
                 'options' => ['class' => 'sidebar-menu sidebar-collapse'],
@@ -93,7 +93,7 @@ use mdm\admin\components\Helper;
                 'options' => ['class' => 'sidebar-menu sidebar-collapse'],
                 'items' => [
                     ['label' => 'Booking','icon' => 'book', 'url' => '/booking/index'],
-                    ['label' => 'Trip/Schedule','icon'=>'calendar', 'url' => ['/trip/index']],
+                    ['label' => 'Trip/Schedule','icon'=>'calendar', 'url' => ['/trip/index-company']],
                     ['label' => 'Change Password','icon'=>'lock', 'url' => ['/admin/user/change-password']],
                 ],
             ]

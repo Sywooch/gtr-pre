@@ -1,13 +1,8 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
-use yii\widgets\MaskedInput;
 use yii\helpers\Url;
 use kartik\widgets\TouchSpin;
-use kartik\widgets\DatePicker;
-use kartik\widgets\Select2;
-use kato\pickadate\Pickadate;
 /* @var $this yii\web\View */
 /* @var $model common\models\TTripSearch */
 /* @var $form yii\widgets\ActiveForm */
@@ -63,36 +58,21 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                 })',
                 ]); ?>
             <?= Html::a('Previous Month',null,[
-                'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
-                'onclick'=>'
-                     $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                    $.ajax({
-                    url:"'.Url::to(["/trip/index","month"=>$blnUrlMin]).'",
-                    type: "POST",
-                    success:function(data){
-                      $("#div-schedule").html(data);
-                    },
-                    error:function(data){
-                      $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
-                    },
-                  })'
-            ]) ?>
-            <?= Html::a('Next Month',null,[
-                'class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg',
-                'onclick'=>'
-                     $("#judul-table").html("<center><img src=\'/spinner.svg\'></center>");
-                     $.ajax({
-                    url:"'.Url::to(["/trip/index","month"=>$blnUrlPlus]).'",
-                    type: "POST",
-                    success:function(data){
-                      $("#div-schedule").html(data);
-                    },
-                    error:function(data){
-                      $("#div-schedule").html("<center>Something Its Wrong...<br>Try To Reload Page</center>");
-                    },
-
-                  })'
-            ]) ?>
+            'class' => 'btn btn-warning btn-md',
+            'onclick'=>'
+                $.pjax.reload({
+                url:"'.Url::to(["index-company","month"=>$blnUrlMin]).'",
+                container:"#pjax-trip",
+              })'
+        ]) ?>
+        <?= Html::a('Next Month',null,[
+            'class' => 'btn btn-warning btn-md',
+            'onclick'=>'
+                $.pjax.reload({
+                url:"'.Url::to(["index-company","month"=>$blnUrlPlus]).'",
+                container:"#pjax-trip",
+              })'
+        ]) ?>
             
             </div>
             </div>
@@ -173,11 +153,15 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
             <?= Html::a(' Update Status ',null,[
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
                 'onclick'=>'
-                        var vdtime = $("#table-trip .checkbox-trip:checkbox:checked").attr("dept-time");
+                        var vdtime = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("dept-time");
+                        }).get();
                         var vdate = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
                         return $(this).attr("date");
                         }).get();
-                        var viroute = $("#table-trip .checkbox-trip:checkbox:checked").attr("island-route");
+                        var viroute = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("island-route");
+                        }).get();
 
                         // alert(vdtime);
                         // alert(vdate);
