@@ -216,6 +216,9 @@ echo Dialog::widget([
             }
             ],
         ],
+        'options' => [
+            'style' => 'overflow: auto; word-wrap: break-word;'
+        ],
     ]); ?>
 <?php Pjax::end(); ?>
 </div>
