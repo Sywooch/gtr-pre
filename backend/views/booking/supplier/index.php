@@ -118,17 +118,19 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
         'header'=>'Buyer/Customer',
-        'width'=>'auto',
-        'format'=>'raw',
+        'format' => 'html',
         'value'=>function($model){
             if (!empty($model->shuttleTmp->id_booking)) {
                 return "<p class='customer'><span class='fa fa-qrcode'></span> ".$model->id."-<span class='fa fa-user'></span> ".$model->idPayment->name." <span class='fa fa-phone'></span> ".$model->idPayment->phone." <span class='fa fa-envelope'></span> ".$model->idPayment->email."
-                    <br>".$model->shuttleTmp->type."-<span class='fa fa-map'></span> ".$model->shuttleTmp->idArea->area."-<span class='fa fa-building'></span> ".$model->shuttleTmp->location_name."-<span class='fa fa-map-marker'></span>".$model->shuttleTmp->address."-<span class='fa fa-phone' ></span>".$model->shuttleTmp->phone."</p>";
+                    <br>".$model->shuttleTmp->type."-<span class='fa fa-map'></span> ".$model->shuttleTmp->idArea->area." -<span class='fa fa-building'> </span> ".$model->shuttleTmp->location_name."-<span class='fa fa-map-marker'> </span>".$model->shuttleTmp->address."-<span class='fa fa-phone' > </span>".$model->shuttleTmp->phone."</p>";
             }else{
                 return "<p class='customer'><span class='fa fa-qrcode'></span> ".$model->id."-<span class='fa fa-user'></span> ".$model->idPayment->name." <span class='fa fa-phone'></span> ".$model->idPayment->phone." <span class='fa fa-envelope'></span> ".$model->idPayment->email;
             }
             
         },
+        'contentOptions' => [
+            'style' => ['width' => 'auto']
+        ],
         'pageSummary'=>'Grand Total',
         'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
@@ -183,6 +185,9 @@ $this->params['breadcrumbs'][] = $this->title;
             ]);
         },
         ],
+        ],
+        'options' => [
+            'style' => 'overflow: auto; word-wrap: break-word;'
         ],
     ]); ?>
     </div>
