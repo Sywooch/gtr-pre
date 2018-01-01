@@ -147,7 +147,7 @@ class MailerController extends Controller
                                 </table>
                                 Please take this Ticket on your trip as a justification<br>'],
                                 //banner footer <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>
-                    ]
+                            ]
                 ]);
                 $Ticket->render();
                 $Receipt = new Pdf([

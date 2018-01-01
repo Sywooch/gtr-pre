@@ -44,6 +44,68 @@ class BookingController extends Controller
         ];
     }
 
+        public function actionTicket($id_booking){
+        $modelBooking = $this->findModel($id_booking);
+        $tempdir = Yii::$app->basePath."/E-Ticket/".$modelBooking->id."/"; //<-- Nama Folder file QR Code kita nantinya akan disimpan
+        FileHelper::createDirectory ( $tempdir, $mode = 0777, $recursive = true );
+        $PdfSupplier = new Pdf([
+             'filename'=>'Ticket-'.$modelBooking['id'].'.pdf',
+                // A4 paper format
+                'format' => Pdf::FORMAT_A4, 
+                // portrait orientation
+                'orientation' => Pdf::ORIENT_PORTRAIT, 
+                'tempPath'    => Yii::getAlias('@console/runtime/mpdf'),
+                // simpan file
+                'destination' => Pdf::DEST_DOWNLOAD,
+                'content' => "
+                    ".$this->renderPartial('/email-ticket/pdf-ticket',[
+                        'modelBooking' =>[$modelBooking],
+                        'modelPayment' => $modelBooking->idPayment,
+                        'tempdir'      =>$tempdir,
+                        ])." ",
+                                 // any css to be embedded if required
+                            'cssInline' => '.kv-heading-1{
+                                                font-size:18px
+                                            }
+                                            .judul{
+                                                font-size:25px;
+                                            }
+                                            @media print{
+                                                .page-break{display: block;page-break-before: always;}
+                                            }
+                                            .secondary-text{
+                                                color: #212121;
+                                            }
+                                            .primary-text{
+                                                color: #212121;
+                                            }
+                                            .island{
+                                                color: #424242;
+                                                font-size:17px;
+                                                
+                                            }
+                                            .ports{
+                                                color: #616161;
+                                                font-size:12px;
+                                            }
+                                            '
+                                            , 
+                            //set mPDF properties on the fly
+                            'options'   => ['title' => 'E-Ticket Supplier Gilitransfers'],
+                            // call mPDF methods on the fly
+                            'methods'   => [ 
+                            'SetHeader' =>['E-Ticket Supplier Gilitransfers'], 
+                            'SetFooter' =>[
+                                'Supplier Tickets'],
+                                //banner footer <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>
+                            ]
+                    ]);
+                    $PdfSupplier->render();
+                        FileHelper::removeDirectory($tempdir);
+                    
+                    
+    }
+
     protected function findRoute($departure,$return){
      return TRoute::find()->where(['departure'=>$departure])->andWhere(['arrival'=>$return])->asArray()->one();
     }
@@ -203,28 +265,64 @@ class BookingController extends Controller
                         'tempdir'      =>$savePath,
                         ])." ",
                                 // any css to be embedded if required
-                                'cssInline' => '.kv-heading-1{
-                                                    font-size:18px
-                                                }
-                                                .judul{
-                                                    font-size:25px;
-                                                }
-                                                .primary-text{
-                                                    text-color: #212121;
-                                                    font-size:25px;
-                                                }
-                                                .ports{
+                            'cssInline' => '.kv-heading-1{
+                                                font-size:18px
+                                            }
+                                            .judul{
+                                                font-size:25px;
+                                            }
+                                            @media print{
+                                                .page-break{display: block;page-break-before: always;}
+                                            }
+                                            .secondary-text{
+                                                color: #212121;
+                                            }
+                                            .primary-text{
+                                                color: #212121;
+                                            }
+                                            .island{
+                                                color: #424242;
+                                                font-size:17px;
+                                                
+                                            }
+                                            .ports{
                                                 color: #616161;
-                                                font-size:10px;
-                                                }
-                                                ', 
-                                //set mPDF properties on the fly
-                                'options'   => ['title' => 'Receipt Gilitransfers'],
-                                // call mPDF methods on the fly
-                                'methods'   => [ 
-                                'SetHeader' =>['Receipt Gilitransfers'], 
-                                'SetFooter' =>['This receipt automatically printed by system and doesnt require a signature'],
-                        ]
+                                                font-size:12px;
+                                            }
+                                            '
+                                            , 
+                            //set mPDF properties on the fly
+                            'options'   => ['title' => 'E-Ticket Gilitransfers'],
+                            // call mPDF methods on the fly
+                            'methods'   => [ 
+                            'SetHeader' =>['E-Ticket Gilitransfers'], 
+                            'SetFooter' =>[
+                                '<table cellspacing="0" width="100%" align="center" style="font-size: 10px;">
+                                <thead>
+                                <tr><th colspan="2" style="background-color: orange;">Cancellation</th></tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                <th scope="row">1. </th>
+                                <td>cancellation 2 week prior to the departure is not subject to a cancellation fee.</td>
+                                </tr>
+                                <tr>
+                                <th scope="row">2. </th>
+                                <td>cancellation between 1 to 2 weeks prior departure is subject to a cancellation fee of 50%.</td>
+                                </tr>
+                                <tr>
+                                <th scope="row">3.</th>
+                                <td>cancellation between 1 week to 48 hours prior to departure is subject of a cancellation fee 75%.</td>
+                                </tr>
+                                <tr>
+                                <th scope="row">4.</th>
+                                <td>cancellation inside 48 hours prior to departure or no show is subject of a cancellation fee 100% of the nett price.</td>
+                                </tr>
+                                </tbody>
+                                </table>
+                                Please take this Ticket on your trip as a justification<br>'],
+                                //banner footer <span style="width:100%;"><img style="width:100%; height: 75px;" src="'.Yii::$app->basePath.'/E-Ticket/banner.jpeg"></span>
+                            ]
                     ]);
                 $Receipt->render();
             }
