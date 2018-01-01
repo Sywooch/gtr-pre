@@ -64,57 +64,56 @@ $this->params['breadcrumbs'][] = $this->title;
             },
             'group'=>true,  // enable grouping
             'groupedRow'=>true,
-            'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
-                return [
-                    'mergeColumns'=>[[0, 3]], // columns to merge in summary
-                    'content'=>[              // content to show in each summary cell
-                        0=>'Summary By Route(' . $model->idTrip->idRoute->departureHarbor->name."<span class='fa fa-arrow-right'></span>".$model->idTrip->idRoute->arrivalHarbor->name . ')',
-                        5=>GridView::F_SUM,
+            // 'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
+            //     return [
+            //         'mergeColumns'=>[[0, 3]], // columns to merge in summary
+            //         'content'=>[              // content to show in each summary cell
+            //             0=>'Summary By Route(' . $model->idTrip->idRoute->departureHarbor->name."<span class='fa fa-arrow-right'></span>".$model->idTrip->idRoute->arrivalHarbor->name . ')',
+            //             5=>GridView::F_SUM,
                        
-                    ],
-                    'contentFormats'=>[      // content reformatting for each summary cell
-                        5=>['format'=>'number', 'decimals'=>0],
-                    ],
-                    'contentOptions'=>[      // content html attributes for each summary cell
-                        5=>['style'=>'text-align:center'],
-                    ],
-                    // html attributes for group summary row
-                    'options'=>['class'=>'success','style'=>'font-weight:bold; width: 10px;']
-                ];
-            },
+            //         ],
+            //         'contentFormats'=>[      // content reformatting for each summary cell
+            //             5=>['format'=>'number', 'decimals'=>0],
+            //         ],
+            //         'contentOptions'=>[      // content html attributes for each summary cell
+            //             5=>['style'=>'text-align:center'],
+            //         ],
+            //         // html attributes for group summary row
+            //         'options'=>['class'=>'success','style'=>'font-weight:bold; width: 10px;']
+            //     ];
+            // },
             
         ],
         [
         'header'=>'Dept Time',
         'attribute'=>'idTrip.dept_time',
         'vAlign'=>'middle',
-        'hAlign'=>'center',
         'width'=>'100px',
         'format'=>'raw',
         'value'=>function($model){
-            return "<span class='dept-time'><span class='fa fa-clock-o'>".date('H:i',strtotime($model->idTrip->dept_time))."</span> ";
+            return "<span class='dept-time'><span class='fa fa-clock-o'> ".date('H:i',strtotime($model->idTrip->dept_time));
         },
         'group'=>true,  // enable grouping
-        //'groupedRow'=>true,
-       // 'subGroupOf'=>1,
-        'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
-                return [
-                    'mergeColumns'=>[[3, 4]], // columns to merge in summary
-                    'content'=>[              // content to show in each summary cell
-                        3=>'Summary By Dept Time ( '.date("H:i",strtotime($model->idTrip->dept_time)).' )',
-                        5=>GridView::F_SUM,
+        'groupedRow'=>true,
+        'subGroupOf'=>0,
+        // 'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
+        //         return [
+        //             'mergeColumns'=>[[3, 4]], // columns to merge in summary
+        //             'content'=>[              // content to show in each summary cell
+        //                 3=>'Summary By Dept Time ( '.date("H:i",strtotime($model->idTrip->dept_time)).' )',
+        //                 5=>GridView::F_SUM,
                        
-                    ],
-                    'contentFormats'=>[      // content reformatting for each summary cell
-                        5=>['format'=>'number', 'decimals'=>0],
-                    ],
-                    'contentOptions'=>[      // content html attributes for each summary cell
-                        5=>['style'=>'text-align:center'],
-                    ],
-                    // html attributes for group summary row
-                    'options'=>['class'=>'danger','style'=>'font-weight:bold;']
-                ];
-            },
+        //             ],
+        //             'contentFormats'=>[      // content reformatting for each summary cell
+        //                 5=>['format'=>'number', 'decimals'=>0],
+        //             ],
+        //             'contentOptions'=>[      // content html attributes for each summary cell
+        //                 5=>['style'=>'text-align:center;'],
+        //             ],
+        //             // html attributes for group summary row
+        //             'options'=>['class'=>'danger','style'=>'font-weight:bold;']
+        //         ];
+        //     },
         
         ],
         [
