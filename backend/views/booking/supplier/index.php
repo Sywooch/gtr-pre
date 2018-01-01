@@ -79,18 +79,20 @@ $this->params['breadcrumbs'][] = $this->title;
                         5=>['style'=>'text-align:center'],
                     ],
                     // html attributes for group summary row
-                    'options'=>['class'=>'success','style'=>'font-weight:bold;']
+                    'options'=>['class'=>'success','style'=>'font-weight:bold; width: 10px;']
                 ];
             },
             
         ],
         [
-        'header'=>'Dept<br>Time',
+        'header'=>'Dept Time',
         'attribute'=>'idTrip.dept_time',
         'vAlign'=>'middle',
+        'hAlign'=>'center',
+        'width'=>'100px',
         'format'=>'raw',
         'value'=>function($model){
-            return "<span class='dept-time'><span class='fa fa-clock-o'></span> ".date('H:i',strtotime($model->idTrip->dept_time))."</span>";
+            return "<span class='dept-time'><span class='fa fa-clock-o'>".date('H:i',strtotime($model->idTrip->dept_time))."</span> ";
         },
         'group'=>true,  // enable grouping
         //'groupedRow'=>true,
@@ -117,6 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
         ],
         [
         'header'=>'Buyer/Customer',
+        'width'=>'auto',
         'format'=>'raw',
         'value'=>function($model){
             if (!empty($model->shuttleTmp->id_booking)) {
@@ -133,8 +136,10 @@ $this->params['breadcrumbs'][] = $this->title;
         [
         'header'=>'<span class="fa fa-calendar"></span> Trip Date',
         'format'=>'raw',
+        'hAlign'=>'center',
+        'width'=>'125px',
         'value'=>function($model){
-            return date('l, d-m-Y',strtotime($model->idTrip->date));
+            return date('D, d-m-Y',strtotime($model->idTrip->date));
         },
         'pageSummaryOptions'=>['class'=>'grand-total'],
         ],
