@@ -85,38 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
             
         ],
         [
-        'header'=>'Dept Time',
-        'attribute'=>'idTrip.dept_time',
-        'vAlign'=>'middle',
-        'width'=>'100px',
-        'format'=>'raw',
-        'value'=>function($model){
-            return "<span class='dept-time'><span class='fa fa-clock-o'> ".date('H:i',strtotime($model->idTrip->dept_time));
-        },
-        'group'=>true,  // enable grouping
-        'groupedRow'=>true,
-        'subGroupOf'=>0,
-        // 'groupFooter'=>function ($model, $key, $index, $widget) { // Closure method
-        //         return [
-        //             'mergeColumns'=>[[3, 4]], // columns to merge in summary
-        //             'content'=>[              // content to show in each summary cell
-        //                 3=>'Summary By Dept Time ( '.date("H:i",strtotime($model->idTrip->dept_time)).' )',
-        //                 5=>GridView::F_SUM,
-                       
-        //             ],
-        //             'contentFormats'=>[      // content reformatting for each summary cell
-        //                 5=>['format'=>'number', 'decimals'=>0],
-        //             ],
-        //             'contentOptions'=>[      // content html attributes for each summary cell
-        //                 5=>['style'=>'text-align:center;'],
-        //             ],
-        //             // html attributes for group summary row
-        //             'options'=>['class'=>'danger','style'=>'font-weight:bold;']
-        //         ];
-        //     },
-        
-        ],
-        [
         'header'=>'Buyer/Customer',
         'format' => 'html',
         'value'=>function($model){
