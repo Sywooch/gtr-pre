@@ -47,7 +47,7 @@ echo Dialog::widget([
 </div>
 
 <center><b id="loading-pjax"></b></center>
-<span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
+
 <div class="col-md-12">
 
 <?php Pjax::begin(['id'=>'pjax-table-booking']); ?>
@@ -475,3 +475,4 @@ $('.btn-resend-reservation-booking').on('click',function(){
 
 </div>
 </div>
+<span class="text-danger pull-right fa fa-warning">* Infant Not Included </span>
