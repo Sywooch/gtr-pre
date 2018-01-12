@@ -34,7 +34,7 @@ class PaymentController extends Controller
 
     public function beforeAction($action)
     {    
-        if ($action->id == 'web-hook' || $action->id == 'hasil-web-hook') {
+        if ($action->id == 'web-hook' || $action->id == 'notification-midtrans') {
 		$this->enableCsrfValidation = false;
 		}
 		    return parent::beforeAction($action);  
@@ -312,8 +312,5 @@ class PaymentController extends Controller
 
 
 
-	public function actionHasilWebHook(){
-		return $this->render('web-hook',['hasil'=>"ok"]);
-	}
 	
 }
