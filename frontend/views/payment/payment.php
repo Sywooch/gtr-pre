@@ -17,42 +17,54 @@ $customCss = <<< SCRIPT
   .img-payment{
     max-height: 30px;
   }
+  h1{
+    font-size: 20px;
+  }
 SCRIPT;
 $this->registerCss($customCss);
 $modelPayment->id_payment_method = 1;
 ?>
 
-<h1><?= Html::encode($this->title); ?></h1>
-<div class="container">
-<?= Html::beginForm(['/payment/index', 'id' => 'form-payment'], 'post') ?>
-<div id="div-hidden" style="display: none;">
-<?= Html::activeRadioList($modelPayment, 'id_payment_method', $listPaymentMethod,
-  [
-  'item' => function($index, $label, $name, $checked, $value) {
-      $return  = '<div class="col-md-12">';
-      $return .= '<label class="main-container__column material-radio-group material-radio-group_primary" for="radio-'.$value.'">';
-      $return .= '<input type="radio" id="radio-'.$value.'" name="'.$name.'" value="'.$value.'" class="radio-payment material-radiobox">';
-      $return .= '<span class="material-radio-group__element material-radio-group__check-radio"></span>
-      <span class="material-radio-group__element material-radio-group__caption">';
-      if ($value == 1) {
-        $return .= 'Paypal ( Also Support VISA & Master Card )<img alt="payment-logo" class="img-payment img-responsive" src="/img/paypal.png">';
-      }elseif ($value == 2) {
-        $return .= 'BCA ( Also Support Klik BCA & m-BCA )<img alt="payment-logo" class="img-payment img-responsive" src="/img/bank-bca.png">';
-      }elseif ($value == 3) {
-        $return .= 'PERMATA BANK /  ATM BERSAMA ( Recomended if Your Bank Is Unavailable )<img alt="payment-logo" class="img-payment img-responsive" src="/img/atm-bersama.png">';
-      }elseif ($value == 4) {
-        $return .= 'Mandiri Bill Payment ( Also Support ATM Mandiri & Internet Banking Madiri )<img alt="payment-logo" class="img-payment img-responsive" src="/img/bank-mandiri.png">';
-      }
-      $return .= '</span></label></div>';
-      return $return;
-   }
-  ]
-); ?>
-</div>
-<div id="div-submit" class="col-md-12">
-</div>
 
-<?= Html::endForm() ?>
+<div class="container">
+  <div class="panel panel-default material-panel material-panel_primary">
+  <div class="panel-heading material-panel__heading"><h1><?= Html::encode($this->title); ?></h1></div>
+    <div id="cart" class="panel-body material-panel__body">
+    <?= Html::beginForm(['/payment/index', 'id' => 'form-payment'], 'post') ?>
+    <div id="div-hidden" style="display: none;">
+    <?= Html::activeRadioList($modelPayment, 'id_payment_method', $listPaymentMethod,
+      [
+      'item' => function($index, $label, $name, $checked, $value) {
+          $return  = '<div class="col-md-12">';
+          $return .= '<label class="main-container__column material-radio-group material-radio-group_primary" for="radio-'.$value.'">';
+          $return .= '<input type="radio" id="radio-'.$value.'" name="'.$name.'" value="'.$value.'" class="radio-payment material-radiobox">';
+          $return .= '<span class="material-radio-group__element material-radio-group__check-radio"></span>
+          <span class="material-radio-group__element material-radio-group__caption">';
+          if ($value == 1) {
+            $return .= 'Paypal ( Also Support VISA & Master Card )<img alt="payment-logo" class="img-payment img-responsive" src="/img/paypal.png">';
+          }elseif ($value == 2) {
+            $return .= 'BCA ( Also Support Klik BCA & m-BCA )<img alt="payment-logo" class="img-payment img-responsive" src="/img/bank-bca.png">';
+          }elseif ($value == 3) {
+            $return .= 'PERMATA BANK /  ATM BERSAMA ( Recomended if Your Bank Is Unavailable )<img alt="payment-logo" class="img-payment img-responsive" src="/img/atm-bersama.png">';
+          }elseif ($value == 4) {
+            $return .= 'Mandiri Bill Payment ( Also Support ATM Mandiri & Internet Banking Madiri )<img alt="payment-logo" class="img-payment img-responsive" src="/img/bank-mandiri.png">';
+          }
+          $return .= '</span></label></div>';
+
+          if ($value == 1) {
+            $return .= '<h4 style="padding-top:75px; font-weight:bold;"> Indonesia Bank Trnasfers</h4>';
+          }
+          return $return;
+       }
+      ]
+    ); ?>
+    </div>
+    <div id="div-submit" class="col-md-12">
+    </div>
+
+    <?= Html::endForm() ?>
+  </div>
+  </div>
 </div>
 
 <?php 

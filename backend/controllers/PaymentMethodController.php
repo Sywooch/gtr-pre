@@ -85,11 +85,28 @@ class PaymentMethodController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+            return $this->redirect(['index']);
         } else {
             return $this->render('update', [
                 'model' => $model,
             ]);
+        }
+    }
+
+    public function actionUpdateAjax()
+    {
+        
+
+        if (Yii::$app->request->isAjax) {
+            $data = Yii::$app->request->post();
+            $model = $this->findModel($data['id']);
+            $model->id_status = $data['id_status'];
+            if ($model->validate()) {
+                $model->save();
+            }
+            return $this->redirect(['index']);
+        } else {
+            return $this->render(['index']);
         }
     }
 

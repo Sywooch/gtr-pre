@@ -51,7 +51,7 @@ class PaymentController extends Controller
     public function actionIndex(){
 		$session      = Yii::$app->session;
 		$modelPayment = $this->findPayment($session['token']);
-		$listPaymentMethod = ArrayHelper::map(TPaymentMethod::find()->where(['!=','id',0])->asArray()->all(),'id', 'method');
+		$listPaymentMethod = ArrayHelper::map(TPaymentMethod::find()->where(['!=','id',0])->andWhere(['id_status'=>TPaymentMethod::STATUS_ON])->asArray()->all(),'id', 'method');
 
         if ($modelPayment->load(Yii::$app->request->post()) && $modelPayment->validate()) {
            $transaction = Yii::$app->db->beginTransaction();

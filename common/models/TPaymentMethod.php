@@ -9,11 +9,15 @@ use Yii;
  *
  * @property integer $id
  * @property string $method
+ * @property integer $id_status
  *
- * @property TBooking[] $tBookings
+ * @property TPayment[] $tPayments
+ * @property TStatusTrip $idStatus
  */
 class TPaymentMethod extends \yii\db\ActiveRecord
 {
+    const STATUS_ON = 1;
+    const STATUS_OFF = 2;
     /**
      * @inheritdoc
      */
@@ -28,8 +32,11 @@ class TPaymentMethod extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['method'], 'required'],
+            [['method', 'id_status'], 'required'],
+            [['id_status'], 'integer'],
+            [['id_status'],'in','range'=>[self::STATUS_ON, self::STATUS_OFF]],
             [['method'], 'string', 'max' => 50],
+            [['id_status'], 'exist', 'skipOnError' => true, 'targetClass' => TStatusTrip::className(), 'targetAttribute' => ['id_status' => 'id']],
         ];
     }
 
@@ -39,16 +46,25 @@ class TPaymentMethod extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'method' => Yii::t('app', 'Method'),
+            'id' => 'ID',
+            'method' => 'Method',
+            'id_status' => 'Status',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getTBookings()
+    public function getTPayments()
     {
-        return $this->hasMany(TBooking::className(), ['id_payment_method' => 'id']);
+        return $this->hasMany(TPayment::className(), ['id_payment_method' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdStatus()
+    {
+        return $this->hasOne(TStatusTrip::className(), ['id' => 'id_status']);
     }
 }

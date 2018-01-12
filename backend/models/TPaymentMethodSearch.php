@@ -41,7 +41,7 @@ class TPaymentMethodSearch extends TPaymentMethod
      */
     public function search($params)
     {
-        $query = TPaymentMethod::find();
+        $query = TPaymentMethod::find()->where(['!=','id',0]);
 
         // add conditions that should always apply here
 

@@ -15535,3 +15535,133 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1515480899.699
     'REQUEST_TIME' => 1515480899
 ]
+2018-01-12 14:13:00 [127.0.0.1][1][fec4bf0c13d620b0d32df30f21882235][error][ParseError] ParseError: syntax error, unexpected '}', expecting ';' in /opt/lampp/htdocs/gilitransfers-local/backend/views/payment-method/index.php:39
+Stack trace:
+#0 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/View.php(250): yii\base\View->renderPhpFile('/opt/lampp/htdo...', Array)
+#1 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/View.php(152): yii\base\View->renderFile('/opt/lampp/htdo...', Array, Object(backend\controllers\PaymentMethodController))
+#2 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Controller.php(381): yii\base\View->render('index', Array, Object(backend\controllers\PaymentMethodController))
+#3 /opt/lampp/htdocs/gilitransfers-local/backend/controllers/PaymentMethodController.php(43): yii\base\Controller->render('index', Array)
+#4 [internal function]: backend\controllers\PaymentMethodController->actionIndex()
+#5 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/InlineAction.php(57): call_user_func_array(Array, Array)
+#6 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Controller.php(156): yii\base\InlineAction->runWithParams(Array)
+#7 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Module.php(523): yii\base\Controller->runAction('', Array)
+#8 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/web/Application.php(102): yii\base\Module->runAction('payment-method', Array)
+#9 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Application.php(380): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 /opt/lampp/htdocs/gilitransfers-local/backend/web/index.php(17): yii\base\Application->run()
+#11 {main}
+2018-01-12 14:13:00 [127.0.0.1][1][fec4bf0c13d620b0d32df30f21882235][info][application] $_COOKIE = [
+    'advanced-backend' => 'fec4bf0c13d620b0d32df30f21882235'
+    '_csrf-backend' => '86cb5fb610e3abcf4d854dc02c4110b880672d51c06cfb7a4afa17fb3ccaf540a:2:{i:0;s:13:\"_csrf-backend\";i:1;s:32:\"T€=”j@É·áëÝ‹ÙÅ²“öÿ†Ý…ÇIÌÊí`\";}'
+    '_identity-backend' => '97e9cb8ef25e729544e4e13fb29ee2d4822614115ba8db916804823e847c656ca:2:{i:0;s:17:\"_identity-backend\";i:1;s:43:\"[1,\"BCLN27miF32oEhsymTM7UiJyXnc-d5Os\",1800]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/'
+    '__id' => 1
+]
+
+$_SERVER = [
+    'REDIRECT_UNIQUE_ID' => 'WlhR7Cksp6JFnsOE3BT0NwAAAAU'
+    'REDIRECT_STATUS' => '200'
+    'UNIQUE_ID' => 'WlhR7Cksp6JFnsOE3BT0NwAAAAU'
+    'HTTP_HOST' => 'book.gilitransfers-local.com'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_REFERER' => 'http://book.gilitransfers-local.com/'
+    'HTTP_COOKIE' => 'advanced-backend=fec4bf0c13d620b0d32df30f21882235; _csrf-backend=86cb5fb610e3abcf4d854dc02c4110b880672d51c06cfb7a4afa17fb3ccaf540a%3A2%3A%7Bi%3A0%3Bs%3A13%3A%22_csrf-backend%22%3Bi%3A1%3Bs%3A32%3A%22T%80%1E%3D%94j%0D%40%C9%04%13%B7%E1%EB%DD%8B%D9%C5%B2%93%F6%FF%86%DD%85%12%C7I%CC%CA%ED%60%22%3B%7D; _identity-backend=97e9cb8ef25e729544e4e13fb29ee2d4822614115ba8db916804823e847c656ca%3A2%3A%7Bi%3A0%3Bs%3A17%3A%22_identity-backend%22%3Bi%3A1%3Bs%3A43%3A%22%5B1%2C%22BCLN27miF32oEhsymTM7UiJyXnc-d5Os%22%2C1800%5D%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'PATH' => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin'
+    'LD_LIBRARY_PATH' => '/opt/lampp/lib:/opt/lampp/lib'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.29 (Unix) OpenSSL/1.0.2n PHP/7.1.12 mod_perl/2.0.8-dev Perl/v5.16.3'
+    'SERVER_NAME' => 'book.gilitransfers-local.com'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'SERVER_ADMIN' => 'webmaster@dummy-host2.example.com'
+    'SCRIPT_FILENAME' => '/opt/lampp/htdocs/gilitransfers-local/backend/web/index.php'
+    'REMOTE_PORT' => '58082'
+    'REDIRECT_URL' => '/payment-method'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/payment-method'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1515737580.16
+    'REQUEST_TIME' => 1515737580
+]
+2018-01-12 14:13:23 [127.0.0.1][1][fec4bf0c13d620b0d32df30f21882235][error][ParseError] ParseError: syntax error, unexpected '}', expecting ';' in /opt/lampp/htdocs/gilitransfers-local/backend/views/payment-method/index.php:39
+Stack trace:
+#0 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/View.php(250): yii\base\View->renderPhpFile('/opt/lampp/htdo...', Array)
+#1 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/View.php(152): yii\base\View->renderFile('/opt/lampp/htdo...', Array, Object(backend\controllers\PaymentMethodController))
+#2 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Controller.php(381): yii\base\View->render('index', Array, Object(backend\controllers\PaymentMethodController))
+#3 /opt/lampp/htdocs/gilitransfers-local/backend/controllers/PaymentMethodController.php(43): yii\base\Controller->render('index', Array)
+#4 [internal function]: backend\controllers\PaymentMethodController->actionIndex()
+#5 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/InlineAction.php(57): call_user_func_array(Array, Array)
+#6 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Controller.php(156): yii\base\InlineAction->runWithParams(Array)
+#7 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Module.php(523): yii\base\Controller->runAction('index', Array)
+#8 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/web/Application.php(102): yii\base\Module->runAction('payment-method/...', Array)
+#9 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Application.php(380): yii\web\Application->handleRequest(Object(yii\web\Request))
+#10 /opt/lampp/htdocs/gilitransfers-local/backend/web/index.php(17): yii\base\Application->run()
+#11 {main}
+2018-01-12 14:13:23 [127.0.0.1][1][fec4bf0c13d620b0d32df30f21882235][info][application] $_COOKIE = [
+    'advanced-backend' => 'fec4bf0c13d620b0d32df30f21882235'
+    '_csrf-backend' => '86cb5fb610e3abcf4d854dc02c4110b880672d51c06cfb7a4afa17fb3ccaf540a:2:{i:0;s:13:\"_csrf-backend\";i:1;s:32:\"T€=”j@É·áëÝ‹ÙÅ²“öÿ†Ý…ÇIÌÊí`\";}'
+    '_identity-backend' => '97e9cb8ef25e729544e4e13fb29ee2d4822614115ba8db916804823e847c656ca:2:{i:0;s:17:\"_identity-backend\";i:1;s:43:\"[1,\"BCLN27miF32oEhsymTM7UiJyXnc-d5Os\",1800]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/'
+    '__id' => 1
+]
+
+$_SERVER = [
+    'REDIRECT_UNIQUE_ID' => 'WlhSA0uvbx5j2-ce1dgtugAAAAM'
+    'REDIRECT_STATUS' => '200'
+    'UNIQUE_ID' => 'WlhSA0uvbx5j2-ce1dgtugAAAAM'
+    'HTTP_HOST' => 'book.gilitransfers-local.com'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:57.0) Gecko/20100101 Firefox/57.0'
+    'HTTP_ACCEPT' => 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.5'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_REFERER' => 'http://book.gilitransfers-local.com/payment-method/update?id=0'
+    'HTTP_COOKIE' => 'advanced-backend=fec4bf0c13d620b0d32df30f21882235; _csrf-backend=86cb5fb610e3abcf4d854dc02c4110b880672d51c06cfb7a4afa17fb3ccaf540a%3A2%3A%7Bi%3A0%3Bs%3A13%3A%22_csrf-backend%22%3Bi%3A1%3Bs%3A32%3A%22T%80%1E%3D%94j%0D%40%C9%04%13%B7%E1%EB%DD%8B%D9%C5%B2%93%F6%FF%86%DD%85%12%C7I%CC%CA%ED%60%22%3B%7D; _identity-backend=97e9cb8ef25e729544e4e13fb29ee2d4822614115ba8db916804823e847c656ca%3A2%3A%7Bi%3A0%3Bs%3A17%3A%22_identity-backend%22%3Bi%3A1%3Bs%3A43%3A%22%5B1%2C%22BCLN27miF32oEhsymTM7UiJyXnc-d5Os%22%2C1800%5D%22%3B%7D'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'HTTP_UPGRADE_INSECURE_REQUESTS' => '1'
+    'PATH' => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin'
+    'LD_LIBRARY_PATH' => '/opt/lampp/lib:/opt/lampp/lib'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.29 (Unix) OpenSSL/1.0.2n PHP/7.1.12 mod_perl/2.0.8-dev Perl/v5.16.3'
+    'SERVER_NAME' => 'book.gilitransfers-local.com'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'SERVER_ADMIN' => 'webmaster@dummy-host2.example.com'
+    'SCRIPT_FILENAME' => '/opt/lampp/htdocs/gilitransfers-local/backend/web/index.php'
+    'REMOTE_PORT' => '58102'
+    'REDIRECT_URL' => '/payment-method/index'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'GET'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/payment-method/index'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1515737603.38
+    'REQUEST_TIME' => 1515737603
+]
