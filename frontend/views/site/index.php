@@ -18,7 +18,7 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
         <ul class="nav nav-tabs material-tabs material-tabs_primary">
           <li class="active"><a href="#fastboats" class="material-tabs__tab-link" data-toggle="tab">Fastboats</a></li>
           <li><a href="#hotels" class="material-tabs__tab-link" data-toggle="tab">Hotels</a></li>
-          <li><a href="#private" class="material-tabs__tab-link" data-toggle="tab">Private Transfers</a></li>
+          <!-- <li><a href="#private" class="material-tabs__tab-link" data-toggle="tab">Private Transfers</a></li> -->
         </ul>
         <div class="tab-content materail-tabs-content">
           <div class="tab-pane book-form book-form fade active in" id="fastboats">
@@ -31,11 +31,13 @@ $this->title = 'Fast boat from Bali to Gili Islands, Lombok, and Nusa Lembongan'
             <?= BookingForm::widget(['formType' => BookingForm::HOTELS]); ?>
             </div>
           </div>
-          <div class="tab-pane book-form book-form fade" id="private">
+         <!--  <div class="tab-pane book-form book-form fade" id="private">
            <div class="row"> 
-            <?= BookingForm::widget(['formType' => BookingForm::PRIVATE_TRANSFERS]); ?>
+            <?php
+            // BookingForm::widget(['formType' => BookingForm::PRIVATE_TRANSFERS]); 
+            ?>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 </div>

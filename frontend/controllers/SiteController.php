@@ -402,7 +402,7 @@ class SiteController extends Controller
          $currency = $this->findOneKursAsArray($formData['currency']);
          $totalPax = $formData['adults']+$formData['childs'];
 
-         if (($routeDeparture = TRoute::getBaliArrayRoute($formData['departurePort'],$formData['arrivalPort'],TRoute::FROM_BALI)) != null) {
+         if (($routeDeparture = TRoute::getBaliArrayRoute($formData['departurePort'],$formData['arrivalPort'])) != null) {
             $departureData = [
               'idRoutes' => $routeDeparture,
               'date'     => $formData['departureDate'],
@@ -411,7 +411,7 @@ class SiteController extends Controller
             $departureList  = TTrip::getDynamicAvailableTrip($departureData);
             // false One Way true Return
             if ($formData['type'] == true) {
-                $routeReturn    = TRoute::getBaliArrayRoute($formData['arrivalPort'],$formData['departurePort'],TRoute::TO_BALI);
+                $routeReturn    = TRoute::getBaliArrayRoute($formData['arrivalPort'],$formData['departurePort']);
                 $returnData = [
                   'idRoutes' => $routeReturn,
                   'date'     => $formData['returnDate'],

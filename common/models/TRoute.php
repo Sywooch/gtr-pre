@@ -17,7 +17,7 @@ use Yii;
  */
 class TRoute extends \yii\db\ActiveRecord
 {
-    const FROM_BALI = 1;
+    const BALI = 1;
     const TO_BALI   = 2;
     /**
      * @inheritdoc
@@ -81,20 +81,21 @@ class TRoute extends \yii\db\ActiveRecord
         return $this->hasMany(TSeasonPriceSet::className(), ['id_route' => 'id']);
     }
 
-    public static function getBaliArrayRoute($from,$toRoute, $type = null)
+    public static function getBaliArrayRoute($from,$toRoute)
     {
-        
-        // groupPort Bali to something
-        if ($type == self::FROM_BALI) {
-            $where1 = 't_route.departure';
-            $where2 = 't_route.arrival';
-            $ports = explode('_', $from);
+        $from = explode('_', $from);
+        $harbor = THarbor::find()->where(['id'=>$from[0]])->asArray()->one();
+        //FROM MULTIPLE BALI TO SOMETHING
+        if ($harbor['id_island'] == self::BALI) {
+            $where1        = 't_route.departure';
+            $where2        = 't_route.arrival';
+            $ports         = $from;
             $andWhereValue = $toRoute;
-        // something to bali groupPort Bali
-        }elseif ($type == self::TO_BALI) {
-            $where1 = 't_route.arrival';
-            $where2 = 't_route.departure';
-            $ports = explode('_', $toRoute);
+        //FROM SOMETHING TO BALI
+        }else{
+            $where1        = 't_route.arrival';
+            $where2        = 't_route.departure';
+            $ports         = explode('_', $toRoute);
             $andWhereValue = $from;
         }
         $groupPort[] = "OR";
