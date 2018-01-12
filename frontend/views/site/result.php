@@ -3,7 +3,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\bootstrap\Modal;
 
-$this->title = 'Choose FastBoats';
+$this->title = 'Choose Your FastBoats';
 
 $customScript = 
 $this->registerJs("
