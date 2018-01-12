@@ -54,6 +54,7 @@ $modelPayment->id_payment_method = 1;
 
 <?= Html::endForm() ?>
 </div>
+
 <?php 
 $this->registerJs('
 $("#div-submit").html("<center><img src=\'/loading.svg\'></center>");
