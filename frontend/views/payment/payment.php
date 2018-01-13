@@ -51,9 +51,7 @@ $modelPayment->id_payment_method = 1;
           }
           $return .= '</span></label></div>';
 
-          if ($value == 1) {
-            $return .= '<h4 style="padding-top:75px; font-weight:bold;"> Indonesia Bank Trnasfers</h4>';
-          }
+          
           return $return;
        }
       ]
