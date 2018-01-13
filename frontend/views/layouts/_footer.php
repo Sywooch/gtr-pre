@@ -57,11 +57,11 @@ use yii\helpers\Html;
        <div class="col-md-3 col-sm-6 footer-col">
         <h6 class="heading7">Payment Channel</h6>
         <ul class="footer-social">
-          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer" src="/img/paypal.png"></li>
-          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer" src="/img/bank-mandiri.png"></li>
-          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer" src="/img/bank-bca.png"></li>
-          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer" src="/img/bank-permata.png"></li>
-          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer" src="/img/atm-bersama.png"></li>
+          <li class="col-md-12 col-xs-12"><img id="paypal-logo" alt="payment-footer" class="img-footer img-responsive" src="/img/paypal.png"></li>
+          <!-- <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer img-responsive" src="/img/bank-mandiri.png"></li>
+          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer img-responsive" src="/img/bank-bca.png"></li>
+          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer img-responsive" src="/img/bank-permata.png"></li>
+          <li class="col-md-12 col-xs-4"><img alt="payment-footer" class="img-footer img-responsive" src="/img/atm-bersama.png"></li> -->
         </ul>
       </div>
     </div>
@@ -95,9 +95,11 @@ $customCss = <<< SCRIPT
   color: #FAFAFA;
 }
 .img-footer{
-  width: 175px;
-  max-height: 75px;
+ 
   padding-bottom: 10px;
+}
+#paypal-logo{
+  min-width: 200px;
 }
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,700,300);
 ul,li{
