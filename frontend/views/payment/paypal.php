@@ -21,7 +21,7 @@ $this->registerJs("
             color: 'gold'   // gold | blue | silver | black
         },
             client: {
-                sandbox:    '".Yii::$app->params['PaypalClientKey']."', 
+                ".Yii::$app->params['PaypalEnv'].":    '".Yii::$app->params['PaypalClientKey']."', 
             },
             commit: true,
             payment: function(data, actions) {
