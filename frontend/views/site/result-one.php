@@ -83,7 +83,7 @@ $this->registerCss($customCss);
     $timeDept = date('H:i',strtotime($valDept['dept_time']));
     $durDept = $valDept['id_est_time'];
      ?>
-    <div class="list-departure" price="<?= $priceDept ?>" times="<?= $timeDept ?>" departure="<?= $valDept['idRoute']['departure'] ?>">
+    <div class="list-departure" price="<?= $priceDept ?>" times="<?= $timeDept ?>" departure="<?= $valDept['idRoute']['departureHarbor']['id_island'] == 1 ? $valDept['idRoute']['departure'] : $valDept['idRoute']['arrival'] ?>">
       <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
         <span>

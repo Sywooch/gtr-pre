@@ -104,7 +104,7 @@ class TRoute extends \yii\db\ActiveRecord
        }
 
         $modelRoute = TRoute::find()
-        ->joinWith(['departureHarbor as DeparturePort'])
+        ->joinWith(['departureHarbor as DeparturePort','arrivalHarbor as ArrivalPort'])
         ->where($groupPort)
         ->andWhere([$where2=>$andWhereValue])
         ->asArray()->all();

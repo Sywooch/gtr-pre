@@ -104,15 +104,27 @@ use yii\helpers\Html;
               'text'  => 'All Ports',
             ]); ?> 
           </li>
-          <?php foreach($listRoute as $Route): ?>
-          <li>
-            <?= Html::a($Route['departureHarbor']['name'],null, [
-              'class' => 'material-dropdown-menu__link drop-item-'.$parent,
-              'value' => $Route['departure'],
-              'text'  => $Route['departureHarbor']['name'],
-            ]); ?> 
-          </li>
-        <?php endforeach; ?>
+          <?php if($listRoute[0]['departureHarbor']['id_island'] == 1): ?>
+            <?php foreach($listRoute as $Route): ?>
+            <li>
+              <?= Html::a($Route['departureHarbor']['name'],null, [
+                'class' => 'material-dropdown-menu__link drop-item-'.$parent,
+                'value' => $Route['departure'],
+                'text'  => $Route['departureHarbor']['name'],
+              ]); ?> 
+            </li>
+            <?php endforeach; ?>
+          <?php elseif($listRoute[0]['departureHarbor']['id_island'] == 2): ?>
+            <?php foreach($listRoute as $Route): ?>
+             <li>
+              <?= Html::a($Route['arrivalHarbor']['name'],null, [
+                'class' => 'material-dropdown-menu__link drop-item-'.$parent,
+                'value' => $Route['arrival'],
+                'text'  => $Route['arrivalHarbor']['name'],
+              ]); ?> 
+            </li>
+            <?php endforeach; ?>
+          <?php endif; ?>
       </ul>
     </div>
   </div>

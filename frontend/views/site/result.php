@@ -27,14 +27,14 @@ $('.radio-dept, .radio-return').on('change',function(){
         }
     });
   }else if(dept != undefined && ret == undefined){
-    $('.departure > .panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
+    $('.list-departure > .panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
     $(this).parents('.panel').css({'box-shadow': '0 4px 10px 0 rgba(1, 87, 155,1.0)'});
     $('html, body').animate({
           scrollTop: $('#div-return').offset().top
         }, 1000); 
         return false;
   }else if(dept == undefined && ret != undefined){
-    $('.return > .panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
+    $('.list-return > .panel').css({'box-shadow': '0 2px 5px 0 rgba(0, 0, 0, 0.298039)'});
     $(this).parents('.panel').css({'box-shadow': '0 4px 10px 0 rgba(1, 87, 155,1.0)'});
     $('html, body').animate({
           scrollTop: $('#div-dept').offset().top
@@ -90,7 +90,7 @@ $('#myModal').on('hide.bs.modal',function(){
     $timeDept = date('H:i',strtotime($valDept['dept_time']));
     $durDept = $valDept['id_est_time'];
      ?>
-    <div class="list-departure" price="<?= $priceDept ?>" times="<?= $timeDept ?>" departure="<?= $valDept['idRoute']['departure'] ?>">
+    <div class="list-departure" price="<?= $priceDept ?>" times="<?= $timeDept ?>" departure="<?= $valDept['idRoute']['departureHarbor']['id_island'] == 1 ? $valDept['idRoute']['departure'] : $valDept['idRoute']['arrival'] ?>">
       <div class="panel panel-primary material-panel material-panel_primary">
         <div class="panel-body" itemprop="reviewBody">
         <span>
@@ -171,7 +171,7 @@ $('#myModal').on('hide.bs.modal',function(){
     $priceRetr = round($valRetr['adult_price']/$currency['kurs']*$totalPax,0,PHP_ROUND_HALF_UP);
     $timeRetr = date('H:i',strtotime($valRetr['dept_time']));
      ?>
-    <div class="list-return" price="<?= $priceRetr ?>" times="<?= $timeRetr ?>" return="<?= $valRetr['idRoute']['arrival'] ?>">
+    <div class="list-return" price="<?= $priceRetr ?>" times="<?= $timeRetr ?>" return="<?= $valRetr['idRoute']['departureHarbor']['id_island'] == 1 ? $valRetr['idRoute']['departure'] : $valRetr['idRoute']['arrival'] ?>">
         <div class="panel panel-primary material-panel material-panel_primary">
           <div class="panel-body" itemprop="reviewBody">
             <span>
