@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use yii\widgets\Modal;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 use mdm\admin\components\Helper;
@@ -16,7 +17,8 @@ $this->title = Yii::t('app', 'Trip List');
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
-<?= Html::a('', ['create'], ['class' => 'btn material-btn material-btn_warning main-container__column material-btn_lg glyphicon glyphicon-plus']) ?>
+<?= Html::a('', ['create'], ['class' => 'btn btn-lg btn-danger fa fa-plus-square','data-toggle'=>'tooltip','title'=>'Add Trip']) ?>
+<?= Html::button('', ['id'=>'btn-clone-trip','class' => 'btn btn-lg btn-primary fa fa-clone','data-toggle'=>'tooltip','title'=>'Copy Trip']) ?>
 
  <b style="font-size: 25px;"><center>Trip Summary</center></b>
  <div class="panel-group material-accordion material-accordion_primary" id="grid-summary">

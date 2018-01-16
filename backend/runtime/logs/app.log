@@ -32600,3 +32600,170 @@ $_SERVER = [
     'REQUEST_TIME_FLOAT' => 1516083491.833
     'REQUEST_TIME' => 1516083491
 ]
+2018-01-16 15:13:15 [127.0.0.1][6][8839cef6e56759fd29a6a9cd52628643][error][yii\base\ErrorException:8] yii\base\ErrorException: Undefined index: id_boat in /opt/lampp/htdocs/gilitransfers-local/backend/controllers/TripController.php:348
+Stack trace:
+#0 /opt/lampp/htdocs/gilitransfers-local/backend/controllers/TripController.php(348): yii\base\ErrorHandler->handleError(8, 'Undefined index...', '/opt/lampp/htdo...', 348, Array)
+#1 [internal function]: backend\controllers\TripController->actionChangeStatusByIsland()
+#2 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/InlineAction.php(57): call_user_func_array(Array, Array)
+#3 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Controller.php(156): yii\base\InlineAction->runWithParams(Array)
+#4 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Module.php(523): yii\base\Controller->runAction('change-status-b...', Array)
+#5 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/web/Application.php(102): yii\base\Module->runAction('trip/change-sta...', Array)
+#6 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Application.php(380): yii\web\Application->handleRequest(Object(yii\web\Request))
+#7 /opt/lampp/htdocs/gilitransfers-local/backend/web/index.php(17): yii\base\Application->run()
+#8 {main}
+2018-01-16 15:13:14 [127.0.0.1][6][8839cef6e56759fd29a6a9cd52628643][info][application] $_POST = [
+    'date' => [
+        0 => '2018-01-01'
+        1 => '2018-01-01'
+        2 => '2018-01-01'
+    ]
+    'iroute' => [
+        0 => '1-3'
+        1 => '1-2'
+        2 => '2-3'
+    ]
+    'sts' => '2'
+]
+
+$_COOKIE = [
+    '__tawkuuid' => 'e::gilitransfers-local.com::KlEpSqANplUdOGMcuVhIVdxug5wxAA/uF6IS6dyo1TSx7LRBsBel4qRg9Z9983vB::2'
+    '_csrf-backend' => '67f6144c1fc745944705ed8acd731b621110216572ab72cc909daf39504fc9a9a:2:{i:0;s:13:\"_csrf-backend\";i:1;s:32:\"Àl„(ÛÞ¹*[µÄ=³ºG³U€Îå²d@]6f\";}'
+    'advanced-backend' => '8839cef6e56759fd29a6a9cd52628643'
+    '_identity-backend' => '54da92546bcd90fd254cd5ef4c506e82bb58e5f5dbf4a455c704a42a030ac5e7a:2:{i:0;s:17:\"_identity-backend\";i:1;s:43:\"[6,\"ROixidPiKBM-PzbW_DAV5kk2PPQKRvTf\",1800]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/'
+    '__id' => 6
+]
+
+$_SERVER = [
+    'REDIRECT_UNIQUE_ID' => 'Wl2mCmT0u@Ig3kvnRUNBxAAAAAI'
+    'REDIRECT_STATUS' => '200'
+    'UNIQUE_ID' => 'Wl2mCmT0u@Ig3kvnRUNBxAAAAAI'
+    'HTTP_HOST' => 'book.gilitransfers-local.com'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '122'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_ORIGIN' => 'http://book.gilitransfers-local.com'
+    'HTTP_X_CSRF_TOKEN' => 'XEiWr4cGVabP5id3P4aeJv1PbKvSgNRPL7WtRdrguG6cJBKHXNjsjJRT4-cCnC2c-Ajf_lJOx1zKB8lYmr2OCA=='
+    'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36'
+    'CONTENT_TYPE' => 'application/x-www-form-urlencoded; charset=UTF-8'
+    'HTTP_REFERER' => 'http://book.gilitransfers-local.com/trip/index-company?month=2018-01'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.9'
+    'HTTP_COOKIE' => '__tawkuuid=e::gilitransfers-local.com::KlEpSqANplUdOGMcuVhIVdxug5wxAA/uF6IS6dyo1TSx7LRBsBel4qRg9Z9983vB::2; _csrf-backend=67f6144c1fc745944705ed8acd731b621110216572ab72cc909daf39504fc9a9a%3A2%3A%7Bi%3A0%3Bs%3A13%3A%22_csrf-backend%22%3Bi%3A1%3Bs%3A32%3A%22%C0l%84%28%DB%DE%B9%2A%5B%B5%C4%90%3D%1A%B3%BA%05G%B3U%80%CE%13%13%E5%B2d%1D%40%5D6f%22%3B%7D; advanced-backend=8839cef6e56759fd29a6a9cd52628643; _identity-backend=54da92546bcd90fd254cd5ef4c506e82bb58e5f5dbf4a455c704a42a030ac5e7a%3A2%3A%7Bi%3A0%3Bs%3A17%3A%22_identity-backend%22%3Bi%3A1%3Bs%3A43%3A%22%5B6%2C%22ROixidPiKBM-PzbW_DAV5kk2PPQKRvTf%22%2C1800%5D%22%3B%7D'
+    'PATH' => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin'
+    'LD_LIBRARY_PATH' => '/opt/lampp/lib:/opt/lampp/lib'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.29 (Unix) OpenSSL/1.0.2n PHP/7.1.12 mod_perl/2.0.8-dev Perl/v5.16.3'
+    'SERVER_NAME' => 'book.gilitransfers-local.com'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'SERVER_ADMIN' => 'webmaster@dummy-host2.example.com'
+    'SCRIPT_FILENAME' => '/opt/lampp/htdocs/gilitransfers-local/backend/web/index.php'
+    'REMOTE_PORT' => '39600'
+    'REDIRECT_URL' => '/trip/change-status-by-island'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/trip/change-status-by-island'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1516086794.972
+    'REQUEST_TIME' => 1516086794
+]
+2018-01-16 15:14:50 [127.0.0.1][6][8839cef6e56759fd29a6a9cd52628643][error][yii\base\ErrorException:8] yii\base\ErrorException: Undefined variable: value in /opt/lampp/htdocs/gilitransfers-local/backend/controllers/TripController.php:350
+Stack trace:
+#0 /opt/lampp/htdocs/gilitransfers-local/backend/controllers/TripController.php(350): yii\base\ErrorHandler->handleError(8, 'Undefined varia...', '/opt/lampp/htdo...', 350, Array)
+#1 [internal function]: backend\controllers\TripController->actionChangeStatusByIsland()
+#2 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/InlineAction.php(57): call_user_func_array(Array, Array)
+#3 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Controller.php(156): yii\base\InlineAction->runWithParams(Array)
+#4 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Module.php(523): yii\base\Controller->runAction('change-status-b...', Array)
+#5 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/web/Application.php(102): yii\base\Module->runAction('trip/change-sta...', Array)
+#6 /opt/lampp/htdocs/gilitransfers-local/vendor/yiisoft/yii2/base/Application.php(380): yii\web\Application->handleRequest(Object(yii\web\Request))
+#7 /opt/lampp/htdocs/gilitransfers-local/backend/web/index.php(17): yii\base\Application->run()
+#8 {main}
+2018-01-16 15:14:50 [127.0.0.1][6][8839cef6e56759fd29a6a9cd52628643][info][application] $_POST = [
+    'date' => [
+        0 => '2018-01-01'
+        1 => '2018-01-01'
+        2 => '2018-01-01'
+    ]
+    'iroute' => [
+        0 => '1-3'
+        1 => '1-2'
+        2 => '2-3'
+    ]
+    'sts' => '2'
+    'id_boat' => [
+        0 => '14'
+        1 => '14'
+        2 => '14'
+    ]
+]
+
+$_COOKIE = [
+    '__tawkuuid' => 'e::gilitransfers-local.com::KlEpSqANplUdOGMcuVhIVdxug5wxAA/uF6IS6dyo1TSx7LRBsBel4qRg9Z9983vB::2'
+    '_csrf-backend' => '67f6144c1fc745944705ed8acd731b621110216572ab72cc909daf39504fc9a9a:2:{i:0;s:13:\"_csrf-backend\";i:1;s:32:\"Àl„(ÛÞ¹*[µÄ=³ºG³U€Îå²d@]6f\";}'
+    'advanced-backend' => '8839cef6e56759fd29a6a9cd52628643'
+    '_identity-backend' => '54da92546bcd90fd254cd5ef4c506e82bb58e5f5dbf4a455c704a42a030ac5e7a:2:{i:0;s:17:\"_identity-backend\";i:1;s:43:\"[6,\"ROixidPiKBM-PzbW_DAV5kk2PPQKRvTf\",1800]\";}'
+]
+
+$_SESSION = [
+    '__flash' => []
+    '__returnUrl' => '/'
+    '__id' => 6
+]
+
+$_SERVER = [
+    'REDIRECT_UNIQUE_ID' => 'Wl2marx3AuZLS0aavqPlXwAAAAE'
+    'REDIRECT_STATUS' => '200'
+    'UNIQUE_ID' => 'Wl2marx3AuZLS0aavqPlXwAAAAE'
+    'HTTP_HOST' => 'book.gilitransfers-local.com'
+    'HTTP_CONNECTION' => 'keep-alive'
+    'CONTENT_LENGTH' => '173'
+    'HTTP_ACCEPT' => '*/*'
+    'HTTP_ORIGIN' => 'http://book.gilitransfers-local.com'
+    'HTTP_X_CSRF_TOKEN' => 'YFjRtcdHDyYRNb6njVd0Ms1tq38wlxD3ZPPbOUfgw2ugNFWdHJm2DEqAejewTceIyCoYKrBZA-SBQb8kB731DQ=='
+    'HTTP_X_REQUESTED_WITH' => 'XMLHttpRequest'
+    'HTTP_USER_AGENT' => 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36'
+    'CONTENT_TYPE' => 'application/x-www-form-urlencoded; charset=UTF-8'
+    'HTTP_REFERER' => 'http://book.gilitransfers-local.com/trip/index-company?month=2018-01'
+    'HTTP_ACCEPT_ENCODING' => 'gzip, deflate'
+    'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.9'
+    'HTTP_COOKIE' => '__tawkuuid=e::gilitransfers-local.com::KlEpSqANplUdOGMcuVhIVdxug5wxAA/uF6IS6dyo1TSx7LRBsBel4qRg9Z9983vB::2; _csrf-backend=67f6144c1fc745944705ed8acd731b621110216572ab72cc909daf39504fc9a9a%3A2%3A%7Bi%3A0%3Bs%3A13%3A%22_csrf-backend%22%3Bi%3A1%3Bs%3A32%3A%22%C0l%84%28%DB%DE%B9%2A%5B%B5%C4%90%3D%1A%B3%BA%05G%B3U%80%CE%13%13%E5%B2d%1D%40%5D6f%22%3B%7D; advanced-backend=8839cef6e56759fd29a6a9cd52628643; _identity-backend=54da92546bcd90fd254cd5ef4c506e82bb58e5f5dbf4a455c704a42a030ac5e7a%3A2%3A%7Bi%3A0%3Bs%3A17%3A%22_identity-backend%22%3Bi%3A1%3Bs%3A43%3A%22%5B6%2C%22ROixidPiKBM-PzbW_DAV5kk2PPQKRvTf%22%2C1800%5D%22%3B%7D'
+    'PATH' => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/snap/bin'
+    'LD_LIBRARY_PATH' => '/opt/lampp/lib:/opt/lampp/lib'
+    'SERVER_SIGNATURE' => ''
+    'SERVER_SOFTWARE' => 'Apache/2.4.29 (Unix) OpenSSL/1.0.2n PHP/7.1.12 mod_perl/2.0.8-dev Perl/v5.16.3'
+    'SERVER_NAME' => 'book.gilitransfers-local.com'
+    'SERVER_ADDR' => '127.0.0.1'
+    'SERVER_PORT' => '80'
+    'REMOTE_ADDR' => '127.0.0.1'
+    'DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'REQUEST_SCHEME' => 'http'
+    'CONTEXT_PREFIX' => ''
+    'CONTEXT_DOCUMENT_ROOT' => '/opt/lampp/htdocs/gilitransfers-local/backend/web'
+    'SERVER_ADMIN' => 'webmaster@dummy-host2.example.com'
+    'SCRIPT_FILENAME' => '/opt/lampp/htdocs/gilitransfers-local/backend/web/index.php'
+    'REMOTE_PORT' => '39614'
+    'REDIRECT_URL' => '/trip/change-status-by-island'
+    'GATEWAY_INTERFACE' => 'CGI/1.1'
+    'SERVER_PROTOCOL' => 'HTTP/1.1'
+    'REQUEST_METHOD' => 'POST'
+    'QUERY_STRING' => ''
+    'REQUEST_URI' => '/trip/change-status-by-island'
+    'SCRIPT_NAME' => '/index.php'
+    'PHP_SELF' => '/index.php'
+    'REQUEST_TIME_FLOAT' => 1516086890.491
+    'REQUEST_TIME' => 1516086890
+]

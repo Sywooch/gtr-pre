@@ -343,51 +343,37 @@ class TripController extends Controller
     public function actionChangeStatusByIsland(){
         if (Yii::$app->request->isAjax) {
             $data        = Yii::$app->request->post();
-            $deptTime    = $data['dtime'];
             $date        = $data['date']; //is Array
-            $islandRoute = $data['iroute'];
+            $islandRoute = $data['iroute']; //is Array
+            $idBoats     = $data['id_boat']; //is Array
             $status      = $data['sts'];
-
-            if(Helper::checkRoute('/booking/validation')){
-                foreach ($idTrip as $key => $value) {
-                    $Trip         = $this->findModel($value);
-                    $Trip->status = $status;
-                    $Trip->validate();
-                    $Trip->save(false);
-                }
-            }else{
-                foreach ($date as $value) {
-
-                    $modelTrip         = $this->findTripByIsland($value,$deptTime,$islandRoute);
-                    $transaction = Yii::$app->db->beginTransaction();
-                    try {
-                        foreach ($modelTrip as $key => $value) {
-                        if ($value->status == '3') {
-                        
-                        }else{
-                        $value->status = $status;
-                        $value->validate();
-                        $value->save(false);
-                        }
-                        }
-                        $transaction->commit();
-                    } catch(\Exception $e) {
-                        $transaction->rollBack();
-                        throw $e;
+            $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    foreach ($date as $key => $valDate) {
+                        $detail = [
+                            'date'         => $valDate,
+                            'island_route' => $islandRoute[$key],
+                            'id_boat'      => $idBoats[$key],
+                            'status'       => $status
+                        ];
+                        TTrip::changeTripStatus($detail); 
                     }
-                    
-                    
-                }
-            }
+                    $transaction->commit();
+                    return count($date)." Trip updated";
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                } 
+                
         }
     }
 
     public function actionUpdateStockByIsland(){
-       // if (Yii::$app->request->isAjax) {
+       if (Yii::$app->request->isAjax) {
             $data        = Yii::$app->request->post();
             $date        = $data['date']; //is Array
             $islandRoute = $data['iroute']; //is Array
-            $idBoats     = $data['id_boat'];
+            $idBoats     = $data['id_boat']; //is Array
             $transaction = Yii::$app->db->beginTransaction();
                 try {
                     foreach ($date as $key => $valDate) {
@@ -402,11 +388,11 @@ class TripController extends Controller
                     }
                     $transaction->commit();
                     return count($date)." Trip updated";
-                    } catch(\Exception $e) {
-                        $transaction->rollBack();
-                        throw $e;
-                    } 
-       // }
+                } catch(\Exception $e) {
+                    $transaction->rollBack();
+                    throw $e;
+                } 
+       }
     }
 
     protected function findTripByIsland($date, $deptTime, $islandRoute){

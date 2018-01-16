@@ -156,22 +156,18 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
             <?= Html::a(' Update Status ',null,[
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
                 'onclick'=>'
-                        var vdtime = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
-                        return $(this).attr("dept-time");
-                        }).get();
                         var vdate = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
                         return $(this).attr("date");
                         }).get();
                         var viroute = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
                         return $(this).attr("island-route");
                         }).get();
-
-                        // alert(vdtime);
-                        // alert(vdate);
-                        // alert(viroute);
-
+                        var viboat = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("id-boat");
+                        }).get();
                         var stsv = $("#drop-status").val();
-                        if (vdtime == "" || stsv == "" || vdate == ""|| viroute == "") {
+
+                        if ( stsv == "" || vdate == ""|| viroute == "" || viboat == "") {
                           alert("Select Trip and Status First");
                           return false;
                         }else{
@@ -181,13 +177,12 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                                 url: "'.Url::to(["change-status-by-island"]).'",
                                 type: "POST",
                                 async: true, 
-                                data: {dtime: vdtime, date: vdate, iroute: viroute, sts: stsv},
+                                data: {date: vdate, iroute: viroute, sts: stsv, id_boat: viboat},
                                 success: function() {
                                       $.pjax.reload({
-                                      timeout:10000,
-                                      container:"#pjax-trip",
+                                        timeout:10000,
+                                        container:"#pjax-trip",
                                       });
-                                      $("#hidden-panel").trigger("click");
                                 }, 
                             });
                           }else{
