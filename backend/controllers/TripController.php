@@ -4,7 +4,7 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\TBooking;
-use common\models\TTrip;
+use backend\models\TTrip;
 use app\models\TTripSearch;
 use common\models\TBoat;
 use common\models\TRoute;
@@ -63,7 +63,7 @@ class TripController extends Controller
             $transaction = Yii::$app->db->beginTransaction();
             try {
                 $userId = $this->findUserByMAskToken($token);
-                $modelTrips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->where(['t_company.id_user'=>$userId,'dept_time'=>$dept_time,'date'=>$date,'CONCAT( departure.id_island, "-", arrival.id_island)'=>$island_route])->all();
+                $modelTrips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->where(['t_company.id_user'=>$userId,'date'=>$date,'CONCAT( departure.id_island, "-", arrival.id_island)'=>$island_route])->all();
                 foreach ($modelTrips as $key => $modelTrip) {
                     $modelTrip->stock = $modelTrip->stock+$value;
                     $modelTrip->validate();
@@ -91,13 +91,25 @@ class TripController extends Controller
     }
 
     public function actionGetAvaibleRoute(){
-       // if (Yii::$app->request->isPost) {
-            $Trip = TTrip::find()->joinWith(['idBoat.idCompany','idRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->all();
+        if(Helper::checkRoute('/booking/*')){
+            $data = Yii::$app->request->post();
+            $Trip = TTrip::find()->joinWith(['idBoat','idRoute.departureHarbor as DeparturePort','idRoute.arrivalHarbor as ArrivalPort'])->where(['t_boat.id_company'=>$data['id_company']])->groupBy('id_route')->asArray()->all();
+            if (!empty($Trip)) {
+                echo "<option value=''>--> Select Route <--</option>";
+                foreach ($Trip as $key => $value) {
+                echo "<option value='".$value['id_route']."'>".$value['idRoute']['departureHarbor']['name']." to ".$value['idRoute']['arrivalHarbor']['name']."</option>";
+                }
+            }else{
+                echo "<option value=''>-> Route Unavailable <-</option>";
+            }
+            return true;
+        }else{
+            $Trip = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor as DeparturePort','idRoute.arrivalHarbor as ArrivalPort'])->where(['t_company.id_user'=>Yii::$app->user->identity->id])->groupBy('id_route')->all();
+        }
             foreach ($Trip as $key => $value) {
-                $list[$key] = ['id'=>$value->idRoute->id,'route'=>$value->idRoute->departureHarbor->name." to ".$value->idRoute->arrivalHarbor->name,'island'=>$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island];
+                $list[$key] = ['id'=>$value->id,'route'=>$value->idRoute->departureHarbor->name." to ".$value->idRoute->arrivalHarbor->name,'island'=>$value->idRoute->departureHarbor->idIsland->island." -> ".$value->idRoute->arrivalHarbor->idIsland->island];
             }
         return $list; 
-        //}
     }
 
     public function actionGetAvaibleTime(){
@@ -174,6 +186,9 @@ class TripController extends Controller
                             }
                             if ($data['desc'] != null) {
                                 $value->description = $data['desc'];
+                            }
+                            if ($data['id_boat'] != null) {
+                                $value->id_boat = $data['id_boat'];
                             }
                             $value->save(false);
                         }
@@ -354,7 +369,7 @@ class TripController extends Controller
                         $value->validate();
                         $value->save(false);
                         }
-                    }
+                        }
                         $transaction->commit();
                     } catch(\Exception $e) {
                         $transaction->rollBack();
@@ -368,111 +383,35 @@ class TripController extends Controller
     }
 
     public function actionUpdateStockByIsland(){
-        if (Yii::$app->request->isAjax) {
+       // if (Yii::$app->request->isAjax) {
             $data        = Yii::$app->request->post();
-            $deptTime    = $data['dtime'];
             $date        = $data['date']; //is Array
-            $islandRoute = $data['iroute'];
-            $topvalue    = $data['topup'];
-            $type        = $data['type'];
-                if ($type == '1') {
-                    foreach ($date as $date1) {
-                        $modelTrip         = $this->findTripByIsland($date1,$deptTime,$islandRoute);
-                        $transaction = Yii::$app->db->beginTransaction();
-                        try {
-                            foreach ($modelTrip as $key => $val) {
-                                $val->stock = $val->stock+$topvalue;
-                                $val->validate();
-                                $val->save(false);
-                            }
-                            $transaction->commit();
-                        } catch(\Exception $e) {
-                            $transaction->rollBack();
-                            throw $e;
-                        }
-                        
+            $islandRoute = $data['iroute']; //is Array
+            $idBoats     = $data['id_boat'];
+            $transaction = Yii::$app->db->beginTransaction();
+                try {
+                    foreach ($date as $key => $valDate) {
+                        $detail = [
+                            'date'         => $valDate,
+                            'island_route' => $islandRoute[$key],
+                            'id_boat'      => $idBoats[$key],
+                            'changeType'   => $data['type'],
+                            'totalPax'     => $data['topup']
+                        ];
+                        TTrip::changeAvailability($detail); 
+                    }
+                    $transaction->commit();
+                    return count($date)." Trip updated";
+                    } catch(\Exception $e) {
+                        $transaction->rollBack();
+                        throw $e;
                     } 
-                }elseif ($type == '2') {
-                    foreach ($date as $date2) {
-                        $modelTrip         = $this->findTripByIsland($date2,$deptTime,$islandRoute);
-                        $transaction = Yii::$app->db->beginTransaction();
-                        try {
-                            foreach ($modelTrip as $key => $val2) {
-                                $val2->stock = $val2->stock-$topvalue;
-                                $val2->validate();
-                                $val2->save(false);
-                            }
-                            $transaction->commit();
-                        } catch(\Exception $e) {
-                            $transaction->rollBack();
-                            throw $e;
-                        }
-                        
-                    } 
-                }else{
-                    return true;
-                }   
-        }
+       // }
     }
 
     protected function findTripByIsland($date, $deptTime, $islandRoute){
         return TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival'])->where(['t_company.id_user'=>Yii::$app->user->identity->id,'dept_time'=>$deptTime,'date'=>$date,'CONCAT( departure.id_island, "-", arrival.id_island)'=>$islandRoute])->all();
     }
-
-
-    // public function actionChangeStatus(){
-    //     if (Yii::$app->request->isAjax) {
-    //         $data = Yii::$app->request->post();
-    //         $idTrip = $data['id'];
-    //         $status = $data['sts'];
-    //         if(Helper::checkRoute('/booking/validation')){
-    //             foreach ($idTrip as $key => $value) {
-    //             $Trip         = $this->findModel($value);
-    //             $Trip->status = $status;
-    //             $Trip->validate();
-    //             $Trip->save(false);
-    //             }
-    //         }else{
-    //             foreach ($idTrip as $key => $value) {
-    //                 $Trip         = $this->findModel($value);
-    //                 if ($Trip->status == '3') {
-                        
-    //                 }else{
-    //                 $Trip->status = $status;
-    //                 $Trip->validate();
-    //                 $Trip->save(false);
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
-    // public function actionTopup(){
-    //     if (Yii::$app->request->isAjax) {
-    //         $data = Yii::$app->request->post();
-    //         $idTrip = $data['id'];
-    //         $topvalue = $data['topup'];
-    //         $type = $data['type'];
-    //         if ($type == '1') {
-    //            foreach ($idTrip as $key => $value) {
-    //             $modelTrip         = $this->findModel($value);
-    //             $modelTrip->stock = $modelTrip->stock+$topvalue;
-    //             $modelTrip->validate();
-    //             $modelTrip->save(false);
-    //             } 
-    //         }elseif ($type == '2') {
-    //             foreach ($idTrip as $key => $value) {
-    //             $modelTrip         = $this->findModel($value);
-    //             $modelTrip->stock = $modelTrip->stock-$topvalue;
-    //             $modelTrip->validate();
-    //             $modelTrip->save(false);
-    //             } 
-    //         }else{
-    //             return true;
-    //         }
-            
-    //     }
-    // }
 
     public function actionChangePrice(){
         if (Yii::$app->request->isAjax) {

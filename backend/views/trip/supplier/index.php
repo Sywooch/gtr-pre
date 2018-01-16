@@ -102,7 +102,7 @@ for ($d=1;$d<=$endDate;$d++) {
     if (date("d",mktime (0,0,0,$month,$d,$year)) == "Sun") {  }
       $today = date("Y-m-d",mktime (0,0,0,$month,$d,$year));
 
-            $trips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival','idEstTime','status0'])->select(['t_trip.*','CONCAT( departure.id_island, "-", arrival.id_island) as islandRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id,'date'=>$today])->groupBy(['islandRoute','dept_time'])->orderBy(['islandRoute'=>SORT_ASC,'dept_time'=>SORT_ASC])->all();
+            $trips = TTrip::find()->joinWith(['idBoat.idCompany','idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival','idEstTime','status0'])->select(['t_trip.*','CONCAT( departure.id_island, "-", arrival.id_island) as islandRoute'])->where(['t_company.id_user'=>Yii::$app->user->identity->id,'date'=>$today])->groupBy(['id_boat','islandRoute'])->orderBy(['id_boat'=>SORT_ASC,'dept_time'=>SORT_ASC])->all();
 
       
     //tanggal 
@@ -142,7 +142,7 @@ for ($d=1;$d<=$endDate;$d++) {
 
           }
         //checkbox per trip
-        echo Html::checkbox('checkbox-'.$value->id, $checked = false, ['class' => 'pull-right checkbox-trip checkbox-'.$today,'dept-time'=>$value->dept_time,'date'=>$value->date,'island-route'=>$value->islandRoute,'id'=>'checkbox-'.$value->id])."<br>";
+        echo Html::checkbox('checkbox-'.$value->id, $checked = false, ['class' => 'pull-right checkbox-trip checkbox-'.$today,'date'=>$value->date,'island-route'=>$value->islandRoute,'id-boat'=>$value->id_boat,'id'=>'checkbox-'.$value->id])."<br>";
 
         // Popover Start
         echo "<div id='".$value->id."' class='hidden panel panel-primary'>

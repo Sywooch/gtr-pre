@@ -52,6 +52,13 @@ class TTrip extends \yii\db\ActiveRecord
     public $islandRoute;
     const TYPE_UP   = 1;
     const TYPE_DOWN = 2;
+    const BALI_TO_GILI      = '1-2';
+    const BALI_TO_LEMBONGAN = '1-3';
+    const LEMBONGAN_TO_GILI = '3-2';
+    const GILI_TO_BALI      = '2-1';
+    const GILI_TO_LEMBOGNAN = '2-3';
+    const LEMBONGAN_TO_BALI = '3-1';
+    const INTER_ISLAND      = '2-2';
     /**
      * @inheritdoc
      */
@@ -293,14 +300,54 @@ class TTrip extends \yii\db\ActiveRecord
     }
 
     public static function changeAvailability(array $data){
-        $trip = TTrip::find()->joinWith(['idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival','idBoat'])
-        ->where([
-            't_trip.id_boat'                                       => $data['id_boat'],
-            'CONCAT( departure.id_island, "-", arrival.id_island)' => $data['island_route'],
-            't_trip.date'                                          => $data['date'],
-            't_trip.dept_time'                                     => $data['dept_time']
-        ])
+        if ($data['island_route'] == self::BALI_TO_GILI) {
+            $affectedIslandRoute = [
+                'OR',
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::BALI_TO_GILI],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::BALI_TO_LEMBONGAN],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::LEMBONGAN_TO_GILI]
+            ];
+        }elseif ($data['island_route'] == self::BALI_TO_LEMBONGAN) {
+            $affectedIslandRoute = [
+                'OR',
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::BALI_TO_LEMBONGAN],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::BALI_TO_GILI]
+            ];
+        }elseif ($data['island_route'] == self::LEMBONGAN_TO_GILI) {
+            $affectedIslandRoute = [
+                'OR',
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::LEMBONGAN_TO_GILI],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::BALI_TO_GILI]
+            ];
+        }elseif ($data['island_route'] == self::GILI_TO_BALI) {
+            $affectedIslandRoute = [
+                'OR',
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::GILI_TO_BALI],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::GILI_TO_LEMBOGNAN],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::LEMBONGAN_TO_BALI]
+            ];
+        }elseif ($data['island_route'] == self::GILI_TO_LEMBOGNAN) {
+            $affectedIslandRoute = [
+                'OR',
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::GILI_TO_LEMBOGNAN],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::GILI_TO_BALI]
+            ];
+        }elseif ($data['island_route'] == self::LEMBONGAN_TO_BALI) {
+            $affectedIslandRoute = [
+                'OR',
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::LEMBONGAN_TO_BALI],
+                ['=','CONCAT( departure.id_island, "-", arrival.id_island)',self::GILI_TO_BALI]
+            ];
+        }elseif ($data['island_route'] == self::INTER_ISLAND) {
+            $affectedIslandRoute =['CONCAT( departure.id_island, "-", arrival.id_island)'=>self::INTER_ISLAND];
+        }
+        $trip = TTrip::find()
+        ->joinWith(['idRoute.departureHarbor departure','idRoute.arrivalHarbor as arrival','idBoat'])
+        ->where($affectedIslandRoute)
+        ->andWhere(['t_trip.id_boat'=> $data['id_boat']])
+        ->andWhere(['t_trip.date' => $data['date']])
         ->all();
+        //'t_trip.dept_time'                                     => $data['dept_time']
         if ($data['changeType'] == self::TYPE_DOWN) {
             foreach ($trip as $key => $valTrip) {
                 $valTrip->stock = $valTrip->stock-$data['totalPax'];

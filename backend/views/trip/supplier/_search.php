@@ -115,15 +115,19 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
         <?= Html::a('Save',null,[
             'class' => 'btn material-btn material-btn_danger main-container__column material-btn_md glyphicon glyphicon-saved',
             'onclick'=>'
-                    var vdtime = $("#table-trip .checkbox-trip:checkbox:checked").attr("dept-time");
                     var vdate = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
                         return $(this).attr("date");
                         }).get();
-                    var viroute = $("#table-trip .checkbox-trip:checkbox:checked").attr("island-route");
+                    var viroute = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("island-route");
+                      }).get();
+                    var viboat = $("#table-trip .checkbox-trip:checkbox:checked").map(function(){
+                        return $(this).attr("id-boat");
+                      }).get();
 
                     var topval = $("#form-topup").val();
                     var toptype = $("#radio-topup-type :radio:checked").val();
-                    if (toptype == "" || topval == "" || vdtime == "" || vdate == ""|| viroute == "") {
+                    if (toptype == "" || topval == "" || vdate == "" || viroute == "" || viboat == "") {
                       alert("Select Trip and fill topup value First");
                       return false;
                     }else{
@@ -132,14 +136,13 @@ $blnUrlMin = date('Y-m',strtotime('-1 MONTH',strtotime($varmonth)));
                         $.ajax({
                             url: "'.Url::to(["update-stock-by-island"]).'",
                             type: "POST",
-                            async: true, 
-                            data: {dtime: vdtime, date: vdate, iroute: viroute, topup: topval, type: toptype},
-                            success: function() {
+                            data: {date: vdate, iroute: viroute, id_boat: viboat, topup: topval, type: toptype},
+                            success: function(data) {
+                              alert(data)
                                   $.pjax.reload({
                                   timeout:10000,
                                   container:"#pjax-trip",
                                   });
-                                  $("#hidden-panel").trigger("click");
                             }, 
                         });
                       }else{

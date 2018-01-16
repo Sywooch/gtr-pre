@@ -146,12 +146,31 @@ HTML;
             <?php
             echo '<label class="control-label">Company</label>';
             echo Select2::widget([
-            'name' => 'company',
-            'data' => $listCompany,
-            'id'  =>'form-company',
-            'options' => [
+            'name'        => 'company',
+            'data'        => $listCompany,
+            'id'          =>'form-company',
+            'options'     => [
             'placeholder' => 'Select Company ...',
-            'multiple' => false
+            'multiple'    => false,
+            'onchange' => '
+              var idcom = $(this).val();
+              $.ajax({
+                url: "'.Url::to(["get-avaible-route"]).'",
+                type: "POST",
+                data:{id_company: idcom},
+                success: function(data){
+                  $("#form-route").html(data);
+                }
+              });
+              $.ajax({
+                url: "'.Url::to(["boat-list"]).'",
+                type: "POST",
+                data:{cpn: idcom},
+                success: function(data){
+                  $("#form-id-boat").html(data);
+                }
+              });
+            '
             ],
             ]);
             ?>
@@ -159,11 +178,11 @@ HTML;
            <div class="col-md-2">
             <?php
             echo '<label class="control-label">Route</label>';
-            echo Html::dropDownList('route',$selected = null, $listRoute,
+            echo Html::dropDownList('route',$selected = null, [],
               [
                'id'=>'form-route',
               'class' => 'form-control',
-              'prompt'=>'Chose Route ...',
+              'prompt'=>'Select Company First...',
 
               ]); 
             ?>
@@ -222,6 +241,7 @@ HTML;
         </div>
       </div>
 <!-- SEARCH FORM BUTTON END -->
+
 <!-- CHECKBOX BUTTON START -->
       <div class="panel panel-default material-accordion__panel">
         <div class="panel-heading material-accordion__heading">
@@ -417,6 +437,10 @@ $this->registerJs("
           <label>Description</label>
           <?= Html::textarea('modal-text-area', null, ['id'=>'form-description','class'=>'form-control']); ?>
         </div>
+        <div class="col-md-12">
+          <label>Change Boat</label>
+          <?= Html::dropDownList('modal-id-boat', null,[], ['id'=>'form-id-boat','class'=>'form-control','prompt'=>'Boat Unavailable']); ?>
+        </div>
         <div style="display: none;" id="btn-modal-form" class="col-md-12">
           <?= Html::button('Submit Changes', [
                 'class' => 'btn material-btn material-btn_danger main-container__column material-btn_lg4 glyphicon glyphicon-trash btn-block',
@@ -436,6 +460,7 @@ $this->registerJs("
                         var uchild = $("#update-child-price").val();
                         var type = $(".check:checkbox:checked").val();
                         var desc = $("#form-description").val();
+                        var idb = $("#form-id-boat").val();
                        
                            if(confirm("Confirm \\r\\n Data On Filtered Will be Updated? ")){
                             $("#btn-close-modal").hide();
@@ -444,7 +469,7 @@ $this->registerJs("
                                 url: "'.Url::to(["update-multiple"]).'",
                                 type: "POST",
                                 async: true, 
-                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type, adult: uadult, child: uchild, desc: desc},
+                                data: {start: start, end: end, company: company, route: route, dtime: dtime, dept: dept, est: est, stock: stock, sts: sts, type: type, adult: uadult, child: uchild, desc: desc, id_boat: idb},
                                 success: function() {
                                      location.reload();
                                 }, 
